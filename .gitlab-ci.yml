@@ -1,5 +1,7 @@
 ScopeFun:
     stage: build
+    tags:
+        - ScopeFun
     script:
         - mkdir build
         - cd build
