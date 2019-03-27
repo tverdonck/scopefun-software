@@ -1,7 +1,3 @@
-job:
-  tags:
-    - ruby
-    - postgres
 ScopeFun:
     stage: build
     script:
