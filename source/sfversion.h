@@ -1,0 +1,5 @@
+#define SCOPEFUN_VERSION_MAJOR       "2"
+#define SCOPEFUN_VERSION_MINOR       "0"
+#define SCOPEFUN_VERSION_MICRO       "0"
+#define SCOPEFUN_VERSION_TIMESTAMP   "17:08 19-03-2019"
+#define SCOPEFUN_VERSION_TYPE        "not for release"
