@@ -5,5 +5,5 @@ ScopeFun:
     script:
         - mkdir build
         - cd build
-        - "c:\Program Files\CMake\bin\cmake" -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
-        - c:\msys\1.0\msys mingw32-make package
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
+        - msys mingw32-make package
