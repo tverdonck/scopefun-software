@@ -5,5 +5,5 @@ ScopeFun:
     script:
         - mkdir build
         - cd build
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
+        - powershell cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - mingw32-make package
