@@ -6,4 +6,5 @@ ScopeFun:
         - mkdir build
         - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
-        - msys mingw32-make package
+        - msys
+        - mingw32-make package
