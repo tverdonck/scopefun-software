@@ -1,4 +1,4 @@
-ScopeFunCmake:
+ScopeFun:
     stage: build
     tags:
         - ScopeFun
@@ -6,12 +6,5 @@ ScopeFunCmake:
         - mkdir build
         - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
-ScopeFunMake:
-    stage: build
-    before_script:
-        - set "PATH=%PATH%;c:\msys\1.0\bin;c:\TDM-GCC-64\bin"
-    tags:
-        - ScopeFun
-    script:
-        - cd build
+        - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
