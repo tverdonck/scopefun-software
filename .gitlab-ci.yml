@@ -1,9 +1,14 @@
+Directory:
+  stage: build
+  script:
+    - mkdir build
+  allow_failure: true
+  
 ScopeFun:
     stage: build
     tags:
         - ScopeFun
     script:
-        - mkdir build
         - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
