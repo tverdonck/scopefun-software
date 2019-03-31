@@ -13,6 +13,8 @@ ScopeFunMake:
         - ScopeFun
     variables:
         PATH: "c:/msys/1.0/bin;c:/TDM-GCC-64/bin"
+    before_script:
+        set "PATH=c:/msys/1.0/bin;c:/TDM-GCC-64/bin;%PATH%"
     script:
         - mkdir build
         - cd build
