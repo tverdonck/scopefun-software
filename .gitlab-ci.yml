@@ -1,4 +1,4 @@
-ScopeFun:
+ScopeFunCmake:
     stage: build
     tags:
         - ScopeFun
@@ -6,4 +6,14 @@ ScopeFun:
         - mkdir build
         - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
+        - mingw32-make package
+ScopeFunMake:
+    stage: build
+    tags:
+        - ScopeFun
+    variables:
+        - PATH = %PATH%;c:/msys/1.0/bin
+    script:
+        - mkdir build
+        - cd build
         - mingw32-make package
