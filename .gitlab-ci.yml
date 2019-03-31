@@ -9,12 +9,10 @@ ScopeFunCmake:
         - mingw32-make package
 ScopeFunMake:
     stage: build
-    tags:
-        - ScopeFun
-    variables:
-        PATH: "c:/msys/1.0/bin;c:/TDM-GCC-64/bin"
     before_script:
         set "PATH=c:/msys/1.0/bin;c:/TDM-GCC-64/bin;%PATH%"
+    tags:
+        - ScopeFun
     script:
         - mkdir build
         - cd build
