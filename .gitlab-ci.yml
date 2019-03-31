@@ -12,7 +12,7 @@ ScopeFunMake:
     tags:
         - ScopeFun
     variables:
-        - PATH: "c:/msys/1.0/bin;c:/TDM-GCC-64/bin"
+        PATH: "c:/msys/1.0/bin;c:/TDM-GCC-64/bin"
     script:
         - mkdir build
         - cd build
