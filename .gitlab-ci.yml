@@ -4,9 +4,8 @@ ScopeFunCmake:
         - ScopeFun
     script:
         - mkdir build
-        - cd build
+        - cd buildhttps://gitlab.com/sfDavid/ScopeFun/-/jobs/187484570        
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
-        - mingw32-make package
 ScopeFunMake:
     stage: build
     before_script:
