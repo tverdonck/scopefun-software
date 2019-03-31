@@ -10,7 +10,7 @@ ScopeFunCmake:
 ScopeFunMake:
     stage: build
     before_script:
-        set "PATH=c:/msys/1.0/bin;c:/TDM-GCC-64/bin;%PATH%"
+        - set "PATH=c:/msys/1.0/bin;c:/TDM-GCC-64/bin;%PATH%"
     tags:
         - ScopeFun
     script:
