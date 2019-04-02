@@ -1,7 +1,15 @@
+stages:
+  - build
+  - package
+  
 ScopeFun-exe:
     stage: build
     tags:
         - ScopeFun
+    artifacts:
+      paths: 
+         - *.exe
+         - *.sha512
     script:
         - cd ..
         - powershell New-Item -ItemType Directory -name build -Force
@@ -23,9 +31,12 @@ ScopeFun-exe:
                                    "close"^
                                    "exit"
 ScopeFun-Source:
-    stage: build
+    stage: package
     tags:
         - ScopeFun
+    artifacts:
+      paths: 
+         - *.zip
     script:
         - cd ..
         - powershell New-Item -ItemType Directory -name srcpkg -Force
