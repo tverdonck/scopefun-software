@@ -1,15 +1,11 @@
-Directory:
-  stage: build
-  script:
-    - cd ..
-    - powershell New-Item -ItemType Directory -name build -Force
-  
 ScopeFun-exe:
     stage: build
     tags:
         - ScopeFun
     script:
-        - cd .\..\build
+        - cd ..
+        - powershell New-Item -ItemType Directory -name build -Force
+        - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" .\..\ScopeFun
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
@@ -31,7 +27,9 @@ ScopeFun-Source:
     tags:
         - ScopeFun
     script:
-        - cd .\..\build
+        - cd ..
+        - powershell New-Item -ItemType Directory -name srcpkg -Force
+        - cd srcpkg
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" .\..\ScopeFun
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
