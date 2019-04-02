@@ -22,5 +22,6 @@ ScopeFun:
         - copy  *.sha512 Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
-					   	           "put Windows\%date%-%time%"^
-						           "close"
+                                   "put Windows\%date%-%time%"^
+                                   "close"^
+                                   "exit"
