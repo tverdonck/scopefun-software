@@ -237,7 +237,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open Source Oscilloscope" )
 set(CPACK_PACKAGE_CHECKSUM SHA512)
 
 #source
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/;/\\\\artifacts/;/\\\\sfBuild/;/\\\\sfBuild64r/;/\\\\sfBuild64d/;/\\\\sfBuild32r/;/\\\\sfBuild32d/")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/;/\\\\sfSource/;/\\\\sfBuild/;/\\\\sfBuild64r/;/\\\\sfBuild64d/;/\\\\sfBuild32r/;/\\\\sfBuild32d/")
 
 # pack
 include(CPack)
