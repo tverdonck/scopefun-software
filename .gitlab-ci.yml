@@ -30,7 +30,7 @@ ScopeFun-Source:
         - cd ..
         - powershell New-Item -ItemType Directory -name srcpkg -Force
         - cd srcpkg
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" .\..\ScopeFun
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" .\..\ScopeFun
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
         - powershell get-date -format {yyyyMMdd} > date.txt
