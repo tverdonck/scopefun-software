@@ -1,6 +1,7 @@
 Directory:
   stage: build
   script:
+    - cd ..
     - mkdir build
   allow_failure: true
   
@@ -9,8 +10,8 @@ ScopeFun-exe:
     tags:
         - ScopeFun
     script:
-        - cd build
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
+        - cd ..\build
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..\ScopeFun
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
         - powershell get-date -format {yyyyMMdd} > date.txt
@@ -31,8 +32,8 @@ ScopeFun-Source:
     tags:
         - ScopeFun
     script:
-        - cd build
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
+        - cd ..\build
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..\ScopeFun
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
         - powershell get-date -format {yyyyMMdd} > date.txt
