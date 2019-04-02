@@ -13,3 +13,14 @@ ScopeFun:
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
+        - powershell get-date -format {yyyyMMdd} > date.txt
+        - powershell get-date -format {HHmmss}   > time.txt
+        - set /p date=<date.txt
+        - set /p time=<time.txt
+        - mkdir Windows\%date%-%time%
+        - copy  *.exe Windows\%date%-%time%
+        - copy  *.sha512 Windows\%date%-%time%
+        - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
+                                   "cd Versions"^
+					   	           "put Windows\%date%-%time%"^
+						           "close"
