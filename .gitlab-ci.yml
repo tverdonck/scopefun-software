@@ -8,9 +8,10 @@ ScopeFun-exe:
         - ScopeFun
     artifacts:
       paths: 
-         - ../build/*.exe
-         - ../build/*.sha512
+         - artifacts/*.exe
+         - artifacts/*.sha512
     script:
+        - powershell New-Item -ItemType Directory -name artifacts -Force
         - cd ..
         - powershell New-Item -ItemType Directory -name build -Force
         - cd build
@@ -30,14 +31,19 @@ ScopeFun-exe:
                                    "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
+        - copy *.exe    ../ScopeFun/artifacts
+        - copy *.sha512 ../ScopeFun/artifacts
+        
 ScopeFun-Source:
     stage: package
     tags:
         - ScopeFun
     artifacts:
       paths: 
-         - ../srcpkg/*.zip
+         - artifacts/*.zip
+         - artifacts/*.sha512
     script:
+        - powershell New-Item -ItemType Directory -name artifacts -Force
         - cd ..
         - powershell New-Item -ItemType Directory -name srcpkg -Force
         - cd srcpkg
@@ -57,3 +63,5 @@ ScopeFun-Source:
                                    "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
+        - copy *.zip    ../ScopeFun/artifacts
+        - copy *.sha512 ../ScopeFun/artifacts
