@@ -2,8 +2,7 @@ Directory:
   stage: build
   script:
     - cd ..
-    - mkdir build
-  allow_failure: true
+    - powershell New-Item -ItemType Directory -name build -Force
   
 ScopeFun-exe:
     stage: build
