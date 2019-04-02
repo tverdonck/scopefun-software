@@ -12,7 +12,7 @@ ScopeFun:
         - cd build
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
-        - mingw32-make package_sources
+        - mingw32-make package_source
         - mingw32-make package
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
