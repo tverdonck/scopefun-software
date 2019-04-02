@@ -8,14 +8,12 @@ ScopeFun-exe:
         - ScopeFun
     artifacts:
       paths: 
-         - artifacts/*.exe
-         - artifacts/*.sha512
+         - sfBuild/*.exe
+         - sfBuild/*.sha512
     script:
-        - powershell New-Item -ItemType Directory -name artifacts -Force
-        - cd ..
-        - powershell New-Item -ItemType Directory -name build -Force
-        - cd build
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" .\..\ScopeFun
+        - powershell New-Item -ItemType Directory -name sfBuild -Force
+        - cd sfBuild
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
         - powershell get-date -format {yyyyMMdd} > date.txt
@@ -23,16 +21,14 @@ ScopeFun-exe:
         - set /p date=<date.txt
         - set /p time=<time.txt
         - mkdir Windows\%date%-%time%
-        - copy  *.exe Windows\%date%-%time%
-        - copy  *.sha512 Windows\%date%-%time%
+        - copy *.exe    Windows\%date%-%time%
+        - copy *.sha512 Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
                                    "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
-        - copy *.exe    ../ScopeFun/artifacts
-        - copy *.sha512 ../ScopeFun/artifacts
         
 ScopeFun-Source:
     stage: package
@@ -40,14 +36,12 @@ ScopeFun-Source:
         - ScopeFun
     artifacts:
       paths: 
-         - artifacts/*.zip
-         - artifacts/*.sha512
+         - sfSource/*.zip
+         - sfSource/*.sha512
     script:
-        - powershell New-Item -ItemType Directory -name artifacts -Force
-        - cd ..
-        - powershell New-Item -ItemType Directory -name srcpkg -Force
-        - cd srcpkg
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" .\..\ScopeFun
+        - powershell New-Item -ItemType Directory -name sfSource -Force
+        - cd sfSource
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
         - powershell get-date -format {yyyyMMdd} > date.txt
@@ -63,5 +57,3 @@ ScopeFun-Source:
                                    "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
-        - copy *.zip    ../ScopeFun/artifacts
-        - copy *.sha512 ../ScopeFun/artifacts
