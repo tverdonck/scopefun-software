@@ -8,8 +8,8 @@ ScopeFun-exe:
         - ScopeFun
     artifacts:
       paths: 
-         - ./*.exe
-         - ./*.sha512
+         - ../build/*.exe
+         - ../build/*.sha512
     script:
         - cd ..
         - powershell New-Item -ItemType Directory -name build -Force
@@ -36,7 +36,7 @@ ScopeFun-Source:
         - ScopeFun
     artifacts:
       paths: 
-         - ./*.zip
+         - ../srcpkg/*.zip
     script:
         - cd ..
         - powershell New-Item -ItemType Directory -name srcpkg -Force
