@@ -15,7 +15,7 @@ ScopeFun-timestamp:
         - powershell get-date -format {HHmmss}   > time.txt
         - set /p date=<date.txt
         - set /p time=<time.txt
-        - %date_time%=%data%-%time%
+        - export date_time=%data%-%time%
         - echo %date_time%
         
 ScopeFun-exe:
