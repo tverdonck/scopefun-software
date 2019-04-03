@@ -46,11 +46,6 @@ ScopeFun-src:
     stage: package
     tags:
         - ScopeFun
-    artifacts:
-      name: "ScopeFun-Src"
-      paths: 
-         - sfSource/*.zip
-         - sfSource/*.sha512
     script:
         - cd sfSource
         - set /p date=<date.txt
