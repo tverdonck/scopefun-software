@@ -14,7 +14,7 @@ ScopeFun-Win64:
         - cd ..
         - powershell New-Item -ItemType Directory -name sfBuild  -Force
         - cd sfBuild
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S ../ScopeFun -B .
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S ../ScopeFun-Software -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
         - mingw32-make package
