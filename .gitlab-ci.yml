@@ -2,10 +2,10 @@ stages:
   - init
   - build
   - package
-  
+
 ScopeFun-init:
-    stage: init
-    tags:
+   stage: init
+   tags:
         - ScopeFun
    script:
         - powershell New-Item -ItemType Directory -name sfBuild  -Force
