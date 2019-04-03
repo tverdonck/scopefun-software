@@ -42,7 +42,7 @@ ScopeFun-exe:
                                    "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
-ScopeFun-Source:
+ScopeFun-src:
     stage: package
     tags:
         - ScopeFun
