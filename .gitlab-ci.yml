@@ -1,7 +1,23 @@
 stages:
+  - timestamp
   - build
   - package
-  
+
+variables:
+    date_time: "yyyyMMdd-HHmmss"
+
+ScopeFun-timestamp:
+    stage: timestamp
+    tags:
+        - ScopeFun
+    script:
+        - powershell get-date -format {yyyyMMdd} > date.txt
+        - powershell get-date -format {HHmmss}   > time.txt
+        - set /p date=<date.txt
+        - set /p time=<time.txt
+        - %date_time%=%data%-%time%
+        - echo %date_time%
+        
 ScopeFun-exe:
     stage: build
     tags:
