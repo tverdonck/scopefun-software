@@ -30,17 +30,16 @@ ScopeFun-exe:
         - cd sfBuild
         - set /p date=<date.txt
         - set /p time=<time.txt
-        - set /p date_time=%date%-%time%
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
-        - mkdir Windows\%date_time%
-        - copy *.exe    Windows\%date_time%
-        - copy *.sha512 Windows\%date_time%
+        - mkdir Windows\%date%-%time%
+        - copy *.exe    Windows\%date%-%time%
+        - copy *.sha512 Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
-                                   "put Windows\%date_time%"^
+                                   "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
 ScopeFun-Source:
@@ -56,16 +55,15 @@ ScopeFun-Source:
         - cd sfSource
         - set /p date=<date.txt
         - set /p time=<time.txt
-        - set /p date_time=%date%-%time%
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" ..
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
-        - mkdir Windows\%date_time%
-        - copy  *.zip Windows\%date_time%
-        - copy  *.sha512 Windows\%date_time%
+        - mkdir Windows\%date%-%time%
+        - copy  *.zip Windows\%date%-%time%
+        - copy  *.sha512 Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
-                                   "put Windows\%date_time%"^
+                                   "put Windows\%date%-%time%"^
                                    "close"^
                                    "exit"
