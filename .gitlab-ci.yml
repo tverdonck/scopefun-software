@@ -14,7 +14,7 @@ ScopeFun-exe:
     script:
         - powershell New-Item -ItemType Directory -name sfBuild -Force
         - cd sfBuild
-        - git show -s --format=%ci > date_time.txt
+        - git log -n1 --format=%ci > date_time.txt
         - set /p date_time=<date_time.txt
         - echo %date_time%
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" ..
@@ -45,7 +45,7 @@ ScopeFun-Source:
     script:
         - powershell New-Item -ItemType Directory -name sfSource -Force
         - cd sfSource
-        - git show -s --format=%ci > date_time.txt
+        - git log -n1 --format=%ci > date_time.txt
         - set /p date_time=<date_time.txt
         - echo %date_time%
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" ..
