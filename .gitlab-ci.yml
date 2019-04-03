@@ -13,8 +13,9 @@ ScopeFun-init:
         - cd sfBuild
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
-        - copy date.txt ./../sfSource/date.txt
-        - copy time.txt ./../sfSource/time.txt
+        - cd ..
+        - copy sfBuild/date.txt sfSource/date.txt
+        - copy sfBuild/time.txt sfSource/time.txt
         
 ScopeFun-exe:
     stage: build
