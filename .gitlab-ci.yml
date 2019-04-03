@@ -47,7 +47,7 @@ ScopeFun-src:
     tags:
         - ScopeFun
     script:
-        - cd sfSource
+        - cd sfBuild
         - set /p date=<date.txt
         - set /p time=<time.txt
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_7Z="false" -S .. -B .
