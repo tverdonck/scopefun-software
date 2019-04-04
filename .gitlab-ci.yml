@@ -24,7 +24,7 @@ ScopeFun-Win64:
         - set /p time=<time.txt
         - mkdir Windows\%date%-%time%
         - copy *.exe    Windows\%date%-%time%
-        - copy *.zip    Windows\%date%-%time%
+        - copy *.7z     Windows\%date%-%time%
         - copy *.sha512 Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
