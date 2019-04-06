@@ -25,6 +25,7 @@ Zip-Src:
     stage: zip-src
     tags:
         - ScopeFun
+    dependencies: []
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
@@ -36,6 +37,7 @@ Upload-Ftp:
     stage: ftp-upload
     tags:
         - ScopeFun
+    dependencies: []
     script:
         - cd sfSrc
         - powershell get-date -format {yyyyMMdd} > date.txt
