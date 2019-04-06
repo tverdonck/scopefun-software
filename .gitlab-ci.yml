@@ -20,6 +20,8 @@ ScopeFun-Win64:
         - mingw32-make package
         - copy *.exe    %cd%\..\ScopeFun-Software\artifacts
         - copy *.sha512 %cd%\..\ScopeFun-Software\artifacts
+        - del %cd%\..\ScopeFun-Software\bin\*.exe
+        - del %cd%\..\ScopeFun-Software\bin\*.pyd
         - mingw32-make package_source
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
