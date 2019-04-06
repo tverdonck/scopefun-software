@@ -26,6 +26,7 @@ ScopeFun-Win64:
     tags:
         - ScopeFun
     script:
+        - cd ..
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
@@ -37,7 +38,6 @@ ScopeFun-Win64:
     tags:
         - ScopeFun
     script:
-        - cd sfSrc
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
         - set /p date=<date.txt
