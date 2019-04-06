@@ -8,16 +8,19 @@ ScopeFun-Win64:
     artifacts:
       name: "ScopeFun-Win64"
       paths: 
-         - ./*.exe
-         - ./*.sha512
+         - artifacts/*.exe
+         - artifacts/*.sha512
     script:
+        - powershell New-Item -ItemType Directory -name artifacts -Force
         - cd ..
-        - powershell New-Item -ItemType Directory -name sfBuild  -Force
+        - powershell New-Item -ItemType Directory -name sfBuild -Force
         - cd sfBuild
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S ../ScopeFun-Software -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
-        - mingw32-make package_source
         - mingw32-make package
+        - copy *.exe    %cd%\..\ScopeFun-Software\artifacts
+        - copy *.sha512 %cd%\..\ScopeFun-Software\artifacts
+        - mingw32-make package_source
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
         - set /p date=<date.txt
