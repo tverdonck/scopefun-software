@@ -1,38 +1,53 @@
 stages:
-  - build
+  - build-exe
+  - build-src
+  - ftp-upload
   
 ScopeFun-Win64:
-    stage: build
+    stage: build-exe
     tags:
         - ScopeFun
     artifacts:
       name: "ScopeFun-Win64"
       paths: 
-         - artifacts/*.exe
-         - artifacts/*.sha512
+         - sfExe/*.exe
+         - sfExe/*.sha512
     script:
-        - powershell New-Item -ItemType Directory -name artifacts -Force
-        - cd ..
-        - powershell New-Item -ItemType Directory -name sfBuild -Force
-        - cd sfBuild
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S ../ScopeFun-Software -B .
+        - powershell New-Item -ItemType Directory -name sfExe -Force
+        - powershell New-Item -ItemType Directory -name sfSrc -Force
+        - cd sfExe
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
-        - copy *.exe    %cd%\..\ScopeFun-Software\artifacts
-        - copy *.sha512 %cd%\..\ScopeFun-Software\artifacts
-        - del /Q /S %cd%\..\ScopeFun-Software\artifacts\*.*
-        - rmdir %cd%\..\ScopeFun-Software\artifacts
-        - del %cd%\..\ScopeFun-Software\bin\*.exe
-        - del %cd%\..\ScopeFun-Software\bin\*.pyd
+        - del %cd%\..\bin\*.exe
+        - del %cd%\..\bin\*.pyd
+
+ScopeFun-Win64:
+    stage: build-src
+    tags:
+        - ScopeFun
+    script:
+        - powershell New-Item -ItemType Directory -name sfSrc -Force
+        - cd sfSrc
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
+        - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
+
+ScopeFun-Win64:
+    stage: ftp-upload
+    tags:
+        - ScopeFun
+    script:
+        - cd sfSrc
         - powershell get-date -format {yyyyMMdd} > date.txt
         - powershell get-date -format {HHmmss}   > time.txt
         - set /p date=<date.txt
         - set /p time=<time.txt
         - mkdir Windows\%date%-%time%
-        - copy *.exe    Windows\%date%-%time%
-        - copy *.7z     Windows\%date%-%time%
-        - copy *.sha512 Windows\%date%-%time%
+        - copy %cd%\..\sfExe\*.exe     Windows\%date%-%time%
+        - copy %cd%\..\sfExe\*.sha512  Windows\%date%-%time%
+        - copy *.7z                    Windows\%date%-%time%
+        - copy *.sha512                Windows\%date%-%time%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
