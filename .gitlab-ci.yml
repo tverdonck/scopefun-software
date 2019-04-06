@@ -20,7 +20,7 @@ ScopeFun-Win64:
         - mingw32-make package
         - copy *.exe    %cd%\..\ScopeFun-Software\artifacts
         - copy *.sha512 %cd%\..\ScopeFun-Software\artifacts
-        - del   %cd%\..\ScopeFun-Software\artifacts\*.*
+        - del /Q /S %cd%\..\ScopeFun-Software\artifacts\*.*
         - rmdir %cd%\..\ScopeFun-Software\artifacts
         - del %cd%\..\ScopeFun-Software\bin\*.exe
         - del %cd%\..\ScopeFun-Software\bin\*.pyd
