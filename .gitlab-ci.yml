@@ -8,8 +8,8 @@ ScopeFun-Win64:
     artifacts:
       name: "ScopeFun-Win64"
       paths: 
-         - *.exe
-         - *.sha512
+         - ./*.exe
+         - ./*.sha512
     script:
         - cd ..
         - powershell New-Item -ItemType Directory -name sfBuild  -Force
