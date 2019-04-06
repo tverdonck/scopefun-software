@@ -4,7 +4,7 @@ stages:
   - ftp-upload
   
 Build-Win64:
-    stage: build-exe
+    stage: build
     tags:
         - ScopeFun
     artifacts:
