@@ -1,9 +1,9 @@
 stages:
-  - build-exe
-  - build-src
+  - build
+  - zip-src
   - ftp-upload
   
-ScopeFun-Win64:
+Build-Win64:
     stage: build-exe
     tags:
         - ScopeFun
@@ -21,8 +21,8 @@ ScopeFun-Win64:
         - del %cd%\..\bin\*.exe
         - del %cd%\..\bin\*.pyd
 
-ScopeFun-Win64:
-    stage: build-src
+Zip-Src:
+    stage: zip-src
     tags:
         - ScopeFun
     script:
@@ -33,7 +33,7 @@ ScopeFun-Win64:
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
 
-ScopeFun-Win64:
+Upload-Ftp:
     stage: ftp-upload
     tags:
         - ScopeFun
