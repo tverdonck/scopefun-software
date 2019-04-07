@@ -16,6 +16,9 @@ Build-Win64:
       paths: 
          - sfExe/
          - sfSrc/
+         - lib/libusb-1.0.22/sfBuild64r/
+         - lib/SDL2-2.0.9/sfBuild64r/
+         - lib/wxWidgets-3.0.4/sfBuild64r/
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
         - cd sfExe
@@ -33,6 +36,9 @@ Zip-Src:
       paths: 
          - sfExe/
          - sfSrc/
+         - lib/libusb-1.0.22/sfBuild64r/
+         - lib/SDL2-2.0.9/sfBuild64r/
+         - lib/wxWidgets-3.0.4/sfBuild64r/
     dependencies: []
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
@@ -50,6 +56,9 @@ Upload-Ftp:
       paths: 
          - sfExe/
          - sfSrc/
+         - lib/libusb-1.0.22/sfBuild64r/
+         - lib/SDL2-2.0.9/sfBuild64r/
+         - lib/wxWidgets-3.0.4/sfBuild64r/
     script:
         - cd sfSrc
         - powershell get-date -format {yyyyMMdd} > date.txt
