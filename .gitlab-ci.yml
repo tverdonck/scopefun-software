@@ -12,6 +12,10 @@ Build-Win64:
       paths: 
          - sfExe/*.exe
          - sfExe/*.sha512
+    cache:
+      paths: 
+         - sfExe/
+         - sfSrc/
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
         - cd sfExe
@@ -25,6 +29,10 @@ Zip-Src:
     stage: zip-src
     tags:
         - ScopeFun
+    cache:
+      paths: 
+         - sfExe/
+         - sfSrc/
     dependencies: []
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
@@ -38,6 +46,10 @@ Upload-Ftp:
     tags:
         - ScopeFun
     dependencies: []
+    cache:
+      paths: 
+         - sfExe/
+         - sfSrc/
     script:
         - cd sfSrc
         - powershell get-date -format {yyyyMMdd} > date.txt
