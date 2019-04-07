@@ -237,7 +237,18 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open Source Oscilloscope" )
 set(CPACK_PACKAGE_CHECKSUM SHA512)
 
 #source
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/;/\\\\sfExe/;/\\\\sfSrc/;/\\\\sfBuild/;/\\\\sfBuild64r/;/\\\\sfBuild64d/;/\\\\sfBuild32r/;/\\\\sfBuild32d/")
+set(CPACK_SOURCE_IGNORE_FILES  "" 
+"/\\\\.git/;"
+"/\\\\sfExe/;"
+"/\\\\sfSrc/;"
+"/\\\\lib/libusb-1.0.22/sfBuild64r/;"
+"/\\\\lib/libusb-1.0.22/src/;"
+"/\\\\lib/libusb-1.0.22/tmp/;"
+"/\\\\lib/SDL2-2.0.9/sfBuild64r/;"
+"/\\\\lib/SDL2-2.0.9/tmp/;"
+"/\\\\lib/wxWidgets-3.0.4/sfBuild64r/;"
+"/\\\\lib/wxWidgets-3.0.4/src/wxWidgets304-stamp/;"
+)
 
 # pack
 include(CPack)
