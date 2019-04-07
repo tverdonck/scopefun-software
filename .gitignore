@@ -1,6 +1,9 @@
 /sfExe
 /sfSrc
 /bin/api
+/bin/sfServer64r.exe
+/bin/sfScope64r.exe
+/bin/_scopefunapi.pyd
 /lib/libusb-1.0.22/sfBuild64r
 /lib/libusb-1.0.22/src
 /lib/libusb-1.0.22/tmp
