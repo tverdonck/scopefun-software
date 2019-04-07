@@ -30,25 +30,25 @@ Zip-Src:
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
 
-Upload-Ftp:
-    stage: ftp-upload
-    tags:
-        - ScopeFun
-    dependencies: []
-    script:
-        - cd sfSrc
-        - powershell get-date -format {yyyyMMdd} > date.txt
-        - powershell get-date -format {HHmmss}   > time.txt
-        - set /p date=<date.txt
-        - set /p time=<time.txt
-        - mkdir Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.exe     Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.sha512  Windows\%date%-%time%
-        - copy *.7z                    Windows\%date%-%time%
-        - copy *.sha512                Windows\%date%-%time%
-        - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
-                                   "cd Versions"^
-                                   "cd Windows"^
-                                   "put Windows\%date%-%time%"^
-                                   "close"^
-                                   "exit"
+#Upload-Ftp:
+#    stage: ftp-upload
+#    tags:
+#        - ScopeFun
+#    dependencies: []
+#    script:
+#        - cd sfSrc
+#        - powershell get-date -format {yyyyMMdd} > date.txt
+#        - powershell get-date -format {HHmmss}   > time.txt
+#        - set /p date=<date.txt
+#        - set /p time=<time.txt
+#        - mkdir Windows\%date%-%time%
+#        - copy %cd%\..\sfExe\*.exe     Windows\%date%-%time%
+#        - copy %cd%\..\sfExe\*.sha512  Windows\%date%-%time%
+#        - copy *.7z                    Windows\%date%-%time%
+#        - copy *.sha512                Windows\%date%-%time%
+#        - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
+#                                   "cd Versions"^
+#                                   "cd Windows"^
+#                                   "put Windows\%date%-%time%"^
+#                                   "close"^
+#                                   "exit"
