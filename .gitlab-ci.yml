@@ -1,7 +1,6 @@
 stages:
   - build
   - zip-src
-  - ftp-upload
   
 Build-Win64:
     stage: build
@@ -18,8 +17,6 @@ Build-Win64:
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
-        - del %cd%\..\bin\*.exe
-        - del %cd%\..\bin\*.pyd
 
 Zip-Src:
     stage: zip-src
