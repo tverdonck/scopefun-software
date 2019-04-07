@@ -251,6 +251,7 @@ set(CPACK_SOURCE_IGNORE_FILES  ""
 "/\\\\lib/SDL2-2.0.9/tmp/;"
 "/\\\\lib/wxWidgets-3.0.4/sfBuild64r/;"
 "/\\\\lib/wxWidgets-3.0.4/src/wxWidgets304-stamp/;"
+"/\\\\lib/wxWidgets-3.0.4/tmp/;"
 )
 
 # pack
