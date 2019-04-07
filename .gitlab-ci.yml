@@ -1,6 +1,6 @@
 stages:
-  - zip-src
   - build
+  - zip-src
   - ftp-upload
   
 Build-Win64:
