@@ -1,1 +1,0 @@
-cmd='sh;../configure;--disable-shared;--with-macosx-version-min=10.9'
