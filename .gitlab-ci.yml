@@ -1,7 +1,7 @@
 stages:
   - build
-  - src7z
-  - ftpup
+  - source
+  - upload
   
 Build-Win64:
     stage: build
@@ -23,7 +23,7 @@ Build-Win64:
         - mingw32-make package
 
 Zip-Src:
-    stage: src7z
+    stage: source
     tags:
         - ScopeFun
     cache:
@@ -38,7 +38,7 @@ Zip-Src:
         - mingw32-make package_source
 
 Upload-Ftp:
-    stage: ftpup
+    stage: upload
     tags:
         - ScopeFun
      cache:
