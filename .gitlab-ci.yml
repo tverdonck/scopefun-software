@@ -37,7 +37,8 @@ Build-Exe-Mac:
     script:
         - mkdir sfExe
         - cd sfExe
-        - open /Applications/CMake.app --args -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DRAGNDROP="true" -S .. -B .
+        - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DRAGNDROP="true" -S .. -B .
         - make package
 
 Zip-Source:
