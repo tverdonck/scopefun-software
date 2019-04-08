@@ -55,6 +55,22 @@ Zip-Source:
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
+        
+Zip-Source-Mac:
+    stage: zip-source
+    tags:
+        - ScopeFunMac
+    cache:
+        key: "%CI_JOB_NAME%"
+        untracked: true
+    dependencies: []
+    script:
+        - mkdir sfSrc
+        - cd sfSrc
+        - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
+        - set "PATH=%PATH%;c:\msys\1.0\bin"
+        - make package_source
 
 Upload-Ftp:
     stage: upload-ftp
