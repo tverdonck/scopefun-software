@@ -13,6 +13,7 @@ Build-Win64:
          - sfExe/*.exe
          - sfExe/*.sha512
     cache:
+        key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
@@ -26,6 +27,7 @@ Zip-Src:
     tags:
         - ScopeFun
     cache:
+        key: "empty-cache"
         untracked: true
     dependencies: []
     script:
@@ -39,7 +41,8 @@ Upload-Ftp:
     stage: ftpup
     tags:
         - ScopeFun
-    cache:
+     cache:
+        key: "empty-cache"
         untracked: true
     dependencies: []
     script:
