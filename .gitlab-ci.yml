@@ -27,8 +27,8 @@ Zip-Src:
     tags:
         - ScopeFun
     cache:
-        key: "%CI_JOB_NAME%"
-        untracked: true
+       key: "%CI_JOB_NAME%"
+       untracked: true
     dependencies: []
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
