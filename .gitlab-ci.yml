@@ -22,6 +22,24 @@ Build-Exe:
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
 
+Build-Exe-Mac:
+    stage: build-exe
+    tags:
+        - ScopeFunMac
+    artifacts:
+      name: "ScopeFun-Mac64"
+      paths: 
+         - sfExe/*.dmg
+         - sfExe/*.sha512
+    cache:
+        key: "%CI_COMMIT_REF_SLUG%"
+        untracked: true
+    script:
+        - mkdir sfExe
+        - cd sfExe
+        - open /Applications/CMake.app --args -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DRAGNDROP="true" -S .. -B .
+        - make package
+
 Zip-Source:
     stage: zip-source
     tags:
