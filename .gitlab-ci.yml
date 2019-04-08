@@ -27,7 +27,7 @@ Zip-Src:
     tags:
         - ScopeFun
     cache:
-        key: "empty-cache"
+        key: empty-cache
         untracked: true
     dependencies: []
     script:
@@ -42,7 +42,7 @@ Upload-Ftp:
     tags:
         - ScopeFun
      cache:
-        key: "empty-cache"
+        key: empty-cache
         untracked: true
     dependencies: []
     script:
