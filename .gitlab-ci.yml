@@ -41,6 +41,24 @@ Build-Exe-Mac:
         - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DRAGNDROP="true" -S .. -B .
         - make package
 
+Build-Exe-Linux:
+    stage: build-exe
+    tags:
+        - ScopeFunLinux
+    artifacts:
+      name: "ScopeFun-Linux64"
+      paths: 
+         - sfExe/*.deb
+         - sfExe/*.sha512
+    cache:
+        key: "%CI_COMMIT_REF_SLUG%"
+        untracked: true
+    script:
+        - mkdir sfExe
+        - cd sfExe
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -S .. -B .
+        - make package
+
 Zip-Source:
     stage: zip-source
     tags:
