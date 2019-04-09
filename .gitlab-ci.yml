@@ -124,6 +124,28 @@ Upload-Ftp-Linux:
               "put Linux\$cDATE-$cTIME"
               "close"
               "exit"
+              
+Upload-Ftp-Mac:
+    stage: upload-ftp
+    tags:
+        - ScopeFunMac
+    dependencies: []
+    script:
+        - cd sfSrc
+        - cDATE=$(date +"%m%d%Y")
+        - cTIME=$(date +"%H%M%S")
+        - mkdir -p Mac/$cDATE-$cTIME
+        - copy ./../sfExe/*.deb     Mac\$cDATE-$cTIME
+        - copy ./../sfExe/*.sha512  Mac\$cDATE-$cTIME
+        - copy *.7z                 Mac\$cDATE-$cTIME
+        - copy *.sha512             Mac\$cDATE-$cTIME
+        - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
+              "cd Versions"
+              "cd Mac"
+              "put Mac\$cDATE-$cTIME"
+              "close"
+              "exit"
+
 Upload-Ftp:
     stage: upload-ftp
     tags:
