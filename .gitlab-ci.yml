@@ -104,25 +104,23 @@ Zip-Source-Mac:
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
         - make package_source
 
-Upload-Ftp:
+Upload-Ftp-Linux:
     stage: upload-ftp
     tags:
-        - ScopeFun
+        - ScopeFunLinux
     dependencies: []
     script:
         - cd sfSrc
-        - powershell get-date -format {yyyyMMdd} > date.txt
-        - powershell get-date -format {HHmmss}   > time.txt
-        - set /p date=<date.txt
-        - set /p time=<time.txt
-        - mkdir Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.exe     Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.sha512  Windows\%date%-%time%
-        - copy *.7z                    Windows\%date%-%time%
-        - copy *.sha512                Windows\%date%-%time%
-        - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
-                                   "cd Versions"^
-                                   "cd Windows"^
-                                   "put Windows\%date%-%time%"^
-                                   "close"^
-                                   "exit"
+        - cDATE=$(date +"%m%d%Y")
+        - cTIME=$(date +"%H%M%S")
+        - mkdir -p Linux/$cDATE-$cTIME
+        - copy ./../sfExe/*.deb     Linux\$cDATE-$cTIME
+        - copy ./../sfExe/*.sha512  Linux\$cDATE-$cTIME
+        - copy *.7z                 Linux\$cDATE-$cTIME
+        - copy *.sha512             Linux\$cDATE-$cTIME
+        - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
+              "cd Versions"
+              "cd Linux"
+              "put Linux\$cDATE-$cTIME"
+              "close"
+              "exit"
