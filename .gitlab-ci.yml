@@ -55,7 +55,7 @@ Build-Exe-Linux:
         key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
     script:
-        - mkdir sfExe
+        - mkdir -p sfExe
         - cd sfExe
         - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" ..
         - make package
@@ -84,7 +84,7 @@ Zip-Source-Linux:
         untracked: true
     dependencies: []
     script:
-        - mkdir sfSrc
+        - mkdir -p sfSrc
         - cd sfSrc
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
         - make package_source
