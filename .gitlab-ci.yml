@@ -37,6 +37,7 @@ Build-Exe-Mac:
     script:
         - mkdir sfExe
         - cd sfExe
+        - chmod +x ./lib/wxWidgets-3.0.4/src/stc/gen_iface.py
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DRAGNDROP="true" -S .. -B .
         - make package
