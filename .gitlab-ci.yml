@@ -75,6 +75,20 @@ Zip-Source:
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
         
+Zip-Source-Linux:
+    stage: zip-source
+    tags:
+        - ScopeFunLinux
+    cache:
+        key: "%CI_JOB_NAME%"
+        untracked: true
+    dependencies: []
+    script:
+        - mkdir sfSrc
+        - cd sfSrc
+        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
+        - make package_source
+        
 Zip-Source-Mac:
     stage: zip-source
     tags:
@@ -88,7 +102,6 @@ Zip-Source-Mac:
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
-        - set "PATH=%PATH%;c:\msys\1.0\bin"
         - make package_source
 
 Upload-Ftp:
