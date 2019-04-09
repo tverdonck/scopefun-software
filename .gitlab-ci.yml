@@ -56,7 +56,8 @@ Build-Exe-Linux:
         untracked: true
     script:
         - mkdir sfExe
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -B sfExe
+        - cd sfExe
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" ..
         - cd sfExe
         - make package
 
