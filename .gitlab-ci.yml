@@ -1,14 +1,20 @@
 stages:
-  - build-exe
-  - zip-source
-  - upload-ftp
+  - win-build
+  - win-zip
+  - win-upload
+  - linux-build
+  - linux-zip
+  - linux-upload
+  - mac-build
+  - mac-zip
+  - mac-upload
         
 #-------------------------------------------------------------------------------
 # build 
 #-------------------------------------------------------------------------------
 
 Build-Exe:
-    stage: build-exe
+    stage: win-build
     tags:
         - ScopeFun
     artifacts:
@@ -27,7 +33,7 @@ Build-Exe:
         - mingw32-make package
 
 Build-Exe-Mac:
-    stage: build-exe
+    stage: mac-build
     tags:
         - ScopeFunMac
     artifacts:
@@ -48,7 +54,7 @@ Build-Exe-Mac:
         - make package
 
 Build-Exe-Linux:
-    stage: build-exe
+    stage: linux-build
     tags:
         - ScopeFunLinux
     artifacts:
@@ -70,7 +76,7 @@ Build-Exe-Linux:
 #-------------------------------------------------------------------------------
 
 Zip-Source:
-    stage: zip-source
+    stage: win-zip
     tags:
         - ScopeFun
     cache:
@@ -86,7 +92,7 @@ Zip-Source:
     when: always
         
 Zip-Source-Linux:
-    stage: zip-source
+    stage: linux-zip
     tags:
         - ScopeFunLinux
     cache:
@@ -101,7 +107,7 @@ Zip-Source-Linux:
     when: always
         
 Zip-Source-Mac:
-    stage: zip-source
+    stage: mac-zip
     tags:
         - ScopeFunMac
     cache:
@@ -121,7 +127,7 @@ Zip-Source-Mac:
 #-------------------------------------------------------------------------------
 
 Upload-Ftp-Linux:
-    stage: upload-ftp
+    stage: linux-upload
     tags:
         - ScopeFunLinux
     dependencies: []
@@ -139,10 +145,9 @@ Upload-Ftp-Linux:
               "put Linux\$COMMIT_TIME"
               "close"
               "exit"
-    when: always
               
 Upload-Ftp-Mac:
-    stage: upload-ftp
+    stage: mac-upload
     tags:
         - ScopeFunMac
     dependencies: []
@@ -160,10 +165,9 @@ Upload-Ftp-Mac:
               "put Mac\$COMMIT_TIME"
               "close"
               "exit"
-    when: always
      
 Upload-Ftp:
-    stage: upload-ftp
+    stage: win-upload
     tags:
         - ScopeFun
     dependencies: []
@@ -182,4 +186,3 @@ Upload-Ftp:
                                    "put Windows\%COMMIT_TIME%"^
                                    "close"^
                                    "exit"
-    when: always
