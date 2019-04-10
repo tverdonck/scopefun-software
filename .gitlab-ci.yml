@@ -1,14 +1,12 @@
 stages:
-  - pkg
-  - zip
-  - ftp
+  - exe-zip-ftp
         
 #-------------------------------------------------------------------------------
 # build 
 #-------------------------------------------------------------------------------
 
 Build-Exe:
-    stage: pkg
+    stage: exe-zip-ftp
     tags:
         - ScopeFun
     artifacts:
@@ -27,7 +25,7 @@ Build-Exe:
         - mingw32-make package
 
 Build-Exe-Mac:
-    stage: pkg
+    stage: exe-zip-ftp
     tags:
         - ScopeFunMac
     artifacts:
@@ -48,7 +46,7 @@ Build-Exe-Mac:
         - make package
 
 Build-Exe-Linux:
-    stage: pkg
+    stage: exe-zip-ftp
     tags:
         - ScopeFunLinux
     artifacts:
@@ -70,7 +68,7 @@ Build-Exe-Linux:
 #-------------------------------------------------------------------------------
 
 Zip-Source:
-    stage: zip
+    stage: exe-zip-ftp
     tags:
         - ScopeFun
     cache:
@@ -86,7 +84,7 @@ Zip-Source:
     when: always
         
 Zip-Source-Linux:
-    stage: zip
+    stage: exe-zip-ftp
     tags:
         - ScopeFunLinux
     cache:
@@ -101,7 +99,7 @@ Zip-Source-Linux:
     when: always
         
 Zip-Source-Mac:
-    stage: zip
+    stage: exe-zip-ftp
     tags:
         - ScopeFunMac
     cache:
@@ -121,7 +119,7 @@ Zip-Source-Mac:
 #-------------------------------------------------------------------------------
 
 Upload-Ftp-Linux:
-    stage: ftp
+    stage: exe-zip-ftp
     tags:
         - ScopeFunLinux
     dependencies: []
@@ -141,7 +139,7 @@ Upload-Ftp-Linux:
               "exit"
               
 Upload-Ftp-Mac:
-    stage: ftp
+    stage: exe-zip-ftp
     tags:
         - ScopeFunMac
     dependencies: []
@@ -161,7 +159,7 @@ Upload-Ftp-Mac:
               "exit"
      
 Upload-Ftp:
-    stage: ftp
+    stage: exe-zip-ftp
     tags:
         - ScopeFun
     dependencies: []
