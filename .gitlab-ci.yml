@@ -2,6 +2,10 @@ stages:
   - build-exe
   - zip-source
   - upload-ftp
+        
+#-------------------------------------------------------------------------------
+# build 
+#-------------------------------------------------------------------------------
 
 Build-Exe:
     stage: build-exe
@@ -61,6 +65,10 @@ Build-Exe-Linux:
         - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -D CPACK_BINARY_TZ="false" -D CPACK_BINARY_TGZ="false" -D CPACK_BINARY_STGZ="false" ..
         - make package
 
+#-------------------------------------------------------------------------------
+# zip 
+#-------------------------------------------------------------------------------
+
 Zip-Source:
     stage: zip-source
     tags:
@@ -104,6 +112,10 @@ Zip-Source-Mac:
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
         - make package_source
+        
+#-------------------------------------------------------------------------------
+# upload
+#-------------------------------------------------------------------------------
 
 Upload-Ftp-Linux:
     stage: upload-ftp
@@ -112,17 +124,16 @@ Upload-Ftp-Linux:
     dependencies: []
     script:
         - cd sfSrc
-        - cDATE=$(date +"%m%d%Y")
-        - cTIME=$(date +"%H%M%S")
-        - mkdir -p Linux/$cDATE-$cTIME
-        - copy ./../sfExe/*.deb     Linux\$cDATE-$cTIME
-        - copy ./../sfExe/*.sha512  Linux\$cDATE-$cTIME
-        - copy *.7z                 Linux\$cDATE-$cTIME
-        - copy *.sha512             Linux\$cDATE-$cTIME
+        - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
+        - mkdir -p Linux/COMMIT_TIME
+        - copy ./../sfExe/*.deb     Linux\$COMMIT_TIME
+        - copy ./../sfExe/*.sha512  Linux\$COMMIT_TIME
+        - copy *.7z                 Linux\$COMMIT_TIME
+        - copy *.sha512             Linux\$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Linux"
-              "put Linux\$cDATE-$cTIME"
+              "put Linux\$COMMIT_TIME"
               "close"
               "exit"
               
@@ -133,17 +144,16 @@ Upload-Ftp-Mac:
     dependencies: []
     script:
         - cd sfSrc
-        - cDATE=$(date +"%m%d%Y")
-        - cTIME=$(date +"%H%M%S")
-        - mkdir -p Mac/$cDATE-$cTIME
-        - copy ./../sfExe/*.deb     Mac\$cDATE-$cTIME
-        - copy ./../sfExe/*.sha512  Mac\$cDATE-$cTIME
-        - copy *.7z                 Mac\$cDATE-$cTIME
-        - copy *.sha512             Mac\$cDATE-$cTIME
+        - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
+        - mkdir -p Mac/COMMIT_TIME
+        - copy ./../sfExe/*.deb     Mac\$COMMIT_TIME
+        - copy ./../sfExe/*.sha512  Mac\$COMMIT_TIME
+        - copy *.7z                 Mac\$COMMIT_TIME
+        - copy *.sha512             Mac\$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Mac"
-              "put Mac\$cDATE-$cTIME"
+              "put Mac\$COMMIT_TIME"
               "close"
               "exit"
 
@@ -154,18 +164,16 @@ Upload-Ftp:
     dependencies: []
     script:
         - cd sfSrc
-        - powershell get-date -format {yyyyMMdd} > date.txt
-        - powershell get-date -format {HHmmss}   > time.txt
-        - set /p date=<date.txt
-        - set /p time=<time.txt
-        - mkdir Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.exe     Windows\%date%-%time%
-        - copy %cd%\..\sfExe\*.sha512  Windows\%date%-%time%
-        - copy *.7z                    Windows\%date%-%time%
-        - copy *.sha512                Windows\%date%-%time%
+        - git show -s --format=%ct $CI_COMMIT_SHA)>commit_time.txt
+        - set -p COMMIT_TIME=<commit_time.txt
+        - mkdir Windows\%COMMIT_TIME%
+        - copy %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
+        - copy %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
+        - copy *.7z                    Windows\%COMMIT_TIME%
+        - copy *.sha512                Windows\%COMMIT_TIME%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
-                                   "put Windows\%date%-%time%"^
+                                   "put Windows\%COMMIT_TIME%"^
                                    "close"^
                                    "exit"
