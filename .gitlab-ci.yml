@@ -139,7 +139,7 @@ Upload-Ftp-Linux:
               "put Linux\$COMMIT_TIME"
               "close"
               "exit"
-     when: always
+    when: always
               
 Upload-Ftp-Mac:
     stage: upload-ftp
@@ -182,4 +182,4 @@ Upload-Ftp:
                                    "put Windows\%COMMIT_TIME%"^
                                    "close"^
                                    "exit"
-     when: always
+    when: always
