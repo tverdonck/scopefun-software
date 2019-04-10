@@ -133,8 +133,8 @@ Zip-Source-Mac:
 
 Upload-Ftp-Linux:
     stage: ftp
-    environment: l
-        name: inux
+    environment:
+        name: linux
     tags:
         - ScopeFunLinux
     dependencies: []
