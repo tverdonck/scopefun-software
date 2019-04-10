@@ -83,6 +83,7 @@ Zip-Source:
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
+    when: always
         
 Zip-Source-Linux:
     stage: zip-source
@@ -97,6 +98,7 @@ Zip-Source-Linux:
         - cd sfSrc
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
         - make package_source
+    when: always
         
 Zip-Source-Mac:
     stage: zip-source
@@ -112,6 +114,7 @@ Zip-Source-Mac:
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
         - make package_source
+    when: always
         
 #-------------------------------------------------------------------------------
 # upload
@@ -136,6 +139,7 @@ Upload-Ftp-Linux:
               "put Linux\$COMMIT_TIME"
               "close"
               "exit"
+     when: always
               
 Upload-Ftp-Mac:
     stage: upload-ftp
@@ -156,7 +160,8 @@ Upload-Ftp-Mac:
               "put Mac\$COMMIT_TIME"
               "close"
               "exit"
-
+    when: always
+     
 Upload-Ftp:
     stage: upload-ftp
     tags:
@@ -177,3 +182,4 @@ Upload-Ftp:
                                    "put Windows\%COMMIT_TIME%"^
                                    "close"^
                                    "exit"
+     when: always
