@@ -9,7 +9,8 @@ stages:
 
 Build-Exe:
     stage: exe
-    environment: win
+    environment: 
+        name: win
     tags:
         - ScopeFun
     artifacts:
@@ -29,7 +30,8 @@ Build-Exe:
 
 Build-Exe-Mac:
     stage: exe
-    environment: mac
+    environment: 
+        name: mac
     tags:
         - ScopeFunMac
     artifacts:
@@ -51,7 +53,8 @@ Build-Exe-Mac:
 
 Build-Exe-Linux:
     stage: exe
-    environment: linux
+    environment: 
+        name: linux
     tags:
         - ScopeFunLinux
     artifacts:
@@ -74,7 +77,8 @@ Build-Exe-Linux:
 
 Zip-Source:
     stage: zip
-    environment: win
+    environment: 
+        name: win
     tags:
         - ScopeFun
     cache:
@@ -107,7 +111,8 @@ Zip-Source-Linux:
         
 Zip-Source-Mac:
     stage: zip
-    environment: mac
+    environment: 
+        name: mac
     tags:
         - ScopeFunMac
     cache:
@@ -128,7 +133,8 @@ Zip-Source-Mac:
 
 Upload-Ftp-Linux:
     stage: ftp
-    environment: linux
+    environment: l
+        name: inux
     tags:
         - ScopeFunLinux
     dependencies: []
@@ -149,7 +155,8 @@ Upload-Ftp-Linux:
               
 Upload-Ftp-Mac:
     stage: ftp
-    environment: mac
+    environment: 
+        name: mac
     tags:
         - ScopeFunMac
     dependencies: []
@@ -170,7 +177,8 @@ Upload-Ftp-Mac:
      
 Upload-Ftp:
     stage: ftp
-    environment: win
+    environment: 
+        name: win
     tags:
         - ScopeFun
     dependencies: []
