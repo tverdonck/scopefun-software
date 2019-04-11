@@ -108,7 +108,7 @@ Zip-Source-Linux:
     script:
         - mkdir -p sfSrc
         - cd sfSrc
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
         - make package_source
     when: always
         
@@ -126,7 +126,7 @@ Zip-Source-Mac:
         - mkdir sfSrc
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
         - make package_source
     when: always
         
