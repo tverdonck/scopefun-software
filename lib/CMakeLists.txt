@@ -80,7 +80,7 @@ externalproject_add(Python2716
     PREFIX            ${CMAKE_SOURCE_DIR}/lib/Python-2.7.16
     BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/sfBuild${SCOPEFUN_TYPE} 
     SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/Python-2.7.16
-    CONFIGURE_COMMAND sh ../configure --enable-framework
+    CONFIGURE_COMMAND sh ../configure --enable-framework --with-pic
     BUILD_COMMAND     make 
     UPDATE_COMMAND    ""
     INSTALL_COMMAND   ""
