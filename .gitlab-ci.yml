@@ -4,7 +4,7 @@ stages:
   - ftp
         
 #-------------------------------------------------------------------------------
-# build 
+# exe 
 #-------------------------------------------------------------------------------
 
 Build-Exe:
@@ -21,6 +21,7 @@ Build-Exe:
     cache:
         key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
+    allow_failure: true
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
         - cd sfExe
@@ -42,6 +43,7 @@ Build-Exe-Mac:
     cache:
         key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
+    allow_failure: true
     script:
         - mkdir sfExe
         - cd sfExe
@@ -65,6 +67,7 @@ Build-Exe-Linux:
     cache:
         key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
+    allow_failure: true
     script:
         - mkdir -p sfExe
         - cd sfExe
@@ -128,7 +131,7 @@ Zip-Source-Mac:
     when: always
         
 #-------------------------------------------------------------------------------
-# upload
+# ftp
 #-------------------------------------------------------------------------------
 
 Upload-Ftp-Linux:
