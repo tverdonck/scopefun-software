@@ -88,6 +88,7 @@ Zip-Source:
         key: "%CI_JOB_NAME%"
         untracked: true
     dependencies: []
+    allow_failure: true
     artifacts:
       name: "ScopeFun-Src-Win"
       paths: 
@@ -115,6 +116,7 @@ Zip-Source-Linux:
          - sfSrc/*.7z
          - sfSrc/*.sha512
     dependencies: []
+    allow_failure: true
     script:
         - mkdir -p sfSrc
         - cd sfSrc
@@ -137,6 +139,7 @@ Zip-Source-Mac:
          - sfSrc/*.7z
          - sfSrc/*.sha512
     dependencies: []
+    allow_failure: true
     script:
         - mkdir sfSrc
         - cd sfSrc
@@ -172,6 +175,7 @@ Upload-Ftp-Linux:
               "put Linux\$COMMIT_TIME"
               "close"
               "exit"
+    when: always
               
 Upload-Ftp-Mac:
     stage: ftp
@@ -196,6 +200,7 @@ Upload-Ftp-Mac:
               "put Mac\$COMMIT_TIME"
               "close"
               "exit"
+    when: always
      
 Upload-Ftp:
     stage: ftp
@@ -221,3 +226,4 @@ Upload-Ftp:
                                    "put Windows\%COMMIT_TIME%"^
                                    "close"^
                                    "exit"
+    when: always
