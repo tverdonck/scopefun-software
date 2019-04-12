@@ -88,6 +88,11 @@ Zip-Source:
         key: "%CI_JOB_NAME%"
         untracked: true
     dependencies: []
+    artifacts:
+      name: "ScopeFun-Src-Win"
+      paths: 
+         - sfSrc/*.7z
+         - sfSrc/*.sha512
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
@@ -104,6 +109,11 @@ Zip-Source-Linux:
     cache:
         key: "%CI_JOB_NAME%"
         untracked: true
+    artifacts:
+      name: "ScopeFun-Src-Linux"
+      paths: 
+         - sfSrc/*.7z
+         - sfSrc/*.sha512
     dependencies: []
     script:
         - mkdir -p sfSrc
@@ -121,12 +131,17 @@ Zip-Source-Mac:
     cache:
         key: "%CI_JOB_NAME%"
         untracked: true
+    artifacts:
+      name: "ScopeFun-Src-Mac"
+      paths: 
+         - sfSrc/*.7z
+         - sfSrc/*.sha512
     dependencies: []
     script:
         - mkdir sfSrc
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="true" -S .. -B .
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - make package_source
     when: always
         
@@ -140,7 +155,9 @@ Upload-Ftp-Linux:
         name: linux
     tags:
         - ScopeFunLinux
-    dependencies: []
+    dependencies:
+        - Build-Exe-Linux
+        - Zip-Source-Linux
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
@@ -162,7 +179,9 @@ Upload-Ftp-Mac:
         name: mac
     tags:
         - ScopeFunMac
-    dependencies: []
+    dependencies:
+        - Build-Exe-Mac
+        - Zip-Source-Mac
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
@@ -184,7 +203,9 @@ Upload-Ftp:
         name: win
     tags:
         - ScopeFun
-    dependencies: []
+    dependencies:
+        - Build-Exe
+        - Zip-Source
     script:
         - cd sfSrc
         - git show -s --format=%ct $CI_COMMIT_SHA)>commit_time.txt
