@@ -45,7 +45,7 @@ Build-Exe-Mac:
          - sfExe/*.sha512
     allow_failure: true
     script:
-        - mkdir sfExe
+        - mkdir -p sfExe
         - cd sfExe
         - chmod +x ../lib/wxWidgets-3.0.4/src/stc/gen_iface.py
         - chmod +x ../lib/libusb-1.0.22/install-sh
@@ -134,7 +134,7 @@ Zip-Source-Mac:
     dependencies: []
     allow_failure: true
     script:
-        - mkdir sfSrc
+        - mkdir -p sfSrc
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
