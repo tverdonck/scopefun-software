@@ -35,6 +35,9 @@ Build-Exe-Mac:
         name: mac
     tags:
         - ScopeFunMac
+    cache:
+        key: "${CI_COMMIT_REF_SLUG}"
+        untracked: true
     artifacts:
       name: "ScopeFun-Mac64"
       paths: 
