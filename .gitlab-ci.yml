@@ -189,7 +189,9 @@ Upload-Ftp-Mac:
         - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
-        - ftp "ftp://$FTP_USERNAME:$FTP_PASSWORD@ftp.scopefun.com/ "
+        - ftp "ftp.scopefun.com"
+        - "$FTP_USERNAME"
+        - "$FTP_PASSWORD"
         - "cd Versions"
         - "cd Mac"
         - "put Mac/$COMMIT_TIME"
