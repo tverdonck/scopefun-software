@@ -159,10 +159,10 @@ Upload-Ftp-Linux:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p Linux/$COMMIT_TIME
-        - copy ./../sfExe/*.deb     Linux/$COMMIT_TIME
-        - copy ./../sfExe/*.sha512  Linux/$COMMIT_TIME
-        - copy *.gz                 Linux/$COMMIT_TIME
-        - copy *.sha512             Linux/$COMMIT_TIME
+        - cp ./../sfExe/*.deb     Linux/$COMMIT_TIME
+        - cp ./../sfExe/*.sha512  Linux/$COMMIT_TIME
+        - cp *.gz                 Linux/$COMMIT_TIME
+        - cp *.sha512             Linux/$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Linux"
@@ -212,10 +212,10 @@ Upload-Ftp:
         - git show -s --format=%ct $CI_COMMIT_SHA)>commit_time.txt
         - set -p COMMIT_TIME=<commit_time.txt
         - mkdir Windows\%COMMIT_TIME%
-        - cp %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
-        - cp %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
-        - cp *.7z                    Windows\%COMMIT_TIME%
-        - cp *.sha512                Windows\%COMMIT_TIME%
+        - copy %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
+        - copy %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
+        - copy *.7z                    Windows\%COMMIT_TIME%
+        - copy *.sha512                Windows\%COMMIT_TIME%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
