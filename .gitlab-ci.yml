@@ -163,7 +163,7 @@ Upload-Ftp-Linux:
         - cp ./../sfExe/*.sha512  Linux/$COMMIT_TIME
         - cp *.gz                 Linux/$COMMIT_TIME
         - cp *.sha512             Linux/$COMMIT_TIME
-        - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
+        - ftp "ftp://$FTP_USERNAME:$FTP_PASSWORD@ftp.scopefun.com/ "
               "cd Versions"
               "cd Linux"
               "put Linux/$COMMIT_TIME"
@@ -189,7 +189,7 @@ Upload-Ftp-Mac:
         - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
-        - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
+        - ftp "ftp://$FTP_USERNAME:$FTP_PASSWORD@ftp.scopefun.com/ "
         - "cd Versions"
         - "cd Mac"
         - "put Mac/$COMMIT_TIME"
