@@ -163,7 +163,7 @@ Upload-Ftp-Linux:
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
-        - mkdir -p Linux/COMMIT_TIME
+        - mkdir -p Linux/$COMMIT_TIME
         - copy ./../sfExe/*.deb     Linux\$COMMIT_TIME
         - copy ./../sfExe/*.sha512  Linux\$COMMIT_TIME
         - copy *.gz                 Linux\$COMMIT_TIME
@@ -194,7 +194,7 @@ Upload-Ftp-Mac:
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
-        - mkdir -p Mac/COMMIT_TIME
+        - mkdir -p Mac/$COMMIT_TIME
         - cp ./../sfExe/*.dmg     Mac\$COMMIT_TIME
         - cp ./../sfExe/*.sha512  Mac\$COMMIT_TIME
         - cp *.gz                 Mac\$COMMIT_TIME
