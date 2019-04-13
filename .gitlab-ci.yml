@@ -41,7 +41,7 @@ Build-Exe-Mac:
          - sfExe/*.dmg
          - sfExe/*.sha512
     cache:
-        key: "%CI_COMMIT_REF_SLUG%"
+        key: "$CI_COMMIT_REF_SLUG"
         untracked: true
     allow_failure: true
     script:
@@ -65,7 +65,7 @@ Build-Exe-Linux:
          - sfExe/*.deb
          - sfExe/*.sha512
     cache:
-        key: "%CI_COMMIT_REF_SLUG%"
+        key: "$CI_COMMIT_REF_SLUG"
         untracked: true
     allow_failure: true
     script:
@@ -84,10 +84,7 @@ Zip-Source:
         name: win
     tags:
         - ScopeFun
-    cache:
-        key: "%CI_JOB_NAME%"
-        untracked: true
-    dependencies: []
+    cache: {}
     allow_failure: true
     artifacts:
       name: "ScopeFun-Src-Win"
@@ -107,9 +104,7 @@ Zip-Source-Linux:
     environment: linux
     tags:
         - ScopeFunLinux
-    cache:
-        key: "%CI_JOB_NAME%"
-        untracked: true
+    cache: {}
     artifacts:
       name: "ScopeFun-Src-Linux"
       paths: 
@@ -130,9 +125,7 @@ Zip-Source-Mac:
         name: mac
     tags:
         - ScopeFunMac
-    cache:
-        key: "%CI_JOB_NAME%"
-        untracked: true
+    cache: {}
     artifacts:
       name: "ScopeFun-Src-Mac"
       paths: 
@@ -158,6 +151,7 @@ Upload-Ftp-Linux:
         name: linux
     tags:
         - ScopeFunLinux
+    cache: {}
     dependencies:
         - Build-Exe-Linux
         - Zip-Source-Linux
@@ -183,6 +177,7 @@ Upload-Ftp-Mac:
         name: mac
     tags:
         - ScopeFunMac
+    cache: {}
     dependencies:
         - Build-Exe-Mac
         - Zip-Source-Mac
@@ -208,6 +203,7 @@ Upload-Ftp:
         name: win
     tags:
         - ScopeFun
+    cache: {}
     dependencies:
         - Build-Exe
         - Zip-Source
