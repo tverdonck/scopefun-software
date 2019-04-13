@@ -190,11 +190,11 @@ Upload-Ftp-Mac:
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
-              "cd Versions"
-              "cd Mac"
-              "put Mac/$COMMIT_TIME"
-              "close"
-              "exit"
+        - "cd Versions"
+        - "cd Mac"
+        - "put Mac/$COMMIT_TIME"
+        - "close"
+        - "exit"
     when: always
      
 Upload-Ftp:
