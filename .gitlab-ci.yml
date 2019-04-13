@@ -115,7 +115,7 @@ Zip-Source-Linux:
     script:
         - mkdir -p sfSrc
         - cd sfSrc
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" ..
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
         - make package_source
     when: always
         
@@ -137,7 +137,7 @@ Zip-Source-Mac:
         - mkdir -p sfSrc
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" -S .. -B .
         - make package_source
     when: always
         
