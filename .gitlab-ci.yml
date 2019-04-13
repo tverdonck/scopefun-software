@@ -159,14 +159,14 @@ Upload-Ftp-Linux:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p Linux/$COMMIT_TIME
-        - copy ./../sfExe/*.deb     Linux\$COMMIT_TIME
-        - copy ./../sfExe/*.sha512  Linux\$COMMIT_TIME
-        - copy *.gz                 Linux\$COMMIT_TIME
-        - copy *.sha512             Linux\$COMMIT_TIME
+        - copy ./../sfExe/*.deb     Linux/$COMMIT_TIME
+        - copy ./../sfExe/*.sha512  Linux/$COMMIT_TIME
+        - copy *.gz                 Linux/$COMMIT_TIME
+        - copy *.sha512             Linux/$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Linux"
-              "put Linux\$COMMIT_TIME"
+              "put Linux/$COMMIT_TIME"
               "close"
               "exit"
     when: always
@@ -185,14 +185,14 @@ Upload-Ftp-Mac:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p Mac/$COMMIT_TIME
-        - cp ./../sfExe/*.dmg     Mac\$COMMIT_TIME
-        - cp ./../sfExe/*.sha512  Mac\$COMMIT_TIME
-        - cp *.gz                 Mac\$COMMIT_TIME
-        - cp *.sha512             Mac\$COMMIT_TIME
+        - cp ./../sfExe/*.dmg     Mac/$COMMIT_TIME
+        - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
+        - cp *.gz                 Mac/$COMMIT_TIME
+        - cp *.sha512             Mac/$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Mac"
-              "put Mac\$COMMIT_TIME"
+              "put Mac/$COMMIT_TIME"
               "close"
               "exit"
     when: always
