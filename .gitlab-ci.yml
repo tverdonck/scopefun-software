@@ -185,7 +185,7 @@ Upload-Ftp-Mac:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p Mac/COMMIT_TIME
-        - cp ./../sfExe/*.deb     Mac\$COMMIT_TIME
+        - cp ./../sfExe/*.dmg     Mac\$COMMIT_TIME
         - cp ./../sfExe/*.sha512  Mac\$COMMIT_TIME
         - cp *.gz                 Mac\$COMMIT_TIME
         - cp *.sha512             Mac\$COMMIT_TIME
