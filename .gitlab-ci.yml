@@ -40,9 +40,6 @@ Build-Exe-Mac:
       paths: 
          - sfExe/*.dmg
          - sfExe/*.sha512
-    cache:
-        key: "$CI_COMMIT_REF_SLUG"
-        untracked: true
     allow_failure: true
     script:
         - mkdir sfExe
