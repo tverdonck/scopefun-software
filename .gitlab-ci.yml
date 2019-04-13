@@ -151,7 +151,11 @@ Upload-Ftp-Linux:
         name: linux
     tags:
         - ScopeFunLinux
-    cache: {}
+    cache:
+      - sfExe/*.deb
+      - sfExe/*.sha512
+      - sfSrc/*.gz
+      - sfSrc/*.sha512
     dependencies:
         - Build-Exe-Linux
         - Zip-Source-Linux
@@ -177,7 +181,11 @@ Upload-Ftp-Mac:
         name: mac
     tags:
         - ScopeFunMac
-    cache: {}
+    cache:
+      - sfExe/*.dmg
+      - sfExe/*.sha512
+      - sfSrc/*.gz
+      - sfSrc/*.sha512
     dependencies:
         - Build-Exe-Mac
         - Zip-Source-Mac
@@ -203,7 +211,11 @@ Upload-Ftp:
         name: win
     tags:
         - ScopeFun
-    cache: {}
+    cache:
+      - sfExe/*.exe
+      - sfExe/*.sha512
+      - sfSrc/*.7z
+      - sfSrc/*.sha512
     dependencies:
         - Build-Exe
         - Zip-Source
