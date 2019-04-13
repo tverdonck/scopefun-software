@@ -47,7 +47,7 @@ Build-Exe-Mac:
         - chmod +x ../lib/wxWidgets-3.0.4/src/stc/gen_iface.py
         - chmod +x ../lib/libusb-1.0.22/install-sh
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CMAKE_VERBOSE_MAKEFILE="true" -D CPACK_BINARY_DRAGNDROP="true" -S $CI_BUILDS_DIR .
+        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CMAKE_VERBOSE_MAKEFILE="true" -D CPACK_BINARY_DRAGNDROP="true" -S $CI_BUILDS_DIR/.. -B.
         - make package
 
 Build-Exe-Linux:
