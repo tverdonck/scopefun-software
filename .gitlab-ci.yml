@@ -108,7 +108,7 @@ Zip-Source-Linux:
     artifacts:
       name: "ScopeFun-Src-Linux"
       paths: 
-         - sfSrc/*.7z
+         - sfSrc/*.gz
          - sfSrc/*.sha512
     dependencies: []
     allow_failure: true
@@ -129,7 +129,7 @@ Zip-Source-Mac:
     artifacts:
       name: "ScopeFun-Src-Mac"
       paths: 
-         - sfSrc/*.7z
+         - sfSrc/*.gz
          - sfSrc/*.sha512
     dependencies: []
     allow_failure: true
@@ -161,7 +161,7 @@ Upload-Ftp-Linux:
         - mkdir -p Linux/COMMIT_TIME
         - copy ./../sfExe/*.deb     Linux\$COMMIT_TIME
         - copy ./../sfExe/*.sha512  Linux\$COMMIT_TIME
-        - copy *.7z                 Linux\$COMMIT_TIME
+        - copy *.gz                 Linux\$COMMIT_TIME
         - copy *.sha512             Linux\$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
@@ -185,10 +185,10 @@ Upload-Ftp-Mac:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p Mac/COMMIT_TIME
-        - copy ./../sfExe/*.deb     Mac\$COMMIT_TIME
-        - copy ./../sfExe/*.sha512  Mac\$COMMIT_TIME
-        - copy *.7z                 Mac\$COMMIT_TIME
-        - copy *.sha512             Mac\$COMMIT_TIME
+        - cp ./../sfExe/*.deb     Mac\$COMMIT_TIME
+        - cp ./../sfExe/*.sha512  Mac\$COMMIT_TIME
+        - cp *.gz                 Mac\$COMMIT_TIME
+        - cp *.sha512             Mac\$COMMIT_TIME
         - ftp "ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "
               "cd Versions"
               "cd Mac"
@@ -212,10 +212,10 @@ Upload-Ftp:
         - git show -s --format=%ct $CI_COMMIT_SHA)>commit_time.txt
         - set -p COMMIT_TIME=<commit_time.txt
         - mkdir Windows\%COMMIT_TIME%
-        - copy %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
-        - copy %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
-        - copy *.7z                    Windows\%COMMIT_TIME%
-        - copy *.sha512                Windows\%COMMIT_TIME%
+        - cp %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
+        - cp %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
+        - cp *.7z                    Windows\%COMMIT_TIME%
+        - cp *.sha512                Windows\%COMMIT_TIME%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "cd Windows"^
