@@ -214,8 +214,7 @@ Upload-Ftp:
         - copy *.sha512                Windows\%COMMIT_TIME%
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
-                                   "cd Windows"^
-                                   "put Windows\%COMMIT_TIME%"^
+                                   "put %COMMIT_TIME%"^
                                    "close"^
                                    "exit"
     when: always
