@@ -206,7 +206,6 @@ Upload-Ftp-Mac:
         - HOST=ftp.scopefun.com
         - USER=$FTP_USERNAME
         - PASSWORD=$FTP_PASSWORD
-        - 
         - ftp -i $HOST <<EOF
         - user $USER $PASSWORD
         - put Mac/$COMMIT_TIME"
