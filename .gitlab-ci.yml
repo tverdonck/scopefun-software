@@ -164,12 +164,12 @@ Upload-Ftp-Linux:
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
-        - mkdir -p Linux/$COMMIT_TIME
-        - cp ./../sfExe/*.deb     Linux/$COMMIT_TIME
-        - cp ./../sfExe/*.sha512  Linux/$COMMIT_TIME
-        - cp *.gz                 Linux/$COMMIT_TIME
-        - cp *.sha512             Linux/$COMMIT_TIME
-        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Linux Versions;"
+        - mkdir -p $COMMIT_TIME/Linux
+        - cp ./../sfExe/*.deb     $COMMIT_TIME/Linux
+        - cp ./../sfExe/*.sha512  $COMMIT_TIME/Linux
+        - cp *.gz                 $COMMIT_TIME/Linux
+        - cp *.sha512             $COMMIT_TIME/Linux
+        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R $COMMIT_TIME Versions;"
     when: always
               
 Upload-Ftp-Mac:
@@ -185,12 +185,12 @@ Upload-Ftp-Mac:
     script:
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
-        - mkdir -p Mac/$COMMIT_TIME
-        - cp ./../sfExe/*.dmg     Mac/$COMMIT_TIME
-        - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
-        - cp *.gz                 Mac/$COMMIT_TIME
-        - cp *.sha512             Mac/$COMMIT_TIME
-        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Mac Versions;"
+        - mkdir -p $COMMIT_TIME/Mac
+        - cp ./../sfExe/*.dmg     $COMMIT_TIME/Mac
+        - cp ./../sfExe/*.sha512  $COMMIT_TIME/Mac
+        - cp *.gz                 $COMMIT_TIME/Mac
+        - cp *.sha512             $COMMIT_TIME/Mac
+        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R $COMMIT_TIME Versions;"
     when: always
      
 Upload-Ftp:
@@ -207,11 +207,11 @@ Upload-Ftp:
         - cd sfSrc
         - git show -s --format=%ct $CI_COMMIT_SHA)>commit_time.txt
         - set -p COMMIT_TIME=<commit_time.txt
-        - mkdir Windows\%COMMIT_TIME%
-        - copy %cd%\..\sfExe\*.exe     Windows\%COMMIT_TIME%
-        - copy %cd%\..\sfExe\*.sha512  Windows\%COMMIT_TIME%
-        - copy *.7z                    Windows\%COMMIT_TIME%
-        - copy *.sha512                Windows\%COMMIT_TIME%
+        - mkdir %COMMIT_TIME%\Windows
+        - copy %cd%\..\sfExe\*.exe     %COMMIT_TIME%\Windows
+        - copy %cd%\..\sfExe\*.sha512  %COMMIT_TIME%\Windows
+        - copy *.7z                    %COMMIT_TIME%\Windows
+        - copy *.sha512                %COMMIT_TIME%\Windows
         - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
                                    "cd Versions"^
                                    "put %COMMIT_TIME%"^
