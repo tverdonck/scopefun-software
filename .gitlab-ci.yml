@@ -203,14 +203,15 @@ Upload-Ftp-Mac:
         - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
-        - HOST=ftp.scopefun.com
-        - USER=$FTP_USERNAME
-        - PASSWORD=$FTP_PASSWORD
-        - ftp -i $HOST <<EOF
-        - user $USER $PASSWORD
-        - put Mac/$COMMIT_TIME"
-        - bye
-        - EOF
+        - scp -r Mac/$COMMIT_TIME $FTP_USERNAME@ftp.scopefun.com:Versions
+        # HOST=ftp.scopefun.com
+        # USER=$FTP_USERNAME
+        # PASSWORD=$FTP_PASSWORD
+        # ftp -i $HOST <<EOF
+        # user $USER $PASSWORD
+        # put Mac/$COMMIT_TIME"
+        # bye
+        # EOF
         # ftp "ftp.scopefun.com"
         # "$FTP_USERNAME"
         # "$FTP_PASSWORD"
