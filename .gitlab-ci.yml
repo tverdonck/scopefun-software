@@ -18,6 +18,7 @@ Build-Exe:
       paths: 
          - sfExe/*.exe
          - sfExe/*.sha512
+      expire_in: 1 day
     cache:
         key: "%CI_COMMIT_REF_SLUG%"
         untracked: true
@@ -43,6 +44,7 @@ Build-Exe-Mac:
       paths: 
          - sfExe/*.dmg
          - sfExe/*.sha512
+      expire_in: 1 day
     allow_failure: true
     script:
         - mkdir -p sfExe
@@ -64,6 +66,7 @@ Build-Exe-Linux:
       paths: 
          - sfExe/*.deb
          - sfExe/*.sha512
+      expire_in: 1 day
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         untracked: true
@@ -91,6 +94,7 @@ Zip-Source:
       paths: 
          - sfSrc/*.7z
          - sfSrc/*.sha512
+      expire_in: 1 day
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
@@ -110,6 +114,7 @@ Zip-Source-Linux:
       paths: 
          - sfSrc/*.gz
          - sfSrc/*.sha512
+      expire_in: 1 day
     dependencies: []
     allow_failure: true
     script:
@@ -131,6 +136,7 @@ Zip-Source-Mac:
       paths: 
          - sfSrc/*.gz
          - sfSrc/*.sha512
+      expire_in: 1 day
     dependencies: []
     allow_failure: true
     script:
@@ -200,7 +206,8 @@ Upload-Ftp-Mac:
         - HOST=ftp.scopefun.com
         - USER=$FTP_USERNAME
         - PASSWORD=$FTP_PASSWORD
-        - ftp -inv $HOST <<EOF
+        - 
+        - ftp -i $HOST <<EOF
         - user $USER $PASSWORD
         - put Mac/$COMMIT_TIME"
         - bye
