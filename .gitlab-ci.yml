@@ -170,6 +170,7 @@ Upload-Ftp-Linux:
         - cp *.gz                 Linux/$COMMIT_TIME
         - cp *.sha512             Linux/$COMMIT_TIME
         - lftp -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com
+        - set ssl:verify-certificate no
         - cd Versions
         - cd Linux
         - put Linux/$COMMIT_TIME
@@ -196,6 +197,7 @@ Upload-Ftp-Mac:
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
         - lftp -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com
+        - set ssl:verify-certificate no
         - cd Versions
         - cd Linux
         - put Linux/$COMMIT_TIME
