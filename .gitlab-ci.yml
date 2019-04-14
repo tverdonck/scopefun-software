@@ -205,7 +205,7 @@ Upload-Ftp:
         - Zip-Source
     script:
         - cd sfSrc
-        - git show -s --pretty="format:%ct"> commit_time.txt
+        - git log --no-walk --pretty=format:%ct > commit_time.txt
         - set /p COMMIT_TIME=<commit_time.txt
         - mkdir %COMMIT_TIME%\Windows
         - copy %cd%\..\sfExe\*.exe     %COMMIT_TIME%\Windows
