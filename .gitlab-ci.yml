@@ -206,7 +206,7 @@ Upload-Ftp:
     script:
         - cd sfSrc
         - echo $CI_COMMIT_SHA
-        - git log --no-walk --pretty=format:%ct> commit_time.txt
+        - git show -s --pretty=format:%ct>commit_time.txt
         - set /p COMMIT_TIME=<commit_time.txt
         - mkdir %COMMIT_TIME%\Windows
         - copy %cd%\..\sfExe\*.exe     %COMMIT_TIME%\Windows
