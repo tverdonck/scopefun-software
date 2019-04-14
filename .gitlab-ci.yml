@@ -169,7 +169,7 @@ Upload-Ftp-Linux:
         - cp ./../sfExe/*.sha512  Linux/$COMMIT_TIME
         - cp *.gz                 Linux/$COMMIT_TIME
         - cp *.sha512             Linux/$COMMIT_TIME
-        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Linux Versions;"
+        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Linux Versions\Linux;"
     when: always
               
 Upload-Ftp-Mac:
@@ -190,7 +190,7 @@ Upload-Ftp-Mac:
         - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
-        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Mac Versions;"
+        - lftp -c "open -u $FTP_USERNAME,$FTP_PASSWORD ftp.scopefun.com; set ssl:verify-certificate no; mirror -R Mac Versions\Mac;"
     when: always
      
 Upload-Ftp:
