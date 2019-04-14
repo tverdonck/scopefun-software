@@ -163,12 +163,20 @@ Upload-Ftp-Linux:
         - cp ./../sfExe/*.sha512  Linux/$COMMIT_TIME
         - cp *.gz                 Linux/$COMMIT_TIME
         - cp *.sha512             Linux/$COMMIT_TIME
-        - ftp "ftp://$FTP_USERNAME:$FTP_PASSWORD@ftp.scopefun.com/ "
-              "cd Versions"
-              "cd Linux"
-              "put Linux/$COMMIT_TIME"
-              "close"
-              "exit"
+        - HOST=ftp.scopefun.com
+        - USER=$FTP_USERNAME
+        - PASSWORD=$FTP_PASSWORD
+        - ftp -inv $HOST <<EOF
+        - user $USER $PASSWORD
+        - put Linux/$COMMIT_TIME"
+        - bye
+        - EOF
+        # ftp "ftp://$FTP_USERNAME:$FTP_USERNAME@ftp.scopefun.com/ "
+        #      "cd Versions"
+        #      "cd Linux"
+        #      "put Linux/$COMMIT_TIME"
+        #      "close"
+        #      "exit"
     when: always
               
 Upload-Ftp-Mac:
@@ -189,14 +197,22 @@ Upload-Ftp-Mac:
         - cp ./../sfExe/*.sha512  Mac/$COMMIT_TIME
         - cp *.gz                 Mac/$COMMIT_TIME
         - cp *.sha512             Mac/$COMMIT_TIME
-        - ftp "ftp.scopefun.com"
-        - "$FTP_USERNAME"
-        - "$FTP_PASSWORD"
-        - "cd Versions"
-        - "cd Mac"
-        - "put Mac/$COMMIT_TIME"
-        - "close"
-        - "exit"
+        - HOST=ftp.scopefun.com
+        - USER=$FTP_USERNAME
+        - PASSWORD=$FTP_PASSWORD
+        - ftp -inv $HOST <<EOF
+        - user $USER $PASSWORD
+        - put Mac/$COMMIT_TIME"
+        - bye
+        - EOF
+        # ftp "ftp.scopefun.com"
+        # "$FTP_USERNAME"
+        # "$FTP_PASSWORD"
+        # "cd Versions"
+        # "cd Mac"
+        # "put Mac/$COMMIT_TIME"
+        # "close"
+        # "exit"
     when: always
      
 Upload-Ftp:
