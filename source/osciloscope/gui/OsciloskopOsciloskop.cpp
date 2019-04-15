@@ -288,6 +288,8 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
     // TODO: Implement onActivate
     if(once)
     {
+        pTimer->init(TIMER_MAIN_THREAD);
+
         ////////////////////////////////////////////////////////////////////////////////////////
         // version
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -633,7 +635,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
     }
     pManager->fireEvents();
     pTimer->deltaTime(TIMER_MAIN_THREAD);
-    pOsciloscope->dtUpdate += pTimer->getDelta(TIMER_MAIN_THREAD);
+    pOsciloscope->dtUpdate = pTimer->getDelta(TIMER_MAIN_THREAD);
     pManager->update(pOsciloscope->dtUpdate);
 
     // render

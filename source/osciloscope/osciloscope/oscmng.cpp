@@ -1792,7 +1792,6 @@ int SDLCALL RenderThreadFunction(void* data)
     // timer
     //////////////////////////////////////////////////
     pTimer->init(TIMER_MAIN);
-    pTimer->init(TIMER_MAIN_THREAD);
     pTimer->init(TIMER_RENDER);
     pTimer->init(TIMER_RENDER_THREAD);
     while(SDL_AtomicCAS(&pOsciloscope->contextCreated, 0, 1) == SDL_FALSE) {};
