@@ -2,11 +2,6 @@ stages:
   - exe
   - zip
   - ftp
-
-variables:
-  VERSION_MAJOR : "2"
-  VERSION_MINOR : "0"
-  VERSION_MICRO : "1"
   
 #-------------------------------------------------------------------------------
 # exe 
@@ -34,6 +29,8 @@ Build-Exe:
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
+    only:
+        - master
 
 Build-Exe-Mac:
     stage: exe
@@ -59,6 +56,8 @@ Build-Exe-Mac:
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CMAKE_VERBOSE_MAKEFILE="true" -D CPACK_BINARY_DRAGNDROP="true" -S "$CI_BUILDS_DIR.." -B.
         - make package
+    only:
+        - master
 
 Build-Exe-Linux:
     stage: exe
@@ -81,6 +80,8 @@ Build-Exe-Linux:
         - cd sfExe
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -D CPACK_BINARY_TZ="false" -D CPACK_BINARY_TGZ="false" -D CPACK_BINARY_STGZ="false" ..
         - make package
+    only:
+        - master
 
 #-------------------------------------------------------------------------------
 # zip 
@@ -103,10 +104,12 @@ Zip-Source:
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
-        - cmake -G "MinGW Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
+        - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
     when: always
+    only:
+        - master
         
 Zip-Source-Linux:
     stage: zip
@@ -125,9 +128,11 @@ Zip-Source-Linux:
     script:
         - mkdir -p sfSrc
         - cd sfSrc
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
+        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
         - make package_source
     when: always
+    only:
+        - master
         
 Zip-Source-Mac:
     stage: zip
@@ -148,9 +153,11 @@ Zip-Source-Mac:
         - mkdir -p sfSrc
         - cd sfSrc
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" -S .. -B .
+        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" -S .. -B .
         - make package_source
     when: always
+    only:
+        - master
         
 #-------------------------------------------------------------------------------
 # ftp
@@ -176,6 +183,8 @@ Upload-Ftp-Linux:
         - cp *.sha512             $COMMIT_TIME/Linux
         - ncftpput -z -R -u $FTP_USERNAME -p $FTP_PASSWORD ftp.scopefun.com Versions $COMMIT_TIME
     when: always
+    only:
+        - master
               
 Upload-Ftp-Mac:
     stage: ftp
@@ -197,6 +206,8 @@ Upload-Ftp-Mac:
         - cp *.sha512             $COMMIT_TIME/Mac
         - ncftpput -z -R -u $FTP_USERNAME -p $FTP_PASSWORD ftp.scopefun.com Versions $COMMIT_TIME
     when: always
+    only:
+        - master
      
 Upload-Ftp:
     stage: ftp
@@ -223,3 +234,5 @@ Upload-Ftp:
                                    "close"^
                                    "exit"
     when: always
+    only:
+        - master
