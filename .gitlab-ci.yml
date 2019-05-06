@@ -26,6 +26,8 @@ Build-Exe:
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
         - cd sfExe
+        - powershell Remove-Item *.exe
+        - powershell Remove-Item *.sha512
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
@@ -104,6 +106,8 @@ Zip-Source:
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
+        - powershell Remove-Item *.7z
+        - powershell Remove-Item *.sha512
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
