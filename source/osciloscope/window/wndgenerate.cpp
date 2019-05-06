@@ -343,7 +343,7 @@ void WndHardwareGenerator::Default()
     frequency0  = 1000.f;
     voltage0    = 1024;
     offset0     = 0;
-    squareDuty0 = 1024;
+    squareDuty0 = 50;
     sawSlopePositive0 = 1;
     onOff0 = 0;
     // generator 1
@@ -351,7 +351,7 @@ void WndHardwareGenerator::Default()
     frequency1  = 1000.f;
     voltage1    = 1024;
     offset1     = 0;
-    squareDuty1 = 1024;
+    squareDuty1 = 50;
     sawSlopePositive1 = 1;
     onOff1 = 0;
     // customData

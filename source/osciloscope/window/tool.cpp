@@ -645,23 +645,23 @@ void ToolText::Time(char* buffer, int size, double value)
     double absvalue = fabsf(value);
     if(absvalue >= 1.0)
     {
-        pFormat->formatString(buffer, size, "%.2f s", value);
+        pFormat->formatString(buffer, size, "%.3f s", value);
     }
     else if(absvalue >= DOUBLE_MILI)
     {
-        pFormat->formatString(buffer, size, "%.2f ms", value * DOUBLE_KILO);
+        pFormat->formatString(buffer, size, "%.3f ms", value * DOUBLE_KILO);
     }
     else if(absvalue >= DOUBLE_MICRO)
     {
-        pFormat->formatString(buffer, size, "%.2f qs", value * DOUBLE_MEGA);
+        pFormat->formatString(buffer, size, "%.3f qs", value * DOUBLE_MEGA);
     }
     else if(absvalue >= DOUBLE_NANO)
     {
-        pFormat->formatString(buffer, size, "%.2f ns", value * DOUBLE_GIGA);
+        pFormat->formatString(buffer, size, "%.3f ns", value * DOUBLE_GIGA);
     }
     else if(absvalue >= DOUBLE_PIKO)
     {
-        pFormat->formatString(buffer, size, "%.2f ps", value * DOUBLE_TERA);
+        pFormat->formatString(buffer, size, "%.3f ps", value * DOUBLE_TERA);
     }
     else
     {

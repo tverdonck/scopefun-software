@@ -180,7 +180,7 @@ public:
     virtual void setGeneratorVoltage0(int volt) = 0;
     virtual void setGeneratorOffset0(int perc) = 0;
     virtual void setGeneratorFrequency0(float freq, float fs = 457142.81f) = 0;
-    virtual void setGeneratorSquareDuty0(int perc) = 0;
+    virtual void setGeneratorSquareDuty0(float perc) = 0;
 public:
     virtual void setGeneratorType1(GeneratorType type) = 0;
     virtual void setGeneratorOn1(int onoff) = 0;
@@ -188,7 +188,7 @@ public:
     virtual void setGeneratorVoltage1(int volt) = 0;
     virtual void setGeneratorOffset1(int perc) = 0;
     virtual void setGeneratorFrequency1(float freq, float fs = 457142.81f) = 0;
-    virtual void setGeneratorSquareDuty1(int perc) = 0;
+    virtual void setGeneratorSquareDuty1(float perc) = 0;
 public:
     virtual void setDigitalVoltage(double volt) = 0;
     virtual void setDigitalInputOutput(int inout15, int inout7) = 0;
@@ -231,7 +231,7 @@ public:
     virtual int           getGeneratorVoltage0() = 0;
     virtual int           getGeneratorOffset0() = 0;
     virtual float         getGeneratorFrequency0(float fs = 457142.81f) = 0;
-    virtual int           getGeneratorSquareDuty0() = 0;
+    virtual float         getGeneratorSquareDuty0() = 0;
 public:
     virtual GeneratorType getGeneratorType1() = 0;
     virtual int           getGeneratorOn1() = 0;
@@ -239,7 +239,7 @@ public:
     virtual int           getGeneratorVoltage1() = 0;
     virtual int           getGeneratorOffset1() = 0;
     virtual float         getGeneratorFrequency1(float fs = 457142.81f) = 0;
-    virtual int           getGeneratorSquareDuty1() = 0;
+    virtual float         getGeneratorSquareDuty1() = 0;
 public:
     virtual double getDigitalVoltage() = 0;
     virtual int    getDigitalInputOutput15() = 0;
@@ -358,7 +358,7 @@ public:
     virtual void setGeneratorVoltage0(int volt);
     virtual void setGeneratorOffset0(int perc);
     virtual void setGeneratorFrequency0(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty0(int perc);
+    virtual void setGeneratorSquareDuty0(float perc);
 public:
     virtual void setGeneratorType1(GeneratorType type);
     virtual void setGeneratorOn1(int onoff);
@@ -366,7 +366,7 @@ public:
     virtual void setGeneratorVoltage1(int volt);
     virtual void setGeneratorOffset1(int perc);
     virtual void setGeneratorFrequency1(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty1(int perc);
+    virtual void setGeneratorSquareDuty1(float perc);
 public:
     virtual void setDigitalVoltage(double volt);
     virtual void setDigitalInputOutput(int inout15, int inout7);
@@ -410,7 +410,7 @@ public:
     virtual int   getGeneratorVoltage0();
     virtual int   getGeneratorOffset0();
     virtual float getGeneratorFrequency0(float fs = 457142.81f);
-    virtual int   getGeneratorSquareDuty0();
+    virtual float getGeneratorSquareDuty0();
 public:
     virtual GeneratorType getGeneratorType1();
     virtual int   getGeneratorOn1();
@@ -418,7 +418,7 @@ public:
     virtual int   getGeneratorVoltage1();
     virtual int   getGeneratorOffset1();
     virtual float getGeneratorFrequency1(float fs = 457142.81f);
-    virtual int   getGeneratorSquareDuty1();
+    virtual float getGeneratorSquareDuty1();
 public:
     virtual double getDigitalVoltage();
     virtual int    getDigitalInputOutput15();
@@ -556,7 +556,7 @@ public:
     virtual void setGeneratorVoltage0(int volt);
     virtual void setGeneratorOffset0(int perc);
     virtual void setGeneratorFrequency0(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty0(int perc);
+    virtual void setGeneratorSquareDuty0(float perc);
 public:
     virtual void setGeneratorType1(GeneratorType type);
     virtual void setGeneratorOn1(int onoff);
@@ -564,7 +564,7 @@ public:
     virtual void setGeneratorVoltage1(int volt);
     virtual void setGeneratorOffset1(int perc);
     virtual void setGeneratorFrequency1(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty1(int perc);
+    virtual void setGeneratorSquareDuty1(float perc);
 public:
     virtual void setDigitalVoltage(double volt);
     virtual void setDigitalInputOutput(int inout15, int inout7);
@@ -608,7 +608,7 @@ public:
     virtual int   getGeneratorVoltage0();
     virtual int   getGeneratorOffset0();
     virtual float getGeneratorFrequency0(float fs = 457142.81f);
-    virtual int   getGeneratorSquareDuty0();
+    virtual float getGeneratorSquareDuty0();
 public:
     virtual GeneratorType getGeneratorType1();
     virtual int   getGeneratorOn1();
@@ -616,7 +616,7 @@ public:
     virtual int   getGeneratorVoltage1();
     virtual int   getGeneratorOffset1();
     virtual float getGeneratorFrequency1(float fs = 457142.81f);
-    virtual int   getGeneratorSquareDuty1();
+    virtual float getGeneratorSquareDuty1();
 public:
     virtual double getDigitalVoltage();
     virtual int    getDigitalInputOutput15();
@@ -705,7 +705,7 @@ public:
     virtual void setGeneratorVoltage0(int volt);
     virtual void setGeneratorOffset0(int perc);
     virtual void setGeneratorFrequency0(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty0(int perc);
+    virtual void setGeneratorSquareDuty0(float perc);
 public:
     virtual void setGeneratorType1(GeneratorType type);
     virtual void setGeneratorOn1(int onoff);
@@ -713,7 +713,7 @@ public:
     virtual void setGeneratorVoltage1(int volt);
     virtual void setGeneratorOffset1(int perc);
     virtual void setGeneratorFrequency1(float freq, float fs = 457142.81f);
-    virtual void setGeneratorSquareDuty1(int perc);
+    virtual void setGeneratorSquareDuty1(float perc);
 public:
     virtual void setDigitalVoltage(double volt);
     virtual void setDigitalInputOutput(int inout15, int inout7);
@@ -756,7 +756,7 @@ public:
     virtual int           getGeneratorVoltage0();
     virtual int           getGeneratorOffset0();
     virtual float         getGeneratorFrequency0(float fs = 457142.81f);
-    virtual int           getGeneratorSquareDuty0();
+    virtual float         getGeneratorSquareDuty0();
 public:
     virtual GeneratorType getGeneratorType1();
     virtual int           getGeneratorOn1();
@@ -764,7 +764,7 @@ public:
     virtual int           getGeneratorVoltage1();
     virtual int           getGeneratorOffset1();
     virtual float         getGeneratorFrequency1(float fs = 457142.81f);
-    virtual int           getGeneratorSquareDuty1();
+    virtual float         getGeneratorSquareDuty1();
 public:
     virtual double getDigitalVoltage();
     virtual int    getDigitalInputOutput15();

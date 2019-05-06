@@ -160,7 +160,7 @@ void OsciloskopHardwareGenerator::m_sliderOffsetOnScroll(wxScrollEvent& event)
 void OsciloskopHardwareGenerator::m_textCtrlSquareDuty0OnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlSquareDuty0OnTextEnter
-    pOsciloscope->window.hardwareGenerator.squareDuty0 = pFormat->stringToInteger(m_textCtrlSquareDuty0->GetValue().ToAscii().data());
+    pOsciloscope->window.hardwareGenerator.squareDuty0 = pFormat->stringToFloat(m_textCtrlSquareDuty0->GetValue().ToAscii().data());
     pOsciloscope->control.setGeneratorSquareDuty0(pOsciloscope->window.hardwareGenerator.squareDuty0);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty0);
@@ -172,7 +172,7 @@ void OsciloskopHardwareGenerator::m_sliderSquareDutyOnScroll(wxScrollEvent& even
     pOsciloscope->window.hardwareGenerator.squareDuty0 = m_sliderSquareDuty->GetValue();
     pOsciloscope->control.setGeneratorSquareDuty0(m_sliderSquareDuty->GetValue());
     pOsciloscope->control.transferData();
-    m_textCtrlSquareDuty0->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
+    m_textCtrlSquareDuty0->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
 }
 
 void OsciloskopHardwareGenerator::m_checkBoxSawSlopeOnCheckBox(wxCommandEvent& event)
@@ -274,7 +274,7 @@ void OsciloskopHardwareGenerator::m_spinBtnGen0SqrDutyOnSpinUp(wxSpinEvent& even
     pOsciloscope->control.setGeneratorSquareDuty0(pOsciloscope->window.hardwareGenerator.squareDuty0);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty0);
-    m_textCtrlSquareDuty0->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
+    m_textCtrlSquareDuty0->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
 }
 
 void OsciloskopHardwareGenerator::m_spinBtnGen0SqrDutyOnSpinDown(wxSpinEvent& event)
@@ -283,7 +283,7 @@ void OsciloskopHardwareGenerator::m_spinBtnGen0SqrDutyOnSpinDown(wxSpinEvent& ev
     pOsciloscope->control.setGeneratorSquareDuty0(pOsciloscope->window.hardwareGenerator.squareDuty0);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty0);
-    m_textCtrlSquareDuty0->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
+    m_textCtrlSquareDuty0->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty0));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +354,7 @@ void OsciloskopHardwareGenerator::m_sliderOffset1OnScroll(wxScrollEvent& event)
 void OsciloskopHardwareGenerator::m_textCtrlSquareDuty1OnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlSquareDuty1OnTextEnter
-    pOsciloscope->window.hardwareGenerator.squareDuty1 = pFormat->stringToInteger(m_textCtrlSquareDuty1->GetValue().ToAscii().data());
+    pOsciloscope->window.hardwareGenerator.squareDuty1 = pFormat->stringToFloat(m_textCtrlSquareDuty1->GetValue().ToAscii().data());
     pOsciloscope->control.setGeneratorSquareDuty1(pOsciloscope->window.hardwareGenerator.squareDuty1);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty1->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty1);
@@ -366,7 +366,7 @@ void OsciloskopHardwareGenerator::m_sliderSquareDuty1OnScroll(wxScrollEvent& eve
     pOsciloscope->window.hardwareGenerator.squareDuty1 = m_sliderSquareDuty1->GetValue();
     pOsciloscope->control.setGeneratorSquareDuty1(m_sliderSquareDuty1->GetValue());
     pOsciloscope->control.transferData();
-    m_textCtrlSquareDuty1->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
+    m_textCtrlSquareDuty1->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
 }
 
 void OsciloskopHardwareGenerator::m_checkBoxSawSlope1OnCheckBox(wxCommandEvent& event)
@@ -471,7 +471,7 @@ void OsciloskopHardwareGenerator::m_spinBtnGen1SqrDutyOnSpinUp(wxSpinEvent& even
     pOsciloscope->control.setGeneratorSquareDuty1(pOsciloscope->window.hardwareGenerator.squareDuty1);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty1->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty1);
-    m_textCtrlSquareDuty1->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
+    m_textCtrlSquareDuty1->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
 }
 
 void OsciloskopHardwareGenerator::m_spinBtnGen1SqrDutyOnSpinDown(wxSpinEvent& event)
@@ -480,7 +480,7 @@ void OsciloskopHardwareGenerator::m_spinBtnGen1SqrDutyOnSpinDown(wxSpinEvent& ev
     pOsciloscope->control.setGeneratorSquareDuty1(pOsciloscope->window.hardwareGenerator.squareDuty1);
     pOsciloscope->control.transferData();
     m_sliderSquareDuty1->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty1);
-    m_textCtrlSquareDuty1->SetValue(pFormat->integerToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
+    m_textCtrlSquareDuty1->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

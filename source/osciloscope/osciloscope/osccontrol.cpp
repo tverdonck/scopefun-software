@@ -555,9 +555,9 @@ void OsciloscopeControl1::setGeneratorFrequency0(float freq, float fs)
     generatorDeltaL0 = gDelta & 0x0000FFFF;
 }
 
-void OsciloscopeControl1::setGeneratorSquareDuty0(int perc)
+void OsciloscopeControl1::setGeneratorSquareDuty0(float perc)
 {
-    generatorSqueareDuty0 = perc;
+    generatorSqueareDuty0 = perc*2047.0/100.0;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -640,9 +640,9 @@ void OsciloscopeControl1::setGeneratorFrequency1(float freq, float fs)
     generatorDeltaL1 = gDelta & 0x0000FFFF;
 }
 
-void OsciloscopeControl1::setGeneratorSquareDuty1(int perc)
+void OsciloscopeControl1::setGeneratorSquareDuty1(float perc)
 {
-    generatorSqueareDuty1 = perc;
+    generatorSqueareDuty1 = perc*2047.0/100.0;
 }
 
 void OsciloscopeControl1::setDigitalVoltage(double volt)
@@ -954,9 +954,9 @@ float OsciloscopeControl1::getGeneratorFrequency0(float fs)
     return float(delta * double(fs) / 8188.0);
 }
 
-int OsciloscopeControl1::getGeneratorSquareDuty0()
+float OsciloscopeControl1::getGeneratorSquareDuty0()
 {
-    return generatorSqueareDuty0;
+    return 100.0*float(generatorSqueareDuty0)/2047.0;
 }
 
 
@@ -1020,9 +1020,9 @@ float OsciloscopeControl1::getGeneratorFrequency1(float fs)
     return float(delta * double(fs) / 8188.0);
 }
 
-int OsciloscopeControl1::getGeneratorSquareDuty1()
+float OsciloscopeControl1::getGeneratorSquareDuty1()
 {
-    return generatorSqueareDuty1;
+    return 100.0*float(generatorSqueareDuty1)/2047.0;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1608,9 +1608,9 @@ void OsciloscopeControl2::setGeneratorFrequency0(float freq, float fs)
     generatorDeltaL0 = gDelta & 0x0000FFFF;
 }
 
-void OsciloscopeControl2::setGeneratorSquareDuty0(int perc)
+void OsciloscopeControl2::setGeneratorSquareDuty0(float perc)
 {
-    generatorSqueareDuty0 = perc;
+    generatorSqueareDuty0 = perc*2047.0/100.0;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1693,9 +1693,9 @@ void OsciloscopeControl2::setGeneratorFrequency1(float freq, float fs)
     generatorDeltaL1 = gDelta & 0x0000FFFF;
 }
 
-void OsciloscopeControl2::setGeneratorSquareDuty1(int perc)
+void OsciloscopeControl2::setGeneratorSquareDuty1(float perc)
 {
-    generatorSqueareDuty1 = perc;
+    generatorSqueareDuty1 = perc*2047.0/100.0;
 }
 
 void OsciloscopeControl2::setDigitalVoltage(double volt)
@@ -2010,9 +2010,9 @@ float OsciloscopeControl2::getGeneratorFrequency0(float fs)
     return float(delta * double(fs) / 8188.0);
 }
 
-int OsciloscopeControl2::getGeneratorSquareDuty0()
+float OsciloscopeControl2::getGeneratorSquareDuty0()
 {
-    return generatorSqueareDuty0;
+    return 100.0*float(generatorSqueareDuty0)/2047;
 }
 
 
@@ -2076,9 +2076,9 @@ float OsciloscopeControl2::getGeneratorFrequency1(float fs)
     return float(delta * double(fs) / 8188.0);
 }
 
-int OsciloscopeControl2::getGeneratorSquareDuty1()
+float OsciloscopeControl2::getGeneratorSquareDuty1()
 {
-    return generatorSqueareDuty1;
+    return 100.0*float(generatorSqueareDuty1)/2047;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -2628,7 +2628,7 @@ void OsciloscopeMainControl::setGeneratorFrequency0(float freq, float fs)
 {
     pControl->setGeneratorFrequency0(freq, fs);
 }
-void OsciloscopeMainControl::setGeneratorSquareDuty0(int perc)
+void OsciloscopeMainControl::setGeneratorSquareDuty0(float perc)
 {
     pControl->setGeneratorSquareDuty0(perc);
 }
@@ -2657,7 +2657,7 @@ void OsciloscopeMainControl::setGeneratorFrequency1(float freq, float fs)
 {
     pControl->setGeneratorFrequency1(freq, fs);
 }
-void OsciloscopeMainControl::setGeneratorSquareDuty1(int perc)
+void OsciloscopeMainControl::setGeneratorSquareDuty1(float perc)
 {
     pControl->setGeneratorSquareDuty1(perc);
 }
@@ -2807,7 +2807,7 @@ float OsciloscopeMainControl::getGeneratorFrequency0(float fs)
 {
     return pControl->getGeneratorFrequency0(fs);
 }
-int OsciloscopeMainControl::getGeneratorSquareDuty0()
+float OsciloscopeMainControl::getGeneratorSquareDuty0()
 {
     return pControl->getGeneratorSquareDuty0();
 }
@@ -2836,7 +2836,7 @@ float OsciloscopeMainControl::getGeneratorFrequency1(float fs)
 {
     return pControl->getGeneratorFrequency1(fs);
 }
-int OsciloscopeMainControl::getGeneratorSquareDuty1()
+float OsciloscopeMainControl::getGeneratorSquareDuty1()
 {
     return pControl->getGeneratorSquareDuty1();
 }

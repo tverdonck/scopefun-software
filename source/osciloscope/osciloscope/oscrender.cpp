@@ -474,8 +474,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     {
         cx = 0.f;
     }
-    float    sx = render.signalPosition;
-    float    sz = render.signalZoom;
+    double    sx = render.signalPosition;
+    double    sz = render.signalZoom;
     double gridStart = cx + xMin;
     double gridEnd   = cx + xMax;
     double gridTime = /*double(render.zoomFFT)**/sz * double(timeDisplay) / 10.0;
@@ -494,16 +494,16 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     // size
     ////////////////////////////////////////////////////////////////////////////////
     pFont->setSize(threadid, 0.25f);
-    float charHeight = pFont->getLineHeight(threadid);
-    float sizeX = 0.035f * render.oscScaleX;
-    float sizeY = 0.035f * render.oscScaleY;
-    float yCount = 10.f;
-    float xCount = 10.f;
+    double charHeight = pFont->getLineHeight(threadid);
+    double sizeX = 0.035f * render.oscScaleX;
+    double sizeY = 0.035f * render.oscScaleY;
+    double yCount = 10.f;
+    double xCount = 10.f;
     ////////////////////////////////////////////////////////////////////////////////
     // trigger
     ////////////////////////////////////////////////////////////////////////////////
-    float triggerVoltage = float(double(wndMain.trigger.Level + wndMain.trigger.His) * getTriggerVoltagePerStep(wndMain, yCount));
-    float triggerY = (triggerVoltage / (getTriggerVoltage(wndMain) * (yCount / 2.f))) * 0.5f;
+    double triggerVoltage = float(double(wndMain.trigger.Level + wndMain.trigger.His) * getTriggerVoltagePerStep(wndMain, yCount));
+    double triggerY = (triggerVoltage / (getTriggerVoltage(wndMain) * (yCount / 2.f))) * 0.5f;
     FORMAT("Trigger", bufferTrigger);
     pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, triggerY + charHeight / 2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
     pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
@@ -517,8 +517,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     FORMAT("%s", "0V");
     uint yellow = render.colorChannel0;
     uint blue   = render.colorChannel1;
-    float zeroBlue   = 0.f;
-    float zeroYellow = 0.f;
+    double zeroBlue   = 0.f;
+    double zeroYellow = 0.f;
     for(int i = 0; i < 2; i++)
     {
         if(i == 0 && wndMain.channel01.OscOnOff == 0)
@@ -538,7 +538,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         {
             step = render.analogChannelYVoltageStep1;
         }
-        float zeroOffset = 0.f;
+        double zeroOffset = 0.f;
         if(i == 0)
         {
             zeroOffset = -(render.analogChannelPositin0 - render.analogChannelOffsets0) * step;
@@ -547,7 +547,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         {
             zeroOffset = -(render.analogChannelPositin1 - render.analogChannelOffsets1) * step;
         }
-        float zeroVoltage = zeroOffset;
+        double zeroVoltage = zeroOffset;
         if(i == 0)
         {
             zeroBlue   = zeroVoltage;
@@ -556,7 +556,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         {
             zeroYellow = zeroVoltage;
         }
-        float zeroY = 0.f;
+        double zeroY = 0.f;
         if(i == 0)
         {
             zeroY = (wndMain.channel01.YPosition / (wndMain.channel01.Capture * yCount));
@@ -583,16 +583,16 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     // x units
     ////////////////////////////////////////////////////////////////////////////////
     char buffer[1024]    = { 0 };
-    float charYmin       = yMin - charHeight;
-    float charYmax       = yMax + charHeight;
+    double charYmin       = yMin - charHeight;
+    double charYmax       = yMax + charHeight;
     ////////////////////////////////////////////////////////////////////////////////
     // subgrid with visibility calculation
     ////////////////////////////////////////////////////////////////////////////////
     double          wx = sx;
-    float smin = -0.5 / sz;
-    float smax = +0.5 / sz;
-    float sdelta = smax - smin;
-    double subCount = double(xCount) / sz;
+    double smin      = -0.5 / sz;
+    double smax      = +0.5 / sz;
+    double sdelta    = smax - smin;
+    double subCount  = double(xCount) / sz;
     double subDelta  = sdelta / subCount;
     double gridDelta = 1.0 / double(xCount);
     // view
@@ -626,10 +626,6 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         {
             double      posDelta = (posX - signalStart) / sdelta;
             double         unitX = (posDelta - preTriggerZero) * frameTime;
-            if(abs(unitX) < wndMain.horizontal.Capture)
-            {
-                unitX = 0.0;
-            }
             ToolText::Time(buffer, 1024, unitX);
             pFont->writeText3d(threadid, render.cameraOsc.Final, posX - sizeX, charYmin, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), buffer, render.colorTime, render.oscScaleX, render.oscScaleY);
             posX  += gridDelta;
