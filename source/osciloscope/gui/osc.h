@@ -409,6 +409,7 @@ class Osciloskop : public wxFrame
 		virtual void m_choiceBit6OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit4OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit2OnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceBit0OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDS70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceInputOutput1OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_filePicker1OnFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }

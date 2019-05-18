@@ -1784,7 +1784,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_choiceBit6->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceBit4->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit4OnChoice ), NULL, this );
 	m_choiceBit2->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
-	m_choiceBit0->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
+	m_choiceBit0->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit0OnChoice ), NULL, this );
 	m_choiceDS70->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDS70OnChoice ), NULL, this );
 	m_choiceInputOutput1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceInputOutput1OnChoice ), NULL, this );
 	m_filePicker1->Connect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( Osciloskop::m_filePicker1OnFileChanged ), NULL, this );
@@ -2002,7 +2002,7 @@ Osciloskop::~Osciloskop()
 	m_choiceBit6->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceBit4->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit4OnChoice ), NULL, this );
 	m_choiceBit2->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
-	m_choiceBit0->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
+	m_choiceBit0->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit0OnChoice ), NULL, this );
 	m_choiceDS70->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDS70OnChoice ), NULL, this );
 	m_choiceInputOutput1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceInputOutput1OnChoice ), NULL, this );
 	m_filePicker1->Disconnect( wxEVT_COMMAND_FILEPICKER_CHANGED, wxFileDirPickerEventHandler( Osciloskop::m_filePicker1OnFileChanged ), NULL, this );

@@ -10062,7 +10062,7 @@
                                                                             <property name="window_extra_style"></property>
                                                                             <property name="window_name"></property>
                                                                             <property name="window_style"></property>
-                                                                            <event name="OnChoice">m_choiceBit2OnChoice</event>
+                                                                            <event name="OnChoice">m_choiceBit0OnChoice</event>
                                                                         </object>
                                                                     </object>
                                                                     <object class="sizeritem" expanded="0">
