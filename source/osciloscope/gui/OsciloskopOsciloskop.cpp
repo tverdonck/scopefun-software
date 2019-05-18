@@ -1022,12 +1022,14 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
     if(version == 1)
     {
         pOsciloscope->control.setSampleSize(frameSize);
+        pOsciloscope->control.setTriggerPre( pOsciloscope->control.getTriggerPre() );
         pOsciloscope->window.horizontal.FrameSize = pOsciloscope->control.getSampleSize();
         data = pOsciloscope->window.horizontal.FrameSize * 6;
     }
     else
     {
         pOsciloscope->control.setSampleSize(frameSize);
+        pOsciloscope->control.setTriggerPre(  pOsciloscope->control.getTriggerPre() );
         pOsciloscope->window.horizontal.FrameSize = pOsciloscope->control.getSampleSize();
         data = pOsciloscope->window.horizontal.FrameSize * 4;
     }

@@ -272,7 +272,9 @@ void OsciloscopeControl1::setTriggerSlope(int value)
 
 void OsciloscopeControl1::setTriggerPre(float perc)
 {
-    triggerPercent = (perc / 100.f) * float(NUM_SAMPLES - 1);
+    uint sampleSize = getSampleSize();
+    triggerPercent  = (perc / 100.f) * float(sampleSize - 1);
+    triggerPercent  = (triggerPercent / 4);
 }
 
 void OsciloscopeControl1::setTriggerHis(int perc)
@@ -762,7 +764,7 @@ ushort OsciloscopeControl1::getTriggerSlope()
 
 float OsciloscopeControl1::getTriggerPre()
 {
-    return 100.f * (float(triggerPercent) / float(NUM_SAMPLES - 1));
+    return 100.f * (float(triggerPercent * 4) / float(getSampleSize() - 1));
 }
 
 int OsciloscopeControl1::getTriggerHis()
@@ -1325,8 +1327,10 @@ void OsciloscopeControl2::setTriggerSlope(int value)
 
 void OsciloscopeControl2::setTriggerPre(float perc)
 {
-    triggerPercent = (perc / 100.f) * float(NUM_SAMPLES - 1);
-}
+    uint sampleSize = getSampleSize();
+    triggerPercent  = (perc / 100.f) * float(sampleSize - 1);
+    triggerPercent  = ( triggerPercent / 4 );
+ }
 
 void OsciloscopeControl2::setTriggerHis(int perc)
 {
@@ -1815,7 +1819,7 @@ ushort OsciloscopeControl2::getTriggerSlope()
 
 float OsciloscopeControl2::getTriggerPre()
 {
-    return 100.f * (float(triggerPercent) / float(NUM_SAMPLES - 1));
+    return 100.f * (float(triggerPercent * 4) / float(getSampleSize() - 1));
 }
 
 int OsciloscopeControl2::getTriggerHis()
