@@ -1354,7 +1354,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_spinBtnTrigHoldoff = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer43->Add( m_spinBtnTrigHoldoff, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_sliderTriggerHoldoff = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	m_sliderTriggerHoldoff = new wxSlider( m_panel3, wxID_ANY, 0, 0, 400000000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer43->Add( m_sliderTriggerHoldoff, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 

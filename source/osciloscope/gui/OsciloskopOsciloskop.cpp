@@ -1566,7 +1566,7 @@ void OsciloskopOsciloskop::m_textCtrlTriggerPreOnTextEnter(wxCommandEvent& event
 void OsciloskopOsciloskop::m_sliderTriggerPreOnScroll(wxScrollEvent& event)
 {
     // TODO: Implement m_sliderTriggerPreOnScroll
-    pOsciloscope->window.trigger.Percent = max(m_sliderTriggerPre->GetValue(), 0);
+    pOsciloscope->window.trigger.Percent = max<int>(m_sliderTriggerPre->GetValue(), 0);
     pOsciloscope->control.setTriggerPre(m_sliderTriggerPre->GetValue());
     pOsciloscope->control.transferData();
     pOsciloscope->window.measure.data.pickX0.updateUI = true;
@@ -1577,21 +1577,25 @@ void OsciloskopOsciloskop::m_sliderTriggerPreOnScroll(wxScrollEvent& event)
 void OsciloskopOsciloskop::m_textCtrlTriggerHoldoffOnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlTriggerHoldoffOnTextEnter
-    pOsciloscope->window.trigger.Holdoff = pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data());
-    pOsciloscope->control.setHoldoff(pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()));
+    uint newHoldOff = max<int>(0,pFormat->stringToInteger(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()));
+    pOsciloscope->control.setHoldoff(newHoldOff);
+    newHoldOff = pOsciloscope->control.getHoldoff();
+    pOsciloscope->window.trigger.Holdoff = newHoldOff;
     pOsciloscope->control.transferData();
-    //
-    m_sliderTriggerHoldoff->SetValue(pOsciloscope->window.trigger.Holdoff);
+    m_sliderTriggerHoldoff->SetValue(newHoldOff);
+    m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->integerToString(newHoldOff)));
 }
 
 void OsciloskopOsciloskop::m_sliderTriggerHoldoffOnScroll(wxScrollEvent& event)
 {
     // TODO: Implement m_sliderTriggerHoldoffOnScroll
-    pOsciloscope->window.trigger.Holdoff = m_sliderTriggerHoldoff->GetValue();
-    pOsciloscope->control.setHoldoff(m_sliderTriggerHoldoff->GetValue());
+    uint newHoldOff = max(0,m_sliderTriggerHoldoff->GetValue());
+    pOsciloscope->control.setHoldoff(newHoldOff);
+    newHoldOff = pOsciloscope->control.getHoldoff();
+    pOsciloscope->window.trigger.Holdoff = newHoldOff;
     pOsciloscope->control.transferData();
-    //
-    m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->doubleToString(pOsciloscope->window.trigger.Holdoff)));
+    m_sliderTriggerHoldoff->SetValue(newHoldOff);
+    m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->integerToString(newHoldOff)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3337,22 +3341,24 @@ void OsciloskopOsciloskop::m_spinBtnTrigPreOnSpinDown(wxSpinEvent& event)
 
 void OsciloskopOsciloskop::m_spinBtnTrigHoldoffOnSpinUp(wxSpinEvent& event)
 {
-    double Hstep = 1000 * double(NANO);
-    pOsciloscope->window.trigger.Holdoff = pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()) + Hstep;
-    pOsciloscope->control.setHoldoff(pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()));
+    uint newHoldOff = max<int>(0,pOsciloscope->control.getHoldoff() + 1);
+    pOsciloscope->control.setHoldoff(newHoldOff);
+    newHoldOff = pOsciloscope->control.getHoldoff();
+    pOsciloscope->window.trigger.Holdoff = newHoldOff;
     pOsciloscope->control.transferData();
-    m_sliderTriggerHoldoff->SetValue(pOsciloscope->window.trigger.Holdoff);
-    m_textCtrlTriggerHoldoff->SetValue(pFormat->doubleToString(pOsciloscope->window.trigger.Holdoff));
+    m_sliderTriggerHoldoff->SetValue(newHoldOff);
+    m_textCtrlTriggerHoldoff->SetValue(pFormat->integerToString(newHoldOff));
 }
 
 void OsciloskopOsciloskop::m_spinBtnTrigHoldoffOnSpinDown(wxSpinEvent& event)
 {
-    double Hstep = 1000 * double(NANO);
-    pOsciloscope->window.trigger.Holdoff = pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()) - Hstep;
-    pOsciloscope->control.setHoldoff(pFormat->stringToDouble(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()));
+    uint newHoldOff = max<int>(0,pOsciloscope->control.getHoldoff() - 1);
+    pOsciloscope->control.setHoldoff(newHoldOff);
+    newHoldOff = pOsciloscope->control.getHoldoff();
+    pOsciloscope->window.trigger.Holdoff = newHoldOff;
     pOsciloscope->control.transferData();
-    m_sliderTriggerHoldoff->SetValue(pOsciloscope->window.trigger.Holdoff);
-    m_textCtrlTriggerHoldoff->SetValue(pFormat->doubleToString(pOsciloscope->window.trigger.Holdoff));
+    m_sliderTriggerHoldoff->SetValue(newHoldOff);
+    m_textCtrlTriggerHoldoff->SetValue(pFormat->integerToString(newHoldOff));
 }
 
 void OsciloskopOsciloskop::RecalculateTriggerPosition(double oldTriggerVoltagePerStep, double newTriggerVoltagePerStep)

@@ -121,7 +121,7 @@ public:
     int                Level;
     int                His;
     double             Percent;
-    double             Holdoff;
+    uint               Holdoff;
 public:
     int                stage;
     int                stageStart;

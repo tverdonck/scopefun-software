@@ -287,12 +287,10 @@ void OsciloscopeControl1::setTriggerLevel(int perc)
     triggerLevel = perc;
 }
 
-void OsciloscopeControl1::setHoldoff(double holdoff)
+void OsciloscopeControl1::setHoldoff(uint holdoff)
 {
-    double     N = double(holdoff) * double(NANO) / 10.0;
-    uint   value = uint(N);
-    holdoffH = (value & 0xFFFF0000) >> 16;
-    holdoffL = value & 0x0000FFFF;
+    holdoffH = (holdoff & 0xFFFF0000) >> 16;
+    holdoffL = holdoff & 0x0000FFFF;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -787,11 +785,10 @@ uint OsciloscopeControl1::getSampleSize()
     return sampleSize;
 }
 
-double OsciloscopeControl1::getHoldoff()
+uint OsciloscopeControl1::getHoldoff()
 {
     uint holdOffInt = uint(holdoffL) | (uint(holdoffH) << 16);
-    double value = double(holdOffInt) * 10.0 / double(NANO);
-    return value;
+    return holdOffInt;
 }
 
 int OsciloscopeControl1::getDigitalStart()
@@ -1342,12 +1339,10 @@ void OsciloscopeControl2::setTriggerLevel(int perc)
     triggerLevel = perc;
 }
 
-void OsciloscopeControl2::setHoldoff(double holdoff)
+void OsciloscopeControl2::setHoldoff(uint holdoff)
 {
-    double     N = double(holdoff) * double(NANO) / 10.0;
-    uint   value = uint(N);
-    holdoffH = (value & 0xFFFF0000) >> 16;
-    holdoffL = value & 0x0000FFFF;
+    holdoffH = (holdoff & 0xFFFF0000) >> 16;
+    holdoffL = holdoff & 0x0000FFFF;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1845,11 +1840,10 @@ uint OsciloscopeControl2::getSampleSize()
     return sampleSize;
 }
 
-double OsciloscopeControl2::getHoldoff()
+uint OsciloscopeControl2::getHoldoff()
 {
     uint holdOffInt = uint(holdoffL) | (uint(holdoffH) << 16);
-    double value = double(holdOffInt) * 10.0 / double(NANO);
-    return value;
+    return holdOffInt;
 }
 
 int OsciloscopeControl2::getDigitalStart()
@@ -2577,7 +2571,7 @@ void OsciloscopeMainControl::setSampleSize(uint frameSize)
     pControl->setSampleSize(frameSize);
 }
 
-void OsciloscopeMainControl::setHoldoff(double holdoff)
+void OsciloscopeMainControl::setHoldoff(uint holdoff)
 {
     pControl->setHoldoff(holdoff);
 }
@@ -2756,7 +2750,7 @@ ishort OsciloscopeMainControl::getXRange()
 {
     return pControl->getXRange();
 }
-double OsciloscopeMainControl::getHoldoff()
+uint OsciloscopeMainControl::getHoldoff()
 {
     return pControl->getHoldoff();
 }

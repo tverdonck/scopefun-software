@@ -165,7 +165,7 @@ public:
 public:
     virtual void setXRange(ishort range) = 0;
     virtual void setSampleSize(uint frameSize) = 0;
-    virtual void setHoldoff(double holdoff) = 0;
+    virtual void setHoldoff(uint holdoff) = 0;
 public:
     virtual void setDigitalStart(int start) = 0;
     virtual void setDigitalMode(int mode) = 0;
@@ -215,7 +215,7 @@ public:
 public:
     virtual uint   getSampleSize() = 0;
     virtual ishort getXRange() = 0;
-    virtual double getHoldoff() = 0;
+    virtual uint   getHoldoff() = 0;
 public:
     virtual int   getDigitalStart() = 0;
     virtual int   getDigitalMode() = 0;
@@ -342,7 +342,7 @@ public:
 public:
     void setXRange(ishort range);
     void setSampleSize(uint frameSize);
-    void setHoldoff(double holdoff);
+    void setHoldoff(uint holdoff);
 public:
     virtual void setDigitalStart(int start);
     virtual void setDigitalMode(int mode);
@@ -394,7 +394,7 @@ public:
     virtual uint   getSampleSize();
 public:
     virtual ishort getXRange();
-    virtual double getHoldoff();
+    virtual uint   getHoldoff();
 public:
     virtual int   getDigitalStart();
     virtual int   getDigitalMode();
@@ -540,7 +540,7 @@ public:
 public:
     virtual void setXRange(ishort range);
     virtual void setSampleSize(uint frameSize);
-    virtual void setHoldoff(double holdoff);
+    virtual void setHoldoff(uint holdoff);
 public:
     virtual void setDigitalStart(int start);
     virtual void setDigitalMode(int mode);
@@ -592,7 +592,7 @@ public:
     virtual uint   getSampleSize();
 public:
     virtual ishort getXRange();
-    virtual double getHoldoff();
+    virtual uint   getHoldoff();
 public:
     virtual int   getDigitalStart();
     virtual int   getDigitalMode();
@@ -690,7 +690,7 @@ public:
 public:
     virtual void setXRange(ishort range);
     virtual void setSampleSize(uint frameSize);
-    virtual void setHoldoff(double holdoff);
+    virtual void setHoldoff(uint holdoff);
 public:
     virtual void setDigitalStart(int start);
     virtual void setDigitalMode(int mode);
@@ -740,7 +740,7 @@ public:
 public:
     virtual uint   getSampleSize();
     virtual ishort getXRange();
-    virtual double getHoldoff();
+    virtual uint   getHoldoff();
 public:
     virtual int   getDigitalStart();
     virtual int   getDigitalMode();
