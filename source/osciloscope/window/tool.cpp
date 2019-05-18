@@ -653,7 +653,7 @@ void ToolText::Time(char* buffer, int size, double value)
     }
     else if(absvalue >= DOUBLE_MICRO)
     {
-        pFormat->formatString(buffer, size, "%.3f qs", value * DOUBLE_MEGA);
+        pFormat->formatString(buffer, size, "%.3f us", value * DOUBLE_MEGA);
     }
     else if(absvalue >= DOUBLE_NANO)
     {
@@ -681,7 +681,7 @@ void ToolText::Hertz(char* buffer, int size, float value)
     }
     if(value >= NANO && value < MICRO)
     {
-        pFormat->formatString(buffer, size, "%.3f qHz", value * MEGA);
+        pFormat->formatString(buffer, size, "%.3f uHz", value * MEGA);
     }
     else if(value >= MICRO && value < MILI)
     {
