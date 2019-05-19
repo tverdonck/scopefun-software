@@ -1683,11 +1683,11 @@ void OsciloscopeControl2::setGeneratorFrequency1(float freq, float fs)
         case GENERATOR_DELTA:
         case GENERATOR_DC:
         case GENERATOR_NOISE:
-            delta = 8192.0 * double(freq) / double(fs);
+            delta = 65536.0 * double(freq) / double(fs);
             break;
     };
     //
-    uint gDelta = uint(delta * 1048575.0);
+    uint gDelta = uint(delta * 131071.0);
     generatorDeltaH1 = (gDelta & 0xFFFF0000) >> 16;
     generatorDeltaL1 = gDelta & 0x0000FFFF;
 }
@@ -1781,6 +1781,7 @@ float OsciloscopeControl2::getYScaleA()
 }
 int OsciloscopeControl2::getYPositionA()
 {
+    if( offseta > 1500 ) return -int(65536-offseta);
     return (int)offseta;
 }
 
@@ -1794,6 +1795,7 @@ float OsciloscopeControl2::getYScaleB()
 }
 int OsciloscopeControl2::getYPositionB()
 {
+    if( offsetb > 1500 ) return -int(65536-offsetb);
     return (int)offsetb;
 }
 

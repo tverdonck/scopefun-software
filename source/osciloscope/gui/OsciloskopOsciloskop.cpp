@@ -1134,7 +1134,6 @@ void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
     m_comboBoxCh0Display->SetSelection(unit);
     double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     RecalculateTriggerPosition(oldTriggerVoltagePerSteps, newTriggerVoltagePerStep);
-    pOsciloscope->control.setYPositionA(pOsciloscope->window.channel01.YPosition + pOsciloscope->settings.getHardware()->getAnalogOffset(pOsciloscope->window.horizontal.Capture, 0, pOsciloscope->window.channel01.Capture));
     // transfer
     pOsciloscope->control.transferData();
     pOsciloscope->window.measure.ClearCapture();
@@ -1212,10 +1211,10 @@ void OsciloskopOsciloskop::m_sliderCh0PositionOnScroll(wxScrollEvent& event)
     float time    = pOsciloscope->window.horizontal.Capture;
     float capture = pOsciloscope->window.channel01.Capture;
     // steps
-    pOsciloscope->control.setYPositionA(m_sliderCh0Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
+    pOsciloscope->control.setYPositionA(-m_sliderCh0Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
     pOsciloscope->control.transferData();
     // voltage
-    pOsciloscope->window.channel01.YPosition = double(m_sliderCh0Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
+    pOsciloscope->window.channel01.YPosition = double(-m_sliderCh0Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
     m_textCtrlCh0Position->SetValue(pFormat->doubleToString(pOsciloscope->window.channel01.YPosition));
 }
 
@@ -1242,7 +1241,6 @@ void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
     //
     double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
-    pOsciloscope->control.setYPositionB(pOsciloscope->window.channel02.YPosition + pOsciloscope->settings.getHardware()->getAnalogOffset(pOsciloscope->window.horizontal.Capture, 1, pOsciloscope->window.channel02.Capture));
     pOsciloscope->control.transferData();
     pOsciloscope->window.measure.ClearCapture();
 }
@@ -1319,10 +1317,10 @@ void OsciloskopOsciloskop::m_sliderCh1PositionOnScroll(wxScrollEvent& event)
     float time = pOsciloscope->window.horizontal.Capture;
     float capture = pOsciloscope->window.channel02.Capture;
     // steps
-    pOsciloscope->control.setYPositionB(m_sliderCh1Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
+    pOsciloscope->control.setYPositionB(-m_sliderCh1Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
     pOsciloscope->control.transferData();
     // voltage
-    pOsciloscope->window.channel02.YPosition = double(m_sliderCh1Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+    pOsciloscope->window.channel02.YPosition = double(-m_sliderCh1Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
     m_textCtrlCh1Position->SetValue(pFormat->doubleToString(pOsciloscope->window.channel02.YPosition));
 }
 
@@ -3185,62 +3183,78 @@ void OsciloskopOsciloskop::m_spinBtnFrameHistoryOnSpinDown(wxSpinEvent& event)
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinUp(wxSpinEvent& event)
 {
-    float time = pOsciloscope->window.horizontal.Capture;
-    float capture = pOsciloscope->window.channel01.Capture;
-    // step
-    double steps = m_sliderCh0Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
-    pOsciloscope->control.setYPositionA(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
-    // transfer
+    // position
+    int ypos = pOsciloscope->control.getYPositionA();
+    pOsciloscope->control.setYPositionA( ypos - 1);
     pOsciloscope->control.transferData();
-    // update text box
-    m_textCtrlCh0Position->SetValue(pFormat->doubleToString(steps * pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture)));
-    wxCommandEvent e;
-    m_textCtrlCh0PositionOnTextEnter(e);
+
+    // ypos, step and offset
+              ypos = pOsciloscope->control.getYPositionA();
+    float  time    = pOsciloscope->window.horizontal.Capture;
+    float  capture = pOsciloscope->window.channel01.Capture;
+    double step    = pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
+    int    offset  = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture);
+
+    // update ui
+    m_sliderCh0Position->SetValue( ypos - offset );
+    m_textCtrlCh0Position->SetValue( pFormat->doubleToString( step*double(ypos - offset) ) );
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinDown(wxSpinEvent& event)
 {
-    float time = pOsciloscope->window.horizontal.Capture;
-    float capture = pOsciloscope->window.channel01.Capture;
-    // step
-    double steps = m_sliderCh0Position->GetValue() - pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
-    pOsciloscope->control.setYPositionA(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
-    // transfer
+    // position
+    int ypos = pOsciloscope->control.getYPositionA();
+    pOsciloscope->control.setYPositionA( ypos + 1);
     pOsciloscope->control.transferData();
-    // update text box
-    m_textCtrlCh0Position->SetValue(pFormat->doubleToString(steps * pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture)));
-    wxCommandEvent e;
-    m_textCtrlCh0PositionOnTextEnter(e);
+
+    // ypos, step and offset
+              ypos = pOsciloscope->control.getYPositionA();
+    float  time    = pOsciloscope->window.horizontal.Capture;
+    float  capture = pOsciloscope->window.channel01.Capture;
+    double step    = pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
+    int    offset  = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture);
+
+    // update ui
+    m_sliderCh0Position->SetValue( ypos - offset );
+    m_textCtrlCh0Position->SetValue( pFormat->doubleToString( step*double(ypos - offset) ) );
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh1YPosOnSpinUp(wxSpinEvent& event)
 {
-    float time = pOsciloscope->window.horizontal.Capture;
-    float capture = pOsciloscope->window.channel02.Capture;
-    // step
-    double steps = m_sliderCh1Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
-    pOsciloscope->control.setYPositionB(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
-    // transfer
+    // position
+    int ypos = pOsciloscope->control.getYPositionB();
+    pOsciloscope->control.setYPositionB( ypos - 1);
     pOsciloscope->control.transferData();
-    // update text box
-    m_textCtrlCh1Position->SetValue(pFormat->doubleToString(steps * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture)));
-    wxCommandEvent e;
-    m_textCtrlCh1PositionOnTextEnter(e);
+
+    // ypos, step and offset
+              ypos = pOsciloscope->control.getYPositionB();
+    float  time    = pOsciloscope->window.horizontal.Capture;
+    float  capture = pOsciloscope->window.channel02.Capture;
+    double step    = pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+    int    offset  = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture);
+
+    // update ui
+    m_sliderCh1Position->SetValue( ypos - offset );
+    m_textCtrlCh1Position->SetValue( pFormat->doubleToString( step*double(ypos - offset) ) );
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh1YPosOnSpinDown(wxSpinEvent& event)
 {
-    float time = pOsciloscope->window.horizontal.Capture;
-    float capture = pOsciloscope->window.channel02.Capture;
-    // step
-    double steps = m_sliderCh1Position->GetValue() - pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
-    pOsciloscope->control.setYPositionB(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
-    // transfer
+       // position
+    int ypos = pOsciloscope->control.getYPositionB();
+    pOsciloscope->control.setYPositionB( ypos + 1);
     pOsciloscope->control.transferData();
-    // update text box
-    m_textCtrlCh1Position->SetValue(pFormat->doubleToString(steps * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture)));
-    wxCommandEvent e;
-    m_textCtrlCh1PositionOnTextEnter(e);
+
+    // ypos, step and offset
+              ypos = pOsciloscope->control.getYPositionB();
+    float  time    = pOsciloscope->window.horizontal.Capture;
+    float  capture = pOsciloscope->window.channel02.Capture;
+    double step    = pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+    int    offset  = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture);
+
+    // update ui
+    m_sliderCh1Position->SetValue( ypos - offset );
+    m_textCtrlCh1Position->SetValue( pFormat->doubleToString( step*double(ypos - offset) ) );
 }
 
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinUp(wxSpinEvent& event)
