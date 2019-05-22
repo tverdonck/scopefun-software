@@ -26,6 +26,8 @@ Build-Exe:
     script:
         - powershell New-Item -ItemType Directory -name sfExe -Force
         - cd sfExe
+        - powershell Remove-Item *.exe
+        - powershell Remove-Item *.sha512
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package
@@ -51,6 +53,8 @@ Build-Exe-Mac:
     script:
         - mkdir -p sfExe
         - cd sfExe
+        - rm -f *.dmg
+        - rm -f *.sha512
         - chmod +x ../lib/wxWidgets-3.0.4/src/stc/gen_iface.py
         - chmod +x ../lib/libusb-1.0.22/install-sh
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
@@ -78,6 +82,8 @@ Build-Exe-Linux:
     script:
         - mkdir -p sfExe
         - cd sfExe
+        - rm -f *.deb
+        - rm -f *.sha512
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -D CPACK_BINARY_TZ="false" -D CPACK_BINARY_TGZ="false" -D CPACK_BINARY_STGZ="false" ..
         - make package
     only:
@@ -104,6 +110,8 @@ Zip-Source:
     script:
         - powershell New-Item -ItemType Directory -name sfSrc -Force
         - cd sfSrc
+        - powershell Remove-Item *.7z
+        - powershell Remove-Item *.sha512
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
         - set "PATH=%PATH%;c:\msys\1.0\bin"
         - mingw32-make package_source
@@ -128,6 +136,8 @@ Zip-Source-Linux:
     script:
         - mkdir -p sfSrc
         - cd sfSrc
+        - rm -f *.gz
+        - rm -f *.sha512
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
         - make package_source
     when: always
@@ -152,6 +162,8 @@ Zip-Source-Mac:
     script:
         - mkdir -p sfSrc
         - cd sfSrc
+        - rm -f *.gz
+        - rm -f *.sha512
         - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" -S .. -B .
         - make package_source
