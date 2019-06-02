@@ -73,6 +73,7 @@ public:
     SUsb   getUSB();
 public:
     int    getAnalogOffset(float time, int ch, float volt);
+    double getAnalogOffsetDouble(float time, int ch, float volt);
     double getAnalogStep(float time, int ch, float volt);
     ushort getAnalogGain(float time, int ch, float volt);
     int    getGeneratorOffset(float time, int ch);

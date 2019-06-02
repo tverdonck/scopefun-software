@@ -303,6 +303,14 @@ int OscHardware::getAnalogOffset(float time, int ch, float volt)
     return callibratedOffsets[type][ch][index];
 }
 
+double OscHardware::getAnalogOffsetDouble(float time, int ch, float volt)
+{
+    ECallibrationType type = getCallibrationType(time);
+    uint             index = captureVoltFromValue(volt);
+    int offset = callibratedOffsets[type][ch][index];
+    double koeficient = 10*double( captureVoltFromEnum(index) ) / 1024.0;
+    return koeficient*offset;
+}
 double OscHardware::getAnalogStep(float time, int ch, float volt)
 {
     ECallibrationType type = getCallibrationType(time);

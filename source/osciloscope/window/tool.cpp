@@ -649,7 +649,7 @@ void ToolText::Time(char* buffer, int size, double value)
     }
     else if(absvalue >= DOUBLE_MILI)
     {
-        pFormat->formatString(buffer, size, "%.3f ms", value * DOUBLE_KILO);
+        pFormat->formatString(buffer, size, "%.3f ms", value*DOUBLE_KILO);
     }
     else if(absvalue >= DOUBLE_MICRO)
     {

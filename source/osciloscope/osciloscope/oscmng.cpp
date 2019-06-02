@@ -1876,8 +1876,8 @@ bool OsciloscopeManager::onApplicationIdle()
         renderData.shadowCoolingShader = shadowCoolingShader;
         renderData.analogChannelYVoltageStep0 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 0, window.channel01.Capture);
         renderData.analogChannelYVoltageStep1 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 1, window.channel02.Capture);
-        renderData.analogChannelOffsets0 = settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 0, window.channel01.Capture);
-        renderData.analogChannelOffsets1 = settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 1, window.channel02.Capture);
+        renderData.analogChannelOffsets0 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 0, window.channel01.Capture);
+        renderData.analogChannelOffsets1 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 1, window.channel02.Capture);
         renderData.analogChannelPositin0 = control.getYPositionA();
         renderData.analogChannelPositin1 = control.getYPositionB();
         renderData.colorBackground = settings.getColors()->renderBackground;

@@ -1088,18 +1088,17 @@ void DoubleToString(char* buffer, int size, double value, char* unit)
 {
     FORMAT_BUFFER();
     double cmp = fabs(value);
-    if(value >= MAX_DOUBLE) FORMAT("max %s",  unit)
-        else if(value <= -MAX_DOUBLE) FORMAT("min %s",  unit)
-            else if(value == 0.0) FORMAT("zero %s",  unit)
-                else if(cmp <= DOUBLE_PIKO)  FORMAT("%.3f pico %s",  value * DOUBLE_TERA, unit)
-                    else if(cmp <= DOUBLE_NANO)  FORMAT("%.3f nano %s",  value * DOUBLE_GIGA, unit)
-                        else if(cmp <= DOUBLE_MICRO) FORMAT("%.3f micro %s", value * DOUBLE_MEGA, unit)
-                            else if(cmp <= DOUBLE_MILI)  FORMAT("%.3f mili %s",  value * DOUBLE_KILO, unit)
-                                else if(cmp >= DOUBLE_TERA)  FORMAT("%.3f tera %s",  value / DOUBLE_TERA, unit)
-                                    else if(cmp >= DOUBLE_GIGA)  FORMAT("%.3f giga %s",  value / DOUBLE_GIGA, unit)
-                                        else if(cmp >= DOUBLE_MEGA)  FORMAT("%.3f mega %s",  value / DOUBLE_MEGA, unit)
-                                            else if(cmp >= DOUBLE_KILO)  FORMAT("%.3f kilo %s",  value / DOUBLE_KILO, unit)
-                                                else { FORMAT("%.3f %s", value, unit); }
+    if(value >= MAX_DOUBLE/100) FORMAT("max %s",  unit)
+        else if(value <= -MAX_DOUBLE/100) FORMAT("min %s",  unit)
+            else if(value == 0.0) FORMAT("0%s",  unit)
+                else if(cmp < 100*DOUBLE_GIGA && cmp >= 100*DOUBLE_MEGA)  FORMAT("%.3f G%s", value / DOUBLE_GIGA, unit)
+                    else if(cmp < 100*DOUBLE_MEGA && cmp >= 100*DOUBLE_KILO) FORMAT("%.3f M%s",  value / DOUBLE_MEGA, unit)
+                        else if(cmp < 100*DOUBLE_KILO && cmp >= 100)  FORMAT("%.3f k%s",  value / DOUBLE_KILO, unit)
+                            else if(cmp < 100 && cmp >= 0.1)  FORMAT("%.3f %s",  value, unit)
+                                else if(cmp < 100*DOUBLE_MILI && cmp >= 100*DOUBLE_MICRO) FORMAT("%.3f m%s", value*DOUBLE_KILO, unit)
+                                    else if(cmp < 100*DOUBLE_MICRO && cmp >= 100*DOUBLE_NANO) FORMAT("%.3f u%s", value*DOUBLE_MEGA, unit)
+                                        else if(cmp < 100*DOUBLE_NANO && cmp >= 100*DOUBLE_PIKO) FORMAT("%.3f n%s", value*DOUBLE_GIGA, unit)
+                                            else FORMAT("%.3f n%s", value*DOUBLE_GIGA, unit);
     memcpy(buffer, formatBuffer, FORMAT_BUFFER_SIZE);
 }
 

@@ -980,9 +980,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     {
         periodF += timeF[i];
     }
-    period0 /= (time0.getCount() / 2);
-    period1 /= (time1.getCount() / 2);
-    periodF /= (timeF.getCount() / 2);
+    period0 /= max(1,(time0.getCount() / 2));
+    period1 /= max(1,(time1.getCount() / 2));
+    periodF /= max(1,(timeF.getCount() / 2));
     current.row[Ch0Tperiod] = period0;
     current.row[Ch1Tperiod] = period1;
     current.row[FunTperiod] = periodF;
