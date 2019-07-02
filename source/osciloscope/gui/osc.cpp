@@ -476,6 +476,9 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_checkBoxFFT1 = new wxCheckBox( m_panel15, wxID_ANY, _("Display FFT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer17->Add( m_checkBoxFFT1, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
+	m_checkBoxAvg01 = new wxCheckBox( m_panel15, wxID_ANY, _("Average"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( m_checkBoxAvg01, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
 
 	bSizer17->Add( 0, 0, 12, wxEXPAND, 5 );
 
@@ -505,7 +508,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel15->SetSizer( bSizer14 );
 	m_panel15->Layout();
 	bSizer14->Fit( m_panel15 );
-	m_notebook4->AddPage( m_panel15, _("Channel 1"), true );
+	m_notebook4->AddPage( m_panel15, _("Channel 1"), false );
 	m_panel16 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer141;
 	bSizer141 = new wxBoxSizer( wxVERTICAL );
@@ -588,6 +591,9 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_checkBoxFFT2 = new wxCheckBox( m_panel16, wxID_ANY, _("Display FFT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer171->Add( m_checkBoxFFT2, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
+	m_checkBoxAvg02 = new wxCheckBox( m_panel16, wxID_ANY, _("Average"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer171->Add( m_checkBoxAvg02, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
 
 	bSizer171->Add( 0, 0, 12, wxEXPAND, 5 );
 
@@ -617,7 +623,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel16->SetSizer( bSizer141 );
 	m_panel16->Layout();
 	bSizer141->Fit( m_panel16 );
-	m_notebook4->AddPage( m_panel16, _("Channel 2"), false );
+	m_notebook4->AddPage( m_panel16, _("Channel 2"), true );
 	m_panel161 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer1411;
 	bSizer1411 = new wxBoxSizer( wxVERTICAL );
@@ -1711,6 +1717,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_comboBoxCh0Display->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh0DisplayOnCombobox ), NULL, this );
 	m_checkBoxSignal1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal1OnCheckBox ), NULL, this );
 	m_checkBoxFFT1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT1OnCheckBox ), NULL, this );
+	m_checkBoxAvg01->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg01OnCheckBox ), NULL, this );
 	m_textCtrlCh0Position->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh0PositionOnTextEnter ), NULL, this );
 	m_spinBtnCh0YPos->Connect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnCh0YPosOnSpinDown ), NULL, this );
 	m_spinBtnCh0YPos->Connect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnCh0YPosOnSpinUp ), NULL, this );
@@ -1732,6 +1739,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_comboBoxCh1Display->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh1DisplayOnCombobox ), NULL, this );
 	m_checkBoxSignal2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal2OnCheckBox ), NULL, this );
 	m_checkBoxFFT2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT2OnCheckBox ), NULL, this );
+	m_checkBoxAvg02->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg02OnCheckBox ), NULL, this );
 	m_textCtrlCh1Position->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh1PositionOnTextEnter ), NULL, this );
 	m_spinBtnCh1YPos->Connect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnCh1YPosOnSpinDown ), NULL, this );
 	m_spinBtnCh1YPos->Connect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnCh1YPosOnSpinUp ), NULL, this );
@@ -1929,6 +1937,7 @@ Osciloskop::~Osciloskop()
 	m_comboBoxCh0Display->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh0DisplayOnCombobox ), NULL, this );
 	m_checkBoxSignal1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal1OnCheckBox ), NULL, this );
 	m_checkBoxFFT1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT1OnCheckBox ), NULL, this );
+	m_checkBoxAvg01->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg01OnCheckBox ), NULL, this );
 	m_textCtrlCh0Position->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh0PositionOnTextEnter ), NULL, this );
 	m_spinBtnCh0YPos->Disconnect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnCh0YPosOnSpinDown ), NULL, this );
 	m_spinBtnCh0YPos->Disconnect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnCh0YPosOnSpinUp ), NULL, this );
@@ -1950,6 +1959,7 @@ Osciloskop::~Osciloskop()
 	m_comboBoxCh1Display->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh1DisplayOnCombobox ), NULL, this );
 	m_checkBoxSignal2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal2OnCheckBox ), NULL, this );
 	m_checkBoxFFT2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT2OnCheckBox ), NULL, this );
+	m_checkBoxAvg02->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg02OnCheckBox ), NULL, this );
 	m_textCtrlCh1Position->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh1PositionOnTextEnter ), NULL, this );
 	m_spinBtnCh1YPos->Disconnect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnCh1YPosOnSpinDown ), NULL, this );
 	m_spinBtnCh1YPos->Disconnect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnCh1YPosOnSpinUp ), NULL, this );

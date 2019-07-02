@@ -112,6 +112,7 @@ class Osciloskop : public wxFrame
 		wxChoice* m_comboBoxCh0Display;
 		wxCheckBox* m_checkBoxSignal1;
 		wxCheckBox* m_checkBoxFFT1;
+		wxCheckBox* m_checkBoxAvg01;
 		wxStaticText* m_staticText1221;
 		wxTextCtrl* m_textCtrlCh0Position;
 		wxSpinButton* m_spinBtnCh0YPos;
@@ -129,6 +130,7 @@ class Osciloskop : public wxFrame
 		wxChoice* m_comboBoxCh1Display;
 		wxCheckBox* m_checkBoxSignal2;
 		wxCheckBox* m_checkBoxFFT2;
+		wxCheckBox* m_checkBoxAvg02;
 		wxStaticText* m_staticText12211;
 		wxTextCtrl* m_textCtrlCh1Position;
 		wxSpinButton* m_spinBtnCh1YPos;
@@ -352,6 +354,7 @@ class Osciloskop : public wxFrame
 		virtual void m_comboBoxCh0DisplayOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignal1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFT1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_checkBoxAvg01OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlCh0PositionOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnCh0YPosOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnCh0YPosOnSpinUp( wxSpinEvent& event ) { event.Skip(); }
@@ -365,6 +368,7 @@ class Osciloskop : public wxFrame
 		virtual void m_comboBoxCh1DisplayOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignal2OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFT2OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_checkBoxAvg02OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlCh1PositionOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnCh1YPosOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnCh1YPosOnSpinUp( wxSpinEvent& event ) { event.Skip(); }

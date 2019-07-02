@@ -1120,7 +1120,7 @@ OsciloscopeControl2::OsciloscopeControl2()
     digitalOutputMask = 0;
     digitalClkDivideH = 0;
     digitalClkDivideL = 0;
-    reserved1 = 0;
+    average   = 0;
     reserved2 = 0;
     reserved3 = 0;
     reserved4 = 0;
@@ -1740,6 +1740,10 @@ void OsciloscopeControl2::setDigitalClockDivide(uint divider)
     digitalClkDivideL = divider & 0x0000FFFF;
 }
 
+void OsciloscopeControl2::setAverage(int enable)
+{
+    average = enable;
+}
 
 ///////////////////////////////////////////////////////////////////////
 // get
@@ -2116,6 +2120,11 @@ uint OsciloscopeControl2::getDigitalClockDivide()
     return uint(digitalClkDivideL) | uint(digitalClkDivideH << 16);
 }
 
+int OsciloscopeControl2::getAverage()
+{
+    return average;
+}
+
 ///////////////////////////////////////////////////////////////////////
 //
 // OsciloscopeMainControl
@@ -2274,6 +2283,7 @@ SHardware2 OsciloscopeControl2::client2Get()
     hw.digitalOutputMask = digitalOutputMask;
     hw.digitalClkDivideH = digitalClkDivideH;
     hw.digitalClkDivideL = digitalClkDivideL;
+    hw.average = average;
     return hw;
 }
 
@@ -2677,6 +2687,10 @@ void OsciloscopeMainControl::setDigitalClockDivide(uint divider)
 {
     pControl->setDigitalClockDivide(divider);
 }
+void OsciloscopeMainControl::setAverage(int enable)
+{
+    pControl->setAverage(enable);
+}
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -2867,6 +2881,10 @@ ushort OsciloscopeMainControl::getAttr(uint volt)
 ushort OsciloscopeMainControl::getGain(int channel, uint volt)
 {
     return pControl->getGain(channel, volt);
+}
+int OsciloscopeMainControl::getAverage()
+{
+    return pControl->getAverage();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

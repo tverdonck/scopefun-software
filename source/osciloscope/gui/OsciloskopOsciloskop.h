@@ -222,6 +222,8 @@ protected:
     void m_checkBoxXYVoltageGraphOnCheckBox(wxCommandEvent& event);
     void m_choiceConnectionOnChoice(wxCommandEvent& event);
     void m_checkBoxFullOnCheckBox(wxCommandEvent& event);
+    void m_checkBoxAvg01OnCheckBox( wxCommandEvent& event );
+    void m_checkBoxAvg02OnCheckBox( wxCommandEvent& event );
     void m_menuItemVersion1OnMenuSelection(wxCommandEvent& event);
     void m_menuItemVersion2OnMenuSelection(wxCommandEvent& event);
     void m_textCtrlFuncCustomOnTextEnter(wxCommandEvent& event);

@@ -965,6 +965,24 @@ void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox(wxCommandEvent& event)
     pOsciloscope->window.horizontal.Full = m_checkBoxFull->GetValue();
 }
 
+void OsciloskopOsciloskop::m_checkBoxAvg01OnCheckBox(wxCommandEvent& event)
+{
+    int avg = pOsciloscope->control.getAverage();
+    if( m_checkBoxAvg01->IsChecked() ) avg |=  512;
+    else                               avg &= ~512;
+    pOsciloscope->control.setAverage( avg );
+    pOsciloscope->control.transferData();
+}
+
+void OsciloskopOsciloskop::m_checkBoxAvg02OnCheckBox(wxCommandEvent& event)
+{
+    int avg = pOsciloscope->control.getAverage();
+    if( m_checkBoxAvg02->IsChecked() ) avg |=  256;
+    else                               avg &= ~256;
+    pOsciloscope->control.setAverage( avg );
+    pOsciloscope->control.transferData();
+}
+
 void OsciloskopOsciloskop::m_textCtrlTimeDisplayOnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlTimeDisplayOnTextEnter

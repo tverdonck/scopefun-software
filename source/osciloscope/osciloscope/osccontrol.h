@@ -195,6 +195,8 @@ public:
     virtual void setDigitalOutputBit(int bit, int onoff) = 0;
     virtual void setDigitalClockDivide(uint divider) = 0;
 public:
+    virtual void setAverage(int enable) = 0;
+public:
     // get
     virtual ushort getAnalogSwitch() = 0;
     virtual int    getEts() = 0;
@@ -249,6 +251,8 @@ public:
 public:
     virtual ushort getAttr(uint volt) = 0;
     virtual ushort getGain(int channel, uint volt) = 0;
+public:
+    virtual int getAverage() = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -373,6 +377,8 @@ public:
     virtual void setDigitalOutputBit(int bit, int onoff);
     virtual void setDigitalClockDivide(uint divider);
 public:
+    virtual void setAverage(int enable) {};
+public:
     virtual ushort getAnalogSwitch();
     virtual int   getEts();
     virtual uint  getControl();
@@ -428,6 +434,8 @@ public:
 public:
     virtual ushort getAttr(uint volt);
     virtual ushort getGain(int channel, uint volt);
+public:
+    virtual int getAverage() {return 0;};
 public:
     void       client1Set(SHardware1& configure);
     SHardware1 client1Get();
@@ -508,7 +516,7 @@ public:
     ushort digitalOutputMask;
     ushort digitalClkDivideH;
     ushort digitalClkDivideL;
-    ushort reserved1;
+    ushort average;
     uint   reserved2;
     uint   reserved3;
     uint   reserved4;
@@ -571,6 +579,8 @@ public:
     virtual void setDigitalOutputBit(int bit, int onoff);
     virtual void setDigitalClockDivide(uint divider);
 public:
+    virtual void setAverage(int enable);
+public:
     virtual ushort getAnalogSwitch();
     virtual int   getEts();
     virtual uint  getControl();
@@ -626,6 +636,8 @@ public:
 public:
     virtual ushort getAttr(uint volt);
     virtual ushort getGain(int channel, uint volt);
+public:
+    virtual int getAverage();
 public:
     void       client2Set(SHardware2& configure);
     SHardware2 client2Get();
@@ -720,6 +732,8 @@ public:
     virtual void setDigitalOutputBit(int bit, int onoff);
     virtual void setDigitalClockDivide(uint divider);
 public:
+    virtual void setAverage(int enable);
+public:
     // get
     virtual ushort getAnalogSwitch();
     virtual int   getEts();
@@ -771,6 +785,8 @@ public:
     virtual int    getDigitalInputOutput7();
     virtual int    getDigitalOutputBit(int bit);
     virtual uint   getDigitalClockDivide();
+public:
+    virtual int getAverage();
 public:
     virtual ushort getAttr(uint volt);
     virtual ushort getGain(int channel, uint volt);

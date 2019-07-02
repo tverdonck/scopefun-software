@@ -257,7 +257,7 @@ typedef struct
     ushort digitalOutputMask;
     ushort digitalClkDivideH;
     ushort digitalClkDivideL;
-    ushort reserved1;
+    ushort average;
     uint   reserved2;
     uint   reserved3;
     uint   reserved4;
