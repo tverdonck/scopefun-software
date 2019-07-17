@@ -152,7 +152,7 @@ def sethw(freq,xrange,VdivCh1,VdivCh2):
 	hardware2config.generatorDeltaH1      = 0
 	hardware2config.generatorDeltaL1      = 42949
 	hardware2config.generatorSqueareDuty1 = 0
-	hardware2config.average               = 48 #enable averaging on both channels
+	hardware2config.average               = 768 #enable averaging on both channels
 	ret = scopefunapi.sfHardwareConfig2(ctx,hardware2config) ###
 	return 0 
 	
