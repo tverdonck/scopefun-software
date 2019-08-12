@@ -45,6 +45,10 @@ if (${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
 	endif()
 endif()
 
+# visual studio ?
+set(SCOPEFUN_VISUALSTUDIO_X64 FALSE CACHE BOOL "visual studio build 64bit")
+set(SCOPEFUN_VISUALSTUDIO_X86 FALSE CACHE BOOL "visual studio build 32bit")
+
 # platform
 if (WIN32)
     set(SCOPEFUN_WINDOWS TRUE CACHE BOOL "os type")

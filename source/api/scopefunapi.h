@@ -1026,7 +1026,7 @@ SCOPEFUN_DELETE(SActiveClients)
                 #define SCOPEFUN_API _declspec(dllexport)
             #endif
         #else
-            #if defined(PLATFORM_LINUX ) || defined(PLATFORM_MINGW) || defined(PLATFORM_MAC)
+            #if defined(PLATFORM_LINUX ) || defined(PLATFORM_MINGW) || defined(PLATFORM_MAC) || defined(PLATFORM_WIN)
                 #define SCOPEFUN_API
             #else
                 #define SCOPEFUN_API _declspec(dllimport)

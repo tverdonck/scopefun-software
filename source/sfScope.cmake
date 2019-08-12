@@ -69,7 +69,7 @@ add_executable(sfScope ${SCOPEFUN_EXE_TYPE}
 "${SF_DATA}"
 "${SF_LOCALE}"
 )
-	
+
 # output
 set_target_properties(sfScope
     PROPERTIES

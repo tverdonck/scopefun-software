@@ -10,24 +10,44 @@ set(SCOPEFUN_LIB_INCLUDE_CJSON     "${CMAKE_SOURCE_DIR}/lib/cJSON"              
 set(SCOPEFUN_LIB_INCLUDE_KISSFFT   "${CMAKE_SOURCE_DIR}/lib/kissfft130"           CACHE PATH "include folder for kissfft" FORCE)
 set(SCOPEFUN_LIB_INCLUDE_GLEW      "${CMAKE_SOURCE_DIR}/lib/glew-1.13.0/include"  CACHE PATH "include folder for glew" FORCE)
 
+# visual studio x64
+if(SCOPEFUN_VISUALSTUDIO_X64)
+	set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/lib/vc_x64_lib/mswud" CACHE PATH "include folder for wx/setup.h" FORCE )
+	set(SCOPEFUN_LIB_LINK_USB  "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/x64/Debug/lib"      CACHE FILEPATH "link folder for libUsb" FORCE)
+	set(SCOPEFUN_LIB_LINK_SDL2 "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.9/VisualC/x64/Debug"     CACHE FILEPATH "link folder for SDL2" FORCE) 
+	set(SCOPEFUN_LIB_LINK_WX  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/lib/vc_x64_lib" CACHE FILEPATH "link folder for wxWidgets" FORCE)
+endif()
+
+# visual studio x86
+if(SCOPEFUN_VISUALSTUDIO_X86)
+	set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/lib/vc_lib/mswud" CACHE PATH "include folder for wx/setup.h" FORCE )
+	set(SCOPEFUN_LIB_LINK_USB  "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Win32/Debug/lib"      CACHE FILEPATH "link folder for libUsb" FORCE)
+	set(SCOPEFUN_LIB_LINK_SDL2 "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.9/VisualC/Win32/Debug"     CACHE FILEPATH "link folder for SDL2" FORCE) 
+	set(SCOPEFUN_LIB_LINK_WX  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/lib/vc_lib" CACHE FILEPATH "link folder for wxWidgets" FORCE)
+endif()
+
 # include platform specifix folders
-if(SCOPEFUN_WINDOWS)
-   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/PC" CACHE PATH "include folder for python on windows" FORCE)                                                                                      
-   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/msw-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE ) 
-endif()
-if(SCOPEFUN_MACOSX)
-   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/sfBuild${SCOPEFUN_TYPE}" CACHE PATH "include folder for python on mac and linux" FORCE)
-   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/osx_cocoa-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE )
-endif()
-if(SCOPEFUN_LINUX)
-   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/sfBuild${SCOPEFUN_TYPE}" CACHE PATH "include folder for python on mac and linux" FORCE)
-   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/gtk3-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE ) 
+if( NOT (SCOPEFUN_VISUALSTUDIO_X64 OR SCOPEFUN_VISUALSTUDIO_X86) )
+	if(SCOPEFUN_WINDOWS)
+	   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/PC" CACHE PATH "include folder for python on windows" FORCE)
+	   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/msw-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE ) 
+	endif()
+	if(SCOPEFUN_MACOSX)
+	   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/sfBuild${SCOPEFUN_TYPE}" CACHE PATH "include folder for python on mac and linux" FORCE)
+	   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/osx_cocoa-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE )
+	endif()
+	if(SCOPEFUN_LINUX)
+	   set(SCOPEFUN_LIB_INCLUDE_PYTHON_PC "${CMAKE_SOURCE_DIR}/lib/Python-2.7.16/sfBuild${SCOPEFUN_TYPE}" CACHE PATH "include folder for python on mac and linux" FORCE)
+	   set(SCOPEFUN_LIB_INCLUDE_WX_SETUP  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib/wx/include/gtk3-unicode-static-3.0" CACHE PATH "include folder for wx/setup.h" FORCE ) 
+	endif()
 endif()
 
 # link folders
-set(SCOPEFUN_LIB_LINK_USB     "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/sfBuild${SCOPEFUN_TYPE}/libusb/.libs" CACHE FILEPATH "link folder for libUsb" FORCE)
-set(SCOPEFUN_LIB_LINK_SDL2    "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.9/sfBuild${SCOPEFUN_TYPE}/build/.libs"     CACHE FILEPATH "link folder for SDL2" FORCE)
-set(SCOPEFUN_LIB_LINK_WX      "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib"        CACHE FILEPATH "link folder for wxWidgets" FORCE)
+if( NOT (SCOPEFUN_VISUALSTUDIO_X64 OR SCOPEFUN_VISUALSTUDIO_X86) )
+	set(SCOPEFUN_LIB_LINK_USB     "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/sfBuild${SCOPEFUN_TYPE}/libusb/.libs" CACHE FILEPATH "link folder for libUsb" FORCE)
+	set(SCOPEFUN_LIB_LINK_SDL2    "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.9/sfBuild${SCOPEFUN_TYPE}/build/.libs"     CACHE FILEPATH "link folder for SDL2" FORCE)
+	set(SCOPEFUN_LIB_LINK_WX      "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/sfBuild${SCOPEFUN_TYPE}/lib" CACHE FILEPATH "link folder for wxWidgets" FORCE)
+endif()
 
 # link folders platform specific
 if(SCOPEFUN_WINDOWS)
@@ -38,6 +58,52 @@ endif()
 
 # libraries
 if(SCOPEFUN_WINDOWS)
+
+if( SCOPEFUN_VISUALSTUDIO_X64 OR SCOPEFUN_VISUALSTUDIO_X86 )
+
+set(SCOPEFUN_LIBS 
+	"${SCOPEFUN_LIB_LINK_USB}/libusb-1.0.lib"
+	"${SCOPEFUN_LIB_LINK_SDL2}/SDL2.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxbase30ud.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxbase30ud_net.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxbase30ud_xml.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxexpatd.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxjpegd.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_adv.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_aui.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_core.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_gl.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_html.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_media.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_propgrid.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_qa.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_ribbon.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_richtext.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_stc.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_webview.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxmsw30ud_xrc.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxpngd.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxregexud.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxscintillad.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxtiffd.lib"
+	"${SCOPEFUN_LIB_LINK_WX}/wxzlibd.lib"
+	"opengl32.lib"
+	"winmm.lib"
+	"ole32.lib"
+	"imm32.lib"
+	"version.lib"
+	"uuid.lib"
+	"oleaut32.lib"
+	"comctl32.lib"
+	"winspool.lib"
+	"ws2_32.lib"
+	"wsock32.lib"
+	"setupapi.lib"
+	"hid.lib"
+	"Rpcrt4.lib"
+	"${CMAKE_SOURCE_DIR}/source/osciloscope/rc/osc.res"
+)
+else()
 
 set(SCOPEFUN_LIBS
 "mingw32.a" 
@@ -81,6 +147,8 @@ set(SCOPEFUN_LIBS
 "hid.a"
 "${CMAKE_SOURCE_DIR}/source/osciloscope/rc/osc.res"
 )
+
+endif()
 
 endif()
 
