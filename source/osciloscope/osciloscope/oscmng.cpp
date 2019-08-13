@@ -142,10 +142,38 @@ OsciloscopeManager::OsciloscopeManager()
     redrawEts = 0;
     signalMode = SIGNAL_MODE_PAUSE;
     windowSlot = 0;
+    simLock = 0;
+    SDL_AtomicUnlock(&simLock);
+    SDL_AtomicSet(&simEnable, 0);
+    SDL_AtomicSet(&simEnableValue, 0);
     SDL_AtomicSet(&customDisplayCh0, 0);
     SDL_AtomicSet(&customDisplayCh1, 0);
     SDL_AtomicSet(&customDisplayFun, 0);
     SDL_AtomicSet(&customDisplayDig, 0);
+    SDL_AtomicSet(&version, 0);
+    SDL_AtomicSet(&headerSize, 0);
+    SDL_AtomicSet(&maxData, 0);
+    SDL_AtomicSet(&packetSize, 0);
+    SDL_AtomicSet(&isConnected, 0);
+    SDL_AtomicSet(&isOpen, 0);
+    SDL_AtomicSet(&transferData, 0);
+    SDL_AtomicSet(&transferSim, 0);
+
+    usbLock = 0;
+    SDL_AtomicUnlock(&usbLock);
+    SDL_AtomicSet(&aOpenUsb,0);
+    SDL_AtomicSet(&aOpenUsbEeprom, 0);
+    SDL_AtomicSet(&aResetUsb, 0);
+    SDL_AtomicSet(&aUploadFpga, 0);
+    SDL_AtomicSet(&aUploadFx2, 0);
+    SDL_AtomicSet(&aUploadFx3, 0);
+    SDL_AtomicSet(&aUploadFirmware, 0);
+    SDL_AtomicSet(&aReadEEPROM, 0);
+    SDL_AtomicSet(&aWriteEEPROM, 0);
+    SDL_AtomicSet(&aReadCallibrate, 0);
+    SDL_AtomicSet(&aWriteCallibrate,0);
+    SDL_AtomicSet(&aEraseEEPROM, 0);
+    SDL_AtomicSet(&aCloseUsb, 0);
 }
 
 void* malloc_fn2(size_t sz)
@@ -187,7 +215,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     sfApiCreateContext(getCtx(), settings.getSettings()->memoryFrame * MEGABYTE);
     sfApiInit();
-    sfSetThreadSafe(getCtx(), 1);
+    sfSetThreadSafe(getCtx(), 0);
     sfSetActive(getCtx(), 1);
     sfSetTimeOut(getCtx(), 0);
     sfSetFrameVersion(getCtx(), HARDWARE_VERSION_2);
@@ -195,7 +223,7 @@ int OsciloscopeManager::start()
     sfSetFrameData(getCtx(), 40000);
     sfSetFramePacket(getCtx(), SCOPEFUN_FRAME_2_PACKET);
     sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
+    pOsciloscope->transmitSim(sim);
     ////////////////////////////////////////////////
     // apply settings
     ////////////////////////////////////////////////
@@ -1504,6 +1532,70 @@ int OsciloscopeManager::stop()
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeManager::openUsb(int eeprom)
 {
+   SDL_AtomicSet(&aOpenUsb, 1);
+   SDL_AtomicSet(&aOpenUsbEeprom, eeprom);
+}
+void OsciloscopeManager::resetUsb()
+{
+   SDL_AtomicSet(&aResetUsb, 1);
+}
+void OsciloscopeManager::uploadFpga()
+{
+   SDL_AtomicSet(&aUploadFpga, 1);
+}
+void OsciloscopeManager::uploadFx2()
+{
+   SDL_AtomicSet(&aUploadFx2, 1);
+}
+void OsciloscopeManager::uploadFx3()
+{
+   SDL_AtomicSet(&aUploadFx3, 1);
+}
+void OsciloscopeManager::uploadFirmware()
+{
+   SDL_AtomicSet(&aUploadFirmware, 1);
+}
+void OsciloscopeManager::ReadEEPROM(SEeprom& out)
+{
+   SDL_AtomicSet(&aReadEEPROM, 1);
+   while(SDL_AtomicCAS(&aReadEEPROM, 0, 0) == SDL_FALSE)
+   {
+      SDL_Delay(100);
+   }
+   SDL_AtomicLock(&usbLock);
+      out = eeprom;
+   SDL_AtomicUnlock(&usbLock);
+}
+void OsciloscopeManager::WriteEEPROM()
+{
+   SDL_AtomicSet(&aWriteEEPROM, 1);
+}
+void OsciloscopeManager::ReadCallibrate(SEeprom& out)
+{
+   SDL_AtomicSet(&aReadCallibrate, 1);
+   while (SDL_AtomicCAS(&aReadCallibrate, 0, 0) == SDL_FALSE)
+   {
+      SDL_Delay(100);
+   }
+   SDL_AtomicLock(&usbLock);
+      out = eeprom;
+   SDL_AtomicUnlock(&usbLock);
+}
+void OsciloscopeManager::WriteCallibrate()
+{
+   SDL_AtomicSet(&aWriteCallibrate, 1);
+}
+void OsciloscopeManager::EraseEEPROM()
+{
+   SDL_AtomicSet(&aEraseEEPROM, 1);
+}
+void OsciloscopeManager::closeUsb()
+{
+   SDL_AtomicSet(&aCloseUsb, 1);
+}
+
+void OsciloscopeManager::threadOpenUsb(int eeprom)
+{
     int version = 0;
     sfGetFrameVersion(getCtx(), &version);
     if(version == HARDWARE_VERSION_2)
@@ -1512,10 +1604,27 @@ void OsciloscopeManager::openUsb(int eeprom)
         SUsb usb2 = settings.getHardware()->getUSB();
         if(eeprom > 0)
         {
-            usb2.idVendor  = CYPRESS_VID;
-            usb2.idProduct = CYPRESS_PID;
+           uint vid = usb2.idVendor;
+           uint pid = usb2.idProduct;
+
+           usb2.idProduct = CYPRESS_PID;
+           usb2.idVendor  = CYPRESS_VID;
+           sfHardwareOpen(getCtx(), &usb2, HARDWARE_VERSION_2);
+
+           int opened = 0;
+           sfHardwareIsOpened(getCtx(),&opened);
+           if (!opened)
+           {
+              usb2.idVendor  = vid;
+              usb2.idProduct = pid;
+              sfHardwareOpen(getCtx(), &usb2, HARDWARE_VERSION_2);
+           }
         }
-        sfHardwareOpen(getCtx(), &usb2, HARDWARE_VERSION_2);
+        else
+        {
+           sfHardwareOpen(getCtx(), &usb2, HARDWARE_VERSION_2);
+        }
+        
     }
     if(version == HARDWARE_VERSION_1)
     {
@@ -1523,18 +1632,21 @@ void OsciloscopeManager::openUsb(int eeprom)
         SUsb usb1 = settings.getHardware()->getUSB();
         sfHardwareOpen(getCtx(), &usb1, HARDWARE_VERSION_1);
     }
+    SDL_AtomicSet(&aOpenUsb, 0);
 }
-void OsciloscopeManager::resetUsb()
+void OsciloscopeManager::threadResetUsb()
 {
     sfHardwareReset(getCtx());
+    SDL_AtomicSet(&aResetUsb, 0);
 }
 
-void OsciloscopeManager::closeUsb()
+void OsciloscopeManager::threadCloseUsb()
 {
     sfHardwareClose(getCtx());
+    SDL_AtomicSet(&aCloseUsb, 0);
 }
 
-void OsciloscopeManager::uploadFirmware()
+void OsciloscopeManager::threadUploadFirmware()
 {
     int open = 0;
     sfHardwareIsOpened(getCtx(), &open);
@@ -1542,20 +1654,19 @@ void OsciloscopeManager::uploadFirmware()
     {
         int version = 0;
         sfGetFrameVersion(getCtx(), &version);
-
-		if(version == HARDWARE_VERSION_1)
+		  if(version == HARDWARE_VERSION_1)
         {
-            uploadFx2();
+            threadUploadFx2();
 
              // close
-            closeUsb();
+            threadCloseUsb();
 
             // open
-            openUsb();
+            threadOpenUsb();
         }
 
         // fpga
-        uploadFpga();
+        threadUploadFpga();
 
         // delay
         SDL_Delay(4000);
@@ -1576,6 +1687,174 @@ void OsciloscopeManager::uploadFirmware()
         // control
         control.transferData();
     }
+    SDL_AtomicSet(&aUploadFirmware, 0);
+}
+
+
+void OsciloscopeManager::threadUploadFx2()
+{
+   FORMAT_BUFFER();
+   FORMAT_PATH("data/firmware/fx2.hex");
+   fx2.size = (uint)SDL_strlen(formatBuffer);
+   SDL_memcpy(fx2.data.bytes, formatBuffer, fx2.size);
+   fx2.data.bytes[fx2.size] = 0;
+   sfHardwareUploadFx2(getCtx(), &fx2);
+   SDL_AtomicSet(&aUploadFx2, 0);
+}
+
+
+void OsciloscopeManager::threadUploadFx3()
+{
+   FORMAT_BUFFER();
+   FORMAT_PATH("data/firmware/fx3.img");
+   fx2.size = (uint)SDL_strlen(formatBuffer);
+   SDL_memcpy(fx2.data.bytes, formatBuffer, fx2.size);
+   fx2.data.bytes[fx2.size] = 0;
+   sfHardwareUploadFx2(getCtx(), &fx2);
+   SDL_AtomicSet(&aUploadFx3, 0);
+}
+
+void OsciloscopeManager::threadUploadFpga()
+{
+   char*  buffer = 0;
+   ilarge bufferSize = 0;
+   String fpgaFileName = settings.getHardware()->fpgaFirmware;
+   int ret = fileLoad(fpgaFileName.asChar(), &buffer, &bufferSize);
+   fpga.size = bufferSize;
+   SDL_memcpy(fpga.data.bytes, buffer, fpga.size);
+   pMemory->free(buffer);
+   sfHardwareUploadFpga(getCtx(), &fpga);
+   SDL_AtomicSet(&aUploadFpga, 0);
+}
+
+void OsciloscopeManager::threadWriteEEPROM()
+{
+   int ret = 0;
+   int version = 0;
+   sfGetFrameVersion(getCtx(), &version);
+   if (version == HARDWARE_VERSION_1)
+   {
+      threadOpenUsb();
+      threadUploadFx2();
+      SEeprom* eeprom = (SEeprom*)pMemory->allocate(sizeof(SEeprom), 16);
+      memset(eeprom, 0, sizeof(SEeprom));
+      eeprom->data.bytes[0] = 0xC0;
+      eeprom->data.bytes[1] = (settings.getHardware()->usbVendor & 0xff);
+      eeprom->data.bytes[2] = (settings.getHardware()->usbVendor >> 8) & 0xff;
+      eeprom->data.bytes[3] = (settings.getHardware()->usbProduct & 0xff);
+      eeprom->data.bytes[4] = (settings.getHardware()->usbProduct >> 8) & 0xff;
+      eeprom->data.bytes[5] = (settings.getHardware()->usbSerial & 0xff);
+      eeprom->data.bytes[6] = (settings.getHardware()->usbSerial & 0xff);
+      ret = sfHardwareEepromWrite(getCtx(), eeprom, 7, 0);
+      pMemory->free(eeprom);
+   }
+   if (version == HARDWARE_VERSION_2)
+   {
+      threadOpenUsb(1);
+      threadUploadFx3();
+      threadCloseUsb();
+      threadOpenUsb();
+      char path[1024] = { 0 };
+      ret = pFormat->formatPath(path, 1024, "data\\firmware\\fx3.img");
+      char*    buffer = 0;
+      ilarge   bufferSize = 0;
+      ret = fileLoad(path, &buffer, &bufferSize);
+      SEeprom* eeprom = (SEeprom*)pMemory->allocate(sizeof(SEeprom), 16);
+      SDL_memset(eeprom, 0, sizeof(SEeprom));
+      SDL_memcpy(eeprom, buffer, bufferSize);
+      pMemory->free(buffer);
+      buffer = (char*)&eeprom->data.bytes[0];
+      ret = sfHardwareEepromWrite(getCtx(), (SEeprom*)(buffer), bufferSize, 0);
+      pMemory->free(eeprom);
+   }
+   if (ret == SCOPEFUN_SUCCESS)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write EEPROM failed.", 0);
+   }
+   threadCloseUsb();
+   SDL_AtomicSet(&aWriteEEPROM, 0);
+}
+
+void OsciloscopeManager::threadWriteCallibrate()
+{
+   threadOpenUsb();
+   int version = 0;
+   sfGetFrameVersion(getCtx(), &version);
+   if (version == HARDWARE_VERSION_1)
+   {
+      threadUploadFx2();
+   }
+   SEeprom eeprom;
+   memset(&eeprom, 0xdd, sizeof(SEeprom));
+   SDL_memcpy((char*)&eeprom.data.bytes[0], (char*)settings.getHardware(), sizeof(OscHardware));
+   int ret = sfHardwareEepromWrite(getCtx(), &eeprom, sizeof(OscHardware), 256000);
+   if (ret == SCOPEFUN_SUCCESS)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write EEPROM failed.", 0);
+   }
+   threadCloseUsb();
+   SDL_AtomicSet(&aWriteCallibrate,0);
+}
+
+void OsciloscopeManager::threadEraseEEPROM()
+{
+   threadUploadFx2();
+   threadOpenUsb();
+   int ret = sfHardwareEepromErase(getCtx());
+   if (ret == SCOPEFUN_SUCCESS)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Erase EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Erase EEPROM failed.", 0);
+   }
+   threadCloseUsb();
+   SDL_AtomicSet(&aEraseEEPROM,0);
+}
+
+void OsciloscopeManager::threadReadEEPROM()
+{
+   threadUploadFx2();
+   threadOpenUsb();
+   int ret = sfHardwareEepromRead(getCtx(), &eeprom, sizeof(SEeprom), 0);
+   if (ret == SCOPEFUN_SUCCESS)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read EEPROM failed.", 0);
+   }
+   threadCloseUsb();
+   SDL_AtomicSet(&aReadEEPROM, 0);
+}
+
+void OsciloscopeManager::threadReadCallibrate()
+{
+   threadOpenUsb();
+   threadUploadFx2();
+   memset(&eeprom, 0xee, sizeof(SEeprom));
+   int ret = sfHardwareEepromRead(getCtx(), &eeprom, sizeof(OscHardware), 256000);
+   if (ret == SCOPEFUN_SUCCESS)
+   {
+      SDL_memcpy(settings.getHardware(), &eeprom.data.bytes[0], sizeof(OscHardware));
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read EEPROM failed.", 0);
+   }
+   threadCloseUsb();
+   SDL_AtomicSet(&aReadCallibrate, 0);
 }
 
 void OsciloscopeManager::connect()
@@ -1590,163 +1869,6 @@ void OsciloscopeManager::disconnect()
     closeUsb();
 }
 
-void OsciloscopeManager::uploadFx2()
-{
-    FORMAT_BUFFER();
-    FORMAT_PATH("data/firmware/fx2.hex");
-    fx2.size  = (uint)SDL_strlen(formatBuffer);
-    SDL_memcpy(fx2.data.bytes, formatBuffer, fx2.size);
-    fx2.data.bytes[fx2.size] = 0;
-    sfHardwareUploadFx2(getCtx(), &fx2);
-}
-
-
-void OsciloscopeManager::uploadFx3()
-{
-    FORMAT_BUFFER();
-    FORMAT_PATH("data/firmware/fx3.img");
-    fx2.size  = (uint)SDL_strlen(formatBuffer);
-    SDL_memcpy(fx2.data.bytes, formatBuffer, fx2.size);
-    fx2.data.bytes[fx2.size] = 0;
-    sfHardwareUploadFx2(getCtx(), &fx2);
-}
-
-void OsciloscopeManager::uploadFpga()
-{
-    char*  buffer = 0;
-    ilarge bufferSize = 0;
-    String fpgaFileName = settings.getHardware()->fpgaFirmware;
-    int ret = fileLoad(fpgaFileName.asChar(), &buffer, &bufferSize);
-    fpga.size = bufferSize;
-    SDL_memcpy(fpga.data.bytes, buffer, fpga.size);
-    pMemory->free(buffer);
-    sfHardwareUploadFpga(getCtx(), &fpga);
-}
-
-void OsciloscopeManager::WriteEEPROM()
-{
-    int ret = 0;
-    int version = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    if(version == HARDWARE_VERSION_1)
-    {
-        openUsb();
-        uploadFx2();
-        SEeprom* eeprom = (SEeprom*)pMemory->allocate(sizeof(SEeprom), 16);
-        memset(eeprom, 0, sizeof(SEeprom));
-        eeprom->data.bytes[0] = 0xC0;
-        eeprom->data.bytes[1] = (settings.getHardware()->usbVendor & 0xff);
-        eeprom->data.bytes[2] = (settings.getHardware()->usbVendor >> 8) & 0xff;
-        eeprom->data.bytes[3] = (settings.getHardware()->usbProduct & 0xff);
-        eeprom->data.bytes[4] = (settings.getHardware()->usbProduct >> 8) & 0xff;
-        eeprom->data.bytes[5] = (settings.getHardware()->usbSerial & 0xff);
-        eeprom->data.bytes[6] = (settings.getHardware()->usbSerial & 0xff);
-        ret = sfHardwareEepromWrite(getCtx(), eeprom, 7, 0);
-        pMemory->free(eeprom);
-    }
-    if(version == HARDWARE_VERSION_2)
-    {
-        openUsb(1);
-        uploadFx3();
-        closeUsb();
-        openUsb();
-        char path[1024] = {0};
-        ret = pFormat->formatPath(path, 1024, "data\\firmware\\fx3.img");
-        char*    buffer = 0;
-        ilarge   bufferSize = 0;
-        ret = fileLoad(path, &buffer, &bufferSize);
-        SEeprom* eeprom = (SEeprom*)pMemory->allocate(sizeof(SEeprom), 16);
-        SDL_memset(eeprom, 0, sizeof(SEeprom));
-        SDL_memcpy(eeprom, buffer, bufferSize);
-        pMemory->free(buffer);
-        buffer = (char*)&eeprom->data.bytes[0];
-        ret = sfHardwareEepromWrite(getCtx(), (SEeprom*)(buffer), bufferSize, 0);
-        pMemory->free(eeprom);
-    }
-    if(ret == SCOPEFUN_SUCCESS)
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write EEPROM was successfull.", 0);
-    }
-    else
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write EEPROM failed.", 0);
-    }
-    closeUsb();
-}
-
-void OsciloscopeManager::WriteCallibrate()
-{
-    openUsb();
-    int version = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    if(version == HARDWARE_VERSION_1)
-    {
-        uploadFx2();
-    }
-    SEeprom eeprom;
-    memset(&eeprom, 0xdd, sizeof(SEeprom));
-    SDL_memcpy((char*)&eeprom.data.bytes[0], (char*)settings.getHardware(), sizeof(OscHardware));
-    int ret = sfHardwareEepromWrite(getCtx(), &eeprom, sizeof(OscHardware), 256000);
-    if(ret ==  SCOPEFUN_SUCCESS)
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write EEPROM was successfull.", 0);
-    }
-    else
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write EEPROM failed.", 0);
-    }
-    closeUsb();
-}
-
-void OsciloscopeManager::EraseEEPROM()
-{
-    uploadFx2();
-    openUsb();
-    int ret = sfHardwareEepromErase(getCtx());
-    if(ret == SCOPEFUN_SUCCESS)
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Erase EEPROM was successfull.", 0);
-    }
-    else
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Erase EEPROM failed.", 0);
-    }
-    closeUsb();
-}
-
-void OsciloscopeManager::ReadEEPROM(SEeprom& out)
-{
-    uploadFx2();
-    openUsb();
-    int ret = sfHardwareEepromRead(getCtx(), &out, sizeof(SEeprom), 0);
-    if(ret == SCOPEFUN_SUCCESS)
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read EEPROM was successfull.", 0);
-    }
-    else
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read EEPROM failed.", 0);
-    }
-    closeUsb();
-}
-
-void OsciloscopeManager::ReadCallibrate(SEeprom& out)
-{
-    openUsb();
-    uploadFx2();
-    memset(&out, 0xee, sizeof(SEeprom));
-    int ret = sfHardwareEepromRead(getCtx(), &out, sizeof(OscHardware), 256000);
-    if(ret == SCOPEFUN_SUCCESS)
-    {
-        SDL_memcpy(settings.getHardware(), &out.data.bytes[0], sizeof(OscHardware));
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read EEPROM was successfull.", 0);
-    }
-    else
-    {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read EEPROM failed.", 0);
-    }
-    closeUsb();
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2630,8 +2752,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     {
                         if(callibrate.messageBox == acmbOk)
                         {
-                            callibrate.mode    = acSaveSettings;
-                            callibrate.resetUI = true;
+                            callibrate.mode = acSaveSettings;
                             callibrate.debug << "acEndMessageBox: ok \n";
                         }
                         if(callibrate.messageBox == acmbCancel)
@@ -2646,11 +2767,12 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     {
                         callibrate.mode = acStartMessageBox;
                         callibrate.active = 0;
-                        settings.getHardware()->save();
+                        // settings.getHardware()->save();
                         callibrate.debug << "acSaveSettings: \n";
                         FORMAT_BUFFER();
                         FORMAT_PATH("data/callibrate/debug.log");
                         fileSaveString((const char*)formatBuffer, callibrate.debug.get());
+                        callibrate.resetUI = true;
                     }
                     break;
             }
@@ -2685,8 +2807,7 @@ void OsciloscopeManager::AutoCallibrate()
     callibrate.messageBox  = acmbStart;
     signalMode = SIGNAL_MODE_CAPTURE;
     SSimulate sim = GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 double OsciloscopeManager::getTriggerVoltagePerStep()
@@ -2833,7 +2954,34 @@ SSimulate OsciloscopeManager::GetServerSim()
     sim.etsMax     = settings.getHardware()->fpgaEtsCount;
     return sim;
 }
+void OsciloscopeManager::transmitSim(SSimulate& sim)
+{
+   SDL_AtomicLock(&simLock);
+      simData = sim;
+   SDL_AtomicUnlock(&simLock);
+   SDL_AtomicSet(&pOsciloscope->transferSim, 1);
+}
+void OsciloscopeManager::threadTransmitSim()
+{
+   SDL_AtomicLock(&pOsciloscope->simLock);
+      sfSetSimulateData(getCtx(), &pOsciloscope->simData);
+   SDL_AtomicUnlock(&pOsciloscope->simLock);
+   sfServerUpload(getCtx());
+   SDL_AtomicSet(&pOsciloscope->transferSim, 0);
+}
 
+void OsciloscopeManager::simOnOff(int value)
+{
+   SDL_AtomicSet(&simEnableValue, value);
+   SDL_AtomicSet(&simEnable, 1);
+}
+
+void OsciloscopeManager::threadSimOnOff()
+{
+   sfSetSimulateOnOff(getCtx(), SDL_AtomicGet(&simEnableValue) );
+   sfServerUpload(getCtx());
+   SDL_AtomicSet(&simEnable, 0);
+}
 
 void OsciloscopeManager::setupControl(WndMain window)
 {
@@ -3060,9 +3208,11 @@ int SDLCALL HardwareThreadFunction(void* data)
     SDL_MemoryBarrierAcquire();
     while(pOsciloscope->captureThreadActive)
     {
+        // timer
         pTimer->deltaTime(TIMER_HARDWARE);
         time += pTimer->getDelta(TIMER_HARDWARE);
         mbTimer += pTimer->getDelta(TIMER_HARDWARE);
+
         // frame info
         int version    = 0;
         int headerSize = 0;
@@ -3072,10 +3222,112 @@ int SDLCALL HardwareThreadFunction(void* data)
         sfGetFrameHeader(getCtx(), &headerSize);
         sfGetFrameData(getCtx(), &maxData);
         sfGetFramePacket(getCtx(), &packetSize);
+
         // connected
         int isConnected = sfIsConnected(getCtx());
+
         // simulation
         int isSimulation = sfIsSimulate(getCtx());
+
+        // open
+        int isOpen = 0;
+        sfHardwareIsOpened(getCtx(), &isOpen);
+
+        // set
+        SDL_AtomicSet(&pOsciloscope->version,     version);
+        SDL_AtomicSet(&pOsciloscope->headerSize,  headerSize);
+        SDL_AtomicSet(&pOsciloscope->maxData,     maxData);
+        SDL_AtomicSet(&pOsciloscope->packetSize,  packetSize);
+        SDL_AtomicSet(&pOsciloscope->isConnected, isConnected);
+        SDL_AtomicSet(&pOsciloscope->isOpen,      isOpen);
+
+
+        // transfer sim
+        int transferSim = SDL_AtomicGet(&pOsciloscope->transferSim);
+        if (transferSim)
+        {
+           pOsciloscope->threadTransmitSim();
+        }
+        // open usb
+        int openUsb = SDL_AtomicGet(&pOsciloscope->aOpenUsb);
+        if (openUsb)
+        {
+           int openUsbEeprom = SDL_AtomicGet(&pOsciloscope->aOpenUsbEeprom);
+           pOsciloscope->threadOpenUsb(openUsbEeprom);
+        }
+        // reset usb
+        int resetUsb = SDL_AtomicGet(&pOsciloscope->aResetUsb);
+        if (resetUsb)
+        {
+           pOsciloscope->threadResetUsb();
+        }
+        // upload fpga
+        int uploadFpga = SDL_AtomicGet(&pOsciloscope->aUploadFpga);
+        if (uploadFpga)
+        {
+           pOsciloscope->threadUploadFpga();
+        }
+        // upload fx2
+        int uploadFx2 = SDL_AtomicGet(&pOsciloscope->aUploadFx2);
+        if (uploadFx2)
+        {
+           pOsciloscope->threadUploadFx2();
+        }
+        // upload fx3
+        int uploadFx3 = SDL_AtomicGet(&pOsciloscope->aUploadFx3);
+        if (uploadFx3)
+        {
+           pOsciloscope->threadUploadFx3();
+        }
+        // upload firmware
+        int uploadFirmware = SDL_AtomicGet(&pOsciloscope->aUploadFirmware);
+        if (uploadFirmware)
+        {
+           pOsciloscope->threadUploadFirmware();
+        }
+        // read eeprom
+        int readEEPROM = SDL_AtomicGet(&pOsciloscope->aReadEEPROM);
+        if (readEEPROM)
+        {
+           pOsciloscope->threadReadEEPROM();
+        }
+        // write eeprom
+        int writeEEPROM = SDL_AtomicGet(&pOsciloscope->aWriteEEPROM);
+        if (writeEEPROM)
+        {
+           pOsciloscope->threadWriteEEPROM();
+        }
+        // read callibrate
+        int readCallibrate = SDL_AtomicGet(&pOsciloscope->aReadCallibrate);
+        if (readCallibrate)
+        {
+           pOsciloscope->threadReadCallibrate();
+        }
+        // write callibrate
+        int writeCallibrate = SDL_AtomicGet(&pOsciloscope->aWriteCallibrate);
+        if (writeCallibrate)
+        {
+           pOsciloscope->threadWriteCallibrate();
+        }
+        // erase EEPROM 
+        int eraseEEPROM = SDL_AtomicGet(&pOsciloscope->aEraseEEPROM);
+        if (eraseEEPROM)
+        {
+           pOsciloscope->threadEraseEEPROM();
+        }
+        // close Usb 
+        int closeUsb = SDL_AtomicGet(&pOsciloscope->aCloseUsb);
+        if (closeUsb)
+        {
+           pOsciloscope->threadCloseUsb();
+        }
+        // sim enable 
+        int simEnable = SDL_AtomicGet(&pOsciloscope->simEnable);
+        if (simEnable)
+        {
+           pOsciloscope->threadSimOnOff();
+        }
+
         // capture and uncompress
         mode = pOsciloscope->signalMode;
         if(mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE)
@@ -3247,6 +3499,13 @@ int SDLCALL CaptureThreadFunction(void* data)
     int received = 0;
     while(pOsciloscope->captureThreadActive)
     {
+        // transfer data
+        int transferData = SDL_AtomicGet(&pOsciloscope->transferData);
+        if (transferData)
+        {
+            pOsciloscope->control.threadTransferData();
+        }
+
         SDL_AtomicLock(&pOsciloscope->captureLock);
         // sync user interface and render data with capture thread
         SDL_AtomicLock(&pOsciloscope->renderLock);

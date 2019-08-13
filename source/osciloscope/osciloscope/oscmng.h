@@ -827,12 +827,40 @@ public:
     bool        serverActive;
     SDL_Thread* serverThread;
 public:
+    SEeprom           eeprom;
+    SDL_SpinLock      simLock;
+    SSimulate         simData;
     SDisplay          customDisplayData;
+    SDL_atomic_t      simEnable;
+    SDL_atomic_t      simEnableValue;
+    SDL_atomic_t      version;
+    SDL_atomic_t      headerSize;
+    SDL_atomic_t      maxData;
+    SDL_atomic_t      packetSize;
+    SDL_atomic_t      isConnected;
+    SDL_atomic_t      isOpen;
+    SDL_atomic_t      transferData;
+    SDL_atomic_t      transferSim;
     SDL_atomic_t      customDisplayCh0;
     SDL_atomic_t      customDisplayCh1;
     SDL_atomic_t      customDisplayFun;
     SDL_atomic_t      customDisplayDig;
     SDL_SpinLock      customDisplayLock;
+public:
+    SDL_SpinLock usbLock;
+    SDL_atomic_t aOpenUsb;
+    SDL_atomic_t aOpenUsbEeprom;
+    SDL_atomic_t aResetUsb;
+    SDL_atomic_t aUploadFpga;
+    SDL_atomic_t aUploadFx2;
+    SDL_atomic_t aUploadFx3;
+    SDL_atomic_t aUploadFirmware;
+    SDL_atomic_t aReadEEPROM;
+    SDL_atomic_t aWriteEEPROM;
+    SDL_atomic_t aReadCallibrate;
+    SDL_atomic_t aWriteCallibrate;
+    SDL_atomic_t aEraseEEPROM;
+    SDL_atomic_t aCloseUsb;
 public:
     SDL_Thread*   pHardwareThread;
     SDL_Thread*   pCatureThread;
@@ -976,6 +1004,19 @@ public:
     void EraseEEPROM();
     void closeUsb();
 public:
+   void threadOpenUsb(int eeprom = 0);
+   void threadResetUsb();
+   void threadUploadFpga();
+   void threadUploadFx2();
+   void threadUploadFx3();
+   void threadUploadFirmware();
+   void threadReadEEPROM();
+   void threadWriteEEPROM();
+   void threadReadCallibrate();
+   void threadWriteCallibrate();
+   void threadEraseEEPROM();
+   void threadCloseUsb();
+public:
     int  start();
     int  update(float dt);
     void startThreads();
@@ -1013,6 +1054,11 @@ public:
     void setupControl(WndMain window);
 public:
     SSimulate GetServerSim();
+    void      transmitSim(SSimulate& sim);
+    void      threadTransmitSim();
+public:
+   void simOnOff(int value);
+   void threadSimOnOff();
 };
 
 SFContext* getCtx();

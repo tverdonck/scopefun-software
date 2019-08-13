@@ -660,6 +660,9 @@ public:
 class OsciloscopeMainControl : public OsciloscopeControlInterface
 {
 private:
+    SHardware1                   hw1;
+    SHardware2                   hw2;
+    SDL_SpinLock                 lock;
     int                          version;
     OsciloscopeControlInterface* pControl;
 public:
@@ -675,6 +678,7 @@ public:
     };
 public:
     void       transferData();
+    void       threadTransferData();
 public:
     void setWindow(WndMain& main);
 public:

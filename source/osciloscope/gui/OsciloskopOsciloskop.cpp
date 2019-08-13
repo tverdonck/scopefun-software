@@ -510,11 +510,10 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             int open = 0;
             if(pConnection)
             {
-                open = sfIsConnected(getCtx());
+                open = SDL_AtomicGet(&pOsciloscope->isConnected);
                 pConnection->setConnectedCheckBox(open);
             }
-            int usb = 0;
-            sfHardwareIsOpened(getCtx(), &usb);
+            int usb = SDL_AtomicGet(&pOsciloscope->isOpen);
             m_checkBox26->SetValue(usb);
         }
         // progress bar
@@ -955,9 +954,11 @@ void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
     pOsciloscope->control.transferData();
     pOsciloscope->redrawEts = 1;
     pOsciloscope->clearRenderTarget = 1;
-    SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+
+    SDL_AtomicLock(&pOsciloscope->simLock);
+      pOsciloscope->simData = pOsciloscope->GetServerSim();
+    SDL_AtomicUnlock(&pOsciloscope->simLock);
+    SDL_AtomicSet(&pOsciloscope->transferSim, 1);
 }
 
 void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox(wxCommandEvent& event)
@@ -1040,14 +1041,14 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
     if(version == 1)
     {
         pOsciloscope->control.setSampleSize(frameSize);
-        pOsciloscope->control.setTriggerPre( pOsciloscope->control.getTriggerPre() );
+        pOsciloscope->control.setTriggerPre(pOsciloscope->window.trigger.Percent);
         pOsciloscope->window.horizontal.FrameSize = pOsciloscope->control.getSampleSize();
         data = pOsciloscope->window.horizontal.FrameSize * 6;
     }
     else
     {
         pOsciloscope->control.setSampleSize(frameSize);
-        pOsciloscope->control.setTriggerPre(  pOsciloscope->control.getTriggerPre() );
+        pOsciloscope->control.setTriggerPre(pOsciloscope->window.trigger.Percent );
         pOsciloscope->window.horizontal.FrameSize = pOsciloscope->control.getSampleSize();
         data = pOsciloscope->window.horizontal.FrameSize * 4;
     }
@@ -1140,6 +1141,27 @@ void _setYDisplay(float& volt, uint& unit, VoltageCapture selected)
 void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
 {
     // TODO: Implement m_comboBoxCh0CaptureOnCombobox
+    if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+    {
+       // 500 Mhz help
+       m_comboBoxCh1Capture->SetSelection(m_comboBoxCh0Capture->GetSelection());
+       double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
+       pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh1Capture->GetSelection());
+       pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
+       pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
+       pOsciloscope->control.setYRangeScaleB(m_comboBoxCh1Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+       //
+       float volt;
+       uint  unit;
+       _setYDisplay(volt, unit, (VoltageCapture)m_comboBoxCh1Capture->GetSelection());
+       //
+       m_textCtrlCh1Display->SetValue(wxString::FromAscii(pFormat->floatToString(volt)));
+       m_comboBoxCh1Display->SetSelection(unit);
+       //
+       double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
+       RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
+    }
+
     double oldTriggerVoltagePerSteps = pOsciloscope->getTriggerVoltagePerStep();
     pOsciloscope->window.channel01.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
     pOsciloscope->window.channel01.Scale   = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
@@ -1212,6 +1234,20 @@ void OsciloskopOsciloskop::m_choiceCh0ACDCOnChoice(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlCh0PositionOnTextEnter(wxCommandEvent& event)
 {
+    if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+    {
+       // 500 Mhz help
+       m_textCtrlCh1Position->SetValue(m_textCtrlCh0Position->GetValue());
+       float time = pOsciloscope->window.horizontal.Capture;
+       float capture = pOsciloscope->window.channel02.Capture;
+       // voltage
+       pOsciloscope->window.channel02.YPosition = pFormat->stringToDouble(m_textCtrlCh1Position->GetValue().ToAscii().data());
+       // step
+       double steps = double(pOsciloscope->window.channel02.YPosition) / pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+       pOsciloscope->control.setYPositionB(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
+       m_sliderCh1Position->SetValue(steps);
+    }
+
     float time = pOsciloscope->window.horizontal.Capture;
     float capture = pOsciloscope->window.channel01.Capture;
     // voltage
@@ -1226,6 +1262,19 @@ void OsciloskopOsciloskop::m_textCtrlCh0PositionOnTextEnter(wxCommandEvent& even
 
 void OsciloskopOsciloskop::m_sliderCh0PositionOnScroll(wxScrollEvent& event)
 {
+   if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+   {
+      // 500 Mhz help
+      m_sliderCh1Position->SetValue(m_sliderCh0Position->GetValue());
+      float time = pOsciloscope->window.horizontal.Capture;
+      float capture = pOsciloscope->window.channel01.Capture;
+      // steps
+      pOsciloscope->control.setYPositionB(-m_sliderCh1Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
+      // voltage
+      pOsciloscope->window.channel02.YPosition = double(-m_sliderCh0Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+      m_textCtrlCh1Position->SetValue(pFormat->doubleToString(pOsciloscope->window.channel02.YPosition));
+   }
+
     float time    = pOsciloscope->window.horizontal.Capture;
     float capture = pOsciloscope->window.channel01.Capture;
     // steps
@@ -3163,6 +3212,7 @@ void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection(wxCommandEven
 
 void OsciloskopOsciloskop::m_menuItemWriteCallibrateOnMenuSelection(wxCommandEvent& event)
 {
+    pOsciloscope->settings.load();
     pOsciloscope->WriteCallibrate();
 }
 
@@ -3201,6 +3251,21 @@ void OsciloskopOsciloskop::m_spinBtnFrameHistoryOnSpinDown(wxSpinEvent& event)
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinUp(wxSpinEvent& event)
 {
+   if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+   {
+      // 500 Mhz help
+      int ypos = pOsciloscope->control.getYPositionA();
+      pOsciloscope->control.setYPositionB(ypos - 1);
+
+      ypos = pOsciloscope->control.getYPositionB();
+      float    time = pOsciloscope->window.horizontal.Capture;
+      float capture = pOsciloscope->window.channel01.Capture;
+      double   step = pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+      int    offset = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture);
+      m_sliderCh1Position->SetValue(ypos - offset);
+      m_textCtrlCh1Position->SetValue(pFormat->doubleToString(step*double(ypos - offset)));
+   }
+
     // position
     int ypos = pOsciloscope->control.getYPositionA();
     pOsciloscope->control.setYPositionA( ypos - 1);
@@ -3220,6 +3285,21 @@ void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinUp(wxSpinEvent& event)
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinDown(wxSpinEvent& event)
 {
+   if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+   {
+      // 500 Mhz help
+      int ypos = pOsciloscope->control.getYPositionA();
+      pOsciloscope->control.setYPositionB(ypos + 1);
+
+               ypos = pOsciloscope->control.getYPositionB();
+      float    time = pOsciloscope->window.horizontal.Capture;
+      float capture = pOsciloscope->window.channel01.Capture;
+      double   step = pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+      int    offset = pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture);
+      m_sliderCh1Position->SetValue( ypos - offset);
+      m_textCtrlCh1Position->SetValue(pFormat->doubleToString(step*double(ypos - offset)));
+   }
+
     // position
     int ypos = pOsciloscope->control.getYPositionA();
     pOsciloscope->control.setYPositionA( ypos + 1);
@@ -3466,8 +3546,7 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
     pOsciloscope->signalMode             = SIGNAL_MODE_PAUSE;
-    sfSetSimulateOnOff(getCtx(), 0);
-    sfServerUpload(getCtx());
+    pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();
@@ -3479,8 +3558,7 @@ void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PLAY;
     pOsciloscope->signalMode = SIGNAL_MODE_PLAY;
-    sfSetSimulateOnOff(getCtx(), 0);
-    sfServerUpload(getCtx());
+    pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();
@@ -3492,8 +3570,7 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CAPTURE;
     pOsciloscope->signalMode = SIGNAL_MODE_CAPTURE;
-    sfSetSimulateOnOff(getCtx(), 0);
-    sfServerUpload(getCtx());
+    pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();
@@ -3505,8 +3582,7 @@ void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_SIMULATE;
     pOsciloscope->signalMode = SIGNAL_MODE_SIMULATE;
-    sfSetSimulateOnOff(getCtx(), 1);
-    sfServerUpload(getCtx());
+    pOsciloscope->simOnOff(1);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();
@@ -3518,8 +3594,7 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CLEAR;
     pOsciloscope->signalMode = SIGNAL_MODE_CLEAR;
-    sfSetSimulateOnOff(getCtx(), 0);
-    sfServerUpload(getCtx());
+    pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();

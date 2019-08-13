@@ -84,8 +84,7 @@ void OsciloskopSoftwareGenerator::SoftwareGeneratorOnInitDialog(wxInitDialogEven
         }
     }
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_comboBoxType0OnCombobox(wxCommandEvent& event)
@@ -93,8 +92,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxType0OnCombobox(wxCommandEvent& even
     // TODO: Implement m_comboBoxType0OnCombobox
     pOsciloscope->window.softwareGenerator.channel[0].type = (GenerateType)m_comboBoxType0->GetSelection();
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlPeriod0OnTextEnter(wxCommandEvent& event)
@@ -102,8 +100,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlPeriod0OnTextEnter(wxCommandEvent& e
     // TODO: Implement m_textCtrlPeriod0OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[0].period = pFormat->stringToFloat(m_textCtrlPeriod0->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeriod0->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_comboBoxPeriod0OnCombobox(wxCommandEvent& event)
@@ -111,8 +108,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxPeriod0OnCombobox(wxCommandEvent& ev
     // TODO: Implement m_comboBoxPeriod0OnCombobox
     pOsciloscope->window.softwareGenerator.channel[0].period = pFormat->stringToFloat(m_textCtrlPeriod0->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeriod0->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlPeek0OnTextEnter(wxCommandEvent& event)
@@ -120,8 +116,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlPeek0OnTextEnter(wxCommandEvent& eve
     // TODO: Implement m_textCtrlPeek0OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[0].peakToPeak = pFormat->stringToFloat(m_textCtrlPeek0->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeek0->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_comboBoxPeek0OnCombobox(wxCommandEvent& event)
@@ -129,8 +124,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxPeek0OnCombobox(wxCommandEvent& even
     // TODO: Implement m_comboBoxPeek0OnCombobox
     pOsciloscope->window.softwareGenerator.channel[0].peakToPeak = pFormat->stringToFloat(m_textCtrlPeek0->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeek0->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlSpeed0OnTextEnter(wxCommandEvent& event)
@@ -138,8 +132,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlSpeed0OnTextEnter(wxCommandEvent& ev
     // TODO: Implement m_textCtrlSpeed0OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[0].speed = pFormat->stringToFloat(m_textCtrlSpeed0->GetValue().ToAscii().data());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlAvery0OnTextEnter(wxCommandEvent& event)
@@ -147,16 +140,14 @@ void OsciloskopSoftwareGenerator::m_textCtrlAvery0OnTextEnter(wxCommandEvent& ev
     // TODO: Implement m_textCtrlAvery0OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[0].every = pFormat->stringToFloat(m_textCtrlAvery0->GetValue().ToAscii().data());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_buttonOn0OnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.softwareGenerator.channel[0].onOff = 1;
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         m_buttonOn0->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
@@ -170,8 +161,7 @@ void OsciloskopSoftwareGenerator::m_buttonOff0OnButtonClick(wxCommandEvent& even
 {
     pOsciloscope->window.softwareGenerator.channel[0].onOff = 0;
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         m_buttonOn0->SetBackgroundColour(pOsciloscope->settings.getColors()->windowBack);
@@ -187,8 +177,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxType1OnCombobox(wxCommandEvent& even
     // TODO: Implement m_comboBoxType1OnCombobox
     pOsciloscope->window.softwareGenerator.channel[1].type = (GenerateType)m_comboBoxType1->GetSelection();
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 
@@ -197,8 +186,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlPeriod1OnTextEnter(wxCommandEvent& e
     // TODO: Implement m_textCtrlPeriod1OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[1].period = pFormat->stringToFloat(m_textCtrlPeriod1->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeriod1->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_comboBoxPeriod1OnCombobox(wxCommandEvent& event)
@@ -206,8 +194,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxPeriod1OnCombobox(wxCommandEvent& ev
     // TODO: Implement m_comboBoxPeriod1OnCombobox
     pOsciloscope->window.softwareGenerator.channel[1].period = pFormat->stringToFloat(m_textCtrlPeriod1->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeriod1->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlPeek1OnTextEnter(wxCommandEvent& event)
@@ -215,8 +202,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlPeek1OnTextEnter(wxCommandEvent& eve
     // TODO: Implement m_textCtrlPeek1OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[1].peakToPeak = pFormat->stringToFloat(m_textCtrlPeek1->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeek1->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_comboBoxPeek1OnCombobox(wxCommandEvent& event)
@@ -224,8 +210,7 @@ void OsciloskopSoftwareGenerator::m_comboBoxPeek1OnCombobox(wxCommandEvent& even
     // TODO: Implement m_comboBoxPeek1OnCombobox
     pOsciloscope->window.softwareGenerator.channel[1].peakToPeak = pFormat->stringToFloat(m_textCtrlPeek1->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxPeek1->GetSelection());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlSpeed1OnTextEnter(wxCommandEvent& event)
@@ -233,8 +218,7 @@ void OsciloskopSoftwareGenerator::m_textCtrlSpeed1OnTextEnter(wxCommandEvent& ev
     // TODO: Implement m_textCtrlSpeed1OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[1].speed = pFormat->stringToFloat(m_textCtrlSpeed1->GetValue().ToAscii().data());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_textCtrlAvery1OnTextEnter(wxCommandEvent& event)
@@ -242,16 +226,14 @@ void OsciloskopSoftwareGenerator::m_textCtrlAvery1OnTextEnter(wxCommandEvent& ev
     // TODO: Implement m_textCtrlAvery1OnTextEnter
     pOsciloscope->window.softwareGenerator.channel[1].every = pFormat->stringToFloat(m_textCtrlAvery1->GetValue().ToAscii().data());
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
 }
 
 void OsciloskopSoftwareGenerator::m_buttonOn1OnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.softwareGenerator.channel[1].onOff = 1;
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         m_buttonOn1->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
@@ -265,8 +247,7 @@ void OsciloskopSoftwareGenerator::m_buttonOff1OnButtonClick(wxCommandEvent& even
 {
     pOsciloscope->window.softwareGenerator.channel[1].onOff = 0;
     SSimulate sim = pOsciloscope->GetServerSim();
-    sfSetSimulateData(getCtx(), &sim);
-    sfServerUpload(getCtx());
+    pOsciloscope->transmitSim(sim);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         m_buttonOn1->SetBackgroundColour(pOsciloscope->settings.getColors()->windowBack);
