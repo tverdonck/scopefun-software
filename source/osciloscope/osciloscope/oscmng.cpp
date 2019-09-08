@@ -543,7 +543,7 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    }
 
    // open
-   function(EThreadApiFunction::afOpenUsb);
+   function(afOpenUsb);
    wait();
 
    // fpga
@@ -567,7 +567,7 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
    {
       SUsb usb = hw->getUSB();
       setUSB(&usb);
-      function(EThreadApiFunction::afOpenUsb);
+      function(afOpenUsb);
       wait();
    }
 
@@ -597,7 +597,7 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
          fileLoadPtr(path, (char*)&eepromData, &eepromSize);
       }
       SDL_AtomicUnlock(&lock);
-      function(EThreadApiFunction::afEEPROMWrite);
+      function(afEEPROMWrite);
       wait();
    }
    int iret = SDL_AtomicGet(&ret);
@@ -625,8 +625,8 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
    {
       SUsb usb = hw->getUSB();
       setUSB(&usb);
-      function(EThreadApiFunction::afOpenUsb);
-      function(EThreadApiFunction::afIsOpened);
+      function(afOpenUsb);
+      function(afIsOpened);
       wait();
    }
 
@@ -647,7 +647,7 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
             eepromOffset = 0;
          }
       SDL_AtomicUnlock(&lock);
-      function(EThreadApiFunction::afEEPROMRead);
+      function(afEEPROMRead);
       wait();
    }
    int iret = SDL_AtomicGet(&ret);
@@ -676,7 +676,7 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
    {
       SUsb usb = hw->getUSB();
       setUSB(&usb);
-      function(EThreadApiFunction::afOpenUsb);
+      function(afOpenUsb);
       wait();
    }
 
@@ -687,7 +687,7 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
          eepromOffset = 256000;
          fileLoadPtr((char*)hw, (char*)&eepromData, &eepromSize);
       SDL_AtomicUnlock(&lock);
-      function(EThreadApiFunction::afEEPROMWrite);
+      function(afEEPROMWrite);
       wait();
    }
    int iret = SDL_AtomicGet(&ret);
@@ -714,7 +714,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
    {
       SUsb usb = hw->getUSB();
       setUSB(&usb);
-      function(EThreadApiFunction::afOpenUsb);
+      function(afOpenUsb);
    }
 
    if ( SDL_AtomicGet(&open) > 0 )
@@ -723,7 +723,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
          eepromSize = sizeof(OscHardware);
          eepromOffset = 256000;
       SDL_AtomicUnlock(&lock);
-      function(EThreadApiFunction::afEEPROMRead);
+      function(afEEPROMRead);
       wait();
       SDL_AtomicLock(&lock);
          SDL_memcpy((char*)hw, (char*)&eepromData, sizeof(OscHardware));
@@ -748,7 +748,7 @@ int ThreadApi::eraseEEPROM(OscHardware* hw)
    {
       SUsb usb = hw->getUSB();
       setUSB(&usb);
-      function(EThreadApiFunction::afOpenUsb);
+      function(afOpenUsb);
    }
    
    // upload
@@ -762,10 +762,10 @@ int ThreadApi::eraseEEPROM(OscHardware* hw)
       function(afCloseUsb);
 
       // open
-      function(EThreadApiFunction::afOpenUsb);
+      function(afOpenUsb);
    }
 
-   function(EThreadApiFunction::afEEPROMErase);
+   function(afEEPROMErase);
    wait();
   
    int iret = SDL_AtomicGet(&ret);
@@ -785,7 +785,7 @@ int ThreadApi::simulateTime(double time)
    SDL_AtomicLock(&lock);
       simulateTimeValue = time;
    SDL_AtomicUnlock(&lock);
-   function(EThreadApiFunction::afSimulate);
+   function(afSimulate);
    return 0;
 }
 
@@ -802,11 +802,11 @@ int ThreadApi::hardwareControlFunction(SHardware1* hw1, SHardware2* hw2)
    int ver = SDL_AtomicGet(&version);
    if (ver == HARDWARE_VERSION_1)
    {
-      function(EThreadApiFunction::afHardwareConfig1);
+      function(afHardwareConfig1);
    }
    if (ver == HARDWARE_VERSION_2)
    {
-      function(EThreadApiFunction::afHardwareConfig2);
+      function(afHardwareConfig2);
    }
    return 0;
 }
@@ -878,11 +878,11 @@ int OsciloscopeManager::start()
     // api
     ////////////////////////////////////////////////
     pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE,0,1,0);
-    pOsciloscope->thread.function(EThreadApiFunction::afInit);
+    pOsciloscope->thread.function(afInit);
     sim = pOsciloscope->GetServerSim();
     pOsciloscope->transmitSim(sim);
     pOsciloscope->thread.setFrame(HARDWARE_VERSION_2, SCOPEFUN_FRAME_2_HEADER, 40000, SCOPEFUN_FRAME_2_PACKET);
-    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
+    pOsciloscope->thread.function(afSetFrame);
 
     ////////////////////////////////////////////////
     // apply settings
@@ -3277,15 +3277,15 @@ SSimulate OsciloscopeManager::GetServerSim()
 void OsciloscopeManager::transmitSim(SSimulate& sim)
 {
    pOsciloscope->thread.setSimulateData(&sim);
-   pOsciloscope->thread.function(EThreadApiFunction::afSetSimulateData);
-   pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
+   pOsciloscope->thread.function(afSetSimulateData);
+   pOsciloscope->thread.function(afServerUpload);
 }
 
 void OsciloscopeManager::simOnOff(int value)
 {
    pOsciloscope->thread.setSimulateOnOff(value);
-   pOsciloscope->thread.function(EThreadApiFunction::afSetSimulateOnOff);
-   pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
+   pOsciloscope->thread.function(afSetSimulateOnOff);
+   pOsciloscope->thread.function(afServerUpload);
 }
 
 void OsciloscopeManager::setupControl(WndMain window)
@@ -3548,8 +3548,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
                 // client display ?
                 if(isConnected)
                 {
-                    pOsciloscope->thread.function(EThreadApiFunction::afServerDownload);
-                    pOsciloscope->thread.function(EThreadApiFunction::afGetClientDisplay);
+                    pOsciloscope->thread.function(afServerDownload);
+                    pOsciloscope->thread.function(afGetClientDisplay);
                 }
                 bandWidth += received;
                 if(mbTimer > 1.0)

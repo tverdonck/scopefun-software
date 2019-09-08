@@ -75,8 +75,8 @@ void OsciloskopStorage::m_choicePacketSizeOnChoice(wxCommandEvent& event)
     packet = pOsciloscope->window.storage.getPacketSize(version);
 
     pOsciloscope->thread.setFrame(version,header,data,packet);
-    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
-    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
+    pOsciloscope->thread.function(afSetFrame);
+    pOsciloscope->thread.function(afServerUpload);
 }
 
 void OsciloskopStorage::m_buttonOkOnButtonClick(wxCommandEvent& event)

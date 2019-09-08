@@ -329,13 +329,13 @@ void WndHardwareGenerator::loadCustomDigital(const char* path)
 void WndHardwareGenerator::upload()
 {
     pOsciloscope->thread.setGeneratorData(&custom);
-    pOsciloscope->thread.function(EThreadApiFunction::afUploadGenerator);
+    pOsciloscope->thread.function(afUploadGenerator);
 }
 
 void WndHardwareGenerator::uploadDigital()
 {
    pOsciloscope->thread.setGeneratorData(&custom);
-   pOsciloscope->thread.function(EThreadApiFunction::afUploadGenerator);
+   pOsciloscope->thread.function(afUploadGenerator);
 }
 
 void WndHardwareGenerator::Default()
