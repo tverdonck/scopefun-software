@@ -2292,6 +2292,11 @@ void OsciloskopOsciloskop::m_choiceInputOutputOnChoice(wxCommandEvent& event)
     int version = pOsciloscope->thread.getVersion();
     if(m_choiceInputOutput->GetSelection() == 1)
     {
+        if (version == HARDWARE_VERSION_2)
+        {
+          m_choiceBit6->Disable();
+          m_choiceBit7->Disable();
+        }
         m_choiceBit8->Disable();
         m_choiceBit9->Disable();
         m_choiceBit10->Disable();
@@ -2306,6 +2311,11 @@ void OsciloskopOsciloskop::m_choiceInputOutputOnChoice(wxCommandEvent& event)
     }
     else
     {
+        if (version == HARDWARE_VERSION_2)
+        {
+           m_choiceBit6->Enable();
+           m_choiceBit7->Enable();
+        }
         m_choiceBit8->Enable();
         m_choiceBit9->Enable();
         m_choiceBit10->Enable();
@@ -2326,6 +2336,7 @@ void OsciloskopOsciloskop::m_choiceInputOutput1OnChoice(wxCommandEvent& event)
     pOsciloscope->control.setDigitalInputOutput(pOsciloscope->window.digitalSetup.inputOutput15, pOsciloscope->window.digitalSetup.inputOutput7);
     pOsciloscope->control.transferData();
     pOsciloscope->window.hardwareGenerator.uploadDigital();
+    int version = pOsciloscope->thread.getVersion();
     if(m_choiceInputOutput1->GetSelection() == 1)
     {
         m_choiceBit0->Disable();
@@ -2334,8 +2345,11 @@ void OsciloskopOsciloskop::m_choiceInputOutput1OnChoice(wxCommandEvent& event)
         m_choiceBit3->Disable();
         m_choiceBit4->Disable();
         m_choiceBit5->Disable();
-        m_choiceBit6->Disable();
-        m_choiceBit7->Disable();
+        if (version == HARDWARE_VERSION_1)
+        {
+           m_choiceBit6->Disable();
+           m_choiceBit7->Disable();
+        }
     }
     else
     {
@@ -2345,8 +2359,11 @@ void OsciloskopOsciloskop::m_choiceInputOutput1OnChoice(wxCommandEvent& event)
         m_choiceBit3->Enable();
         m_choiceBit4->Enable();
         m_choiceBit5->Enable();
-        m_choiceBit6->Enable();
-        m_choiceBit7->Enable();
+        if (version == HARDWARE_VERSION_1)
+        {
+           m_choiceBit6->Enable();
+           m_choiceBit7->Enable();
+        }
     }
 }
 
@@ -2552,11 +2569,17 @@ void OsciloskopOsciloskop::m_choiceBit70OnChoice(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
 {
+    int version = pOsciloscope->thread.getVersion();
     switch(m_choiceDS815->GetSelection())
     {
         case 0:
             break;
         case 1:
+            if (version == HARDWARE_VERSION_2)
+            {
+               m_choiceBit6->SetSelection(0);
+               m_choiceBit7->SetSelection(0);
+            }
             m_choiceBit8->SetSelection(0);
             m_choiceBit9->SetSelection(0);
             m_choiceBit10->SetSelection(0);
@@ -2567,6 +2590,11 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
             m_choiceBit15->SetSelection(0);
             break;
         case 2:
+            if (version == HARDWARE_VERSION_2)
+            {
+               m_choiceBit6->SetSelection(1);
+               m_choiceBit7->SetSelection(1);
+            }
             m_choiceBit8->SetSelection(1);
             m_choiceBit9->SetSelection(1);
             m_choiceBit10->SetSelection(1);
@@ -2577,6 +2605,11 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
             m_choiceBit15->SetSelection(1);
             break;
     };
+    if (version == HARDWARE_VERSION_2)
+    {
+       pOsciloscope->control.setDigitalOutputBit(6, m_choiceBit6->GetSelection());
+       pOsciloscope->control.setDigitalOutputBit(7, m_choiceBit7->GetSelection());
+    }
     pOsciloscope->control.setDigitalOutputBit(8,  m_choiceBit8->GetSelection());
     pOsciloscope->control.setDigitalOutputBit(9,  m_choiceBit9->GetSelection());
     pOsciloscope->control.setDigitalOutputBit(10, m_choiceBit10->GetSelection());
@@ -2590,19 +2623,23 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_choiceDS70OnChoice(wxCommandEvent& event)
 {
+    int version = pOsciloscope->thread.getVersion();
     switch(m_choiceDS70->GetSelection())
     {
         case 0:
             break;
         case 1:
-            m_choiceBit9->SetSelection(0);
+            m_choiceBit0->SetSelection(0);
             m_choiceBit1->SetSelection(0);
             m_choiceBit2->SetSelection(0);
             m_choiceBit3->SetSelection(0);
             m_choiceBit4->SetSelection(0);
             m_choiceBit5->SetSelection(0);
-            m_choiceBit6->SetSelection(0);
-            m_choiceBit7->SetSelection(0);
+            if(version==HARDWARE_VERSION_1)
+            {
+               m_choiceBit6->SetSelection(0);
+               m_choiceBit7->SetSelection(0);
+            }
             break;
         case 2:
             m_choiceBit0->SetSelection(1);
@@ -2611,8 +2648,11 @@ void OsciloskopOsciloskop::m_choiceDS70OnChoice(wxCommandEvent& event)
             m_choiceBit3->SetSelection(1);
             m_choiceBit4->SetSelection(1);
             m_choiceBit5->SetSelection(1);
-            m_choiceBit6->SetSelection(1);
-            m_choiceBit7->SetSelection(1);
+            if (version == HARDWARE_VERSION_1)
+            {
+               m_choiceBit6->SetSelection(1);
+               m_choiceBit7->SetSelection(1);
+            }
             break;
     };
     pOsciloscope->control.setDigitalOutputBit(0, m_choiceBit0->GetSelection());
@@ -2621,13 +2661,17 @@ void OsciloskopOsciloskop::m_choiceDS70OnChoice(wxCommandEvent& event)
     pOsciloscope->control.setDigitalOutputBit(3, m_choiceBit3->GetSelection());
     pOsciloscope->control.setDigitalOutputBit(4, m_choiceBit4->GetSelection());
     pOsciloscope->control.setDigitalOutputBit(5, m_choiceBit5->GetSelection());
-    pOsciloscope->control.setDigitalOutputBit(6, m_choiceBit6->GetSelection());
-    pOsciloscope->control.setDigitalOutputBit(7, m_choiceBit7->GetSelection());
+    if (version == HARDWARE_VERSION_1)
+    {
+       pOsciloscope->control.setDigitalOutputBit(6, m_choiceBit6->GetSelection());
+       pOsciloscope->control.setDigitalOutputBit(7, m_choiceBit7->GetSelection());
+    }
     pOsciloscope->control.transferData();
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice(wxCommandEvent& event)
 {
+    int version = pOsciloscope->thread.getVersion();
     switch(m_choiceDOnOff815->GetSelection())
     {
         case 0:
@@ -2665,7 +2709,8 @@ void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice(wxCommandEvent& event)
 {
-    switch(m_choiceDOnOff70->GetSelection())
+   int version = pOsciloscope->thread.getVersion();
+   switch(m_choiceDOnOff70->GetSelection())
     {
         case 0:
             break;

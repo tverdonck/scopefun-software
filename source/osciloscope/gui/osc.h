@@ -153,7 +153,6 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBox13;
 		wxCheckBox* m_checkBox11;
 		wxCheckBox* m_checkBox9;
-		wxStaticLine* m_staticline16;
 		wxChoice* m_choiceDOnOff70;
 		wxCheckBox* m_checkBox8;
 		wxCheckBox* m_checkBox6;
@@ -184,7 +183,6 @@ class Osciloskop : public wxFrame
 		wxChoice* m_choiceDS815;
 		wxStaticText* m_staticText1341;
 		wxChoice* m_choiceInputOutput;
-		wxStaticLine* m_staticline35;
 		wxStaticText* m_staticText971;
 		wxChoice* m_choiceBit7;
 		wxStaticText* m_staticText98;
@@ -263,7 +261,6 @@ class Osciloskop : public wxFrame
 		wxChoice* m_comboBoxBit12;
 		wxChoice* m_comboBoxBit10;
 		wxChoice* m_comboBoxBit8;
-		wxStaticLine* m_staticline13;
 		wxChoice* m_choiceBit70;
 		wxChoice* m_comboBoxBit7;
 		wxChoice* m_comboBoxBit5;

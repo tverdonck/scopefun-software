@@ -408,7 +408,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxString m_comboBoxCh0CaptureChoices[] = { _("2V"), _("1V"), _("500mV"), _("200mV"), _("100mV"), _("50mV"), _("20mV"), _("10mV") };
 	int m_comboBoxCh0CaptureNChoices = sizeof( m_comboBoxCh0CaptureChoices ) / sizeof( wxString );
 	m_comboBoxCh0Capture = new wxChoice( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxCh0CaptureNChoices, m_comboBoxCh0CaptureChoices, 0 );
-	m_comboBoxCh0Capture->SetSelection( 0 );
+	m_comboBoxCh0Capture->SetSelection( 1 );
 	bSizer15->Add( m_comboBoxCh0Capture, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -508,7 +508,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel15->SetSizer( bSizer14 );
 	m_panel15->Layout();
 	bSizer14->Fit( m_panel15 );
-	m_notebook4->AddPage( m_panel15, _("Channel 1"), false );
+	m_notebook4->AddPage( m_panel15, _("Channel 1"), true );
 	m_panel16 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer141;
 	bSizer141 = new wxBoxSizer( wxVERTICAL );
@@ -623,7 +623,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel16->SetSizer( bSizer141 );
 	m_panel16->Layout();
 	bSizer141->Fit( m_panel16 );
-	m_notebook4->AddPage( m_panel16, _("Channel 2"), true );
+	m_notebook4->AddPage( m_panel16, _("Channel 2"), false );
 	m_panel161 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer1411;
 	bSizer1411 = new wxBoxSizer( wxVERTICAL );
@@ -745,9 +745,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 
 	bSizer1111->Add( bSizer1482, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_staticline16 = new wxStaticLine( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer1111->Add( m_staticline16, 0, wxEXPAND|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxBoxSizer* bSizer1492;
 	bSizer1492 = new wxBoxSizer( wxVERTICAL );
@@ -984,9 +981,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 
 	bSizer164->Add( bSizer166, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
-
-	m_staticline35 = new wxStaticLine( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer164->Add( m_staticline35, 0, wxEXPAND | wxALL, 5 );
 
 	wxBoxSizer* bSizer167;
 	bSizer167 = new wxBoxSizer( wxVERTICAL );
@@ -1505,9 +1499,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 
 	bSizer811->Add( bSizer1502, 1, wxEXPAND, 5 );
-
-	m_staticline13 = new wxStaticLine( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
-	bSizer811->Add( m_staticline13, 0, wxEXPAND | wxALL, 5 );
 
 	wxBoxSizer* bSizer1513;
 	bSizer1513 = new wxBoxSizer( wxVERTICAL );
