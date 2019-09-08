@@ -2251,7 +2251,8 @@ void OsciloskopOsciloskop::m_menuItemResetEEPROMOnMenuSelection(wxCommandEvent& 
 
 void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
-   pOsciloscope->thread.setUSB(&pOsciloscope->settings.getHardware()->getUSB());
+   SUsb usb = pOsciloscope->settings.getHardware()->getUSB();
+   pOsciloscope->thread.setUSB(&usb);
    pOsciloscope->thread.function(afOpenUsb);
 }
 
@@ -2270,7 +2271,9 @@ void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_buttonFirmwareUploadOnButtonClick(wxCommandEvent& event)
 {
-   pOsciloscope->thread.writeFpgaToArtix7( &pOsciloscope->control.control1.client1Get(), &pOsciloscope->control.control2.client2Get(), pOsciloscope->settings.getHardware());
+   SHardware1 hw1 = pOsciloscope->control.control1.client1Get();
+   SHardware2 hw2 = pOsciloscope->control.control2.client2Get();
+   pOsciloscope->thread.writeFpgaToArtix7( &hw1, &hw2, pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_choiceSpeedOnChoice(wxCommandEvent& event)
