@@ -2217,11 +2217,23 @@ void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& e
     {
         pDebug->Clear();
         FORMAT_BUFFER();
-        for(int i = 0; i < EEPROM_BYTE_COUNT; i++)
+        int count = min(16,size / EEPROM_BYTE_COUNT);
+        int left  = size % EEPROM_BYTE_COUNT;
+        for(int i=0;i<count;i++)
+        { 
+           for(int j = 0; j < EEPROM_BYTE_COUNT; j++)
+           {
+               byte byteToPrint = eeprom.data.bytes[i*EEPROM_BYTE_COUNT +j];
+               FORMAT("%02x ", byteToPrint);
+               pDebug->AppendText(wxString::FromAscii(formatBuffer));
+           }
+           pDebug->AppendText(wxString::FromAscii("\n"));
+        }
+        for (int j = 0; j < left; j++)
         {
-            byte byteToPrint = eeprom.data.bytes[i];
-            FORMAT("%02x ", byteToPrint);
-            pDebug->AppendText(wxString::FromAscii(formatBuffer));
+           byte byteToPrint = eeprom.data.bytes[count*EEPROM_BYTE_COUNT + j];
+           FORMAT("%02x ", byteToPrint);
+           pDebug->AppendText(wxString::FromAscii(formatBuffer));
         }
     }
 }

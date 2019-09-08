@@ -25,6 +25,7 @@ int   fileLoadString(const char* fileName, char** string, ilarge* stringSize);
 int   fileSaveString(const char* fileName, char* string);
 
 int   fileLoad(const char* fileName, char** buffer,   ilarge* bufferSize);
+int   fileSize(const char* fileName, ilarge* bufferSize);
 int   fileLoadPtr(const char* fileName, char* buffer, ilarge* bufferSize);
 int   fileSave(const char* fileName, char*  buffer, ilarge bufferSize);
 

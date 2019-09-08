@@ -203,15 +203,31 @@ int usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int reada
     if(usbFxxIsConnected(ctx))
     {
         // bReqType: 0xC0, bRequest : 0xBB, wLength - MAX : 0x1000
-        int ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
-                                          0xC0,
-                                          0xBB,
-                                          (readadress >> 16) & 0xffff,
-                                          (readadress) & 0xffff,
-                                          buffer,
-                                          size,
-                                          100000);
-        if(ret == size)
+        int packet = 1024;
+        int count  = size / packet;
+        int left   = size % packet;
+        int read   = 0;
+        for (int i = 0; i < count; i++)
+        {
+           read += libusb_control_transfer((libusb_device_handle*)ctx->device,
+              0xC0,
+              0xBB,
+              (readadress >> 16) & 0xffff,
+              (readadress) & 0xffff,
+              buffer + i * packet,
+              packet,
+              100000);
+           readadress += packet;
+        }
+        read += libusb_control_transfer((libusb_device_handle*)ctx->device,
+           0xC0,
+           0xBB,
+           (readadress >> 16) & 0xffff,
+           (readadress) & 0xffff,
+           buffer + count * packet,
+           left,
+           100000);
+        if(read == size)
         {
             return PUREUSB_SUCCESS;
         }

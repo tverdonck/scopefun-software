@@ -162,10 +162,10 @@ ThreadApi::ThreadApi()
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadApi::function(EThreadApiFunction f)
 {
-   SDL_AtomicSet(&sync, 1);
    SDL_AtomicLock(&lock);
       func.pushBack(f);
    SDL_AtomicUnlock(&lock);
+   SDL_AtomicSet(&sync, 1);
 }
 
 void ThreadApi::wait()
@@ -215,6 +215,10 @@ void ThreadApi::update()
             sfSetActive(getCtx(), active);
             sfSetTimeOut(getCtx(), timeout);
          SDL_AtomicUnlock(&lock);
+         break;
+      case afIsOpened:
+         iret += sfHardwareIsOpened(getCtx(), &iopened);
+         SDL_AtomicSet(&open, iopened);
          break;
       case afOpenUsb:
          SDL_AtomicLock(&lock);
@@ -622,6 +626,8 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
       SUsb usb = hw->getUSB();
       setUSB(&usb);
       function(EThreadApiFunction::afOpenUsb);
+      function(EThreadApiFunction::afIsOpened);
+      wait();
    }
 
    if (SDL_AtomicGet(&open) > 0)
@@ -635,24 +641,23 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
          }
          if (iversion == HARDWARE_VERSION_2)
          {
-            eepromSize   = sizeof(SEeprom);
+            ilarge size = 0;
+            fileSize(hw->usbFirmware.asChar(), &size);
+            eepromSize = size;
             eepromOffset = 0;
          }
       SDL_AtomicUnlock(&lock);
       function(EThreadApiFunction::afEEPROMRead);
       wait();
-      SDL_AtomicLock(&lock);
-         SDL_memcpy((char*)hw, (char*)&eepromData, eepromSize);
-      SDL_AtomicUnlock(&lock);
    }
    int iret = SDL_AtomicGet(&ret);
    if (iret == SCOPEFUN_SUCCESS)
    {
-      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read callibration data from EEPROM was successfull.", 0);
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read usb data from EEPROM was successfull.", 0);
    }
    else
    {
-      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read callibration data from EEPROM failed.", 0);
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read usb data from EEPROM failed.", 0);
    }
    return iret;
 }

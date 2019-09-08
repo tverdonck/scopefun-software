@@ -788,6 +788,7 @@ public:
 
 enum EThreadApiFunction {
    afInit,
+   afIsOpened,
    afOpenUsb,
    afUploadFpga,
    afUploadFxx,
