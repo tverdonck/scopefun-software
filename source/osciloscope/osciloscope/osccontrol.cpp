@@ -2154,7 +2154,9 @@ void OsciloscopeMainControl::setVersion(int ver)
 void OsciloscopeMainControl::transferData()
 {
    SDL_AtomicLock(&lock);
-      pOsciloscope->thread.hardwareControlFunction(&control1.client1Get(), &control2.client2Get());
+      SHardware1 hw1 = control1.client1Get();
+      SHardware2 hw2 = control2.client2Get();
+      pOsciloscope->thread.hardwareControlFunction(&hw1, &hw2);
    SDL_AtomicUnlock(&lock);
 }
 
