@@ -3117,7 +3117,9 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
 
 void OsciloscopeManager::AutoCallibrate()
 {
-    thread.writeFpgaToArtix7( &pOsciloscope->control.control1.client1Get(), &pOsciloscope->control.control2.client2Get(), settings.getHardware());
+    SHardware1 hw1 = pOsciloscope->control.control1.client1Get();
+    SHardware2 hw2 = pOsciloscope->control.control2.client2Get();
+    thread.writeFpgaToArtix7( &hw1, &hw2, settings.getHardware());
     callibrate.clear();
     callibrate.active      = 1;
     callibrate.mode        = acStartMessageBox;
