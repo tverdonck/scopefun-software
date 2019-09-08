@@ -1447,7 +1447,11 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     ////////////////////////////////////////////////////////////////////////////////
     // double freq
     ////////////////////////////////////////////////////////////////////////////////
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+    int version = 0;
+    int header  = 0;
+    int data    = 0;
+    int packet  = 0;
+    pOsciloscope->thread.getFrame(&version,&header,&data,&packet);
     uint doubleFreq = 0;
     if(version == HARDWARE_VERSION_2 && wndMain.horizontal.ETS == 0)
     {

@@ -71,16 +71,12 @@ void OsciloskopStorage::m_choicePacketSizeOnChoice(wxCommandEvent& event)
     int header  = 0;
     int data    = 0;
     int packet  = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &header);
-    sfGetFrameData(getCtx(), &data);
-    sfGetFramePacket(getCtx(), &packet);
+    pOsciloscope->thread.getFrame(&version, &header, &data, &packet);
     packet = pOsciloscope->window.storage.getPacketSize(version);
-    sfSetFrameVersion(getCtx(), version);
-    sfSetFrameHeader(getCtx(), header);
-    sfSetFrameData(getCtx(), data);
-    sfSetFramePacket(getCtx(), packet);
-    sfServerUpload(getCtx());
+
+    pOsciloscope->thread.setFrame(version,header,data,packet);
+    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
+    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
 }
 
 void OsciloskopStorage::m_buttonOkOnButtonClick(wxCommandEvent& event)

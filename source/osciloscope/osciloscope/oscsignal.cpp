@@ -184,10 +184,7 @@ uint CaptureMemory::save(const char* path, uint& progress, uint& active)
     int frameHeader = 0;
     int frameData = 0;
     int framePacket = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &frameHeader);
-    sfGetFrameData(getCtx(), &frameData);
-    sfGetFramePacket(getCtx(), &framePacket);
+    pOsciloscope->thread.getFrame(&version, &frameHeader, &frameData, &framePacket);
     CaptureHeader header;
     header.hwVersion    = version;
     header.hwHeader     = frameHeader;
@@ -245,10 +242,7 @@ uint CaptureMemory::load(const char* path, uint& progress, uint& active)
     int frameHeader = 0;
     int frameData = 0;
     int framePacket = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &frameHeader);
-    sfGetFrameData(getCtx(), &frameData);
-    sfGetFramePacket(getCtx(), &framePacket);
+    pOsciloscope->thread.getFrame(&version, &frameHeader, &frameData, &framePacket);
     // offset
     CaptureHeader header;
     SDL_RWops* ctxRead = SDL_RWFromFile(path, "rb");
@@ -361,10 +355,7 @@ uint CaptureSSD::save(const char* path, uint& progress, uint& active)
     int frameHeader = 0;
     int frameData = 0;
     int framePacket = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &frameHeader);
-    sfGetFrameData(getCtx(), &frameData);
-    sfGetFramePacket(getCtx(), &framePacket);
+    pOsciloscope->thread.getFrame(&version, &frameHeader, &frameData, &framePacket);
     CaptureHeader header;
     header.hwVersion   = version;
     header.hwHeader    = frameHeader;
@@ -423,10 +414,7 @@ uint CaptureSSD::load(const char* path, uint& progress, uint& active)
     int frameHeader = 0;
     int frameData = 0;
     int framePacket = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &frameHeader);
-    sfGetFrameData(getCtx(), &frameData);
-    sfGetFramePacket(getCtx(), &framePacket);
+    pOsciloscope->thread.getFrame(&version, &frameHeader, &frameData, &framePacket);
     // offset
     CaptureHeader header;
     SDL_RWops* ctxRead = SDL_RWFromFile(path, "rb");

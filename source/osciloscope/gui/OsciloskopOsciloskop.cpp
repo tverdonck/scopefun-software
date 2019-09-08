@@ -510,10 +510,10 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             int open = 0;
             if(pConnection)
             {
-                open = SDL_AtomicGet(&pOsciloscope->isConnected);
+                open = pOsciloscope->thread.isConnected();
                 pConnection->setConnectedCheckBox(open);
             }
-            int usb = SDL_AtomicGet(&pOsciloscope->isOpen);
+            int usb = pOsciloscope->thread.isOpen();
             m_checkBox26->SetValue(usb);
         }
         // progress bar
@@ -955,10 +955,8 @@ void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
     pOsciloscope->redrawEts = 1;
     pOsciloscope->clearRenderTarget = 1;
 
-    SDL_AtomicLock(&pOsciloscope->simLock);
-      pOsciloscope->simData = pOsciloscope->GetServerSim();
-    SDL_AtomicUnlock(&pOsciloscope->simLock);
-    SDL_AtomicSet(&pOsciloscope->transferSim, 1);
+    pOsciloscope->thread.setSimulateData( &pOsciloscope->GetServerSim() );
+    pOsciloscope->thread.function(EThreadApiFunction::afSetSimulateData);
 }
 
 void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox(wxCommandEvent& event)
@@ -1032,11 +1030,11 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
     int data    = 0;
     int packet  = 0;
     uint frameSize = 0;
-    sfServerDownload(getCtx());
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &header);
-    sfGetFrameData(getCtx(), &data);
-    sfGetFramePacket(getCtx(), &packet);
+    pOsciloscope->thread.function(EThreadApiFunction::afServerDownload);
+    pOsciloscope->thread.wait();
+    pOsciloscope->thread.function(EThreadApiFunction::afGetFrame);
+    pOsciloscope->thread.wait();
+    pOsciloscope->thread.getFrame(&version, &header, &data, &packet);
     frameSize = atoi(m_textCtrlTimeFrameSize->GetValue().ToAscii().data());
     if(version == 1)
     {
@@ -1052,11 +1050,9 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
         pOsciloscope->window.horizontal.FrameSize = pOsciloscope->control.getSampleSize();
         data = pOsciloscope->window.horizontal.FrameSize * 4;
     }
-    sfSetFrameVersion(getCtx(), version);
-    sfSetFrameHeader(getCtx(), header);
-    sfSetFrameData(getCtx(), data);
-    sfSetFramePacket(getCtx(), packet);
-    sfServerUpload(getCtx());
+    pOsciloscope->thread.setFrame(version, header, data, packet);
+    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
+    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
     m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(pOsciloscope->control.getSampleSize())));
     pOsciloscope->control.transferData();
 }
@@ -1958,10 +1954,9 @@ void OsciloskopOsciloskop::m_comboBoxBit15OnCombobox(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_menuItemVersion1OnMenuSelection(wxCommandEvent& event)
 {
     SetDigital13To16(true);
-    sfSetFrameVersion(getCtx(), HARDWARE_VERSION_1);
-    sfSetFrameHeader(getCtx(), SCOPEFUN_FRAME_1_HEADER);
-    sfSetFrameData(getCtx(), SCOPEFUN_FRAME_1_DATA);
-    sfSetFramePacket(getCtx(), SCOPEFUN_FRAME_1_PACKET);
+    pOsciloscope->thread.setFrame(HARDWARE_VERSION_1, SCOPEFUN_FRAME_1_HEADER, SCOPEFUN_FRAME_1_DATA, SCOPEFUN_FRAME_1_PACKET);
+    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
+
     GetMenuBar()->GetMenu(8)->FindItemByPosition(0)->Check(1);
     GetMenuBar()->GetMenu(8)->FindItemByPosition(1)->Check(0);
     pOsciloscope->control.setVersion(HARDWARE_VERSION_1);
@@ -1972,7 +1967,7 @@ void OsciloskopOsciloskop::m_menuItemVersion1OnMenuSelection(wxCommandEvent& eve
         m_comboBoxTimeCapture->Append(captureTimeToStr(i));
     }
     m_comboBoxTimeCapture->SetSelection(pOsciloscope->control.getXRange());
-    sfServerUpload(getCtx());
+    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
 }
 
 void OsciloskopOsciloskop::SetDigital13To16(bool enable)
@@ -1998,17 +1993,13 @@ void OsciloskopOsciloskop::m_menuItemVersion2OnMenuSelection(wxCommandEvent& eve
     int header  = 0;
     int data    = 0;
     int packet  = 0;
-    sfGetFrameVersion(getCtx(), &version);
-    sfGetFrameHeader(getCtx(), &header);
-    sfGetFrameData(getCtx(), &data);
-    sfGetFramePacket(getCtx(), &packet);
+    pOsciloscope->thread.getFrame(&version, &header, &data, &packet);
     version = HARDWARE_VERSION_2;
     header  = SCOPEFUN_FRAME_2_HEADER;
     packet  = pOsciloscope->window.storage.getPacketSize(HARDWARE_VERSION_2);
-    sfSetFrameVersion(getCtx(), version);
-    sfSetFrameHeader(getCtx(), header);
-    sfSetFrameData(getCtx(), data);
-    sfSetFramePacket(getCtx(), packet);
+    pOsciloscope->thread.setFrame(version, header, data, packet);
+    pOsciloscope->thread.function(EThreadApiFunction::afSetFrame);
+
     GetMenuBar()->GetMenu(8)->FindItemByPosition(0)->Check(0);
     GetMenuBar()->GetMenu(8)->FindItemByPosition(1)->Check(1);
     pOsciloscope->control.setVersion(HARDWARE_VERSION_2);
@@ -2019,7 +2010,7 @@ void OsciloskopOsciloskop::m_menuItemVersion2OnMenuSelection(wxCommandEvent& eve
         m_comboBoxTimeCapture->Append(captureTimeToStr(i));
     }
     m_comboBoxTimeCapture->SetSelection(pOsciloscope->control.getXRange());
-    sfServerUpload(getCtx());
+    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
     //   setupControl(pOsciloscope->window);
 }
 
@@ -2213,8 +2204,13 @@ void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& e
     wxCommandEvent evt;
     m_buttonPauseOnButtonClick(evt);
     SEeprom eeprom;
+    int     size   = 0;
+    int     offset = 0;
     memset(eeprom.data.bytes, 0xdd, sizeof(SEeprom));
-    pOsciloscope->ReadEEPROM(eeprom);
+
+    pOsciloscope->thread.readUsbFromEEPROM(pOsciloscope->settings.getHardware());
+    pOsciloscope->thread.getEEPROM(&eeprom,&size,&offset);
+
     wxCommandEvent et;
     m_menuItemDebugOnMenuSelection(et);
     if(pDebug && pDebug->IsShown())
@@ -2232,24 +2228,27 @@ void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& e
 
 void OsciloskopOsciloskop::m_menuItemWriteEEPROMOnMenuSelection(wxCommandEvent& event)
 {
-    pOsciloscope->WriteEEPROM();
+    pOsciloscope->thread.writeUsbToEEPROM(pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_menuItemResetEEPROMOnMenuSelection(wxCommandEvent& event)
 {
-    pOsciloscope->EraseEEPROM();
+    pOsciloscope->thread.eraseEEPROM(pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
-    pOsciloscope->connect();
+   pOsciloscope->thread.setUSB(&pOsciloscope->settings.getHardware()->getUSB());
+   pOsciloscope->thread.function(EThreadApiFunction::afOpenUsb);
 }
 
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
 {
-    pOsciloscope->disconnect();
-    pOsciloscope->signalMode = SIGNAL_MODE_PAUSE;
+    pOsciloscope->thread.function(EThreadApiFunction::afCloseUsb);
+
+    pOsciloscope->signalMode             = SIGNAL_MODE_PAUSE;
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
+
     // must sync close button usbClose and usbCapture thread
     // currrent fix is that we just wait a second which should be enought for the capture thread to exit capture state in most cases
     SDL_Delay(1000);
@@ -2258,7 +2257,7 @@ void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_buttonFirmwareUploadOnButtonClick(wxCommandEvent& event)
 {
-    pOsciloscope->uploadFirmware();
+   pOsciloscope->thread.writeFpgaToArtix7( &pOsciloscope->control.control1.client1Get(), &pOsciloscope->control.control2.client2Get(), pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_choiceSpeedOnChoice(wxCommandEvent& event)
@@ -2290,8 +2289,7 @@ void OsciloskopOsciloskop::m_choiceInputOutputOnChoice(wxCommandEvent& event)
     pOsciloscope->control.setDigitalInputOutput(pOsciloscope->window.digitalSetup.inputOutput15, pOsciloscope->window.digitalSetup.inputOutput7);
     pOsciloscope->control.transferData();
     pOsciloscope->window.hardwareGenerator.uploadDigital();
-    int version = 0;
-    sfGetFrameVersion(getCtx(), &version);
+    int version = pOsciloscope->thread.getVersion();
     if(m_choiceInputOutput->GetSelection() == 1)
     {
         m_choiceBit8->Disable();
@@ -3202,18 +3200,35 @@ void OsciloskopOsciloskop::m_menuItemAutoCallibrateOnMenuSelection(wxCommandEven
 }
 void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection(wxCommandEvent& event)
 {
-    int size = sizeof(OscHardware);
     wxCommandEvent evt;
     m_buttonPauseOnButtonClick(evt);
     SEeprom eeprom;
+    int     size = 0;
+    int     offset = 0;
     memset(eeprom.data.bytes, 0xdd, sizeof(SEeprom));
-    pOsciloscope->ReadCallibrate(eeprom);
+
+    pOsciloscope->thread.readCallibrateSettingsFromEEPROM(pOsciloscope->settings.getHardware());
+    pOsciloscope->thread.getEEPROM(&eeprom, &size, &offset);
+
+    wxCommandEvent et;
+    m_menuItemDebugOnMenuSelection(et);
+    if (pDebug && pDebug->IsShown())
+    {
+       pDebug->Clear();
+       FORMAT_BUFFER();
+       for (int i = 0; i < EEPROM_BYTE_COUNT; i++)
+       {
+          byte byteToPrint = eeprom.data.bytes[i];
+          FORMAT("%02x ", byteToPrint);
+          pDebug->AppendText(wxString::FromAscii(formatBuffer));
+       }
+    }
 }
 
 void OsciloskopOsciloskop::m_menuItemWriteCallibrateOnMenuSelection(wxCommandEvent& event)
 {
     pOsciloscope->settings.load();
-    pOsciloscope->WriteCallibrate();
+    pOsciloscope->thread.writeCallibrateSettingsToEEPROM(pOsciloscope->settings.getHardware());
 }
 
 

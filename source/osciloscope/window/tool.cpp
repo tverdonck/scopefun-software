@@ -120,7 +120,7 @@ uint  multiplyerFromValue(float value)
 
 const char* captureTimeToStr(int enumerated)
 {
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+    int version = pOsciloscope->thread.getVersion();
     if(version == 1)
     {
         switch(enumerated)
@@ -355,7 +355,7 @@ double captureTimeFromEnumVersion(int enumerated, int version)
 
 ECallibrationType getCallibrationType(int enumerated)
 {
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+   int version = pOsciloscope->thread.getVersion();
     if(version == 2 && enumerated == t2c2ns)
     {
         return ct500Mhz;
@@ -365,7 +365,7 @@ ECallibrationType getCallibrationType(int enumerated)
 
 ECallibrationType getCallibrationType(float value)
 {
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+    int version = pOsciloscope->thread.getVersion();
     if(version == 2 && captureTimeFromValue(value) == t2c2ns)
     {
         return ct500Mhz;
@@ -375,13 +375,13 @@ ECallibrationType getCallibrationType(float value)
 
 double captureTimeFromEnum(int enumerated)
 {
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+    int version = pOsciloscope->thread.getVersion();
     return captureTimeFromEnumVersion(enumerated, version);
 }
 
 uint captureTimeFromValue(float value)
 {
-    int version = SDL_AtomicGet(&pOsciloscope->version);
+    int version = pOsciloscope->thread.getVersion();
     if(version == 1)
     {
         if(value < 20.f * NANO)

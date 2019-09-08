@@ -677,8 +677,7 @@ public:
         return version;
     };
 public:
-    void       transferData();
-    void       threadTransferData();
+    void transferData();
 public:
     void setWindow(WndMain& main);
 public:

@@ -2153,30 +2153,8 @@ void OsciloscopeMainControl::setVersion(int ver)
 
 void OsciloscopeMainControl::transferData()
 {
-    SDL_AtomicLock(&lock);
-    if(version == 1)
-    {
-        hw1 = control1.client1Get();
-    }
-    if(version == 2)
-    {
-        hw2 = control2.client2Get();
-    }
-    SDL_AtomicSet(&pOsciloscope->transferData, 1);
-    SDL_AtomicUnlock(&lock);
-}
-void OsciloscopeMainControl::threadTransferData()
-{
    SDL_AtomicLock(&lock);
-   if (version == 1)
-   {
-      int ret = sfHardwareConfig1(getCtx(), &hw1);
-   }
-   if (version == 2)
-   {
-      int ret = sfHardwareConfig2(getCtx(), &hw2);
-   }
-   SDL_AtomicSet(&pOsciloscope->transferData, 0);
+      pOsciloscope->thread.hardwareControlFunction(&control1.client1Get(), &control2.client2Get());
    SDL_AtomicUnlock(&lock);
 }
 

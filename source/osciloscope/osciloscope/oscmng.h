@@ -786,6 +786,123 @@ public:
     void getDisplay(SDisplay* sim);
 };
 
+enum EThreadApiFunction {
+   afInit,
+   afOpenUsb,
+   afUploadFpga,
+   afUploadFxx,
+   afResetUsb,
+   afCloseUsb,
+   afEEPROMRead,
+   afEEPROMWrite,
+   afEEPROMErase,
+   afSetFrame,
+   afGetFrame,
+   afHardwareConfig1,
+   afHardwareConfig2,
+   afSimulate,
+   afSetSimulateData,
+   afSetSimulateOnOff,
+   afServerUpload,
+   afServerDownload,
+   afGetClientDisplay,
+   afUploadGenerator,
+   afSetUsb,
+   afSetNetwork,
+   afClientConnect,
+   afClientDisconnect,
+};
+
+class ThreadApi {
+private:
+   SDL_SpinLock                  lock;
+   SDL_atomic_t                  sync;
+   Array<EThreadApiFunction,16>  func;
+   SDL_atomic_t                  ret;
+private:
+   SDL_atomic_t open;
+   SDL_atomic_t connected;
+   SDL_atomic_t simulate;
+   SDL_atomic_t vid;
+   SDL_atomic_t pid;
+   SDL_atomic_t sid;
+   SDL_atomic_t version;
+   SDL_atomic_t header;
+   SDL_atomic_t data;
+   SDL_atomic_t packet;
+public:
+   SUsb         usbData;
+   ilarge       usbSize;
+   SFx2         fx2Data;
+   ilarge       fx2Size;
+   SFpga        fpgaData;
+   ilarge       fpgaSize;
+   SEeprom      eepromData;
+   ilarge       eepromSize;
+   ilarge       eepromOffset;
+public:
+   String       ip;
+   uint         port;
+   uint         memory;
+   uint         threadSafe;
+   uint         active;
+   uint         timeout;
+public:
+   double       simulateTimeValue;
+   SSimulate    simulateData;
+   SDL_atomic_t simulateOnOff;
+   SDisplay     displayData;
+   SGenerator   generatorData;
+   SHardware1   config1;
+   SHardware2   config2;
+public:
+   ThreadApi();
+public:
+   // thread
+   void function(EThreadApiFunction func);
+   void wait();
+   void update();
+public:
+   // data
+   int  getVersion();
+   int  isOpen();
+   int  isConnected();
+   int  isSimulate();
+   void setInit(int memory, int thread, int active, int timeout);
+   void setFrame(int  version, int  header,int  data,int  packet);
+   void getFrame(int* version, int* header,int* data,int* packet);
+   void setUSB(SUsb* usb);
+   void getUSB(SUsb* usb);
+   void setConfig1(SHardware1* config);
+   void getConfig1(SHardware1* config);
+   void setConfig2(SHardware2* config);
+   void getConfig2(SHardware2* config);
+   void setEEPROM(SEeprom* data,int  size,int  offset);
+   void getEEPROM(SEeprom* data,int* size,int* offset);
+   void setSimulateData(SSimulate* sim);
+   void getSimulateData(SSimulate* sim);
+   void setGeneratorData(SGenerator* gen);
+   void getGeneratorData(SGenerator* gen);
+   void setSimulateOnOff(int  onoff);
+   void getSimulateOnOff(int* onoff);
+   void setDisplay(SDisplay* display);
+   void getDisplay(SDisplay* display);
+   void setIpPort(const char* ip, uint port);
+public:
+   // controlThread
+   int  writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardware* hw);
+   int  writeUsbToEEPROM(OscHardware* hw);
+   int  readUsbFromEEPROM(OscHardware* hw);
+   int  writeCallibrateSettingsToEEPROM(OscHardware* hw);
+   int  readCallibrateSettingsFromEEPROM(OscHardware* hw);
+   int  eraseEEPROM(OscHardware* hw);
+   int  simulateTime(double time);
+   int  hardwareControlFunction(SHardware1* hw1, SHardware2* hw2);
+public:
+   // captureThread
+   int  captureFrameData(SFrameData* buffer,int toReceive,int* transfered,int type);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Osciloscope
@@ -827,43 +944,11 @@ public:
     bool        serverActive;
     SDL_Thread* serverThread;
 public:
-    SEeprom           eeprom;
-    SDL_SpinLock      simLock;
-    SSimulate         simData;
-    SDisplay          customDisplayData;
-    SDL_atomic_t      simEnable;
-    SDL_atomic_t      simEnableValue;
-    SDL_atomic_t      version;
-    SDL_atomic_t      headerSize;
-    SDL_atomic_t      maxData;
-    SDL_atomic_t      packetSize;
-    SDL_atomic_t      isConnected;
-    SDL_atomic_t      isOpen;
-    SDL_atomic_t      transferData;
-    SDL_atomic_t      transferSim;
-    SDL_atomic_t      customDisplayCh0;
-    SDL_atomic_t      customDisplayCh1;
-    SDL_atomic_t      customDisplayFun;
-    SDL_atomic_t      customDisplayDig;
-    SDL_SpinLock      customDisplayLock;
+   ThreadApi thread;
 public:
-    SDL_SpinLock usbLock;
-    SDL_atomic_t aOpenUsb;
-    SDL_atomic_t aOpenUsbEeprom;
-    SDL_atomic_t aResetUsb;
-    SDL_atomic_t aUploadFpga;
-    SDL_atomic_t aUploadFx2;
-    SDL_atomic_t aUploadFx3;
-    SDL_atomic_t aUploadFirmware;
-    SDL_atomic_t aReadEEPROM;
-    SDL_atomic_t aWriteEEPROM;
-    SDL_atomic_t aReadCallibrate;
-    SDL_atomic_t aWriteCallibrate;
-    SDL_atomic_t aEraseEEPROM;
-    SDL_atomic_t aCloseUsb;
-public:
-    SDL_Thread*   pHardwareThread;
-    SDL_Thread*   pCatureThread;
+    SDL_Thread*   pCaptureData;
+    SDL_Thread*   pGenerateFrame;
+    SDL_Thread*   pControlHardware;
     SDL_Thread*   pRenderThread;
     SDL_Thread*   aUpdateThread[MAX_THREAD];
 public:
@@ -960,7 +1045,9 @@ public:
     Ring<OsciloscopeFrame> tmpHistory;
 public:
     bool                   renderThreadActive;
-    bool                   captureThreadActive;
+    bool                   captureDataThreadActive;
+    bool                   generateFrameThreadActive;
+    bool                   controlHardwareThreadActive;
     bool                   updateThreadActive;
     OsciloscopeFrame       threadDisplay;
     Ring<CapturePacket>    threadHistory;
@@ -987,35 +1074,6 @@ public:
     int  saveToFile(const char* file);
     int  loadFromFile(const char* file);
     int  convertToText(const char* file);
-public:
-    void connect();
-    void disconnect();
-public:
-    void openUsb(int eeprom = 0);
-    void resetUsb();
-    void uploadFpga();
-    void uploadFx2();
-    void uploadFx3();
-    void uploadFirmware();
-    void ReadEEPROM(SEeprom& out);
-    void WriteEEPROM();
-    void ReadCallibrate(SEeprom& out);
-    void WriteCallibrate();
-    void EraseEEPROM();
-    void closeUsb();
-public:
-   void threadOpenUsb(int eeprom = 0);
-   void threadResetUsb();
-   void threadUploadFpga();
-   void threadUploadFx2();
-   void threadUploadFx3();
-   void threadUploadFirmware();
-   void threadReadEEPROM();
-   void threadWriteEEPROM();
-   void threadReadCallibrate();
-   void threadWriteCallibrate();
-   void threadEraseEEPROM();
-   void threadCloseUsb();
 public:
     int  start();
     int  update(float dt);
@@ -1048,17 +1106,14 @@ public:
     void startUserInterface();
     void stopUserInterface();
 public:
-    void           clientUploadGenerator(SGenerator& generator);
-    void           clientUploadDisplay(SDisplay& display);
+    void clientUploadGenerator(SGenerator& generator);
+    void clientUploadDisplay(SDisplay& display);
 public:
     void setupControl(WndMain window);
 public:
     SSimulate GetServerSim();
     void      transmitSim(SSimulate& sim);
-    void      threadTransmitSim();
-public:
-   void simOnOff(int value);
-   void threadSimOnOff();
+    void      simOnOff(int value);
 };
 
 SFContext* getCtx();

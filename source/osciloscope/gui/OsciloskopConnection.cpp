@@ -40,7 +40,7 @@ void OsciloskopConnection::m_choiceConnectionOnChoice(wxCommandEvent& event)
     // TODO: Implement m_choiceConnectionOnChoice
     if(m_choiceConnection->GetSelection() == 0)
     {
-        sfSetUsb(getCtx());
+        pOsciloscope->thread.function(EThreadApiFunction::afSetUsb);
         m_buttonConnect->Disable();
         m_buttonDisconnect->Disable();
         m_textCtrlIP->Disable();
@@ -49,7 +49,7 @@ void OsciloskopConnection::m_choiceConnectionOnChoice(wxCommandEvent& event)
     }
     else
     {
-        sfSetNetwork(getCtx());
+        pOsciloscope->thread.function(EThreadApiFunction::afSetNetwork);
         m_buttonConnect->Enable();
         m_buttonDisconnect->Enable();
         m_textCtrlIP->Enable();
@@ -76,8 +76,9 @@ void OsciloskopConnection::m_checkBoxConnectedOnCheckBox(wxCommandEvent& event)
 void OsciloskopConnection::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
     // TODO: Implement m_buttonConnectOnButtonClick
-    int ret = sfClientConnect(getCtx(), (const char*)m_textCtrlIP->GetValue(), (int)atoi(m_textCtrlPort->GetValue()));
-    sfServerUpload(getCtx());
+    pOsciloscope->thread.setIpPort((const char*)m_textCtrlIP->GetValue(), (int)atoi(m_textCtrlPort->GetValue()));
+    pOsciloscope->thread.function(EThreadApiFunction::afClientConnect);
+    pOsciloscope->thread.function(EThreadApiFunction::afServerUpload);
     wxApp* app = (wxApp*)wxApp::GetInstance();
     if(app)
     {
@@ -93,7 +94,7 @@ void OsciloskopConnection::m_buttonDisconnectOnButtonClick(wxCommandEvent& event
 {
     // TODO: Implement m_buttonDisconnectOnButtonClick
     // disconnect first, becouse mode change has no affect then ...
-    sfClientDisconnect(getCtx());
+   pOsciloscope->thread.function(EThreadApiFunction::afClientDisconnect);
     // automatic mode change
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
     pOsciloscope->signalMode = (SignalMode)pOsciloscope->window.horizontal.Mode;
