@@ -993,7 +993,7 @@ class Debug : public wxDialog
 	public:
 		wxTextCtrl* m_textCtrl41;
 
-		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 750,500 ), long style = wxDEFAULT_DIALOG_STYLE );
+		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 750,750 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~Debug();
 
 };

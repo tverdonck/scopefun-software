@@ -163,10 +163,10 @@ ThreadApi::ThreadApi()
 void ThreadApi::function(EThreadApiFunction f)
 {
    SDL_AtomicLock(&lock);
+      SDL_AtomicAdd(&sync, 1);
       func.pushBack(f);
    SDL_AtomicUnlock(&lock);
-   SDL_AtomicSet(&sync, 1);
-}
+ }
 
 void ThreadApi::wait()
 {
@@ -182,18 +182,20 @@ void ThreadApi::update()
 
    // default
    int iconnected = 0;
-   int iopened    = 0;
-   int isimulate  = 0;
-   isimulate   = sfIsSimulate(getCtx());
-   iconnected  = sfIsConnected(getCtx());
+   int iopened = 0;
+   int isimulate = 0;
+   isimulate = sfIsSimulate(getCtx());
+   iconnected = sfIsConnected(getCtx());
    iret += sfHardwareIsOpened(getCtx(), &iopened);
    SDL_AtomicSet(&connected, iconnected);
-   SDL_AtomicSet(&simulate,  isimulate);
-   SDL_AtomicSet(&open,      iopened);
+   SDL_AtomicSet(&simulate, isimulate);
+   SDL_AtomicSet(&open, iopened);
 
    // functions 
+   int decr = 0;
    Array<EThreadApiFunction, 22>  execute;
    SDL_AtomicLock(&lock);
+      decr = -1*func.getCount();
       for(int i=0;i<func.getCount();i++)
          execute.pushBack( func[i] );
       func.clear();
@@ -342,8 +344,8 @@ void ThreadApi::update()
          break;
       };
    }
-   SDL_AtomicSet(&ret, iret);
-   SDL_AtomicSet(&sync, 0);
+   SDL_AtomicSet( &ret,  iret );
+   SDL_AtomicAdd( &sync, decr );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -796,7 +798,6 @@ int ThreadApi::captureFrameData(SFrameData* buffer, int toReceive, int* transfer
 
 int ThreadApi::hardwareControlFunction(SHardware1* hw1, SHardware2* hw2)
 {
-   SDL_AtomicSet(&sync, 1);
    setConfig1(hw1);
    setConfig2(hw2);
    int ver = SDL_AtomicGet(&version);

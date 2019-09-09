@@ -25,6 +25,10 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     Debug(parent)
 {
     m_Redirect = new wxStreamToTextRedirector(m_textCtrl41);
+
+    wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
+
+    m_textCtrl41->SetFont(font);
 }
 
 void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
