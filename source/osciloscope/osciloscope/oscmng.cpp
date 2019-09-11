@@ -184,6 +184,7 @@ void ThreadApi::update()
    int iconnected = 0;
    int iopened = 0;
    int isimulate = 0;
+   int iversion = SDL_AtomicGet(&version);
    isimulate = sfIsSimulate(getCtx());
    iconnected = sfIsConnected(getCtx());
    iret += sfHardwareIsOpened(getCtx(), &iopened);
@@ -224,7 +225,7 @@ void ThreadApi::update()
          break;
       case afOpenUsb:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareOpen(getCtx(), &usbData, SDL_AtomicGet(&version));
+            iret += sfHardwareOpen(getCtx(), &usbData, iversion);
          SDL_AtomicUnlock(&lock);
          break;
       case afUploadFpga:
@@ -369,12 +370,12 @@ int ThreadApi::isSimulate()
 {
    return SDL_AtomicGet(&simulate);
 }
-void ThreadApi::setInit(int mem, int thread, int active, int tt)
+void ThreadApi::setInit(int mem, int ithread, int iactive, int tt)
 {
    SDL_AtomicLock(&lock);
       memory = mem;
-      threadSafe = thread;
-      active = active;
+      threadSafe = ithread;
+      active = iactive;
       timeout = tt;
    SDL_AtomicUnlock(&lock);
 }
@@ -3856,12 +3857,14 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
 
 int SDLCALL ControlHardwareThreadFunction(void* data)
 {
+   SDL_MemoryBarrierAcquire();
    pOsciloscope->setThreadPriority(THREAD_ID_CAPTURE);
    while (pOsciloscope->controlHardwareThreadActive)
    {
       pOsciloscope->thread.update();
       SDL_Delay(100);
    }
+   SDL_MemoryBarrierRelease();
    return 0;
 }
 
