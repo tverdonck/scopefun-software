@@ -1196,7 +1196,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_spinBtnDigVoltage = new wxSpinButton( m_panel25, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer109->Add( m_spinBtnDigVoltage, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_staticText108 = new wxStaticText( m_panel25, wxID_ANY, _("Frequency(100Mhz) divider:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText108 = new wxStaticText( m_panel25, wxID_ANY, _("Frequency divider:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText108->Wrap( -1 );
 	bSizer109->Add( m_staticText108, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 

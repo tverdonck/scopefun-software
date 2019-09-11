@@ -172,7 +172,7 @@ void ThreadApi::wait()
 {
    while (SDL_AtomicCAS(&sync, 0, 0) == SDL_FALSE)
    {
-      SDL_Delay(100);
+      SDL_Delay(1);
    }
 }
 
@@ -3862,7 +3862,7 @@ int SDLCALL ControlHardwareThreadFunction(void* data)
    while (pOsciloscope->controlHardwareThreadActive)
    {
       pOsciloscope->thread.update();
-      SDL_Delay(100);
+      SDL_Delay(1);
    }
    SDL_MemoryBarrierRelease();
    return 0;

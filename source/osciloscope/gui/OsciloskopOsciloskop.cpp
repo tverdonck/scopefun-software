@@ -2294,6 +2294,8 @@ void OsciloskopOsciloskop::m_textCtrlFreqDividerOnTextEnter(wxCommandEvent& even
     uint  divider = pFormat->stringToInteger(m_textCtrlFreqDivider->GetValue().ToAscii().data());
     pOsciloscope->window.digitalSetup.divider = divider;
     double   freq = 100000000.0 / (double(divider) + 1.0);
+    if( pOsciloscope->thread.getVersion() == HARDWARE_VERSION_2 )
+       freq = 250000000.0 / (double(divider) + 1.0);
     m_staticTextMhz->SetLabel(wxString(pFormat->doubleToString(freq)).append(wxT(" Hz")));
     pOsciloscope->control.setDigitalClockDivide(divider);
     pOsciloscope->control.transferData();
