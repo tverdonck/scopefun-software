@@ -88,7 +88,7 @@ int fileLoadPtr(const char* fileName, char* buffer, ilarge* bufferSize)
     {
         return 1;
     }
-    *bufferSize = min( *bufferSize, SDL_RWsize(ctx) );
+    *bufferSize = min<ilarge>( *bufferSize, (ilarge)SDL_RWsize(ctx) );
     SDL_RWread(ctx, buffer, 1, *bufferSize);
     SDL_RWclose(ctx);
     return 0;
