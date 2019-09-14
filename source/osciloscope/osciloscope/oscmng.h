@@ -812,6 +812,7 @@ enum EThreadApiFunction {
    afSetNetwork,
    afClientConnect,
    afClientDisconnect,
+   afLast,
 };
 
 class ThreadApi {
@@ -819,7 +820,7 @@ private:
    SDL_SpinLock                  lock;
    SDL_atomic_t                  sync;
    Array<EThreadApiFunction,16>  func;
-   SDL_atomic_t                  ret;
+   SDL_atomic_t                  ret[afLast];
 private:
    SDL_atomic_t open;
    SDL_atomic_t connected;
@@ -864,6 +865,10 @@ public:
    void wait();
    void update();
 public:
+   int  result(EThreadApiFunction func);
+   void resultClear(EThreadApiFunction func);
+   void resultClearAll();
+public:
    // data
    int  getVersion();
    int  isOpen();
@@ -891,6 +896,7 @@ public:
    void setIpPort(const char* ip, uint port);
 public:
    // controlThread
+   int  openUSB(OscHardware* hw);
    int  writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardware* hw);
    int  writeUsbToEEPROM(OscHardware* hw);
    int  readUsbFromEEPROM(OscHardware* hw);

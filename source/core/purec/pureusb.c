@@ -271,20 +271,21 @@ int usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writ
     if(usbFxxIsConnected(ctx))
     {
         // write eeprom
-        int chunk = 2048;
+        int chunk = 1024;
         int loop = size / chunk;
         int left = size % chunk;
+        int ret  = 0;
         for(int i = 0; i < loop; i++)
         {
-            int ret = writeDataEeprom(ctx,
+            ret += writeDataEeprom(ctx,
                                       writeadress + (chunk * i),
                                       buffer + (chunk * i),
                                       chunk);
         }
-        int ret = writeDataEeprom(ctx,
-                                  writeadress + (chunk * loop),
-                                  buffer + (chunk * loop),
-                                  left);
+        ret += writeDataEeprom(ctx,
+                               writeadress + (chunk * loop),
+                               buffer + (chunk * loop),
+                               left);
         if(ret == 0)
         {
             return PUREUSB_SUCCESS;

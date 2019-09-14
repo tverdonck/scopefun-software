@@ -124,7 +124,7 @@ ThreadApi::ThreadApi()
 {
    lock = 0;
    SDL_AtomicSet(&sync, 0);
-   SDL_AtomicSet(&ret,0);
+   resultClearAll();
    
    SDL_AtomicSet(&open,0);
    SDL_AtomicSet(&connected,0);
@@ -164,6 +164,7 @@ void ThreadApi::function(EThreadApiFunction f)
 {
    SDL_AtomicLock(&lock);
       SDL_AtomicAdd(&sync, 1);
+      SDL_AtomicSet(&ret[func],0);
       func.pushBack(f);
    SDL_AtomicUnlock(&lock);
  }
@@ -176,18 +177,32 @@ void ThreadApi::wait()
    }
 }
 
+int ThreadApi::result(EThreadApiFunction func)
+{
+   return SDL_AtomicGet(&ret[func]);
+}
+
+void ThreadApi::resultClear(EThreadApiFunction func)
+{
+   SDL_AtomicSet(&ret[func], 0);
+}
+
+void ThreadApi::resultClearAll()
+{
+   for (int i = 0; i < afLast; i++)
+      resultClear((EThreadApiFunction)i);
+}
+
 void ThreadApi::update()
 {
-   int iret = 0;
-
    // default
    int iconnected = 0;
    int iopened = 0;
    int isimulate = 0;
    int iversion = SDL_AtomicGet(&version);
-   isimulate = sfIsSimulate(getCtx());
+   isimulate  = sfIsSimulate(getCtx());
    iconnected = sfIsConnected(getCtx());
-   iret += sfHardwareIsOpened(getCtx(), &iopened);
+   sfHardwareIsOpened(getCtx(), &iopened);
    SDL_AtomicSet(&connected, iconnected);
    SDL_AtomicSet(&simulate, isimulate);
    SDL_AtomicSet(&open, iopened);
@@ -196,46 +211,49 @@ void ThreadApi::update()
    int decr = 0;
    Array<EThreadApiFunction, 22>  execute;
    SDL_AtomicLock(&lock);
-      decr = -1*func.getCount();
-      for(int i=0;i<func.getCount();i++)
-         execute.pushBack( func[i] );
-      func.clear();
+   decr = -1 * func.getCount();
+   for (int i = 0; i < func.getCount(); i++)
+      execute.pushBack(func[i]);
+   func.clear();
    SDL_AtomicUnlock(&lock);
-   while(true)
+   while (true)
    {
       uint count = execute.getCount();
-      if (count==0) break;
+      if (count == 0) break;
 
       EThreadApiFunction f = execute.first();
       execute.popFront();
 
+      int iret = 0;
       switch (f) {
       case afInit:
          SDL_AtomicLock(&lock);
-            sfApiCreateContext(getCtx(), memory);
-            sfApiInit();
-            sfSetThreadSafe(getCtx(), threadSafe);
-            sfSetActive(getCtx(), active);
-            sfSetTimeOut(getCtx(), timeout);
+         sfApiCreateContext(getCtx(), memory);
+         sfApiInit();
+         sfSetThreadSafe(getCtx(), threadSafe);
+         sfSetActive(getCtx(), active);
+         sfSetTimeOut(getCtx(), timeout);
          SDL_AtomicUnlock(&lock);
          break;
       case afIsOpened:
-         iret += sfHardwareIsOpened(getCtx(), &iopened);
+         iret = sfHardwareIsOpened(getCtx(), &iopened);
          SDL_AtomicSet(&open, iopened);
          break;
       case afOpenUsb:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareOpen(getCtx(), &usbData, iversion);
+         iret += sfHardwareOpen(getCtx(), &usbData, iversion);
+         iret += sfHardwareIsOpened(getCtx(), &iopened);
+         SDL_AtomicSet(&open, iopened);
          SDL_AtomicUnlock(&lock);
          break;
       case afUploadFpga:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareUploadFpga(getCtx(), &fpgaData);
+         iret += sfHardwareUploadFpga(getCtx(), &fpgaData);
          SDL_AtomicUnlock(&lock);
          break;
       case afUploadFxx:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareUploadFx2(getCtx(), &fx2Data);
+         iret += sfHardwareUploadFx2(getCtx(), &fx2Data);
          SDL_AtomicUnlock(&lock);
          break;
       case afResetUsb:
@@ -246,70 +264,70 @@ void ThreadApi::update()
          break;
       case afEEPROMRead:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareEepromRead(getCtx(), &eepromData, eepromSize, eepromOffset);
+         iret += sfHardwareEepromRead(getCtx(), &eepromData, eepromSize, eepromOffset);
          SDL_AtomicUnlock(&lock);
          break;
       case afEEPROMWrite:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareEepromWrite(getCtx(), &eepromData, eepromSize, eepromOffset);
+         iret += sfHardwareEepromWrite(getCtx(), &eepromData, eepromSize, eepromOffset);
          SDL_AtomicUnlock(&lock);
          break;
       case afEEPROMErase:
          iret += sfHardwareEepromErase(getCtx());
          break;
       case afSetFrame:
-         {
-            int iversion = SDL_AtomicGet(&version);
-            int iheader  = SDL_AtomicGet(&header);
-            int idata    = SDL_AtomicGet(&data);
-            int ipacket  = SDL_AtomicGet(&packet);
-            iret += sfSetFrameVersion(getCtx(), iversion);
-            iret += sfSetFrameHeader(getCtx(),  iheader);
-            iret += sfSetFrameData(getCtx(),    idata);
-            iret += sfSetFramePacket(getCtx(),  ipacket);
-         }
-         break;
+      {
+         int iversion = SDL_AtomicGet(&version);
+         int iheader = SDL_AtomicGet(&header);
+         int idata = SDL_AtomicGet(&data);
+         int ipacket = SDL_AtomicGet(&packet);
+         iret += sfSetFrameVersion(getCtx(), iversion);
+         iret += sfSetFrameHeader(getCtx(), iheader);
+         iret += sfSetFrameData(getCtx(), idata);
+         iret += sfSetFramePacket(getCtx(), ipacket);
+      }
+      break;
       case afGetFrame:
-         {
-            int iversion = 0;
-            int iheader = 0;
-            int idata = 0;
-            int ipacket = 0;
-            iret += sfGetFrameVersion(getCtx(), &iversion);
-            iret += sfGetFrameHeader(getCtx(), &iheader);
-            iret += sfGetFrameData(getCtx(), &idata);
-            iret += sfGetFramePacket(getCtx(), &ipacket);
-            SDL_AtomicSet(&version,iversion);
-            SDL_AtomicSet(&header,iheader);
-            SDL_AtomicSet(&data, idata);
-            SDL_AtomicSet(&packet, ipacket);
-         }
-         break;
+      {
+         int iversion = 0;
+         int iheader = 0;
+         int idata = 0;
+         int ipacket = 0;
+         iret += sfGetFrameVersion(getCtx(), &iversion);
+         iret += sfGetFrameHeader(getCtx(), &iheader);
+         iret += sfGetFrameData(getCtx(), &idata);
+         iret += sfGetFramePacket(getCtx(), &ipacket);
+         SDL_AtomicSet(&version, iversion);
+         SDL_AtomicSet(&header, iheader);
+         SDL_AtomicSet(&data, idata);
+         SDL_AtomicSet(&packet, ipacket);
+      }
+      break;
       case afHardwareConfig1:
-         {
-            SHardware1 hw1 = { 0 };
-            getConfig1(&hw1);
-            iret += sfHardwareConfig1(getCtx(), &hw1);
-         }
-         break;
+      {
+         SHardware1 hw1 = { 0 };
+         getConfig1(&hw1);
+         iret += sfHardwareConfig1(getCtx(), &hw1);
+      }
+      break;
       case afHardwareConfig2:
-         {
-            SHardware2 hw2 = { 0 };
-            getConfig2(&hw2);
-            iret += sfHardwareConfig2(getCtx(), &hw2);
-         }
-         break;
+      {
+         SHardware2 hw2 = { 0 };
+         getConfig2(&hw2);
+         iret += sfHardwareConfig2(getCtx(), &hw2);
+      }
+      break;
       case afSimulate:
-         {
-            SDL_AtomicLock(&lock);
-               double time = simulateTimeValue;
-            SDL_AtomicUnlock(&lock);
-            iret += sfSimulate(getCtx(), time);
-         }
-         break;
+      {
+         SDL_AtomicLock(&lock);
+         double time = simulateTimeValue;
+         SDL_AtomicUnlock(&lock);
+         iret += sfSimulate(getCtx(), time);
+      }
+      break;
       case afSetSimulateData:
          SDL_AtomicLock(&lock);
-            iret += sfSetSimulateData(getCtx(), &simulateData);
+         iret += sfSetSimulateData(getCtx(), &simulateData);
          SDL_AtomicUnlock(&lock);
          break;
       case afSetSimulateOnOff:
@@ -323,12 +341,12 @@ void ThreadApi::update()
          break;
       case afGetClientDisplay:
          SDL_AtomicLock(&lock);
-            iret += sfGetClientDisplay(getCtx(), &displayData);
+         iret += sfGetClientDisplay(getCtx(), &displayData);
          SDL_AtomicUnlock(&lock);
          break;
       case afUploadGenerator:
          SDL_AtomicLock(&lock);
-            iret += sfHardwareUploadGenerator(getCtx(), &generatorData);
+         iret += sfHardwareUploadGenerator(getCtx(), &generatorData);
          SDL_AtomicUnlock(&lock);
          break;
       case afSetUsb:
@@ -338,15 +356,16 @@ void ThreadApi::update()
          iret += sfSetNetwork(getCtx());
          break;
       case afClientConnect:
-         iret += sfClientConnect(getCtx(), ip.asChar(), port );
+         iret += sfClientConnect(getCtx(), ip.asChar(), port);
          break;
       case afClientDisconnect:
          iret += sfClientDisconnect(getCtx());
+  
          break;
       };
+      SDL_AtomicSet(&ret[f], iret);
    }
-   SDL_AtomicSet( &ret,  iret );
-   SDL_AtomicAdd( &sync, decr );
+   SDL_AtomicAdd(&sync, decr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -561,10 +580,10 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    wait();
 
    // ret
-   return SDL_AtomicGet(&ret);
+   return result(afUploadFpga);
 }
 
-int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
+int ThreadApi::openUSB(OscHardware* hw)
 {
    if (SDL_AtomicGet(&open) == 0)
    {
@@ -572,11 +591,30 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
       setUSB(&usb);
       function(afOpenUsb);
       wait();
+      if (SDL_AtomicGet(&open) == 0)
+      {
+         usb.idVendor  = CYPRESS_VID;
+         usb.idProduct = CYPRESS_PID;
+         setUSB(&usb);
+         function(afOpenUsb);
+         wait();
+      }
    }
+   return 0;
+}
+int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
+{
+   openUSB(hw);
 
    if (SDL_AtomicGet(&open) > 0)
    {
       SDL_AtomicLock(&lock);
+
+      fx2Size = (uint)SDL_strlen(hw->usbFirmware.asChar());
+      fx2Data.size = fx2Size;
+      SDL_memcpy(fx2Data.data.bytes, hw->usbFirmware.asChar(), fx2Size);
+      fx2Data.data.bytes[fx2Size] = 0;
+
       int iversion = SDL_AtomicGet(&version);
       if (iversion == HARDWARE_VERSION_1)
       {
@@ -600,10 +638,17 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
          fileLoadPtr(path, (char*)&eepromData, &eepromSize);
       }
       SDL_AtomicUnlock(&lock);
+
+      SUsb usb = hw->getUSB();
+      setUSB(&usb);
+
+      function(afUploadFxx);
+      function(afCloseUsb);
+      function(afOpenUsb);
       function(afEEPROMWrite);
       wait();
    }
-   int iret = SDL_AtomicGet(&ret);
+   int iret = result(afEEPROMWrite);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write USB data to EEPROM was successfull.", 0);
@@ -624,14 +669,7 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
       return SCOPEFUN_FAILURE;
    }
 
-   if (SDL_AtomicGet(&open) == 0)
-   {
-      SUsb usb = hw->getUSB();
-      setUSB(&usb);
-      function(afOpenUsb);
-      function(afIsOpened);
-      wait();
-   }
+   openUSB(hw);
 
    if (SDL_AtomicGet(&open) > 0)
    {
@@ -653,7 +691,7 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
       function(afEEPROMRead);
       wait();
    }
-   int iret = SDL_AtomicGet(&ret);
+   int iret = result(afEEPROMRead);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read usb data from EEPROM was successfull.", 0);
@@ -675,13 +713,7 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
       return SCOPEFUN_FAILURE;
    }
 
-   if (SDL_AtomicGet(&open) == 0)
-   {
-      SUsb usb = hw->getUSB();
-      setUSB(&usb);
-      function(afOpenUsb);
-      wait();
-   }
+   openUSB(hw);
 
    if (SDL_AtomicGet(&open) > 0)
    {
@@ -693,7 +725,7 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
       function(afEEPROMWrite);
       wait();
    }
-   int iret = SDL_AtomicGet(&ret);
+   int iret = result(afEEPROMWrite);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write callibration data to EEPROM was successfull.", 0);
@@ -713,12 +745,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
       return SCOPEFUN_FAILURE;
    }
 
-   if (SDL_AtomicGet(&open) == 0)
-   {
-      SUsb usb = hw->getUSB();
-      setUSB(&usb);
-      function(afOpenUsb);
-   }
+   openUSB(hw);
 
    if ( SDL_AtomicGet(&open) > 0 )
    {
@@ -732,7 +759,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
          SDL_memcpy((char*)hw, (char*)&eepromData, sizeof(OscHardware));
       SDL_AtomicUnlock(&lock);
    }
-   int iret = SDL_AtomicGet(&ret);
+   int iret = result(afEEPROMRead);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read callibration data from EEPROM was successfull.", 0);
@@ -747,12 +774,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
 
 int ThreadApi::eraseEEPROM(OscHardware* hw)
 {
-   if (SDL_AtomicGet(&open) == 0)
-   {
-      SUsb usb = hw->getUSB();
-      setUSB(&usb);
-      function(afOpenUsb);
-   }
+   openUSB(hw);
    
    // upload
    function(afUploadFxx);
@@ -771,7 +793,7 @@ int ThreadApi::eraseEEPROM(OscHardware* hw)
    function(afEEPROMErase);
    wait();
   
-   int iret = SDL_AtomicGet(&ret);
+   int iret = result(afEEPROMErase);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Erase EEPROM was successfull.", 0);

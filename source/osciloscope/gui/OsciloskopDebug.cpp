@@ -37,11 +37,12 @@ void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
 }
 void OsciloskopDebug::Clear()
 {
-    #ifdef PLATFORM_MINGW
-    system("cls");
+    #if defined(PLATFORM_MINGW)
+      system("cls");
     #else
-    system("clear");
+      system("clear");
     #endif
+    m_textCtrl41->Clear();
 }
 void OsciloskopDebug::AppendText(const char* str)
 {

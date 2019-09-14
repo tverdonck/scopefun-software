@@ -425,11 +425,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         // reset gui
         if(pOsciloscope->callibrate.resetUI)
         {
-            // slot
-            wxFileName fn = GetOscDataFolder();
-            wxString fileName = fn.GetPath().append(_("/data/callibrate/start.slot"));
-            LoadSlot(getCurrentSlot(), fileName.ToAscii().data());
-            loadWindow(getCurrentSlot());
             // callibrate
             pOsciloscope->settings.getHardware()->save();
             pOsciloscope->setupControl(pOsciloscope->window);
@@ -2219,7 +2214,6 @@ void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& e
         pDebug->Clear();
         FORMAT_BUFFER();
         int count = min(16,size / EEPROM_BYTE_COUNT);
-        int left  = size % EEPROM_BYTE_COUNT;
         for(int i=0;i<count;i++)
         { 
            for(int j = 0; j < EEPROM_BYTE_COUNT; j++)
@@ -2229,12 +2223,6 @@ void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& e
                pDebug->AppendText(wxString::FromAscii(formatBuffer));
            }
            pDebug->AppendText(wxString::FromAscii("\n"));
-        }
-        for (int j = 0; j < left; j++)
-        {
-           byte byteToPrint = eeprom.data.bytes[count*EEPROM_BYTE_COUNT + j];
-           FORMAT("%02x ", byteToPrint);
-           pDebug->AppendText(wxString::FromAscii(formatBuffer));
         }
     }
 }
