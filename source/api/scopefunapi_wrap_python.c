@@ -3043,43 +3043,45 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 #define SWIGTYPE_p_csHardwareConfig2 swig_types[61]
 #define SWIGTYPE_p_csHardwareEepromErase swig_types[62]
 #define SWIGTYPE_p_csHardwareEepromRead swig_types[63]
-#define SWIGTYPE_p_csHardwareEepromWrite swig_types[64]
-#define SWIGTYPE_p_csHardwareIsOpened swig_types[65]
-#define SWIGTYPE_p_csHardwareOpen swig_types[66]
-#define SWIGTYPE_p_csHardwareReset swig_types[67]
-#define SWIGTYPE_p_csHardwareUploadFpga swig_types[68]
-#define SWIGTYPE_p_csHardwareUploadFx2 swig_types[69]
-#define SWIGTYPE_p_csHardwareUploadGenerator swig_types[70]
-#define SWIGTYPE_p_csUpload swig_types[71]
-#define SWIGTYPE_p_float swig_types[72]
-#define SWIGTYPE_p_int swig_types[73]
-#define SWIGTYPE_p_long_long swig_types[74]
-#define SWIGTYPE_p_messageHeader swig_types[75]
-#define SWIGTYPE_p_scClientConnect swig_types[76]
-#define SWIGTYPE_p_scClientDisconnect swig_types[77]
-#define SWIGTYPE_p_scClientDisplay swig_types[78]
-#define SWIGTYPE_p_scDownload swig_types[79]
-#define SWIGTYPE_p_scHardwareCapture swig_types[80]
-#define SWIGTYPE_p_scHardwareClose swig_types[81]
-#define SWIGTYPE_p_scHardwareConfig1 swig_types[82]
-#define SWIGTYPE_p_scHardwareConfig2 swig_types[83]
-#define SWIGTYPE_p_scHardwareEepromErase swig_types[84]
-#define SWIGTYPE_p_scHardwareEepromRead swig_types[85]
-#define SWIGTYPE_p_scHardwareEepromWrite swig_types[86]
-#define SWIGTYPE_p_scHardwareIsOpened swig_types[87]
-#define SWIGTYPE_p_scHardwareOpen swig_types[88]
-#define SWIGTYPE_p_scHardwareReset swig_types[89]
-#define SWIGTYPE_p_scHardwareUploadFpga swig_types[90]
-#define SWIGTYPE_p_scHardwareUploadFx2 swig_types[91]
-#define SWIGTYPE_p_scHardwareUploadGenerator swig_types[92]
-#define SWIGTYPE_p_scUpload swig_types[93]
-#define SWIGTYPE_p_short swig_types[94]
-#define SWIGTYPE_p_unsigned_char swig_types[95]
-#define SWIGTYPE_p_unsigned_int swig_types[96]
-#define SWIGTYPE_p_unsigned_long_long swig_types[97]
-#define SWIGTYPE_p_unsigned_short swig_types[98]
-static swig_type_info *swig_types[100];
-static swig_module_info swig_module = {swig_types, 99, 0, 0, 0, 0};
+#define SWIGTYPE_p_csHardwareEepromReadFirmwareID swig_types[64]
+#define SWIGTYPE_p_csHardwareEepromWrite swig_types[65]
+#define SWIGTYPE_p_csHardwareIsOpened swig_types[66]
+#define SWIGTYPE_p_csHardwareOpen swig_types[67]
+#define SWIGTYPE_p_csHardwareReset swig_types[68]
+#define SWIGTYPE_p_csHardwareUploadFpga swig_types[69]
+#define SWIGTYPE_p_csHardwareUploadFx2 swig_types[70]
+#define SWIGTYPE_p_csHardwareUploadGenerator swig_types[71]
+#define SWIGTYPE_p_csUpload swig_types[72]
+#define SWIGTYPE_p_float swig_types[73]
+#define SWIGTYPE_p_int swig_types[74]
+#define SWIGTYPE_p_long_long swig_types[75]
+#define SWIGTYPE_p_messageHeader swig_types[76]
+#define SWIGTYPE_p_scClientConnect swig_types[77]
+#define SWIGTYPE_p_scClientDisconnect swig_types[78]
+#define SWIGTYPE_p_scClientDisplay swig_types[79]
+#define SWIGTYPE_p_scDownload swig_types[80]
+#define SWIGTYPE_p_scHardwareCapture swig_types[81]
+#define SWIGTYPE_p_scHardwareClose swig_types[82]
+#define SWIGTYPE_p_scHardwareConfig1 swig_types[83]
+#define SWIGTYPE_p_scHardwareConfig2 swig_types[84]
+#define SWIGTYPE_p_scHardwareEepromErase swig_types[85]
+#define SWIGTYPE_p_scHardwareEepromRead swig_types[86]
+#define SWIGTYPE_p_scHardwareEepromReadFirmwareID swig_types[87]
+#define SWIGTYPE_p_scHardwareEepromWrite swig_types[88]
+#define SWIGTYPE_p_scHardwareIsOpened swig_types[89]
+#define SWIGTYPE_p_scHardwareOpen swig_types[90]
+#define SWIGTYPE_p_scHardwareReset swig_types[91]
+#define SWIGTYPE_p_scHardwareUploadFpga swig_types[92]
+#define SWIGTYPE_p_scHardwareUploadFx2 swig_types[93]
+#define SWIGTYPE_p_scHardwareUploadGenerator swig_types[94]
+#define SWIGTYPE_p_scUpload swig_types[95]
+#define SWIGTYPE_p_short swig_types[96]
+#define SWIGTYPE_p_unsigned_char swig_types[97]
+#define SWIGTYPE_p_unsigned_int swig_types[98]
+#define SWIGTYPE_p_unsigned_long_long swig_types[99]
+#define SWIGTYPE_p_unsigned_short swig_types[100]
+static swig_type_info *swig_types[102];
+static swig_module_info swig_module = {swig_types, 101, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -21093,6 +21095,255 @@ SWIGINTERN PyObject *csHardwareEepromRead_swigregister(PyObject *SWIGUNUSEDPARM(
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_header_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  messageHeader *arg2 = (messageHeader *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:csHardwareEepromReadFirmwareID_header_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_header_set" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_messageHeader, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "csHardwareEepromReadFirmwareID_header_set" "', argument " "2"" of type '" "messageHeader *""'"); 
+  }
+  arg2 = (messageHeader *)(argp2);
+  if (arg1) (arg1)->header = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_header_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  messageHeader *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:csHardwareEepromReadFirmwareID_header_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_header_get" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  result = (messageHeader *)& ((arg1)->header);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_messageHeader, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_size_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  uint arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:csHardwareEepromReadFirmwareID_size_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_size_set" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "csHardwareEepromReadFirmwareID_size_set" "', argument " "2"" of type '" "uint""'");
+  } 
+  arg2 = (uint)(val2);
+  if (arg1) (arg1)->size = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_size_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  uint result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:csHardwareEepromReadFirmwareID_size_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_size_get" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  result = (uint) ((arg1)->size);
+  resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_address_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  uint arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:csHardwareEepromReadFirmwareID_address_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_address_set" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "csHardwareEepromReadFirmwareID_address_set" "', argument " "2"" of type '" "uint""'");
+  } 
+  arg2 = (uint)(val2);
+  if (arg1) (arg1)->address = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_address_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  uint result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:csHardwareEepromReadFirmwareID_address_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_address_get" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  result = (uint) ((arg1)->address);
+  resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_reserved_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  uint arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:csHardwareEepromReadFirmwareID_reserved_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_reserved_set" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "csHardwareEepromReadFirmwareID_reserved_set" "', argument " "2"" of type '" "uint""'");
+  } 
+  arg2 = (uint)(val2);
+  if (arg1) (arg1)->reserved = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_csHardwareEepromReadFirmwareID_reserved_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  uint result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:csHardwareEepromReadFirmwareID_reserved_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csHardwareEepromReadFirmwareID_reserved_get" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  result = (uint) ((arg1)->reserved);
+  resultobj = SWIG_From_unsigned_SS_int((unsigned int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_csHardwareEepromReadFirmwareID(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_csHardwareEepromReadFirmwareID")) SWIG_fail;
+  result = (csHardwareEepromReadFirmwareID *)calloc(1, sizeof(csHardwareEepromReadFirmwareID));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_csHardwareEepromReadFirmwareID, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_csHardwareEepromReadFirmwareID(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  csHardwareEepromReadFirmwareID *arg1 = (csHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_csHardwareEepromReadFirmwareID",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_csHardwareEepromReadFirmwareID, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_csHardwareEepromReadFirmwareID" "', argument " "1"" of type '" "csHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (csHardwareEepromReadFirmwareID *)(argp1);
+  free((char *) arg1);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *csHardwareEepromReadFirmwareID_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char *)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_csHardwareEepromReadFirmwareID, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 SWIGINTERN PyObject *_wrap_csHardwareEepromWrite_header_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   csHardwareEepromWrite *arg1 = (csHardwareEepromWrite *) 0 ;
@@ -24064,6 +24315,151 @@ SWIGINTERN PyObject *scHardwareEepromRead_swigregister(PyObject *SWIGUNUSEDPARM(
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char *)"O:swigregister", &obj)) return NULL;
   SWIG_TypeNewClientData(SWIGTYPE_p_scHardwareEepromRead, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_scHardwareEepromReadFirmwareID_header_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *arg1 = (scHardwareEepromReadFirmwareID *) 0 ;
+  messageHeader *arg2 = (messageHeader *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:scHardwareEepromReadFirmwareID_header_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_scHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "scHardwareEepromReadFirmwareID_header_set" "', argument " "1"" of type '" "scHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (scHardwareEepromReadFirmwareID *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_messageHeader, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "scHardwareEepromReadFirmwareID_header_set" "', argument " "2"" of type '" "messageHeader *""'"); 
+  }
+  arg2 = (messageHeader *)(argp2);
+  if (arg1) (arg1)->header = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_scHardwareEepromReadFirmwareID_header_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *arg1 = (scHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  messageHeader *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:scHardwareEepromReadFirmwareID_header_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_scHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "scHardwareEepromReadFirmwareID_header_get" "', argument " "1"" of type '" "scHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (scHardwareEepromReadFirmwareID *)(argp1);
+  result = (messageHeader *)& ((arg1)->header);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_messageHeader, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_scHardwareEepromReadFirmwareID_eeprom_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *arg1 = (scHardwareEepromReadFirmwareID *) 0 ;
+  SEeprom *arg2 = (SEeprom *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:scHardwareEepromReadFirmwareID_eeprom_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_scHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "scHardwareEepromReadFirmwareID_eeprom_set" "', argument " "1"" of type '" "scHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (scHardwareEepromReadFirmwareID *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_SEeprom, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "scHardwareEepromReadFirmwareID_eeprom_set" "', argument " "2"" of type '" "SEeprom *""'"); 
+  }
+  arg2 = (SEeprom *)(argp2);
+  if (arg1) (arg1)->eeprom = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_scHardwareEepromReadFirmwareID_eeprom_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *arg1 = (scHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  SEeprom *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:scHardwareEepromReadFirmwareID_eeprom_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_scHardwareEepromReadFirmwareID, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "scHardwareEepromReadFirmwareID_eeprom_get" "', argument " "1"" of type '" "scHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (scHardwareEepromReadFirmwareID *)(argp1);
+  result = (SEeprom *)& ((arg1)->eeprom);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_SEeprom, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_scHardwareEepromReadFirmwareID(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_scHardwareEepromReadFirmwareID")) SWIG_fail;
+  result = (scHardwareEepromReadFirmwareID *)calloc(1, sizeof(scHardwareEepromReadFirmwareID));
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_scHardwareEepromReadFirmwareID, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_scHardwareEepromReadFirmwareID(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  scHardwareEepromReadFirmwareID *arg1 = (scHardwareEepromReadFirmwareID *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_scHardwareEepromReadFirmwareID",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_scHardwareEepromReadFirmwareID, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_scHardwareEepromReadFirmwareID" "', argument " "1"" of type '" "scHardwareEepromReadFirmwareID *""'"); 
+  }
+  arg1 = (scHardwareEepromReadFirmwareID *)(argp1);
+  free((char *) arg1);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *scHardwareEepromReadFirmwareID_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char *)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_scHardwareEepromReadFirmwareID, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
@@ -28123,6 +28519,55 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_sfHardwareEepromReadFirmwareID(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SFContext *arg1 = (SFContext *) 0 ;
+  SEeprom *arg2 = (SEeprom *) 0 ;
+  int arg3 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:sfHardwareEepromReadFirmwareID",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SFContext, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "sfHardwareEepromReadFirmwareID" "', argument " "1"" of type '" "SFContext *""'"); 
+  }
+  arg1 = (SFContext *)(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_SEeprom, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "sfHardwareEepromReadFirmwareID" "', argument " "2"" of type '" "SEeprom *""'"); 
+  }
+  arg2 = (SEeprom *)(argp2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "sfHardwareEepromReadFirmwareID" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = (int)(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "sfHardwareEepromReadFirmwareID" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = (int)(val4);
+  result = (int)sfHardwareEepromReadFirmwareID(arg1,arg2,arg3,arg4);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_sfHardwareEepromWrite(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   SFContext *arg1 = (SFContext *) 0 ;
@@ -29101,6 +29546,17 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_csHardwareEepromRead", _wrap_new_csHardwareEepromRead, METH_VARARGS, NULL},
 	 { (char *)"delete_csHardwareEepromRead", _wrap_delete_csHardwareEepromRead, METH_VARARGS, NULL},
 	 { (char *)"csHardwareEepromRead_swigregister", csHardwareEepromRead_swigregister, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_header_set", _wrap_csHardwareEepromReadFirmwareID_header_set, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_header_get", _wrap_csHardwareEepromReadFirmwareID_header_get, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_size_set", _wrap_csHardwareEepromReadFirmwareID_size_set, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_size_get", _wrap_csHardwareEepromReadFirmwareID_size_get, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_address_set", _wrap_csHardwareEepromReadFirmwareID_address_set, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_address_get", _wrap_csHardwareEepromReadFirmwareID_address_get, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_reserved_set", _wrap_csHardwareEepromReadFirmwareID_reserved_set, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_reserved_get", _wrap_csHardwareEepromReadFirmwareID_reserved_get, METH_VARARGS, NULL},
+	 { (char *)"new_csHardwareEepromReadFirmwareID", _wrap_new_csHardwareEepromReadFirmwareID, METH_VARARGS, NULL},
+	 { (char *)"delete_csHardwareEepromReadFirmwareID", _wrap_delete_csHardwareEepromReadFirmwareID, METH_VARARGS, NULL},
+	 { (char *)"csHardwareEepromReadFirmwareID_swigregister", csHardwareEepromReadFirmwareID_swigregister, METH_VARARGS, NULL},
 	 { (char *)"csHardwareEepromWrite_header_set", _wrap_csHardwareEepromWrite_header_set, METH_VARARGS, NULL},
 	 { (char *)"csHardwareEepromWrite_header_get", _wrap_csHardwareEepromWrite_header_get, METH_VARARGS, NULL},
 	 { (char *)"csHardwareEepromWrite_size_set", _wrap_csHardwareEepromWrite_size_set, METH_VARARGS, NULL},
@@ -29241,6 +29697,13 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_scHardwareEepromRead", _wrap_new_scHardwareEepromRead, METH_VARARGS, NULL},
 	 { (char *)"delete_scHardwareEepromRead", _wrap_delete_scHardwareEepromRead, METH_VARARGS, NULL},
 	 { (char *)"scHardwareEepromRead_swigregister", scHardwareEepromRead_swigregister, METH_VARARGS, NULL},
+	 { (char *)"scHardwareEepromReadFirmwareID_header_set", _wrap_scHardwareEepromReadFirmwareID_header_set, METH_VARARGS, NULL},
+	 { (char *)"scHardwareEepromReadFirmwareID_header_get", _wrap_scHardwareEepromReadFirmwareID_header_get, METH_VARARGS, NULL},
+	 { (char *)"scHardwareEepromReadFirmwareID_eeprom_set", _wrap_scHardwareEepromReadFirmwareID_eeprom_set, METH_VARARGS, NULL},
+	 { (char *)"scHardwareEepromReadFirmwareID_eeprom_get", _wrap_scHardwareEepromReadFirmwareID_eeprom_get, METH_VARARGS, NULL},
+	 { (char *)"new_scHardwareEepromReadFirmwareID", _wrap_new_scHardwareEepromReadFirmwareID, METH_VARARGS, NULL},
+	 { (char *)"delete_scHardwareEepromReadFirmwareID", _wrap_delete_scHardwareEepromReadFirmwareID, METH_VARARGS, NULL},
+	 { (char *)"scHardwareEepromReadFirmwareID_swigregister", scHardwareEepromReadFirmwareID_swigregister, METH_VARARGS, NULL},
 	 { (char *)"scHardwareEepromWrite_header_set", _wrap_scHardwareEepromWrite_header_set, METH_VARARGS, NULL},
 	 { (char *)"scHardwareEepromWrite_header_get", _wrap_scHardwareEepromWrite_header_get, METH_VARARGS, NULL},
 	 { (char *)"scHardwareEepromWrite_reserved_set", _wrap_scHardwareEepromWrite_reserved_set, METH_VARARGS, NULL},
@@ -29414,6 +29877,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"sfHardwareUploadFpga", _wrap_sfHardwareUploadFpga, METH_VARARGS, NULL},
 	 { (char *)"sfHardwareUploadGenerator", _wrap_sfHardwareUploadGenerator, METH_VARARGS, NULL},
 	 { (char *)"sfHardwareEepromRead", _wrap_sfHardwareEepromRead, METH_VARARGS, NULL},
+	 { (char *)"sfHardwareEepromReadFirmwareID", _wrap_sfHardwareEepromReadFirmwareID, METH_VARARGS, NULL},
 	 { (char *)"sfHardwareEepromWrite", _wrap_sfHardwareEepromWrite, METH_VARARGS, NULL},
 	 { (char *)"sfHardwareEepromErase", _wrap_sfHardwareEepromErase, METH_VARARGS, NULL},
 	 { (char *)"sfHardwareClose", _wrap_sfHardwareClose, METH_VARARGS, NULL},
@@ -29493,6 +29957,7 @@ static swig_type_info _swigt__p_csHardwareConfig1 = {"_p_csHardwareConfig1", "cs
 static swig_type_info _swigt__p_csHardwareConfig2 = {"_p_csHardwareConfig2", "csHardwareConfig2 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_csHardwareEepromErase = {"_p_csHardwareEepromErase", "csHardwareEepromErase *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_csHardwareEepromRead = {"_p_csHardwareEepromRead", "csHardwareEepromRead *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_csHardwareEepromReadFirmwareID = {"_p_csHardwareEepromReadFirmwareID", "csHardwareEepromReadFirmwareID *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_csHardwareEepromWrite = {"_p_csHardwareEepromWrite", "csHardwareEepromWrite *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_csHardwareIsOpened = {"_p_csHardwareIsOpened", "csHardwareIsOpened *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_csHardwareOpen = {"_p_csHardwareOpen", "csHardwareOpen *", 0, 0, (void*)0, 0};
@@ -29515,6 +29980,7 @@ static swig_type_info _swigt__p_scHardwareConfig1 = {"_p_scHardwareConfig1", "sc
 static swig_type_info _swigt__p_scHardwareConfig2 = {"_p_scHardwareConfig2", "scHardwareConfig2 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_scHardwareEepromErase = {"_p_scHardwareEepromErase", "scHardwareEepromErase *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_scHardwareEepromRead = {"_p_scHardwareEepromRead", "scHardwareEepromRead *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_scHardwareEepromReadFirmwareID = {"_p_scHardwareEepromReadFirmwareID", "scHardwareEepromReadFirmwareID *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_scHardwareEepromWrite = {"_p_scHardwareEepromWrite", "scHardwareEepromWrite *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_scHardwareIsOpened = {"_p_scHardwareIsOpened", "scHardwareIsOpened *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_scHardwareOpen = {"_p_scHardwareOpen", "scHardwareOpen *", 0, 0, (void*)0, 0};
@@ -29594,6 +30060,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_csHardwareConfig2,
   &_swigt__p_csHardwareEepromErase,
   &_swigt__p_csHardwareEepromRead,
+  &_swigt__p_csHardwareEepromReadFirmwareID,
   &_swigt__p_csHardwareEepromWrite,
   &_swigt__p_csHardwareIsOpened,
   &_swigt__p_csHardwareOpen,
@@ -29616,6 +30083,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_scHardwareConfig2,
   &_swigt__p_scHardwareEepromErase,
   &_swigt__p_scHardwareEepromRead,
+  &_swigt__p_scHardwareEepromReadFirmwareID,
   &_swigt__p_scHardwareEepromWrite,
   &_swigt__p_scHardwareIsOpened,
   &_swigt__p_scHardwareOpen,
@@ -29695,6 +30163,7 @@ static swig_cast_info _swigc__p_csHardwareConfig1[] = {  {&_swigt__p_csHardwareC
 static swig_cast_info _swigc__p_csHardwareConfig2[] = {  {&_swigt__p_csHardwareConfig2, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_csHardwareEepromErase[] = {  {&_swigt__p_csHardwareEepromErase, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_csHardwareEepromRead[] = {  {&_swigt__p_csHardwareEepromRead, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_csHardwareEepromReadFirmwareID[] = {  {&_swigt__p_csHardwareEepromReadFirmwareID, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_csHardwareEepromWrite[] = {  {&_swigt__p_csHardwareEepromWrite, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_csHardwareIsOpened[] = {  {&_swigt__p_csHardwareIsOpened, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_csHardwareOpen[] = {  {&_swigt__p_csHardwareOpen, 0, 0, 0},{0, 0, 0, 0}};
@@ -29717,6 +30186,7 @@ static swig_cast_info _swigc__p_scHardwareConfig1[] = {  {&_swigt__p_scHardwareC
 static swig_cast_info _swigc__p_scHardwareConfig2[] = {  {&_swigt__p_scHardwareConfig2, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scHardwareEepromErase[] = {  {&_swigt__p_scHardwareEepromErase, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scHardwareEepromRead[] = {  {&_swigt__p_scHardwareEepromRead, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_scHardwareEepromReadFirmwareID[] = {  {&_swigt__p_scHardwareEepromReadFirmwareID, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scHardwareEepromWrite[] = {  {&_swigt__p_scHardwareEepromWrite, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scHardwareIsOpened[] = {  {&_swigt__p_scHardwareIsOpened, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_scHardwareOpen[] = {  {&_swigt__p_scHardwareOpen, 0, 0, 0},{0, 0, 0, 0}};
@@ -29796,6 +30266,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_csHardwareConfig2,
   _swigc__p_csHardwareEepromErase,
   _swigc__p_csHardwareEepromRead,
+  _swigc__p_csHardwareEepromReadFirmwareID,
   _swigc__p_csHardwareEepromWrite,
   _swigc__p_csHardwareIsOpened,
   _swigc__p_csHardwareOpen,
@@ -29818,6 +30289,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_scHardwareConfig2,
   _swigc__p_scHardwareEepromErase,
   _swigc__p_scHardwareEepromRead,
+  _swigc__p_scHardwareEepromReadFirmwareID,
   _swigc__p_scHardwareEepromWrite,
   _swigc__p_scHardwareIsOpened,
   _swigc__p_scHardwareOpen,
@@ -30539,6 +31011,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "SCOPEFUN_FIRMWARE_FX2",SWIG_From_int((int)(16384)));
   SWIG_Python_SetConstant(d, "SCOPEFUN_FIRMWARE_FPGA",SWIG_From_int((int)((4*1024*1024))));
   SWIG_Python_SetConstant(d, "SCOPEFUN_EEPROM_BYTES",SWIG_From_int((int)((256*1024))));
+  SWIG_Python_SetConstant(d, "SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES",SWIG_From_int((int)((16))));
   SWIG_Python_SetConstant(d, "SCOPEFUN_GENERATOR",SWIG_From_int((int)(32768)));
   SWIG_Python_SetConstant(d, "SCOPEFUN_CAPTURE_TYPE_NONE",SWIG_From_int((int)(0)));
   SWIG_Python_SetConstant(d, "SCOPEFUN_CAPTURE_TYPE_HEADER",SWIG_From_int((int)(1)));
@@ -30581,6 +31054,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "mHardwareUploadFpga",SWIG_From_int((int)(mHardwareUploadFpga)));
   SWIG_Python_SetConstant(d, "mHardwareUploadGenerator",SWIG_From_int((int)(mHardwareUploadGenerator)));
   SWIG_Python_SetConstant(d, "mHardwareEepromRead",SWIG_From_int((int)(mHardwareEepromRead)));
+  SWIG_Python_SetConstant(d, "mHardwareEepromReadFirmwareID",SWIG_From_int((int)(mHardwareEepromReadFirmwareID)));
   SWIG_Python_SetConstant(d, "mHardwareEepromWrite",SWIG_From_int((int)(mHardwareEepromWrite)));
   SWIG_Python_SetConstant(d, "mHardwareEepromErase",SWIG_From_int((int)(mHardwareEepromErase)));
   SWIG_Python_SetConstant(d, "mHardwareClose",SWIG_From_int((int)(mHardwareClose)));

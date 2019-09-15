@@ -68,6 +68,7 @@ typedef unsigned long long ularge;
 #define SCOPEFUN_FIRMWARE_FX2               16384
 #define SCOPEFUN_FIRMWARE_FPGA              (4*1024*1024)
 #define SCOPEFUN_EEPROM_BYTES               (256*1024)
+#define SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES (16)
 #define SCOPEFUN_GENERATOR                  32768
 
 /*----------------------------------------
@@ -531,6 +532,7 @@ typedef enum _EMessage
     mHardwareUploadFpga,
     mHardwareUploadGenerator,
     mHardwareEepromRead,
+    mHardwareEepromReadFirmwareID,
     mHardwareEepromWrite,
     mHardwareEepromErase,
     mHardwareClose,
@@ -660,6 +662,14 @@ typedef struct
     uint                    address;
     uint                    reserved;
 } csHardwareEepromRead;
+
+typedef struct
+{
+   messageHeader           header;
+   uint                    size;
+   uint                    address;
+   uint                    reserved;
+} csHardwareEepromReadFirmwareID;
 
 typedef struct
 {
@@ -794,6 +804,12 @@ typedef struct
     messageHeader           header;
     SEeprom                 eeprom;
 } scHardwareEepromRead;
+
+typedef struct
+{
+   messageHeader           header;
+   SEeprom                 eeprom;
+} scHardwareEepromReadFirmwareID;
 
 typedef struct
 {
@@ -1005,6 +1021,7 @@ SCOPEFUN_DELETE(SActiveClients)
     SCOPEFUN_API int sfHardwareUploadFpga(SFContext* INPUT, SFpga* INPUT);
     SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* INPUT, SGenerator* INPUT);
     SCOPEFUN_API int sfHardwareEepromRead(SFContext* INPUT, SEeprom* INOUT, int INPUT, int INPUT);
+    SCOPEFUN_API int sfHardwareEepromReadFirmwareID(SFContext* INPUT, SEeprom* INOUT, int INPUT, int INPUT);
     SCOPEFUN_API int sfHardwareEepromWrite(SFContext* INPUT, SEeprom* INPUT, int INPUT, int INPUT);
     SCOPEFUN_API int sfHardwareEepromErase(SFContext* INPUT);
     SCOPEFUN_API int sfHardwareClose(SFContext* INPUT);
@@ -1108,6 +1125,7 @@ SCOPEFUN_DELETE(SActiveClients)
     SCOPEFUN_API int sfHardwareUploadFpga(SFContext* ctx, SFpga* fpgs);
     SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* ctx, SGenerator* gen);
     SCOPEFUN_API int sfHardwareEepromRead(SFContext* ctx, SEeprom* eeprom, int size, int adrees);
+    SCOPEFUN_API int sfHardwareEepromReadFirmwareID(SFContext* ctx, SEeprom* eeprom, int size, int adrees);
     SCOPEFUN_API int sfHardwareEepromWrite(SFContext* ctx, SEeprom* eeprom, int size, int adress);
     SCOPEFUN_API int sfHardwareEepromErase(SFContext* ctx);
     SCOPEFUN_API int sfHardwareClose(SFContext* ctx);

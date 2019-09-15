@@ -321,7 +321,7 @@
                     </object>
                 </object>
                 <object class="wxMenu" expanded="0">
-                    <property name="label">Hardware</property>
+                    <property name="label">EEPROM</property>
                     <property name="name">m_menu5</property>
                     <property name="permission">protected</property>
                     <object class="wxMenuItem" expanded="0">
@@ -331,7 +331,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Read EEPROM</property>
+                        <property name="label">Read FX3</property>
                         <property name="name">m_menuItemReadEEPROM</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -345,26 +345,12 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Write EEPROM</property>
+                        <property name="label">Write FX3</property>
                         <property name="name">m_menuItemWriteEEPROM</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">m_menuItemWriteEEPROMOnMenuSelection</event>
-                    </object>
-                    <object class="wxMenuItem" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Erase EEPROM</property>
-                        <property name="name">m_menuItemResetEEPROM</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">m_menuItemResetEEPROMOnMenuSelection</event>
                     </object>
                     <object class="separator" expanded="0">
                         <property name="name">m_separator4</property>
@@ -377,12 +363,16 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Auto Callibrate</property>
+                        <property name="label">Auto Callibrate ( save to EEPROM and hardware2.json )</property>
                         <property name="name">m_menuItem12</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">m_menuItem12OnMenuSelection</event>
+                    </object>
+                    <object class="separator" expanded="0">
+                        <property name="name">m_separator42</property>
+                        <property name="permission">none</property>
                     </object>
                     <object class="wxMenuItem" expanded="0">
                         <property name="bitmap"></property>
@@ -391,7 +381,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Write Callibration</property>
+                        <property name="label">Write Callibration ( load from hardware2.json )</property>
                         <property name="name">m_menuItemWriteCallibrate</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -405,12 +395,30 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Read Callibration</property>
+                        <property name="label">Read Callibration (  save to hardware2.json )</property>
                         <property name="name">m_menuItemReadCallibrate</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">m_menuItemReadCallibrateOnMenuSelection</event>
+                    </object>
+                    <object class="separator" expanded="0">
+                        <property name="name">m_separator41</property>
+                        <property name="permission">none</property>
+                    </object>
+                    <object class="wxMenuItem" expanded="0">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help"></property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Erase</property>
+                        <property name="name">m_menuItemResetEEPROM</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut"></property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">m_menuItemResetEEPROMOnMenuSelection</event>
                     </object>
                 </object>
                 <object class="wxMenu" expanded="0">

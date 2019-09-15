@@ -298,10 +298,10 @@ class Osciloskop : public wxFrame
 		virtual void m_menuItem11OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemReadEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemWriteEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem12OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemWriteCallibrateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemReadCallibrateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem15OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemSlot1OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemSlot2OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }

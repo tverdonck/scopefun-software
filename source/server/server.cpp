@@ -511,6 +511,20 @@ int SDLCALL ClientFunServer(void* data)
                 }
                 continue;
             }
+            if (recvHeader->message == mHardwareEepromReadFirmwareID)
+            {
+               SERVER_RECV_MSG(csHardwareEepromReadFirmwareID);
+               if (server_recv_msg == SCOPEFUN_SUCCESS)
+               {
+                  SERVER_HEADER(scHardwareEepromReadFirmwareID, mHardwareEepromReadFirmwareID);
+                  if (server_header == SCOPEFUN_SUCCESS)
+                  {
+                     sendMessage->header.error = sfHardwareEepromReadFirmwareID(&pServer->ctx, &sendMessage->eeprom, recvMessage->size, recvMessage->address);
+                     SERVER_SEND_MSG(scHardwareEepromReadFirmwareID);
+                  }
+               }
+               continue;
+            }
             if(recvHeader->message == mHardwareEepromWrite)
             {
                 SERVER_RECV_MSG(csHardwareEepromWrite);

@@ -96,6 +96,7 @@ int  usbFx3CheckFirmwareID(UsbContext* ctx, char* data);
 int  usbFx3UploadFirmwareToFx3(UsbContext* ctx, const char* path);
 int  usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size, int swapBits);
 int  usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
+int  usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3Reset(UsbContext* ctx);
 

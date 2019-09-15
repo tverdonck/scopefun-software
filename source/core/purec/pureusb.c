@@ -197,6 +197,27 @@ int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size,
     return PUREUSB_FAILURE;
 }
 
+int usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
+{
+   int transfered = 0;
+   if (usbFxxIsConnected(ctx))
+   {
+      // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
+      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+            0xC0,
+            0xB0,
+            (readadress >> 16) & 0xffff,
+            (readadress) & 0xffff,
+            buffer,
+            size,
+            100000);
+      if (read == size)
+      {
+         return PUREUSB_SUCCESS;
+      }
+   }
+   return PUREUSB_FAILURE;
+}
 int usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
 {
     int transfered = 0;

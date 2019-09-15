@@ -267,6 +267,11 @@ void ThreadApi::update()
          iret += sfHardwareEepromRead(getCtx(), &eepromData, eepromSize, eepromOffset);
          SDL_AtomicUnlock(&lock);
          break;
+      case afEEPROMReadFirmwareID:
+         SDL_AtomicLock(&lock);
+         iret += sfHardwareEepromReadFirmwareID(getCtx(), &eepromData, eepromSize, eepromOffset);
+         SDL_AtomicUnlock(&lock);
+         break;
       case afEEPROMWrite:
          SDL_AtomicLock(&lock);
          iret += sfHardwareEepromWrite(getCtx(), &eepromData, eepromSize, eepromOffset);
@@ -530,23 +535,23 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
 {
    SDL_AtomicLock(&lock);
 
-      // usb
-      usbData = hw->getUSB();
-      usbSize = sizeof(SUsb);
+   // usb
+   usbData = hw->getUSB();
+   usbSize = sizeof(SUsb);
 
-      // fx2
-      fx2Size = (uint)SDL_strlen(hw->usbFirmware.asChar());
-      fx2Data.size = fx2Size;
-      SDL_memcpy(fx2Data.data.bytes, hw->usbFirmware.asChar(), fx2Size);
-      fx2Data.data.bytes[fx2Size] = 0;
+   // fx2
+   fx2Size = (uint)SDL_strlen(hw->usbFirmware.asChar());
+   fx2Data.size = fx2Size;
+   SDL_memcpy(fx2Data.data.bytes, hw->usbFirmware.asChar(), fx2Size);
+   fx2Data.data.bytes[fx2Size] = 0;
 
-      // fpga
-      char*  buffer = 0;
-      ilarge bufferSize = 0;
-      int fret = fileLoad(hw->fpgaFirmware.asChar(), &buffer, &bufferSize);
-      fpgaData.size = fpgaSize = bufferSize;
-      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
-      pMemory->free(buffer);
+   // fpga
+   char*  buffer = 0;
+   ilarge bufferSize = 0;
+   int fret = fileLoad(hw->fpgaFirmware.asChar(), &buffer, &bufferSize);
+   fpgaData.size = fpgaSize = bufferSize;
+   SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+   pMemory->free(buffer);
 
    SDL_AtomicUnlock(&lock);
 
@@ -568,6 +573,25 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    function(afOpenUsb);
    wait();
 
+   // callibration
+   if (SDL_AtomicGet(&open) == 1)
+   {
+      SDL_AtomicLock(&lock);
+        eepromSize = sizeof(OscHardware);
+         eepromOffset = 256000;
+      SDL_AtomicUnlock(&lock);
+      function(afEEPROMRead);
+      wait();
+
+      // use callibration from eeprom
+      if (result(afEEPROMRead) == 0)
+      {
+         cJSON* json = hw->json;
+         SDL_memcpy(hw, &eepromData, eepromSize);
+         hw->json = json;
+      }
+   }
+
    // fpga
    function(afUploadFpga);
    wait();
@@ -578,6 +602,7 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    // control
    hardwareControlFunction(ctrl1,ctrl2);
    wait();
+
 
    // ret
    return result(afUploadFpga);
@@ -660,7 +685,48 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
    return iret;
 }
 
-int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
+int ThreadApi::readFirmwareIDFromEEPROM(OscHardware* hw)
+{
+   int iversion = SDL_AtomicGet(&version);
+   if (iversion == HARDWARE_VERSION_1)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Error", "This function is supported only with hardware version 2 and above.", 0);
+      return SCOPEFUN_FAILURE;
+   }
+
+   openUSB(hw);
+
+   if (SDL_AtomicGet(&open) > 0)
+   {
+      SDL_AtomicLock(&lock);
+      int iversion = SDL_AtomicGet(&version);
+      if (iversion == HARDWARE_VERSION_1)
+      {
+         eepromSize = 7;
+         eepromOffset = 0;
+      }
+      if (iversion == HARDWARE_VERSION_2)
+      {
+         eepromSize   = SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES;
+         eepromOffset = 0;
+      }
+      SDL_AtomicUnlock(&lock);
+      function(afEEPROMReadFirmwareID);
+      wait();
+   }
+   int iret = result(afEEPROMReadFirmwareID);
+   if (iret == SCOPEFUN_SUCCESS)
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Read Frimware ID data from EEPROM was successfull.", 0);
+   }
+   else
+   {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Read Firmware ID data from EEPROM failed.", 0);
+   }
+   return iret;
+}
+
+int ThreadApi::readUsbFromEEPROM(OscHardware* hw,int readsize)
 {
    int iversion = SDL_AtomicGet(&version);
    if (iversion == HARDWARE_VERSION_1)
@@ -682,9 +748,9 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw)
          }
          if (iversion == HARDWARE_VERSION_2)
          {
-            ilarge size = 0;
-            fileSize(hw->usbFirmware.asChar(), &size);
-            eepromSize = size;
+            ilarge size = readsize;
+            if(size==0) fileSize(hw->usbFirmware.asChar(), &size);
+            eepromSize   = size;
             eepromOffset = 0;
          }
       SDL_AtomicUnlock(&lock);
@@ -720,7 +786,7 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
       SDL_AtomicLock(&lock);
          eepromSize = sizeof(OscHardware);
          eepromOffset = 256000;
-         fileLoadPtr((char*)hw, (char*)&eepromData, &eepromSize);
+         SDL_memcpy( (void*)&eepromData, (void*)hw, (size_t)eepromSize);
       SDL_AtomicUnlock(&lock);
       function(afEEPROMWrite);
       wait();
@@ -755,9 +821,6 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
       SDL_AtomicUnlock(&lock);
       function(afEEPROMRead);
       wait();
-      SDL_AtomicLock(&lock);
-         SDL_memcpy((char*)hw, (char*)&eepromData, sizeof(OscHardware));
-      SDL_AtomicUnlock(&lock);
    }
    int iret = result(afEEPROMRead);
    if (iret == SCOPEFUN_SUCCESS)
@@ -3143,7 +3206,8 @@ void OsciloscopeManager::AutoCallibrate()
 {
     SHardware1 hw1 = pOsciloscope->control.control1.client1Get();
     SHardware2 hw2 = pOsciloscope->control.control2.client2Get();
-    thread.writeFpgaToArtix7( &hw1, &hw2, settings.getHardware());
+    thread.hardwareControlFunction(&hw1, &hw2);
+    thread.wait();
     callibrate.clear();
     callibrate.active      = 1;
     callibrate.mode        = acStartMessageBox;

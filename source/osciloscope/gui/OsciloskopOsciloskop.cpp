@@ -2197,22 +2197,34 @@ void OsciloskopOsciloskop::m_menuItemClipboardAllOnMenuSelection(wxCommandEvent&
 
 void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& event)
 {
+    // pause
     wxCommandEvent evt;
     m_buttonPauseOnButtonClick(evt);
+
+    // firmware id
+    String  ID;
     SEeprom eeprom;
     int     size   = 0;
     int     offset = 0;
-    memset(eeprom.data.bytes, 0xdd, sizeof(SEeprom));
+    memset(eeprom.data.bytes, 0x00, sizeof(SEeprom));
+    pOsciloscope->thread.readFirmwareIDFromEEPROM(pOsciloscope->settings.getHardware());
+    pOsciloscope->thread.getEEPROM(&eeprom, &size, &offset);
+    ID = (char*)&eeprom.data.bytes[0];
 
-    pOsciloscope->thread.readUsbFromEEPROM(pOsciloscope->settings.getHardware());
+    // data
+    memset(eeprom.data.bytes, 0x00, sizeof(SEeprom));
+    pOsciloscope->thread.readUsbFromEEPROM(pOsciloscope->settings.getHardware(), (16*EEPROM_BYTE_COUNT) );
     pOsciloscope->thread.getEEPROM(&eeprom,&size,&offset);
 
+    // debug
     wxCommandEvent et;
     m_menuItemDebugOnMenuSelection(et);
     if(pDebug && pDebug->IsShown())
     {
         pDebug->Clear();
         FORMAT_BUFFER();
+        FORMAT("%s \n", (char*)ID.asChar() );
+        pDebug->AppendText(wxString::FromAscii(formatBuffer));
         int count = min(16,size / EEPROM_BYTE_COUNT);
         for(int i=0;i<count;i++)
         { 
@@ -3251,27 +3263,43 @@ void OsciloskopOsciloskop::m_menuItemAutoCallibrateOnMenuSelection(wxCommandEven
 }
 void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection(wxCommandEvent& event)
 {
+    // pause
     wxCommandEvent evt;
     m_buttonPauseOnButtonClick(evt);
+
+    // read
     SEeprom eeprom;
     int     size = 0;
     int     offset = 0;
     memset(eeprom.data.bytes, 0xdd, sizeof(SEeprom));
-
     pOsciloscope->thread.readCallibrateSettingsFromEEPROM(pOsciloscope->settings.getHardware());
     pOsciloscope->thread.getEEPROM(&eeprom, &size, &offset);
 
+    // save
+    OscHardware* save = pOsciloscope->settings.getHardware();
+    cJSON* json = save->json;
+    save->load();
+    SDL_memcpy(save, &eeprom, size);
+    save->json - json;
+    save->save();
+
+    // debug
     wxCommandEvent et;
     m_menuItemDebugOnMenuSelection(et);
     if (pDebug && pDebug->IsShown())
     {
        pDebug->Clear();
        FORMAT_BUFFER();
-       for (int i = 0; i < EEPROM_BYTE_COUNT; i++)
+       int count = min(16, size / EEPROM_BYTE_COUNT);
+       for (int i = 0; i < count; i++)
        {
-          byte byteToPrint = eeprom.data.bytes[i];
-          FORMAT("%02x ", byteToPrint);
-          pDebug->AppendText(wxString::FromAscii(formatBuffer));
+          for (int j = 0; j < EEPROM_BYTE_COUNT; j++)
+          {
+             byte byteToPrint = eeprom.data.bytes[i*EEPROM_BYTE_COUNT + j];
+             FORMAT("%02x ", byteToPrint);
+             pDebug->AppendText(wxString::FromAscii(formatBuffer));
+          }
+          pDebug->AppendText(wxString::FromAscii("\n"));
        }
     }
 }

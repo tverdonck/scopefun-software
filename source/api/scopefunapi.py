@@ -113,6 +113,7 @@ SCOPEFUN_DISPLAY = _scopefunapi.SCOPEFUN_DISPLAY
 SCOPEFUN_FIRMWARE_FX2 = _scopefunapi.SCOPEFUN_FIRMWARE_FX2
 SCOPEFUN_FIRMWARE_FPGA = _scopefunapi.SCOPEFUN_FIRMWARE_FPGA
 SCOPEFUN_EEPROM_BYTES = _scopefunapi.SCOPEFUN_EEPROM_BYTES
+SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES = _scopefunapi.SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES
 SCOPEFUN_GENERATOR = _scopefunapi.SCOPEFUN_GENERATOR
 SCOPEFUN_CAPTURE_TYPE_NONE = _scopefunapi.SCOPEFUN_CAPTURE_TYPE_NONE
 SCOPEFUN_CAPTURE_TYPE_HEADER = _scopefunapi.SCOPEFUN_CAPTURE_TYPE_HEADER
@@ -1880,6 +1881,7 @@ mHardwareUploadFx2 = _scopefunapi.mHardwareUploadFx2
 mHardwareUploadFpga = _scopefunapi.mHardwareUploadFpga
 mHardwareUploadGenerator = _scopefunapi.mHardwareUploadGenerator
 mHardwareEepromRead = _scopefunapi.mHardwareEepromRead
+mHardwareEepromReadFirmwareID = _scopefunapi.mHardwareEepromReadFirmwareID
 mHardwareEepromWrite = _scopefunapi.mHardwareEepromWrite
 mHardwareEepromErase = _scopefunapi.mHardwareEepromErase
 mHardwareClose = _scopefunapi.mHardwareClose
@@ -2335,6 +2337,40 @@ class csHardwareEepromRead(_object):
     __del__ = lambda self: None
 csHardwareEepromRead_swigregister = _scopefunapi.csHardwareEepromRead_swigregister
 csHardwareEepromRead_swigregister(csHardwareEepromRead)
+
+class csHardwareEepromReadFirmwareID(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, csHardwareEepromReadFirmwareID, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, csHardwareEepromReadFirmwareID, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["header"] = _scopefunapi.csHardwareEepromReadFirmwareID_header_set
+    __swig_getmethods__["header"] = _scopefunapi.csHardwareEepromReadFirmwareID_header_get
+    if _newclass:
+        header = _swig_property(_scopefunapi.csHardwareEepromReadFirmwareID_header_get, _scopefunapi.csHardwareEepromReadFirmwareID_header_set)
+    __swig_setmethods__["size"] = _scopefunapi.csHardwareEepromReadFirmwareID_size_set
+    __swig_getmethods__["size"] = _scopefunapi.csHardwareEepromReadFirmwareID_size_get
+    if _newclass:
+        size = _swig_property(_scopefunapi.csHardwareEepromReadFirmwareID_size_get, _scopefunapi.csHardwareEepromReadFirmwareID_size_set)
+    __swig_setmethods__["address"] = _scopefunapi.csHardwareEepromReadFirmwareID_address_set
+    __swig_getmethods__["address"] = _scopefunapi.csHardwareEepromReadFirmwareID_address_get
+    if _newclass:
+        address = _swig_property(_scopefunapi.csHardwareEepromReadFirmwareID_address_get, _scopefunapi.csHardwareEepromReadFirmwareID_address_set)
+    __swig_setmethods__["reserved"] = _scopefunapi.csHardwareEepromReadFirmwareID_reserved_set
+    __swig_getmethods__["reserved"] = _scopefunapi.csHardwareEepromReadFirmwareID_reserved_get
+    if _newclass:
+        reserved = _swig_property(_scopefunapi.csHardwareEepromReadFirmwareID_reserved_get, _scopefunapi.csHardwareEepromReadFirmwareID_reserved_set)
+
+    def __init__(self):
+        this = _scopefunapi.new_csHardwareEepromReadFirmwareID()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _scopefunapi.delete_csHardwareEepromReadFirmwareID
+    __del__ = lambda self: None
+csHardwareEepromReadFirmwareID_swigregister = _scopefunapi.csHardwareEepromReadFirmwareID_swigregister
+csHardwareEepromReadFirmwareID_swigregister(csHardwareEepromReadFirmwareID)
 
 class csHardwareEepromWrite(_object):
     __swig_setmethods__ = {}
@@ -2831,6 +2867,32 @@ class scHardwareEepromRead(_object):
     __del__ = lambda self: None
 scHardwareEepromRead_swigregister = _scopefunapi.scHardwareEepromRead_swigregister
 scHardwareEepromRead_swigregister(scHardwareEepromRead)
+
+class scHardwareEepromReadFirmwareID(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, scHardwareEepromReadFirmwareID, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, scHardwareEepromReadFirmwareID, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["header"] = _scopefunapi.scHardwareEepromReadFirmwareID_header_set
+    __swig_getmethods__["header"] = _scopefunapi.scHardwareEepromReadFirmwareID_header_get
+    if _newclass:
+        header = _swig_property(_scopefunapi.scHardwareEepromReadFirmwareID_header_get, _scopefunapi.scHardwareEepromReadFirmwareID_header_set)
+    __swig_setmethods__["eeprom"] = _scopefunapi.scHardwareEepromReadFirmwareID_eeprom_set
+    __swig_getmethods__["eeprom"] = _scopefunapi.scHardwareEepromReadFirmwareID_eeprom_get
+    if _newclass:
+        eeprom = _swig_property(_scopefunapi.scHardwareEepromReadFirmwareID_eeprom_get, _scopefunapi.scHardwareEepromReadFirmwareID_eeprom_set)
+
+    def __init__(self):
+        this = _scopefunapi.new_scHardwareEepromReadFirmwareID()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _scopefunapi.delete_scHardwareEepromReadFirmwareID
+    __del__ = lambda self: None
+scHardwareEepromReadFirmwareID_swigregister = _scopefunapi.scHardwareEepromReadFirmwareID_swigregister
+scHardwareEepromReadFirmwareID_swigregister(scHardwareEepromReadFirmwareID)
 
 class scHardwareEepromWrite(_object):
     __swig_setmethods__ = {}
@@ -3454,6 +3516,10 @@ sfHardwareUploadGenerator = _scopefunapi.sfHardwareUploadGenerator
 def sfHardwareEepromRead(arg1, INOUT, arg3, arg4):
     return _scopefunapi.sfHardwareEepromRead(arg1, INOUT, arg3, arg4)
 sfHardwareEepromRead = _scopefunapi.sfHardwareEepromRead
+
+def sfHardwareEepromReadFirmwareID(arg1, INOUT, arg3, arg4):
+    return _scopefunapi.sfHardwareEepromReadFirmwareID(arg1, INOUT, arg3, arg4)
+sfHardwareEepromReadFirmwareID = _scopefunapi.sfHardwareEepromReadFirmwareID
 
 def sfHardwareEepromWrite(arg1, arg2, arg3, arg4):
     return _scopefunapi.sfHardwareEepromWrite(arg1, arg2, arg3, arg4)

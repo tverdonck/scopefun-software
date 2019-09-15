@@ -94,32 +94,36 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	m_menu5 = new wxMenu();
 	wxMenuItem* m_menuItemReadEEPROM;
-	m_menuItemReadEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read EEPROM") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemReadEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read FX3") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemReadEEPROM );
 
 	wxMenuItem* m_menuItemWriteEEPROM;
-	m_menuItemWriteEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write EEPROM") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemWriteEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write FX3") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemWriteEEPROM );
-
-	wxMenuItem* m_menuItemResetEEPROM;
-	m_menuItemResetEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Erase EEPROM") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu5->Append( m_menuItemResetEEPROM );
 
 	m_menu5->AppendSeparator();
 
 	wxMenuItem* m_menuItem12;
-	m_menuItem12 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Auto Callibrate") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItem12 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Auto Callibrate ( save to EEPROM and hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItem12 );
 
+	m_menu5->AppendSeparator();
+
 	wxMenuItem* m_menuItemWriteCallibrate;
-	m_menuItemWriteCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write Callibration") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemWriteCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write Callibration ( load from hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemWriteCallibrate );
 
 	wxMenuItem* m_menuItemReadCallibrate;
-	m_menuItemReadCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read Callibration") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemReadCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read Callibration (  save to hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemReadCallibrate );
 
-	m_menubar1->Append( m_menu5, _("Hardware") );
+	m_menu5->AppendSeparator();
+
+	wxMenuItem* m_menuItemResetEEPROM;
+	m_menuItemResetEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Erase") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu5->Append( m_menuItemResetEEPROM );
+
+	m_menubar1->Append( m_menu5, _("EEPROM") );
 
 	m_menu8 = new wxMenu();
 	wxMenuItem* m_menuItem15;
@@ -1639,10 +1643,10 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_menu4->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem11OnMenuSelection ), this, m_menuItem11->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemReadEEPROMOnMenuSelection ), this, m_menuItemReadEEPROM->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemWriteEEPROMOnMenuSelection ), this, m_menuItemWriteEEPROM->GetId());
-	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemResetEEPROMOnMenuSelection ), this, m_menuItemResetEEPROM->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem12OnMenuSelection ), this, m_menuItem12->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemWriteCallibrateOnMenuSelection ), this, m_menuItemWriteCallibrate->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemReadCallibrateOnMenuSelection ), this, m_menuItemReadCallibrate->GetId());
+	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemResetEEPROMOnMenuSelection ), this, m_menuItemResetEEPROM->GetId());
 	m_menu8->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem15OnMenuSelection ), this, m_menuItem15->GetId());
 	m_menu9->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemSlot1OnMenuSelection ), this, m_menuItemSlot1->GetId());
 	m_menu9->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemSlot2OnMenuSelection ), this, m_menuItemSlot2->GetId());

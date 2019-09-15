@@ -239,6 +239,9 @@ int clientMessageHeader(messageHeader* dest, EMessage message)
         case mHardwareEepromRead:
             dest->size = sizeof(csHardwareEepromRead);
             break;
+        case mHardwareEepromReadFirmwareID:
+           dest->size = sizeof(csHardwareEepromReadFirmwareID);
+           break;
         case mHardwareEepromWrite:
             dest->size = sizeof(csHardwareEepromWrite);
             break;
@@ -312,6 +315,9 @@ int serverMessageHeader(messageHeader* dest, EMessage message)
         case mHardwareEepromRead:
             dest->size = sizeof(scHardwareEepromRead);
             break;
+        case mHardwareEepromReadFirmwareID:
+           dest->size = sizeof(scHardwareEepromReadFirmwareID);
+           break;
         case mHardwareEepromWrite:
             dest->size = sizeof(scHardwareEepromWrite);
             break;
@@ -417,6 +423,11 @@ int isClientHeaderOk(messageHeader* header)
             {
                 return SCOPEFUN_SUCCESS;
             }
+        case mHardwareEepromReadFirmwareID:
+           if (header->size == sizeof(csHardwareEepromReadFirmwareID))
+           {
+              return SCOPEFUN_SUCCESS;
+           }
         case mHardwareEepromWrite:
             if(header->size == sizeof(csHardwareEepromWrite))
             {
@@ -527,6 +538,11 @@ int isServerHeaderOk(messageHeader* header)
             {
                 return SCOPEFUN_SUCCESS;
             }
+        case mHardwareEepromReadFirmwareID:
+           if (header->size == sizeof(scHardwareEepromReadFirmwareID))
+           {
+              return SCOPEFUN_SUCCESS;
+           }
         case mHardwareEepromWrite:
             if(header->size == sizeof(scHardwareEepromWrite))
             {
@@ -1347,6 +1363,42 @@ SCOPEFUN_API int netHardwareEepromRead(SFContext* ctx, SEeprom* data, int size, 
     apiUnlock(ctx);
     return result;
 }
+
+SCOPEFUN_API int netHardwareEepromReadFirmwareID(SFContext* ctx, SEeprom* data, int size, int adress)
+{
+   int result = SCOPEFUN_FAILURE;
+   apiLock(ctx);
+   struct SocketContext* pSocketCtx = (SocketContext*)ctx->net;
+   if (pSocketCtx->socket > 0 && ctx->api.active > 0)
+   {
+      int ret = 0;
+      int sent = 0;
+      int received = 0;
+      // message
+      csHardwareEepromReadFirmwareID message = { 0 };
+      clientMessageHeader(&message.header, mHardwareEepromReadFirmwareID);
+      message.size = size;
+      message.address = adress;
+      ret = socketSend(pSocketCtx, (char*)&message, sizeof(message), 0, &sent);
+      if (ret == PURESOCKET_SUCCESS && sent == sizeof(csHardwareEepromReadFirmwareID))
+      {
+         // response
+         messageHeader header = { 0 };
+         ret = socketRecv(pSocketCtx, (char*)&header, sizeof(messageHeader), 0, &received);
+         if (ret == PURESOCKET_SUCCESS && received == sizeof(messageHeader) && isServerHeaderOk((messageHeader*)&header) == SCOPEFUN_SUCCESS)
+         {
+            ret = socketRecv(pSocketCtx, (char*)data, sizeof(SEeprom), 0, &received);
+            if (ret == PURESOCKET_SUCCESS && received == sizeof(SEeprom))
+            {
+               result = apiResult(ret);
+            }
+         }
+      }
+   }
+   apiUnlock(ctx);
+   return result;
+}
+
 SCOPEFUN_API int netHardwareEepromWrite(SFContext* ctx, SEeprom* data, int size, int adress)
 {
     int result = SCOPEFUN_FAILURE;
@@ -1643,12 +1695,36 @@ SCOPEFUN_API int usbHardwareEepromRead(SFContext* ctx, SEeprom* buffer, int size
         if(pUsbCtx->version == HARDWARE_VERSION_2)
         {
             int ret = usbFx3ReadEEPROM(pUsbCtx, (byte*)&buffer->data.bytes[0], size, adress);
-            result = apiResult(ret);
+            result  = apiResult(ret);
         }
     }
     apiUnlock(ctx);
     return result;
 }
+
+SCOPEFUN_API int usbHardwareEepromReadFirmwareID(SFContext* ctx, SEeprom* buffer, int size, int adress)
+{
+   int result = SCOPEFUN_FAILURE;
+   apiLock(ctx);
+   if (ctx->api.active > 0)
+   {
+      struct UsbContext* pUsbCtx = (struct UsbContext*)ctx->usb;
+      if (pUsbCtx->version == HARDWARE_VERSION_1)
+      {
+         int ret = usbFx3ReadEEPROMFirmwareID(pUsbCtx, (byte*)&buffer->data.bytes[0], SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES, adress);
+         result  = apiResult(ret);
+      }
+      if (pUsbCtx->version == HARDWARE_VERSION_2)
+      {
+         int ret = usbFx3ReadEEPROMFirmwareID(pUsbCtx, (byte*)&buffer->data.bytes[0], SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES, adress);
+         result = apiResult(ret);
+      }
+   }
+   apiUnlock(ctx);
+   return result;
+}
+
+
 SCOPEFUN_API int usbHardwareEepromWrite(SFContext* ctx, SEeprom* buffer, int size, int address)
 {
     int result = SCOPEFUN_FAILURE;
@@ -1852,6 +1928,19 @@ SCOPEFUN_API int sfHardwareEepromRead(SFContext* ctx, SEeprom* eeprom, int size,
         ret = netHardwareEepromRead(ctx, eeprom, size, adress);
     }
     return ret;
+}
+SCOPEFUN_API int sfHardwareEepromReadFirmwareID(SFContext* ctx, SEeprom* eeprom, int size, int adress)
+{
+   int ret = 0;
+   if (sfIsUsb(ctx))
+   {
+      ret = usbHardwareEepromReadFirmwareID(ctx, eeprom, size, adress);
+   }
+   if (sfIsNetwork(ctx))
+   {
+      ret = netHardwareEepromReadFirmwareID(ctx, eeprom, size, adress);
+   }
+   return ret;
 }
 SCOPEFUN_API int sfHardwareEepromWrite(SFContext* ctx, SEeprom* eeprom, int size, int adress)
 {
