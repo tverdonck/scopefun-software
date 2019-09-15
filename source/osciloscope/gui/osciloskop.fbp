@@ -27,7 +27,7 @@
         <property name="ui_table">UI</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg">255,255,255</property>
@@ -60,7 +60,7 @@
             <event name="OnIdle">OnIdle</event>
             <event name="OnSetFocus">OnSetFocus</event>
             <event name="OnSize">OnSize</event>
-            <object class="wxMenuBar" expanded="0">
+            <object class="wxMenuBar" expanded="1">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="context_menu">1</property>
@@ -331,7 +331,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Read FX3</property>
+                        <property name="label">Read FX3 Firmware</property>
                         <property name="name">m_menuItemReadEEPROM</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -345,7 +345,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Write FX3</property>
+                        <property name="label">Write FX3 Firmware</property>
                         <property name="name">m_menuItemWriteEEPROM</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -363,7 +363,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Auto Callibrate ( save to EEPROM and hardware2.json )</property>
+                        <property name="label">Auto Callibrate</property>
                         <property name="name">m_menuItem12</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -381,7 +381,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Write Callibration ( load from hardware2.json )</property>
+                        <property name="label">Write Callibration</property>
                         <property name="name">m_menuItemWriteCallibrate</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -395,7 +395,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Read Callibration (  save to hardware2.json )</property>
+                        <property name="label">Read Callibration</property>
                         <property name="name">m_menuItemReadCallibrate</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
@@ -413,7 +413,7 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Erase</property>
+                        <property name="label">Erase FX3 Firmware</property>
                         <property name="name">m_menuItemResetEEPROM</property>
                         <property name="permission">none</property>
                         <property name="shortcut"></property>

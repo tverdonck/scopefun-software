@@ -670,8 +670,10 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
       function(afUploadFxx);
       function(afCloseUsb);
       function(afOpenUsb);
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting FX3 will start.", "Please wait and do not disconnect USB.",0 );
       function(afEEPROMWrite);
       wait();
+
    }
    int iret = result(afEEPROMWrite);
    if (iret == SCOPEFUN_SUCCESS)
@@ -3185,7 +3187,6 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     {
                         callibrate.mode = acStartMessageBox;
                         callibrate.active = 0;
-                        // settings.getHardware()->save();
                         callibrate.debug << "acSaveSettings: \n";
                         FORMAT_BUFFER();
                         FORMAT_PATH("data/callibrate/debug.log");

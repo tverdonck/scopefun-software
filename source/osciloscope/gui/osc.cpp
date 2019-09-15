@@ -94,33 +94,33 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	m_menu5 = new wxMenu();
 	wxMenuItem* m_menuItemReadEEPROM;
-	m_menuItemReadEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read FX3") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemReadEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read FX3 Firmware") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemReadEEPROM );
 
 	wxMenuItem* m_menuItemWriteEEPROM;
-	m_menuItemWriteEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write FX3") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemWriteEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write FX3 Firmware") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemWriteEEPROM );
 
 	m_menu5->AppendSeparator();
 
 	wxMenuItem* m_menuItem12;
-	m_menuItem12 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Auto Callibrate ( save to EEPROM and hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItem12 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Auto Callibrate") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItem12 );
 
 	m_menu5->AppendSeparator();
 
 	wxMenuItem* m_menuItemWriteCallibrate;
-	m_menuItemWriteCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write Callibration ( load from hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemWriteCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write Callibration") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemWriteCallibrate );
 
 	wxMenuItem* m_menuItemReadCallibrate;
-	m_menuItemReadCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read Callibration (  save to hardware2.json )") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemReadCallibrate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read Callibration") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemReadCallibrate );
 
 	m_menu5->AppendSeparator();
 
 	wxMenuItem* m_menuItemResetEEPROM;
-	m_menuItemResetEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Erase") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menuItemResetEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Erase FX3 Firmware") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemResetEEPROM );
 
 	m_menubar1->Append( m_menu5, _("EEPROM") );
