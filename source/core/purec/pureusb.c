@@ -131,6 +131,7 @@ int usbFx3UploadFirmwareToFx3(UsbContext* ctx, const char* path)
         int res = 0;
         res = ezusb_load_ram((libusb_device_handle*)ctx->device, path, FX_TYPE_FX3, IMG_TYPE_IMG, 0);
     }
+    return 0;
 }
 int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size, int swapBits)
 {

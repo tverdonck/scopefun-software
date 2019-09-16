@@ -541,11 +541,11 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         double zeroOffset = 0.f;
         if(i == 0)
         {
-            zeroOffset = -(render.analogChannelPositin0 - render.analogChannelOffsets0) * step;
+            zeroOffset = render.analogChannelPositin0 * step;
         }
         if(i == 1)
         {
-            zeroOffset = -(render.analogChannelPositin1 - render.analogChannelOffsets1) * step;
+            zeroOffset = render.analogChannelPositin1  * step;
         }
         double zeroVoltage = zeroOffset;
         if(i == 0)

@@ -1154,11 +1154,23 @@ void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
        RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
     }
 
+    float time = pOsciloscope->window.horizontal.Capture;
+    float captureOld = pOsciloscope->window.channel01.Capture;
+
     double oldTriggerVoltagePerSteps = pOsciloscope->getTriggerVoltagePerStep();
     pOsciloscope->window.channel01.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
     pOsciloscope->window.channel01.Scale   = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
     pOsciloscope->window.channel01.Display = pOsciloscope->window.channel01.Capture;
     pOsciloscope->control.setYRangeScaleA(m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel01.Scale);
+
+    // yposition fix
+    float captureNew       = pOsciloscope->window.channel01.Capture;
+    double slidePos        = m_sliderCh0Position->GetValue();
+    double slidePosOffset  = -slidePos + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, captureNew);
+    pOsciloscope->window.channel01.YPosition = -slidePos * pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, captureNew);
+    m_textCtrlCh0Position->SetValue(pFormat->floatToString(pOsciloscope->window.channel01.YPosition));
+    pOsciloscope->control.setYPositionA(slidePosOffset);
+
     float volt;
     uint  unit;
     _setYDisplay(volt, unit, (VoltageCapture)m_comboBoxCh0Capture->GetSelection());
@@ -1247,7 +1259,7 @@ void OsciloskopOsciloskop::m_textCtrlCh0PositionOnTextEnter(wxCommandEvent& even
     // step
     double steps = double(pOsciloscope->window.channel01.YPosition) / pOsciloscope->settings.getHardware()->getAnalogStep(time, 0, capture);
     pOsciloscope->control.setYPositionA(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
-    m_sliderCh0Position->SetValue(steps);
+    m_sliderCh0Position->SetValue(-steps);
     // transfer
     pOsciloscope->control.transferData();
 }
@@ -1285,6 +1297,9 @@ void OsciloskopOsciloskop::m_sliderCh0PositionOnScroll(wxScrollEvent& event)
 void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
 {
     // TODO: Implement m_comboBoxCh1CaptureOnCombobox
+    float captureOld = pOsciloscope->window.channel02.Capture;
+    float time = pOsciloscope->window.horizontal.Capture;
+
     double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh1Capture->GetSelection());
     pOsciloscope->window.channel02.Scale   = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
@@ -1297,6 +1312,15 @@ void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
     //
     m_textCtrlCh1Display->SetValue(wxString::FromAscii(pFormat->floatToString(volt)));
     m_comboBoxCh1Display->SetSelection(unit);
+
+    // yposition fix
+    float captureNew = pOsciloscope->window.channel02.Capture;
+    double slidePos = m_sliderCh1Position->GetValue();
+    double slidePosOffset = -slidePos + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, captureNew);
+    pOsciloscope->window.channel02.YPosition = -slidePos * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, captureNew);
+    m_textCtrlCh1Position->SetValue(pFormat->floatToString(pOsciloscope->window.channel02.YPosition));
+    pOsciloscope->control.setYPositionB(slidePosOffset);
+
     //
     double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
@@ -1366,7 +1390,7 @@ void OsciloskopOsciloskop::m_textCtrlCh1PositionOnTextEnter(wxCommandEvent& even
     // step
     double steps = double(pOsciloscope->window.channel02.YPosition) / pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
     pOsciloscope->control.setYPositionB(steps + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
-    m_sliderCh1Position->SetValue(steps);
+    m_sliderCh1Position->SetValue(-steps);
     // transfer
     pOsciloscope->control.transferData();
 }
