@@ -117,34 +117,41 @@ if(SCOPEFUN_LINUX)
    add_definitions(-D__WXGTK__)
 endif(SCOPEFUN_LINUX)
 
+# permissions
+set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
+
 # install
 if(SCOPEFUN_LINUX)
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/DEBIAN"   DESTINATION "../" )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/usr"      DESTINATION "../" )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/lib"      DESTINATION "../" )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale"                                       DESTINATION "./share" )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"                                         DESTINATION "./lib/oscilloscope")
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/DEBIAN"   DESTINATION "../" 
+	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/usr"      DESTINATION "../" 
+	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/lib"      DESTINATION "../" 
+	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale"                                       DESTINATION "./share" 
+	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"                                         DESTINATION "./lib/oscilloscope" FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
     install(TARGETS sfScope sfServer
-            PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+            PERMISSIONS ${ALL_PERMISSIONS}
             RUNTIME  DESTINATION "./bin"
             BUNDLE   DESTINATION "./bin"
             LIBRARY  DESTINATION "./share/api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "./share/api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "./share/api" )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
 else()
 	install(TARGETS sfScope sfServer
-	        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	        PERMISSIONS ${ALL_PERMISSIONS}
 			RUNTIME  DESTINATION "."
 			BUNDLE   DESTINATION "."
 			LIBRARY  DESTINATION "api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "api" )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
 endif()
 
 if(SCOPEFUN_WINDOWS)
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"   DESTINATION "." )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/api"    DESTINATION "." )
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/api" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
 endif()
 
 # macosx packing
