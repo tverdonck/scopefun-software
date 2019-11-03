@@ -301,6 +301,9 @@ class Osciloskop : public wxFrame
 		virtual void m_menuItem12OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemWriteCallibrateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemReadCallibrateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemWriteCertificateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemReadCertificateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_menuItemLockCertificateOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem15OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemSlot1OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
@@ -1037,7 +1040,7 @@ class Storage : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class Connection
+/// Class v
 ///////////////////////////////////////////////////////////////////////////////
 class Connection : public wxDialog
 {
@@ -1074,7 +1077,7 @@ class Connection : public wxDialog
 
 	public:
 
-		Connection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Connection"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+      Connection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Connection"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~Connection();
 
 };

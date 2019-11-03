@@ -533,7 +533,6 @@ class OsciloscopeRenderData
 {
 public:
     Flag64 flags;
-    uint   redrawEts;
 public:
     GrTexture* shadowTexture;
 public:
@@ -633,7 +632,7 @@ public:
     uint                         etsAttr;
 public:
     void clear();
-    void redraw(OsciloscopeRenderData& render);
+    void redraw(OsciloscopeRenderData& render,SDL_atomic_t* redraw);
     void onFrameChange(int framechange, Ring<CapturePacket> threadHistory, OsciloscopeRenderData& render);
     void onCapture(OsciloscopeFrame& frame, OsciloscopeRenderData& render);
     void onPause(OsciloscopeFrame& frame, WndMain& window);
@@ -739,6 +738,7 @@ enum ERenderMode
     RENDER_MODE_COLOR_BLEND_IN_HEATING,
     RENDER_MODE_LAST,
 };
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -993,7 +993,7 @@ public:
     GrShader* shadowCoolingShader;
 public:
     OsciloscopeETS ets;
-    uint           redrawEts;
+    SDL_atomic_t   etsClear;
 public:
     float   mouseWheel;
     ularge  wheel;
@@ -1124,6 +1124,8 @@ public:
     SSimulate GetServerSim();
     void      transmitSim(SSimulate& sim);
     void      simOnOff(int value);
+public:
+   void clearEts(int value);
 };
 
 SFContext* getCtx();

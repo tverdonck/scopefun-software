@@ -584,7 +584,7 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
       wait();
 
       // use callibration from eeprom
-      if (result(afEEPROMRead) == 0)
+      if (result(afEEPROMRead) == 0 || eepromData.data.bytes[0] == 0 )
       {
          cJSON* json = hw->json;
          SDL_memcpy(hw, &eepromData, eepromSize);
@@ -675,14 +675,14 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
       wait();
 
    }
-   int iret = result(afEEPROMWrite);
+   int iret = result(afOpenUsb) + result(afUploadFxx) + result(afEEPROMWrite);
    if (iret == SCOPEFUN_SUCCESS)
    {
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Success", "Write USB data to EEPROM was successfull.", 0);
    }
    else
    {
-      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write USB data to EEPROM failed.", 0);
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Write USB data to EEPROM failed. Install WinUSB Device driver first.", 0);
    }
    return iret;
 }
@@ -785,8 +785,18 @@ int ThreadApi::writeCallibrateSettingsToEEPROM(OscHardware* hw)
 
    if (SDL_AtomicGet(&open) > 0)
    {
+      // clear
       SDL_AtomicLock(&lock);
-         eepromSize = sizeof(OscHardware);
+         eepromSize   = sizeof(OscHardware);
+         eepromOffset = 256000;
+         SDL_memset((void*)&eepromData, 0, (size_t)eepromSize);
+      SDL_AtomicUnlock(&lock);
+      function(afEEPROMWrite);
+      wait();
+
+      // write
+      SDL_AtomicLock(&lock);
+         eepromSize   = sizeof(OscHardware);
          eepromOffset = 256000;
          SDL_memcpy( (void*)&eepromData, (void*)hw, (size_t)eepromSize);
       SDL_AtomicUnlock(&lock);
@@ -919,12 +929,12 @@ OsciloscopeManager::OsciloscopeManager()
     serverActive = false;
     scrollThread = false;
     frameTime = 0.f;
-    clearRenderTarget = 0;
+    clearRenderTarget = 1;
     clearThermal = 0;
     analogWindowSize = 1.f;
     sliderMode  = 0;
     openglFocus = 1;
-    redrawEts = 0;
+    SDL_AtomicSet(&etsClear, 1);
     signalMode = SIGNAL_MODE_PAUSE;
     windowSlot = 0;
 }
@@ -1276,8 +1286,8 @@ int OsciloscopeManager::update(float dt)
     ////////////////////////////////////////////////////////////////////////////////
     // setup
     ////////////////////////////////////////////////////////////////////////////////
-    clearRenderTarget = !window.horizontal.ETS;
-    redrawEts = 0;
+    // clearRenderTarget = !window.horizontal.ETS;
+
     ////////////////////////////////////////////////////////////////////////////////
     // mouse
     ////////////////////////////////////////////////////////////////////////////////
@@ -1325,7 +1335,7 @@ int OsciloscopeManager::update(float dt)
             {
                 clearThermal      = 1;
                 clearRenderTarget = 1;
-                redrawEts         = 1;
+                clearEts(1);
                 // capture
                 double captureTime = window.horizontal.Capture;
                 // precision
@@ -1434,7 +1444,7 @@ int OsciloscopeManager::update(float dt)
             if(pInput->isMouse(SDL_BUTTON_LEFT))
             {
                 clearRenderTarget = 1;
-                redrawEts = 1;
+                clearEts(1);
                 float zoomOffset = (1.f / signalZoom) / 2.f;
                 OsciloscopeSlider slider;
                 slider.Rectangle(sliderRectW, sliderRectH, sliderRectX, sliderRectY, pRender->width, pRender->height, analogWindowSize);
@@ -1484,7 +1494,7 @@ int OsciloscopeManager::update(float dt)
             {
                 clearThermal = 1;
                 clearRenderTarget = 1;
-                redrawEts = 1;
+                clearEts(1);
                 cameraFFT.ortho.View.Pos() = Vector4(0, 0, -1.f, 1.f);
                 cameraFFT.zoom = 1.f;
                 cameraOsc.ortho.View.Pos() = Vector4(0, 0, -1.f, 1.f);
@@ -1571,7 +1581,7 @@ int OsciloscopeManager::update(float dt)
                 cameraFFT.theta =  TO_RAD * float(mRelX) / float(sizeX) * dt * 10000.f;
                 cameraFFT.phi   = -TO_RAD * float(mRelY) / float(sizeY) * dt * 10000.f;
                 clearThermal = 1;
-                redrawEts = 1;
+                clearEts(1);
             }
             else
             {
@@ -1590,7 +1600,7 @@ int OsciloscopeManager::update(float dt)
         {
             clearThermal = 1;
             clearRenderTarget = 1;
-            redrawEts = 1;
+            clearEts(1);
             cameraFFT.zoom -= 0.01f * dt * mWheel;
             cameraFFT.zoom = clamp<float>(cameraFFT.zoom, 0.05f, 2.f);
         }
@@ -1661,7 +1671,7 @@ int OsciloscopeManager::update(float dt)
                 cameraOsc.theta =  TO_RAD * float(mRelX) / float(sizeX) * dt * 10000.f;
                 cameraOsc.phi   = -TO_RAD * float(mRelY) / float(sizeY) * dt * 10000.f;
                 clearThermal = 1;
-                redrawEts = 1;
+                clearEts(1);
             }
             else
             {
@@ -1681,7 +1691,7 @@ int OsciloscopeManager::update(float dt)
         {
             zoomZoom = 0.1f * dt * float(mWheel);
             clearThermal = 1;
-            redrawEts = 1;
+            clearEts(1);
             cameraOsc.zoom -= 0.01f * dt * mWheel;
             cameraOsc.zoom = clamp<float>(cameraOsc.zoom, 0.05f, 2.f);
         }
@@ -2427,14 +2437,13 @@ bool OsciloscopeManager::onApplicationIdle()
         renderData.colorChannel0   = settings.getColors()->renderChannel0;
         renderData.colorChannel1   = settings.getColors()->renderChannel1;
         renderData.colorFunction   = settings.getColors()->renderFunction;
-        renderData.colorXyGraph = settings.getColors()->renderXyGraph;
-        renderData.colorGrid       = settings.getColors()->renderGrid;
-        renderData.colorBorder     = settings.getColors()->renderBorder;
-        renderData.colorTrigger    = settings.getColors()->renderTrigger;
-        renderData.colorDigital    = settings.getColors()->renderDigital;
-        renderData.etsAttr = 0;
-        renderData.flags.bit(rfClearRenderTarget, clearRenderTarget);
-        renderData.redrawEts = redrawEts;
+        renderData.colorXyGraph    = settings.getColors()->renderXyGraph;
+        renderData.colorGrid         = settings.getColors()->renderGrid;
+        renderData.colorBorder       = settings.getColors()->renderBorder;
+        renderData.colorTrigger      = settings.getColors()->renderTrigger;
+        renderData.colorDigital      = settings.getColors()->renderDigital;
+        renderData.etsAttr           = 0;
+        renderData.flags.bit(rfClearRenderTarget,clearRenderTarget);
         SDL_AtomicUnlock(&renderLock);
         // lock
         uint renderId = 0;
@@ -3379,6 +3388,13 @@ void OsciloscopeManager::simOnOff(int value)
    pOsciloscope->thread.function(afServerUpload);
 }
 
+void OsciloscopeManager::clearEts(int value)
+{
+   SDL_AtomicSet(&etsClear,value);
+   if (window.horizontal.ETS)
+      clearRenderTarget = 0;
+}
+
 void OsciloscopeManager::setupControl(WndMain window)
 {
     int version = control.getVersion();
@@ -3466,11 +3482,25 @@ void OsciloscopeETS::clear()
     etsIndex = 0;
 }
 
-void OsciloscopeETS::redraw(OsciloscopeRenderData& render)
+void OsciloscopeETS::redraw(OsciloscopeRenderData& render,SDL_atomic_t* redrawEts)
 {
-    render.flags.raise(rfClearRenderTarget);
-    etsIndex = etsHistory.getCount() - 1;
-    etsIndex = max(0U, etsIndex);
+   if (SDL_AtomicGet(redrawEts) == 12)
+   {
+      render.flags.bit(rfClearRenderTarget, 0);
+      SDL_AtomicSet(redrawEts, 0);
+   }
+   if (SDL_AtomicGet(redrawEts) > 1 && SDL_AtomicGet(redrawEts) < 12 )
+   {
+      render.flags.bit(rfClearRenderTarget, 1);
+      SDL_AtomicSet(redrawEts, SDL_AtomicGet(redrawEts) + 1);
+   }
+   if (SDL_AtomicGet(redrawEts) == 1)
+   {
+      etsIndex = etsHistory.getCount() - 1;
+      etsIndex = max(0U, etsIndex);
+      SDL_AtomicSet(redrawEts, 2);
+      render.flags.bit(rfClearRenderTarget, 1);
+   }
 }
 
 void OsciloscopeETS::onFrameChange(int framechange, Ring<CapturePacket> threadHistory, OsciloscopeRenderData& render)
@@ -3488,7 +3518,7 @@ void OsciloscopeETS::onFrameChange(int framechange, Ring<CapturePacket> threadHi
         pOsciloscope->captureBuffer->display(oscFrame, frame.version, frame.header, frame.data, frame.packet);
         onCapture(oscFrame, render);
     }
-    redraw(render);
+    redraw(render,&pOsciloscope->etsClear);
 }
 
 void OsciloscopeETS::onCapture(OsciloscopeFrame& frame, OsciloscopeRenderData& render)
@@ -3836,7 +3866,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
                     ets.clear();
                     break;
                 case SIGNAL_MODE_PAUSE:
-                    ets.redraw(captureRender);
+                    ets.redraw(captureRender,&pOsciloscope->etsClear);
                     break;
                 case SIGNAL_MODE_CLEAR:
                     pOsciloscope->captureBuffer->clear();
@@ -3860,10 +3890,9 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
             mode = pOsciloscope->signalMode;
         }
         // redraw ets ?
-        if(captureRender.redrawEts)
-        {
-            ets.redraw(captureRender);
-        }
+        ets.redraw(captureRender, &pOsciloscope->etsClear);
+
+        // mode ?
         mode = pOsciloscope->signalMode;
         ////////////////////////////////////////////////////////////////////
         // mode

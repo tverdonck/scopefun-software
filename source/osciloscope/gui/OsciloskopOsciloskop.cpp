@@ -944,11 +944,11 @@ void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event
 void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
 {
     // TODO: Implement m_checkBoxETSOnCheckBox
-    pOsciloscope->window.horizontal.ETS = m_checkBoxETS->GetValue();
+    pOsciloscope->window.horizontal.ETS = m_checkBoxETS->GetValue() ? 1 : 0;
     pOsciloscope->control.setEts(pOsciloscope->window.horizontal.ETS);
     pOsciloscope->control.transferData();
-    pOsciloscope->redrawEts = 1;
-    pOsciloscope->clearRenderTarget = 1;
+    pOsciloscope->clearEts(pOsciloscope->window.horizontal.ETS);
+    pOsciloscope->clearRenderTarget = !pOsciloscope->window.horizontal.ETS;
 
     pOsciloscope->sim = pOsciloscope->GetServerSim();
     pOsciloscope->thread.setSimulateData( &pOsciloscope->sim );
@@ -1635,6 +1635,7 @@ void OsciloskopOsciloskop::m_textCtrlTriggerPreOnTextEnter(wxCommandEvent& event
 {
     // TODO: Implement m_textCtrlTriggerPreOnTextEnter
     double preTrigger = max(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()), 0.f);
+           preTrigger = min(preTrigger, 99.0);
     pOsciloscope->window.trigger.Percent = preTrigger;
     pOsciloscope->control.setTriggerPre(preTrigger);
     pOsciloscope->control.transferData();
@@ -3334,6 +3335,129 @@ void OsciloskopOsciloskop::m_menuItemWriteCallibrateOnMenuSelection(wxCommandEve
     pOsciloscope->thread.writeCallibrateSettingsToEEPROM(pOsciloscope->settings.getHardware());
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// certificate
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+void OsciloskopOsciloskop::m_menuItemWriteCertificateOnMenuSelection(wxCommandEvent& event)
+{
+   m_buttonConnectOnButtonClick(event);
+   pOsciloscope->thread.wait();
+   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Clipboard data will be written to EEPROM.", "Please copy data to clipboard before proceeding.", 0);
+   if (wxTheClipboard->Open())
+   {
+      if (wxTheClipboard->IsSupported(wxDF_TEXT))
+      {
+         wxTextDataObject data;
+         if (wxTheClipboard->GetData(data))
+         {
+            wxString string = data.GetText();
+            char* src = (char*)string.To8BitData().data();
+            cJSON_Minify(src);
+            size_t size = SDL_strlen(src);
+            if (size > 256)
+            {
+               SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Clipboard data is too large.", " Max. 256 bytes can be written.", 0);
+            }
+            else
+            {
+               char zeroAll[256] = { 0 };
+               int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)zeroAll, 256, 0);
+               if (ret == PUREUSB_SUCCESS)
+               {
+                  int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)src, size, 0);
+                  if (ret == PUREUSB_SUCCESS)
+                  {
+                     char verify[256] = { 0 };
+                     ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, size, 0);
+                     if (ret == PUREUSB_SUCCESS)
+                     {
+                        if (SDL_memcmp((unsigned char*)src, verify, size) == 0)
+                        {
+                           SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Clipboard data written and verifyed tha all written bits match original.", verify, 0);
+                        }
+                        else
+                        {
+                           SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Verifing written bits failed.", verify, 0);
+                        }
+                     }
+                     else
+                     {
+                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Reading written bits failed.", "failed", 0);
+                     }
+                  }
+                  else
+                  {
+                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting bits failed.", "failed", 0);
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+void OsciloskopOsciloskop::m_menuItemReadCertificateOnMenuSelection(wxCommandEvent& event)
+{
+   m_buttonConnectOnButtonClick(event);
+   pOsciloscope->thread.wait();
+   char verify[256] = { 0 };
+   int ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, 256, 0);
+   if (ret == PUREUSB_SUCCESS)
+   {
+      if (wxTheClipboard->Open())
+      {
+         wxString string = wxString::From8BitData(verify);
+         wxTextDataObject* data = new wxTextDataObject(string);
+         wxTheClipboard->SetData(data);
+         wxTheClipboard->Flush();
+         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Certificate data was read and written to clipboard.", string.data().AsChar(), 0);
+      }
+   }
+}
+
+void OsciloskopOsciloskop::m_menuItemLockCertificateOnMenuSelection(wxCommandEvent& event)
+{
+   const SDL_MessageBoxButtonData buttons[] = {
+        { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "no" },
+        { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "yes" },
+   };
+   const SDL_MessageBoxColorScheme colorScheme = {
+       { /* .colors (.r, .g, .b) */
+           /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+           { 255,   0,   0 },
+           /* [SDL_MESSAGEBOX_COLOR_TEXT] */
+           {   0, 255,   0 },
+           /* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+           { 255, 255,   0 },
+           /* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+           {   0,   0, 255 },
+           /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+           { 255,   0, 255 }
+       }
+   };
+   const SDL_MessageBoxData messageboxdata = {
+       SDL_MESSAGEBOX_INFORMATION, /* .flags */
+       NULL, /* .window */
+       "Data will be locked permanently.", /* .title */
+       "This action cannot be undone.", /* .message */
+       SDL_arraysize(buttons), /* .numbuttons */
+       buttons, /* .buttons */
+       &colorScheme /* .colorScheme */
+   };
+   int buttonid = 0;
+   int ret = SDL_ShowMessageBox(&messageboxdata, &buttonid);
+   if (buttonid == SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT)
+   {
+      m_buttonConnectOnButtonClick(event);
+      pOsciloscope->thread.wait();
+      int ret = usbFx3LockLockableEEPROM((UsbContext*)getCtx()->usb);
+      if (ret == PUREUSB_SUCCESS)
+      {
+         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Data locked.", "permanently", 0);
+      }
+   }
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // spin
@@ -3554,6 +3678,7 @@ void OsciloskopOsciloskop::m_spinBtnTrigHisOnSpinDown(wxSpinEvent& event)
 void OsciloskopOsciloskop::m_spinBtnTrigPreOnSpinUp(wxSpinEvent& event)
 {
     pOsciloscope->window.trigger.Percent = max(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()) + 1.0f, 0.f);
+    pOsciloscope->window.trigger.Percent = min(pOsciloscope->window.trigger.Percent, 99.0);
     pOsciloscope->control.setTriggerPre(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()));
     pOsciloscope->control.transferData();
     m_sliderTriggerPre->SetValue(pOsciloscope->window.trigger.Percent);
@@ -3563,6 +3688,7 @@ void OsciloskopOsciloskop::m_spinBtnTrigPreOnSpinUp(wxSpinEvent& event)
 void OsciloskopOsciloskop::m_spinBtnTrigPreOnSpinDown(wxSpinEvent& event)
 {
     pOsciloscope->window.trigger.Percent = max(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()) - 1.0f, 0.f);
+    pOsciloscope->window.trigger.Percent = min(pOsciloscope->window.trigger.Percent, 99.0);
     pOsciloscope->control.setTriggerPre(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()));
     pOsciloscope->control.transferData();
     m_sliderTriggerPre->SetValue(pOsciloscope->window.trigger.Percent);

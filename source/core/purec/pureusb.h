@@ -98,6 +98,9 @@ int  usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size
 int  usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
+int  usbFx3WriteLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
+int  usbFx3ReadLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
+int  usbFx3LockLockableEEPROM(UsbContext* ctx);
 int  usbFx3Reset(UsbContext* ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +126,7 @@ int  usbFxxFindList(UsbContext* ctx, usbDevice** foundList, int maxCount);
 int  usbFxxFreeList(UsbContext* ctx);
 int  usbFxxOpenSerial(UsbContext* ctx, char* path, char checkSerial, usbDevice** foundList, int maxCount);
 int  usbFxxOpenNormal(UsbContext* ctx, usbDevice** foundList, int maxCount);
-void usbFxxOpen(UsbContext* ctx, usbDevice* device);
+int  usbFxxOpen(UsbContext* ctx, usbDevice* device);
 void usbFxxClose(UsbContext* ctx);
 void usbFxxClaimInterface(UsbContext* ctx, int i);
 void usbFxxReleaseInterface(UsbContext* ctx, int i);

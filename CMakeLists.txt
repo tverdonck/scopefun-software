@@ -3,6 +3,14 @@ cmake_minimum_required (VERSION 2.8)
 # pic ?
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# permissions
+set(CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS
+     OWNER_READ
+     OWNER_WRITE
+     OWNER_EXECUTE
+     GROUP_READ
+   )
+
 # timestamp
 string(TIMESTAMP SCOPEFUN_VERSION_TIMESTAMP "%H:%M %d-%m-%Y")
 

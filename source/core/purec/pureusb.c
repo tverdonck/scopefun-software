@@ -316,6 +316,76 @@ int usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writ
     return PUREUSB_FAILURE;
 }
 
+int usbFx3WriteLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writeadress)
+{
+   if (usbFxxIsConnected(ctx))
+   {
+      unsigned short hi = 8;
+      unsigned short lo = writeadress & 0x00ff;
+      int ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
+         LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
+         0xBA,
+         hi,
+         lo,
+         buffer,
+         size,
+         10000);
+      return ret == size ? 0 : 1;
+      if (ret == 0)
+      {
+         return PUREUSB_SUCCESS;
+      }
+   }
+   return PUREUSB_FAILURE;
+}
+
+int usbFx3ReadLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
+{
+   int transfered = 0;
+   if (usbFxxIsConnected(ctx))
+   {
+      unsigned short hi = 8;
+      unsigned short lo = readadress & 0x00ff;
+      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+         0xC0,
+         0xBB,
+         hi,
+         lo,
+         buffer,
+         size,
+         100000);
+      if (read == size)
+      {
+         return PUREUSB_SUCCESS;
+      }
+   }
+   return PUREUSB_FAILURE;
+}
+
+int usbFx3LockLockableEEPROM(UsbContext* ctx)
+{
+   int transfered = 0;
+   if (usbFxxIsConnected(ctx))
+   {
+      unsigned short hi = 8;
+      unsigned short lo = 0x400;
+      char byte = 0x2;
+      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+         LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
+         0xBA,
+         hi,
+         lo,
+         &byte,
+         1,
+         100000);
+      if (read == 1)
+      {
+         return PUREUSB_SUCCESS;
+      }
+   }
+   return PUREUSB_FAILURE;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // FX2
@@ -651,28 +721,29 @@ int usbFxxOpenNormal(UsbContext* ctx, usbDevice** foundList, int maxCount)
         libusb_device* device = (libusb_device*)foundList[i];
         if(device)
         {
-            usbFxxOpen(ctx, (usbDevice*)device);
-            return PUREUSB_SUCCESS;
+            return usbFxxOpen(ctx, (usbDevice*)device);
         }
     }
     return PUREUSB_FAILURE;
 }
 
 
-void usbFxxOpen(UsbContext* ctx, usbDevice* device)
+int usbFxxOpen(UsbContext* ctx, usbDevice* device)
 {
     if(ctx->device)
     {
-        return;
+        return PUREUSB_FAILURE;
     }
     int err = libusb_open((libusb_device*)device, (libusb_device_handle**)&ctx->device);
     if(err)
     {
-        return;
+        return PUREUSB_FAILURE;
     }
     int speed = libusb_get_device_speed((libusb_device*)device);
     // interface
     usbFxxClaimInterface(ctx, 0);
+
+    return PUREUSB_SUCCESS;
 }
 
 void usbFxxClose(UsbContext* ctx)

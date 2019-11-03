@@ -119,6 +119,20 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	m_menu5->AppendSeparator();
 
+	wxMenuItem* m_menuItemWriteCertificate;
+	m_menuItemWriteCertificate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Write Certificate") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu5->Append( m_menuItemWriteCertificate );
+
+	wxMenuItem* m_menuItemReadCertificate;
+	m_menuItemReadCertificate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Read Certificate") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu5->Append( m_menuItemReadCertificate );
+
+	wxMenuItem* m_menuItemLockCertificate;
+	m_menuItemLockCertificate = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Lock Certificate") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu5->Append( m_menuItemLockCertificate );
+
+	m_menu5->AppendSeparator();
+
 	wxMenuItem* m_menuItemResetEEPROM;
 	m_menuItemResetEEPROM = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Erase FX3 Firmware") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu5->Append( m_menuItemResetEEPROM );
@@ -1339,7 +1353,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_spinBtnTrigPre = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer322->Add( m_spinBtnTrigPre, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_sliderTriggerPre = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	m_sliderTriggerPre = new wxSlider( m_panel3, wxID_ANY, 50, 0, 99, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer322->Add( m_sliderTriggerPre, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -1646,6 +1660,9 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem12OnMenuSelection ), this, m_menuItem12->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemWriteCallibrateOnMenuSelection ), this, m_menuItemWriteCallibrate->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemReadCallibrateOnMenuSelection ), this, m_menuItemReadCallibrate->GetId());
+	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemWriteCertificateOnMenuSelection ), this, m_menuItemWriteCertificate->GetId());
+	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemReadCertificateOnMenuSelection ), this, m_menuItemReadCertificate->GetId());
+	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemLockCertificateOnMenuSelection ), this, m_menuItemLockCertificate->GetId());
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemResetEEPROMOnMenuSelection ), this, m_menuItemResetEEPROM->GetId());
 	m_menu8->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem15OnMenuSelection ), this, m_menuItem15->GetId());
 	m_menu9->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemSlot1OnMenuSelection ), this, m_menuItemSlot1->GetId());

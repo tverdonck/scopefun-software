@@ -196,6 +196,9 @@ protected:
     void m_menuItemAutoCallibrateOnMenuSelection(wxCommandEvent& event);
     void m_menuItemWriteCallibrateOnMenuSelection(wxCommandEvent& event);
     void m_menuItemReadCallibrateOnMenuSelection(wxCommandEvent& event);
+    void m_menuItemWriteCertificateOnMenuSelection(wxCommandEvent& event);
+    void m_menuItemReadCertificateOnMenuSelection(wxCommandEvent& event);
+    void m_menuItemLockCertificateOnMenuSelection(wxCommandEvent& event);
     void m_spinBtnXPosOnSpinUp(wxSpinEvent& event);
     void m_spinBtnXPosOnSpinDown(wxSpinEvent& event);
     void m_spinBtnFrameHistoryOnSpinUp(wxSpinEvent& event);
