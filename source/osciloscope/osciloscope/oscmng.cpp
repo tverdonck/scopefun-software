@@ -2599,42 +2599,38 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                 case acOffsetCapture:
                     {
                         int ch = callibrate.channel;
-                        callibrate.offset = 0;
+                        callibrate.offsetMeasured = 0;
                         for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
                         {
-                            callibrate.offset += frame.getAnalogShort(ch, sample);
+                            callibrate.offsetMeasured += frame.getAnalogDouble(ch, sample);
                         }
-                        callibrate.offset /= double(frame.analog[ch].getCount());
+                        callibrate.offsetMeasured /= double(frame.analog[ch].getCount());
                         callibrate.mode = acOffsetCalculate;
                         callibrate.debug << "acOffsetCapture:";
-                        callibrate.debug << "  offset: ";
-                        callibrate.debug << callibrate.offset;
+                        callibrate.debug << "  offsetMeasured: ";
+                        callibrate.debug << callibrate.offsetMeasured;
                         callibrate.debug << "\n";
                     }
                     break;
                 case acOffsetCalculate:
                     {
-                        double reference  = (settings.getHardware()->referenceOffsetMaxValue - settings.getHardware()->referenceOffsetMinValue) / 2.0;
-                        double range      = fabsf(callibrate.offsetMax - callibrate.offsetMin) / 2.0;
-                        double percentage = 100.0 * (range / reference);
+                        double range = fabsf(callibrate.offsetMax - callibrate.offsetMin) / 2.0;
                         callibrate.debug << "acOffsetCalculate:";
-                        if((fabsf(percentage) < settings.getHardware()->referenceExitPercentage) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations))
+                        //if( ( fabs(callibrate.offset) < 0.001957) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations) )
+                        if( ( fabs(callibrate.offsetMeasured) < 0.00066) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations) )
                         {
                             callibrate.debug << "  callibratedOffset: ";
-                            callibrate.debug << settings.getHardware()->callibratedOffsets[callibrate.type][callibrate.channel][callibrate.voltage];
+                            callibrate.debug << double(callibrate.offset);
                             callibrate.debug << "\n";
-                            callibrate.debug << "  percentage: ";
-                            callibrate.debug << percentage;
-                            callibrate.debug << "\n";
-                            settings.getHardware()->callibratedOffsets[callibrate.type][callibrate.channel][callibrate.voltage] = (callibrate.offsetMin + callibrate.offsetMax) / 2.0;
+                            settings.getHardware()->callibratedOffsets[callibrate.type][callibrate.channel][callibrate.voltage] = round(callibrate.offset);
                             callibrate.mode = acOffsetVoltageChange;
                         }
                         else
                         {
-                            callibrate.debug << "  percentage: ";
-                            callibrate.debug << percentage;
+                            callibrate.debug << "  OffsetStep: ";
+                            callibrate.debug << range;
                             callibrate.debug << "\n";
-                            if(callibrate.offset > 0.f)
+                            if(callibrate.offsetMeasured > 0.f)
                             {
                                 callibrate.offsetMin += range;
                             }
@@ -2649,6 +2645,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     break;
                 case acOffsetVoltageChange:
                     {
+                        callibrate.offsetMax = settings.getHardware()->referenceOffsetMaxValue;
+                        callibrate.offsetMin = settings.getHardware()->referenceOffsetMinValue;
                         if(callibrate.voltage == vc10Mili)
                         {
                             if(callibrate.channel == 0)
@@ -2929,6 +2927,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                             int gain = callibrate.gainSetPrevius;
                             callibrate.gainSetPrevius = callibrate.gainSet;
                             int delta = abs(gain - callibrate.gainSet) / 2;
+                                delta = max(1, delta);
                             if(callibrate.percentage > 100.f)
                             {
                                 callibrate.gainSet -= delta;
@@ -3023,8 +3022,10 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         {
                             callibrate.channel = 0;
                             callibrate.voltage = vc2Volt;
-                            callibrate.stepMax = settings.getHardware()->referenceOffsetMaxValue;
-                            callibrate.stepMin = settings.getHardware()->referenceOffsetMinValue;
+                            //callibrate.stepMax = settings.getHardware()->referenceStepMax;
+                            //callibrate.stepMin = settings.getHardware()->referenceStepMin;
+                            callibrate.stepMax = 1000;
+                            callibrate.stepMin = 0;
                             callibrate.mode = acStepSetup;
                             callibrate.debug << "acStepStart: ok \n";
                         }
@@ -3058,47 +3059,44 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                 case acStepCapture:
                     {
                         int          ch = callibrate.channel;
-                        callibrate.stepVoltage = 0;
-                        callibrate.stepValue   = 0;
+                        callibrate.stepMeasuredOffsetVoltage = 0;
+                        callibrate.stepMeasuredOffsetValue   = 0;
                         for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
                         {
-                            callibrate.stepValue   += frame.getAnalogShort(ch, sample);
-                            callibrate.stepVoltage += frame.getAnalog(ch, sample);
+                            callibrate.stepMeasuredOffsetValue   += frame.getAnalogShort(ch, sample);
+                            callibrate.stepMeasuredOffsetVoltage += frame.getAnalog(ch, sample);
                         }
-                        callibrate.stepValue   /= double(frame.analog[ch].getCount());
-                        callibrate.stepVoltage /= double(frame.analog[ch].getCount());
-                        callibrate.stepValue    = callibrate.stepValue;
-                        callibrate.stepVoltage  = callibrate.stepVoltage;
+                        callibrate.stepMeasuredOffsetValue   /= double(frame.analog[ch].getCount());
+                        callibrate.stepMeasuredOffsetVoltage /= double(frame.analog[ch].getCount());
                         callibrate.mode = acStepCalculate;
-                        callibrate.debug << "stepVoltage: ";
-                        callibrate.debug << "  stepValue: ";
-                        callibrate.debug << callibrate.stepValue;
+                        callibrate.debug << "  stepMeasuredOffsetValue: ";
+                        callibrate.debug << callibrate.stepMeasuredOffsetValue;
                         callibrate.debug << "\n";
-                        callibrate.debug << "  stepVoltage: ";
-                        callibrate.debug << callibrate.stepVoltage;
+                        callibrate.debug << "  stepMeasuredOffsetVoltage: ";
+                        callibrate.debug << callibrate.stepMeasuredOffsetVoltage;
                         callibrate.debug << "\n";
                     }
                     break;
                 case acStepCalculate:
                     {
-                        if(callibrate.iteration > settings.getHardware()->referenceMaxIterations || callibrate.stepValue >= settings.getHardware()->referenceStepMin && callibrate.stepValue <= settings.getHardware()->referenceStepMax)
+                        if(callibrate.iteration > settings.getHardware()->referenceMaxIterations || abs(callibrate.stepMeasuredOffsetValue) >= settings.getHardware()->referenceStepMin && abs(callibrate.stepMeasuredOffsetValue) <= settings.getHardware()->referenceStepMax)
                         {
                             double yGridMax      = grid.yCount / 2.0;
                             double dCapture      = double(captureVoltFromEnum(callibrate.voltage));
-                            double  iStepVoltage = yGridMax * callibrate.stepVoltage * dCapture;
+                            double  iStepVoltage = yGridMax * callibrate.stepMeasuredOffsetVoltage * dCapture;
                             settings.getHardware()->callibratedVoltageStep[callibrate.type][callibrate.channel][callibrate.voltage] = double(iStepVoltage) / (callibrate.stepReference);
                             callibrate.mode = acStepVoltageChange;
                         }
                         else
                         {
                             double delta = (callibrate.stepMax - callibrate.stepMin) / 2.0;
-                            if(callibrate.stepValue >= settings.getHardware()->referenceStepMax)
-                            {
-                                callibrate.stepMin += delta;
-                            }
-                            else if(callibrate.stepValue <= settings.getHardware()->referenceStepMin)
+                            if(abs(callibrate.stepMeasuredOffsetValue) >= settings.getHardware()->referenceStepMax)
                             {
                                 callibrate.stepMax -= delta;
+                            }
+                            else if(abs(callibrate.stepMeasuredOffsetValue) <= settings.getHardware()->referenceStepMin)
+                            {
+                                callibrate.stepMin += delta;
                             }
                             callibrate.mode = acStepSetup;
                             callibrate.iteration++;
@@ -3118,8 +3116,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                 case acStepVoltageChange:
                     {
                         callibrate.iteration = 0;
-                        callibrate.stepMax = settings.getHardware()->referenceOffsetMaxValue;
-                        callibrate.stepMin = settings.getHardware()->referenceOffsetMinValue;
+                        callibrate.stepMax = 1000;
+                        callibrate.stepMin = 0;
                         if(callibrate.voltage == vc10Mili)
                         {
                             if(callibrate.type == ctNormal)

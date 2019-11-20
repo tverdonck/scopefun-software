@@ -259,6 +259,48 @@ wxBEGIN_EVENT_TABLE(OsciloskopOsciloskop, wxFrame)
     EVT_TIMER(TIMER_ID, OsciloskopOsciloskop::OnTimer)
 wxEND_EVENT_TABLE()
 
+
+void _setYDisplay(float& volt, uint& unit, VoltageCapture selected)
+{
+   switch (selected)
+   {
+   case  vc2Volt:
+      volt = 2.f;
+      unit = (uint)vVolt;
+      break;
+   case  vc1Volt:
+      volt = 1.f;
+      unit = (uint)vVolt;
+      break;
+   case  vc500Mili:
+      volt = 500.f;
+      unit = (uint)vMili;
+      break;
+   case  vc200Mili:
+      volt = 200.f;
+      unit = (uint)vMili;
+      break;
+   case  vc100Mili:
+      volt = 100.f;
+      unit = (uint)vMili;
+      break;
+   case  vc50Mili:
+      volt = 50.f;
+      unit = (uint)vMili;
+      break;
+   case  vc20Mili:
+      volt = 20.f;
+      unit = (uint)vMili;
+      break;
+   case  vc10Mili:
+      volt = 10.f;
+      unit = (uint)vMili;
+      break;
+   default:
+      CORE_ERROR("invalid volt value", 0);
+   };
+}
+
 OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent), m_timer(this, TIMER_ID)
 {
     userinterfaceupdate = 1;
@@ -928,8 +970,41 @@ void OsciloskopOsciloskop::m_menuItemTestsOnMenuSelection(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event)
 {
+   pOsciloscope->window.horizontal.Capture = captureTimeFromEnum(m_comboBoxTimeCapture->GetSelection());
+
+   if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
+   {
+      // 500 Mhz help
+      m_comboBoxCh1Capture->SetSelection(m_comboBoxCh0Capture->GetSelection());
+      double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
+      pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
+      pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
+      pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
+      pOsciloscope->control.setYRangeScaleB(m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+
+      // 500 Mhz help
+      m_sliderCh1Position->SetValue(m_sliderCh0Position->GetValue());
+      float time = pOsciloscope->window.horizontal.Capture;
+      float capture = pOsciloscope->window.channel01.Capture;
+      // steps
+      pOsciloscope->control.setYPositionA(-m_sliderCh0Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 0, capture));
+      pOsciloscope->control.setYPositionB(-m_sliderCh1Position->GetValue() + pOsciloscope->settings.getHardware()->getAnalogOffset(time, 1, capture));
+      // voltage
+      pOsciloscope->window.channel02.YPosition = double(-m_sliderCh0Position->GetValue()) * pOsciloscope->settings.getHardware()->getAnalogStep(time, 1, capture);
+      m_textCtrlCh1Position->SetValue(pFormat->doubleToString(pOsciloscope->window.channel02.YPosition));
+
+      float volt;
+      uint  unit;
+      _setYDisplay(volt, unit, (VoltageCapture)m_comboBoxCh1Capture->GetSelection());
+      //
+      m_textCtrlCh1Display->SetValue(wxString::FromAscii(pFormat->floatToString(volt)));
+      m_comboBoxCh1Display->SetSelection(unit);
+      //
+      double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
+      RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
+   }
+
     // TODO: Implement m_comboBoxTimeCaptureOnCombobox
-    pOsciloscope->window.horizontal.Capture = captureTimeFromEnum(m_comboBoxTimeCapture->GetSelection());
     pOsciloscope->control.setXRange(m_comboBoxTimeCapture->GetSelection());
     pOsciloscope->control.transferData();
     //
@@ -1089,47 +1164,6 @@ void OsciloskopOsciloskop::m_radioBoxTimeModeOnRadioBox(wxCommandEvent& event)
 // Channel 0
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-void _setYDisplay(float& volt, uint& unit, VoltageCapture selected)
-{
-    switch(selected)
-    {
-        case  vc2Volt  :
-            volt = 2.f;
-            unit = (uint)vVolt;
-            break;
-        case  vc1Volt  :
-            volt = 1.f;
-            unit = (uint)vVolt;
-            break;
-        case  vc500Mili:
-            volt = 500.f;
-            unit = (uint)vMili;
-            break;
-        case  vc200Mili:
-            volt = 200.f;
-            unit = (uint)vMili;
-            break;
-        case  vc100Mili:
-            volt = 100.f;
-            unit = (uint)vMili;
-            break;
-        case  vc50Mili :
-            volt = 50.f;
-            unit = (uint)vMili;
-            break;
-        case  vc20Mili :
-            volt = 20.f;
-            unit = (uint)vMili;
-            break;
-        case  vc10Mili :
-            volt = 10.f;
-            unit = (uint)vMili;
-            break;
-        default:
-            CORE_ERROR("invalid volt value", 0);
-    };
-}
-
 void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
 {
     // TODO: Implement m_comboBoxCh0CaptureOnCombobox
@@ -1138,10 +1172,11 @@ void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
        // 500 Mhz help
        m_comboBoxCh1Capture->SetSelection(m_comboBoxCh0Capture->GetSelection());
        double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
-       pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh1Capture->GetSelection());
-       pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
-       pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
-       pOsciloscope->control.setYRangeScaleB(m_comboBoxCh1Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+       //pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
+       //pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
+       //pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
+       //pOsciloscope->control.setYRangeScaleB(m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+       m_comboBoxCh1CaptureOnCombobox(event);
        //
        float volt;
        uint  unit;
@@ -3529,6 +3564,9 @@ void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinDown(wxSpinEvent& event)
 {
    if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
    {
+      // 500 Mhz help
+      m_spinBtnCh1YPosOnSpinDown(event);
+
       // 500 Mhz help
       int ypos = pOsciloscope->control.getYPositionA();
       pOsciloscope->control.setYPositionB(ypos + 1);

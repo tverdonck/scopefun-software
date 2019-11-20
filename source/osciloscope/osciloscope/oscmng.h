@@ -463,6 +463,7 @@ public:
     double            offsetMax;
     double            offsetMin;
     double            offset;
+    double            offsetMeasured;
 public:
     double            generatorMax;
     double            generatorMin;
@@ -483,6 +484,8 @@ public:
     double             stepReference;
     double             stepVoltage;
     double             stepValue;
+    double             stepMeasuredOffsetVoltage;
+    double             stepMeasuredOffsetValue;
 public:
     AutoCallibration()
     {
@@ -506,6 +509,7 @@ public:
         offsetMax = 0;
         offsetMin = 0;
         offset = 0;
+        offsetMeasured = 0;
         generatorMax = 0;
         generatorMin = 0;
         generatorOffset = 0;
@@ -514,6 +518,8 @@ public:
         gainVoltageUp = 0;
         gainVoltageDown = 0;
         gainMode = 0;
+        stepMeasuredOffsetVoltage = 0;
+        stepMeasuredOffsetValue = 0;
     }
 };
 

@@ -141,35 +141,35 @@ void VoltageFromJson(cJSON* json, double* output)
         cJSON* mili10 = cJSON_GetObjectItem(json, "mili10");
         if(volt2)
         {
-            output[vc2Volt] = jsonToDouble(volt2);
+            output[vc2Volt] = jsonToDouble(volt2)/100;
         }
         if(volt1)
         {
-            output[vc1Volt] = jsonToDouble(volt1);
+            output[vc1Volt] = jsonToDouble(volt1) / 100;
         }
         if(mili500)
         {
-            output[vc500Mili] = jsonToDouble(mili500);
+            output[vc500Mili] = jsonToDouble(mili500) / 100;
         }
         if(mili200)
         {
-            output[vc200Mili] = jsonToDouble(mili200);
+            output[vc200Mili] = jsonToDouble(mili200) / 100;
         }
         if(mili100)
         {
-            output[vc100Mili] = jsonToDouble(mili100);
+            output[vc100Mili] = jsonToDouble(mili100) / 100;
         }
         if(mili50)
         {
-            output[vc50Mili] = jsonToDouble(mili50);
+            output[vc50Mili] = jsonToDouble(mili50) / 100;
         }
         if(mili20)
         {
-            output[vc20Mili] = jsonToDouble(mili20);
+            output[vc20Mili] = jsonToDouble(mili20) / 100;
         }
         if(mili10)
         {
-            output[vc10Mili] = jsonToDouble(mili10);
+            output[vc10Mili] = jsonToDouble(mili10) / 100;
         }
     }
 }
@@ -241,14 +241,14 @@ void VoltageToJson(cJSON* json, double* input)
 {
     if(json && input)
     {
-        cJSON_AddItemToObject(json, "volt2", cJSON_CreateNumber(input[vc2Volt]));
-        cJSON_AddItemToObject(json, "volt1", cJSON_CreateNumber(input[vc1Volt]));
-        cJSON_AddItemToObject(json, "mili500", cJSON_CreateNumber(input[vc500Mili]));
-        cJSON_AddItemToObject(json, "mili200", cJSON_CreateNumber(input[vc200Mili]));
-        cJSON_AddItemToObject(json, "mili100", cJSON_CreateNumber(input[vc100Mili]));
-        cJSON_AddItemToObject(json, "mili50", cJSON_CreateNumber(input[vc50Mili]));
-        cJSON_AddItemToObject(json, "mili20", cJSON_CreateNumber(input[vc20Mili]));
-        cJSON_AddItemToObject(json, "mili10", cJSON_CreateNumber(input[vc10Mili]));
+        cJSON_AddItemToObject(json, "volt2",   cJSON_CreateNumber(100 * input[vc2Volt]));
+        cJSON_AddItemToObject(json, "volt1",   cJSON_CreateNumber(100 * input[vc1Volt]));
+        cJSON_AddItemToObject(json, "mili500", cJSON_CreateNumber(100 * input[vc500Mili]));
+        cJSON_AddItemToObject(json, "mili200", cJSON_CreateNumber(100 * input[vc200Mili]));
+        cJSON_AddItemToObject(json, "mili100", cJSON_CreateNumber(100 * input[vc100Mili]));
+        cJSON_AddItemToObject(json, "mili50",  cJSON_CreateNumber(100 * input[vc50Mili]));
+        cJSON_AddItemToObject(json, "mili20",  cJSON_CreateNumber(100 * input[vc20Mili]));
+        cJSON_AddItemToObject(json, "mili10",  cJSON_CreateNumber(100 * input[vc10Mili]));
     }
 }
 
