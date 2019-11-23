@@ -2927,7 +2927,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                             int gain = callibrate.gainSetPrevius;
                             callibrate.gainSetPrevius = callibrate.gainSet;
                             int delta = abs(gain - callibrate.gainSet) / 2;
-                                delta = max(1, delta);
+                                delta = max(1, (int)abs(callibrate.percentage - 100));
                             if(callibrate.percentage > 100.f)
                             {
                                 callibrate.gainSet -= delta;
@@ -2941,6 +2941,9 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         callibrate.debug << "acGainCalculate: ";
                         callibrate.debug << "  percentage: ";
                         callibrate.debug <<     callibrate.percentage;
+                        callibrate.debug << "\n";
+                        callibrate.debug << "  iteration: ";
+                        callibrate.debug <<     callibrate.iteration;
                         callibrate.debug << "\n";
                     }
                     break;

@@ -22,7 +22,7 @@
 		"invertCh1":	0,
 		"framesPerCapture":	2,
 		"maxIterations":	64,
-		"exitPercentage":	0.024414,
+		"exitPercentage":	0.1,
 		"offsetMax":	200,
 		"offsetMin":	-200,
 		"generatorReference":	0,
