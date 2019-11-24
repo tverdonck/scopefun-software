@@ -423,6 +423,8 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         icoBundle.AddIcon(icon128);
         icoBundle.AddIcon(icon512);
         SetIcons(icoBundle);
+
+        m_textCtrlFreqDividerOnTextEnter(version2);
     }
 }
 

@@ -3092,7 +3092,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         }
                         else
                         {
-                            double delta = (callibrate.stepMax - callibrate.stepMin) / 2.0;
+                            double delta = (callibrate.stepMax - callibrate.stepMin) / 4.0;
                             if(abs(callibrate.stepMeasuredOffsetValue) >= settings.getHardware()->referenceStepMax)
                             {
                                 callibrate.stepMax -= delta;
