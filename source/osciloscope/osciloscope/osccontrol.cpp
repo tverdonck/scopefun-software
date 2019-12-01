@@ -2466,7 +2466,7 @@ void OsciloscopeMainControl::setWindow(WndMain& window)
     window.hardwareGenerator.onOff0 = getGeneratorOn0();
     window.hardwareGenerator.sawSlopePositive0 = getGeneratorSlope0();
     window.hardwareGenerator.voltage0 = getGeneratorVoltage0();
-    window.hardwareGenerator.offset0 = getGeneratorOffset0() - pOsciloscope->settings.getHardware()->getGeneratorOffset(0, window.horizontal.Capture);
+    window.hardwareGenerator.offset0 = getGeneratorOffset0() - pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture,0);
     window.hardwareGenerator.frequency0 = getGeneratorFrequency0(pOsciloscope->settings.getHardware()->generatorFs);
     window.hardwareGenerator.squareDuty0 = getGeneratorSquareDuty0();
     // generator B
@@ -2474,7 +2474,7 @@ void OsciloscopeMainControl::setWindow(WndMain& window)
     window.hardwareGenerator.onOff1 = getGeneratorOn1();
     window.hardwareGenerator.sawSlopePositive1 = getGeneratorSlope1();
     window.hardwareGenerator.voltage1 = getGeneratorVoltage1();
-    window.hardwareGenerator.offset1 = getGeneratorOffset1() - pOsciloscope->settings.getHardware()->getGeneratorOffset(1, window.horizontal.Capture);
+    window.hardwareGenerator.offset1 = getGeneratorOffset1() - pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture,1);
     window.hardwareGenerator.frequency1 = getGeneratorFrequency1(pOsciloscope->settings.getHardware()->generatorFs);
     window.hardwareGenerator.squareDuty1 = getGeneratorSquareDuty1();
 }

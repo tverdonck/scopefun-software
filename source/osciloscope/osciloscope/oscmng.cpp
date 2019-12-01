@@ -2710,7 +2710,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                 case acGeneratorStart:
                     {
                         callibrate.gainMode = 0;
-                        callibrate.voltage = vc100Mili;
+                        callibrate.voltage = vc20Mili;
                         window.hardwareGenerator.type0 = GENERATOR_DC;
                         window.hardwareGenerator.type1 = GENERATOR_DC;
                         window.hardwareGenerator.onOff0 = 1;
@@ -3449,14 +3449,14 @@ void OsciloscopeManager::setupControl(WndMain window)
         control.setGeneratorOn0(window.hardwareGenerator.onOff0);
         control.setGeneratorSlope0(window.hardwareGenerator.sawSlopePositive0);
         control.setGeneratorVoltage0(window.hardwareGenerator.voltage0);
-        control.setGeneratorOffset0(window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(0, window.horizontal.Capture));
+        control.setGeneratorOffset0(window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture,0));
         control.setGeneratorFrequency0(window.hardwareGenerator.frequency0, pOsciloscope->settings.getHardware()->generatorFs);
         control.setGeneratorSquareDuty0(window.hardwareGenerator.squareDuty0);
         control.setGeneratorType1((GeneratorType)window.hardwareGenerator.type1);
         control.setGeneratorOn1(window.hardwareGenerator.onOff1);
         control.setGeneratorSlope1(window.hardwareGenerator.sawSlopePositive1);
         control.setGeneratorVoltage1(window.hardwareGenerator.voltage1);
-        control.setGeneratorOffset1(window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(1, window.horizontal.Capture));
+        control.setGeneratorOffset1(window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture,1));
         control.setGeneratorFrequency1(window.hardwareGenerator.frequency1, pOsciloscope->settings.getHardware()->generatorFs);
         control.setGeneratorSquareDuty1(window.hardwareGenerator.squareDuty1);
         control.setDigitalVoltage(window.digitalSetup.voltage);
