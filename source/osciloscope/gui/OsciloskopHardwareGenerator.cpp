@@ -152,7 +152,7 @@ void OsciloskopHardwareGenerator::m_sliderOffsetOnScroll(wxScrollEvent& event)
     // TODO: Implement m_sliderOffsetOnScroll
     float voltage = double(m_sliderOffset->GetValue()) * pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep;
     pOsciloscope->window.hardwareGenerator.offset0 = m_sliderOffset->GetValue();
-    pOsciloscope->control.setGeneratorOffset0(m_sliderOffset->GetValue() + pOsciloscope->settings.getHardware()->getGeneratorOffset(0, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset0(m_sliderOffset->GetValue() + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,0));
     pOsciloscope->control.transferData();
     m_textCtrlOffset0->SetValue(pFormat->floatToString(voltage));
 }
@@ -254,7 +254,7 @@ void OsciloskopHardwareGenerator::m_spinBtnCh0OffsetOnSpinUp(wxSpinEvent& event)
     pOsciloscope->window.hardwareGenerator.offset0 = min(pOsciloscope->window.hardwareGenerator.offset0, 2048);
     m_textCtrlOffset0->SetValue(pFormat->floatToString(double(pOsciloscope->window.hardwareGenerator.offset0)*pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep));
     m_sliderOffset->SetValue(pOsciloscope->window.hardwareGenerator.offset0);
-    pOsciloscope->control.setGeneratorOffset0(pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(0, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset0(pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,0));
     pOsciloscope->control.transferData();
 }
 
@@ -264,7 +264,7 @@ void OsciloskopHardwareGenerator::m_spinBtnCh0OffsetOnSpinDown(wxSpinEvent& even
     pOsciloscope->window.hardwareGenerator.offset0 = max(pOsciloscope->window.hardwareGenerator.offset0, -2048);
     m_textCtrlOffset0->SetValue(pFormat->floatToString(double(pOsciloscope->window.hardwareGenerator.offset0)*pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep));
     m_sliderOffset->SetValue(pOsciloscope->window.hardwareGenerator.offset0);
-    pOsciloscope->control.setGeneratorOffset0(pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(0, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset0(pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,0));
     pOsciloscope->control.transferData();
 }
 
@@ -336,7 +336,7 @@ void OsciloskopHardwareGenerator::m_textCtrlOffset1OnTextEnter(wxCommandEvent& e
 {
     // TODO: Implement m_textCtrlOffset1OnTextEnter
     pOsciloscope->window.hardwareGenerator.offset1 = pFormat->stringToFloat(m_textCtrlOffset1->GetValue().ToAscii().data()) / pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep;
-    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(1, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,1));
     pOsciloscope->control.transferData();
     m_sliderOffset1->SetValue(pOsciloscope->window.hardwareGenerator.offset1);
 }
@@ -346,7 +346,7 @@ void OsciloskopHardwareGenerator::m_sliderOffset1OnScroll(wxScrollEvent& event)
     // TODO: Implement m_sliderOffset1OnScroll
     float voltage = double(m_sliderOffset1->GetValue()) * pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep;
     pOsciloscope->window.hardwareGenerator.offset1 = m_sliderOffset1->GetValue();
-    pOsciloscope->control.setGeneratorOffset1(m_sliderOffset1->GetValue() + pOsciloscope->settings.getHardware()->getGeneratorOffset(1, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset1(m_sliderOffset1->GetValue() + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,1));
     pOsciloscope->control.transferData();
     m_textCtrlOffset1->SetValue(pFormat->floatToString(voltage));
 }
@@ -451,7 +451,7 @@ void OsciloskopHardwareGenerator::m_spinBtnCh1OffsetOnSpinUp(wxSpinEvent& event)
     pOsciloscope->window.hardwareGenerator.offset1 = min(pOsciloscope->window.hardwareGenerator.offset1, 2048);
     m_textCtrlOffset1->SetValue(pFormat->floatToString(double(pOsciloscope->window.hardwareGenerator.offset1)*pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep));
     m_sliderOffset1->SetValue(pOsciloscope->window.hardwareGenerator.offset1);
-    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(1, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,1));
     pOsciloscope->control.transferData();
 }
 
@@ -461,7 +461,7 @@ void OsciloskopHardwareGenerator::m_spinBtnCh1OffsetOnSpinDown(wxSpinEvent& even
     pOsciloscope->window.hardwareGenerator.offset1 = max(pOsciloscope->window.hardwareGenerator.offset1, -2048);
     m_textCtrlOffset1->SetValue(pFormat->floatToString(double(pOsciloscope->window.hardwareGenerator.offset1)*pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep));
     m_sliderOffset1->SetValue(pOsciloscope->window.hardwareGenerator.offset1);
-    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(1, pOsciloscope->window.horizontal.Capture));
+    pOsciloscope->control.setGeneratorOffset1(pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture,1));
     pOsciloscope->control.transferData();
 }
 

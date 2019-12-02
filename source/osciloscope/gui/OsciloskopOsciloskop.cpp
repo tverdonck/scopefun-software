@@ -2322,9 +2322,7 @@ void OsciloskopOsciloskop::m_menuItemResetEEPROMOnMenuSelection(wxCommandEvent& 
 
 void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
-   SUsb usb = pOsciloscope->settings.getHardware()->getUSB();
-   pOsciloscope->thread.setUSB(&usb);
-   pOsciloscope->thread.function(afOpenUsb);
+   pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
