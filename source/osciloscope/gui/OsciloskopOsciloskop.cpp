@@ -2323,6 +2323,7 @@ void OsciloskopOsciloskop::m_menuItemResetEEPROMOnMenuSelection(wxCommandEvent& 
 void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
    pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());
+   pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
 }
 
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
