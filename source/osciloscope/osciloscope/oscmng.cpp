@@ -570,8 +570,10 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    }
 
    // open
-   function(afOpenUsb);
-   wait();
+   openUSB(hw);
+
+   // callibration
+   useEepromCallibration(hw);
 
    // fpga
    function(afUploadFpga);
@@ -604,24 +606,27 @@ int ThreadApi::openUSB(OscHardware* hw)
          function(afOpenUsb);
          wait();
       }
+   }
+   return 0;
+}
+int ThreadApi::useEepromCallibration(OscHardware* hw)
+{
+   // callibration
+   if (SDL_AtomicGet(&open) == 1)
+   {
+      SDL_AtomicLock(&lock);
+      eepromSize = sizeof(OscHardware);
+      eepromOffset = 256000;
+      SDL_AtomicUnlock(&lock);
+      function(afEEPROMRead);
+      wait();
 
-      // callibration
-      if (SDL_AtomicGet(&open) == 1)
+      // use callibration from eeprom
+      if (result(afEEPROMRead) == 0 || eepromData.data.bytes[0] == 0)
       {
-         SDL_AtomicLock(&lock);
-         eepromSize = sizeof(OscHardware);
-         eepromOffset = 256000;
-         SDL_AtomicUnlock(&lock);
-         function(afEEPROMRead);
-         wait();
-
-         // use callibration from eeprom
-         if (result(afEEPROMRead) == 0 || eepromData.data.bytes[0] == 0)
-         {
-            cJSON* json = hw->json;
-            SDL_memcpy(hw, &eepromData, eepromSize);
-            hw->json = json;
-         }
+         cJSON* json = hw->json;
+         SDL_memcpy(hw, &eepromData, eepromSize);
+         hw->json = json;
       }
    }
    return 0;

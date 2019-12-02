@@ -904,6 +904,7 @@ public:
 public:
    // controlThread
    int  openUSB(OscHardware* hw);
+   int  useEepromCallibration(OscHardware* hw);
    int  writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardware* hw);
 
    int  writeUsbToEEPROM(OscHardware* hw);
