@@ -611,7 +611,7 @@ int usbFxxTransferDataOut(UsbContext* ctx, int endPoint, char* src, int size, in
     return PUREUSB_FAILURE;
 }
 
-void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId,unsigned int serialId)
+void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId,char serialId)
 {
     ctx->guid      = guid;
     ctx->vendorId  = vendorId;
