@@ -425,6 +425,19 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         SetIcons(icoBundle);
 
         m_textCtrlFreqDividerOnTextEnter(version2);
+
+        if (pOsciloscope->settings.getSettings()->windowDebug != 2)
+        {
+           wxMenuItem* item8 = m_menu5->FindItemByPosition(8);
+           if(item8)
+               item8->Enable(false);
+           wxMenuItem* item9 = m_menu5->FindItemByPosition(9);
+           if (item9)
+               item9->Enable(false);
+           wxMenuItem* item10 = m_menu5->FindItemByPosition(10);
+           if (item10)
+              item10->Enable(false);
+        }
     }
 }
 
@@ -3408,35 +3421,44 @@ void OsciloskopOsciloskop::m_menuItemWriteCertificateOnMenuSelection(wxCommandEv
             }
             else
             {
-               char zeroAll[256] = { 0 };
-               int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)zeroAll, 256, 0);
-               if (ret == PUREUSB_SUCCESS)
+               cJSON* json = cJSON_Parse(src);
+               bool isValid = json && json->child && json->child[0].next;
+               if (isValid && SDL_memcmp(json->child[0].next->valuestring, ((UsbContext*)getCtx()->usb)->serialBuffer, ((UsbContext*)getCtx()->usb)->serialBufferSize ) == 0)
                {
-                  int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)src, size, 0);
+                  char zeroAll[256] = { 0 };
+                  int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)zeroAll, 256, 0);
                   if (ret == PUREUSB_SUCCESS)
                   {
-                     char verify[256] = { 0 };
-                     ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, size, 0);
+                     int ret = usbFx3WriteLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)src, size, 0);
                      if (ret == PUREUSB_SUCCESS)
                      {
-                        if (SDL_memcmp((unsigned char*)src, verify, size) == 0)
+                        char verify[256] = { 0 };
+                        ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, size, 0);
+                        if (ret == PUREUSB_SUCCESS)
                         {
-                           SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Clipboard data written and verifyed tha all written bits match original.", verify, 0);
+                           if (SDL_memcmp((unsigned char*)src, verify, size) == 0)
+                           {
+                              SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Clipboard data written and verifyed tha all written bits match original.", verify, 0);
+                           }
+                           else
+                           {
+                              SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Verifing written bits failed.", verify, 0);
+                           }
                         }
                         else
                         {
-                           SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Verifing written bits failed.", verify, 0);
+                           SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Reading written bits failed.", "failed", 0);
                         }
                      }
                      else
                      {
-                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Reading written bits failed.", "failed", 0);
+                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting bits failed.", "failed", 0);
                      }
                   }
-                  else
-                  {
-                     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting bits failed.", "failed", 0);
-                  }
+               }
+               else
+               {
+                  SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Clipboard data serial id does not match usb.", "Serial id is incorrect.", 0);
                }
             }
          }

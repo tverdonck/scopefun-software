@@ -84,7 +84,9 @@ struct UsbContext
     usbDeviceHandle*      device;
     int                   vendorId;
     int                   productId;
-    char                  serialId;
+    unsigned int          serialId;
+    char                  serialBuffer[1024];
+    int                   serialBufferSize;
     usbCallback           callback;
 };
 typedef struct UsbContext UsbContext;

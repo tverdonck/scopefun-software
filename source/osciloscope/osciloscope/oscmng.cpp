@@ -672,13 +672,14 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
       setUSB(&usb);
 
       function(afUploadFxx);
+      wait();
       function(afCloseUsb);
       wait();
-      openUSB(hw);
+      function(afOpenUsb);
+      wait();
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting FX3 will start.", "Please wait and do not disconnect USB.",0 );
       function(afEEPROMWrite);
       wait();
-
    }
    int iret = result(afOpenUsb) + result(afUploadFxx) + result(afEEPROMWrite);
    if (iret == SCOPEFUN_SUCCESS)

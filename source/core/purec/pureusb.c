@@ -611,7 +611,7 @@ int usbFxxTransferDataOut(UsbContext* ctx, int endPoint, char* src, int size, in
     return PUREUSB_FAILURE;
 }
 
-void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId, char serialId)
+void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId,unsigned int serialId)
 {
     ctx->guid      = guid;
     ctx->vendorId  = vendorId;
@@ -644,6 +644,7 @@ int usbFxxFindList(UsbContext* ctx, usbDevice** foundList, int maxCount)
             libusb_get_device_descriptor(device, &desc);
             if(desc.idVendor == ctx->vendorId && desc.idProduct == ctx->productId)
             {
+                ctx->serialId = desc.iSerialNumber;
                 foundList[index] = (usbDevice*)device;
                 index++;
                 if(index < 0)
@@ -721,7 +722,9 @@ int usbFxxOpenNormal(UsbContext* ctx, usbDevice** foundList, int maxCount)
         libusb_device* device = (libusb_device*)foundList[i];
         if(device)
         {
-            return usbFxxOpen(ctx, (usbDevice*)device);
+            int ret = usbFxxOpen(ctx, (usbDevice*)device);
+            ctx->serialBufferSize = libusb_get_string_descriptor_ascii(ctx->device, ctx->serialId, ctx->serialBuffer, 1024);
+            return ret;
         }
     }
     return PUREUSB_FAILURE;
