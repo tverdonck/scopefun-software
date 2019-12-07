@@ -125,7 +125,7 @@ ThreadApi::ThreadApi()
    lock = 0;
    SDL_AtomicSet(&sync, 0);
    resultClearAll();
-   
+
    SDL_AtomicSet(&open,0);
    SDL_AtomicSet(&connected,0);
    SDL_AtomicSet(&simulate, 0);
@@ -207,7 +207,7 @@ void ThreadApi::update()
    SDL_AtomicSet(&simulate, isimulate);
    SDL_AtomicSet(&open, iopened);
 
-   // functions 
+   // functions
    int decr = 0;
    Array<EThreadApiFunction, 22>  execute;
    SDL_AtomicLock(&lock);
@@ -365,7 +365,7 @@ void ThreadApi::update()
          break;
       case afClientDisconnect:
          iret += sfClientDisconnect(getCtx());
-  
+
          break;
       };
       SDL_AtomicSet(&ret[f], iret);
@@ -673,7 +673,8 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
 
       function(afUploadFxx);
       function(afCloseUsb);
-      function(afOpenUsb);
+      wait();
+      openUSB(hw);
       SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Writting FX3 will start.", "Please wait and do not disconnect USB.",0 );
       function(afEEPROMWrite);
       wait();
@@ -854,7 +855,7 @@ int ThreadApi::readCallibrateSettingsFromEEPROM(OscHardware* hw)
 int ThreadApi::eraseEEPROM(OscHardware* hw)
 {
    openUSB(hw);
-   
+
    // upload
    function(afUploadFxx);
 
@@ -871,7 +872,7 @@ int ThreadApi::eraseEEPROM(OscHardware* hw)
 
    function(afEEPROMErase);
    wait();
-  
+
    int iret = result(afEEPROMErase);
    if (iret == SCOPEFUN_SUCCESS)
    {
@@ -2540,6 +2541,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
             case acOffsetCapture:
             case acGainCapture:
             case acGeneratorCapture:
+            case acStepCapture:
                 framesPerCapture = settings.getHardware()->referenceFramesPerCapture;
                 break;
             default:
@@ -2618,13 +2620,15 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     break;
                 case acOffsetCalculate:
                     {
-                        double range = fabsf(callibrate.offsetMax - callibrate.offsetMin) / 2.0;
+                        double range = fabsf(callibrate.offsetMax - callibrate.offsetMin) / 5.0;
                         callibrate.debug << "acOffsetCalculate:";
-                        //if( ( fabs(callibrate.offset) < 0.001957) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations) )
-                        if( ( fabs(callibrate.offsetMeasured) < 0.00066) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations) )
+                        if( ( fabs(callibrate.offsetMeasured) < 0.00025) || (callibrate.iteration >= settings.getHardware()->referenceMaxIterations) || (range < 0.001) )
                         {
                             callibrate.debug << "  callibratedOffset: ";
                             callibrate.debug << double(callibrate.offset);
+                            callibrate.debug << "\n";
+                            callibrate.debug << "  callibratedIteration: ";
+                            callibrate.debug << callibrate.iteration;
                             callibrate.debug << "\n";
                             settings.getHardware()->callibratedOffsets[callibrate.type][callibrate.channel][callibrate.voltage] = round(callibrate.offset);
                             callibrate.mode = acOffsetVoltageChange;
@@ -2997,6 +3001,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                             callibrate.mode = acGainSetup;
                         }
                         callibrate.debug << "acGainVoltageChange: ";
+                        callibrate.debug << "  acGainVoltage: ";
+                        callibrate.debug << callibrate.voltage;
                         callibrate.debug << "  gainMin: ";
                         callibrate.debug << callibrate.gainMin;
                         callibrate.debug << "\n";
@@ -3046,21 +3052,44 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     break;
                 case acStepSetup:
                     {
-                        callibrate.stepReference = callibrate.stepMin + (callibrate.stepMax - callibrate.stepMin) / 2.0;
+                        callibrate.stepReference = int(callibrate.stepMin + (callibrate.stepMax - callibrate.stepMin) / 2.0);
                         window.channel01.Ground = 1;
                         window.channel02.Ground = 1;
                         control.setAnalogSwitchBit(CHANNEL_A_GROUND, 1);
                         control.setAnalogSwitchBit(CHANNEL_B_GROUND, 1);
-                        control.setYPositionA(callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
-                        control.setYPositionB(callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
-                        control.setYRangeScaleA(settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
-                        control.setYRangeScaleB(settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
+                        if(callibrate.type == ct500Mhz)
+                        {
+                            control.setXRange(0);
+                            control.setAnalogSwitchBit(CHANNEL_INTERLEAVE, 1);
+                        }
+                        else
+                        {
+                            control.setXRange(5);
+                            control.setAnalogSwitchBit(CHANNEL_INTERLEAVE, 0);
+                        }
+                        if(callibrate.channel == 0)
+                        {
+                            control.setYPositionA(callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
+                            control.setYRangeScaleA(settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
+                            control.setYPositionB(settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
+                            control.setYRangeScaleB(settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
+                        }
+                        else
+                        {
+                            control.setYPositionA(settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
+                            control.setYRangeScaleA(settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
+                            control.setYPositionB(callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
+                            control.setYRangeScaleB(settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage], (uint)control.getAttr(callibrate.voltage));
+                        }
                         control.transferData();
                         callibrate.mode = acStepCapture;
                         callibrate.debug << "acStepSetup: ";
+                        callibrate.debug << "  CH: ";
+                        callibrate.debug << callibrate.channel;
                         callibrate.debug << "  stepReference: ";
                         callibrate.debug << callibrate.stepReference;
                         callibrate.debug << "\n";
+                        SDL_Delay(50);
                     }
                     break;
                 case acStepCapture:
@@ -3091,8 +3120,14 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                             double yGridMax      = grid.yCount / 2.0;
                             double dCapture      = double(captureVoltFromEnum(callibrate.voltage));
                             double  iStepVoltage = yGridMax * callibrate.stepMeasuredOffsetVoltage * dCapture;
-                            settings.getHardware()->callibratedVoltageStep[callibrate.type][callibrate.channel][callibrate.voltage] = double(iStepVoltage) / (callibrate.stepReference);
+                            settings.getHardware()->callibratedVoltageStep[callibrate.type][callibrate.channel][callibrate.voltage] = double(iStepVoltage) / callibrate.stepReference;
                             callibrate.mode = acStepVoltageChange;
+                            callibrate.debug << "  stepiStepVoltage: ";
+                            callibrate.debug << double(iStepVoltage);
+                            callibrate.debug << "\n";
+                            callibrate.debug << "  callibratedVoltageStep: ";
+                            callibrate.debug << (double(iStepVoltage) / callibrate.stepReference) * 100.0;
+                            callibrate.debug << "\n";
                         }
                         else
                         {
@@ -3107,17 +3142,15 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                             }
                             callibrate.mode = acStepSetup;
                             callibrate.iteration++;
+                            callibrate.debug << "acStepCalculate: ";
+                            callibrate.debug << "\n";
+                            callibrate.debug << "  stepMin: ";
+                            callibrate.debug << callibrate.stepMin;
+                            callibrate.debug << "\n";
+                            callibrate.debug << "  stepMax: ";
+                            callibrate.debug << callibrate.stepMax;
+                            callibrate.debug << "\n";
                         }
-                        callibrate.debug << "acStepCalculate: ";
-                        callibrate.debug << "  voltageStep: ";
-                        callibrate.debug << settings.getHardware()->callibratedVoltageStep[callibrate.type][callibrate.channel][callibrate.voltage];
-                        callibrate.debug << "\n";
-                        callibrate.debug << "  stepMin: ";
-                        callibrate.debug << callibrate.stepMin;
-                        callibrate.debug << "\n";
-                        callibrate.debug << "  stepMax: ";
-                        callibrate.debug << callibrate.stepMax;
-                        callibrate.debug << "\n";
                     }
                     break;
                 case acStepVoltageChange:

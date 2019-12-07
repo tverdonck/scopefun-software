@@ -20,26 +20,26 @@
 	"reference":	{
 		"invertCh0":	0,
 		"invertCh1":	0,
-		"framesPerCapture":	2,
+		"framesPerCapture":	4,
 		"maxIterations":	64,
-		"exitPercentage":	0.1,
-		"offsetMax":	200,
-		"offsetMin":	-200,
+		"exitPercentage":	0.100000,
+		"offsetMax":	125,
+		"offsetMin":	-125,
 		"generatorReference":	0,
-		"generatorMax":	95,
-		"generatorMin":	-95,
+		"generatorMax":	25,
+		"generatorMin":	-25,
 		"generatorStep":	0.001000,
-		"stepMin":	400,
-		"stepMax":	500,
+		"stepMin":	460,
+		"stepMax":	480,
 		"gainValue":	{
-			"volt2":	1500,
-			"volt1":	1850,
-			"mili500":	2200,
-			"mili200":	2650,
-			"mili100":	1500,
-			"mili50":	1850,
-			"mili20":	2300,
-			"mili10":	2650
+			"volt2":	1413,
+			"volt1":	1769,
+			"mili500":	2120,
+			"mili200":	2583,
+			"mili100":	1410,
+			"mili50":	1763,
+			"mili20":	2238,
+			"mili10":	2599
 		},
 		"gainVoltage":	{
 			"volt2":	200,
@@ -84,134 +84,134 @@
 	},
 	"callibratedNormal":	{
 		"offsetsCh0":	{
-			"volt2":	-38,
-			"volt1":	-38,
-			"mili500":	-34,
-			"mili200":	-27,
-			"mili100":	-38,
-			"mili50":	-38,
-			"mili20":	-34,
-			"mili10":	-27
+			"volt2":	3,
+			"volt1":	3,
+			"mili500":	-3,
+			"mili200":	-12,
+			"mili100":	3,
+			"mili50":	3,
+			"mili20":	-4,
+			"mili10":	-12
 		},
 		"offsetsCh1":	{
-			"volt2":	-31,
-			"volt1":	-30,
-			"mili500":	-27,
-			"mili200":	-19,
-			"mili100":	-31,
-			"mili50":	-30,
-			"mili20":	-24,
-			"mili10":	-19
+			"volt2":	-38,
+			"volt1":	-40,
+			"mili500":	-39,
+			"mili200":	-43,
+			"mili100":	-38,
+			"mili50":	-40,
+			"mili20":	-40,
+			"mili10":	-43
 		},
 		"voltageStepCh0":	{
-			"volt2":	-1.484064,
-			"volt1":	-0.685386,
-			"mili500":	-0.305459,
-			"mili200":	-0.086674,
-			"mili100":	-0.074290,
-			"mili50":	-0.034310,
-			"mili20":	-0.011113,
-			"mili10":	-0.004231
+			"volt2":	-1.565110,
+			"volt1":	-0.783541,
+			"mili500":	-0.390944,
+			"mili200":	-0.156411,
+			"mili100":	-0.078266,
+			"mili50":	-0.039178,
+			"mili20":	-0.015649,
+			"mili10":	-0.007823
 		},
 		"voltageStepCh1":	{
-			"volt2":	-1.495630,
-			"volt1":	-0.702031,
-			"mili500":	-0.319975,
-			"mili200":	-0.097510,
-			"mili100":	-0.074794,
-			"mili50":	-0.035039,
-			"mili20":	-0.011694,
-			"mili10":	-0.004480
+			"volt2":	-1.555900,
+			"volt1":	-0.777344,
+			"mili500":	-0.388984,
+			"mili200":	-0.155633,
+			"mili100":	-0.077793,
+			"mili50":	-0.038871,
+			"mili20":	-0.015571,
+			"mili10":	-0.007780
 		},
 		"gainValueCh0":	{
-			"volt2":	1437,
-			"volt1":	1791,
-			"mili500":	2141,
-			"mili200":	2601,
-			"mili100":	1431,
-			"mili50":	1788,
-			"mili20":	2254,
-			"mili10":	2618
+			"volt2":	1414,
+			"volt1":	1770,
+			"mili500":	2121,
+			"mili200":	2584,
+			"mili100":	1411,
+			"mili50":	1764,
+			"mili20":	2239,
+			"mili10":	2599
 		},
 		"gainValueCh1":	{
-			"volt2":	1435,
-			"volt1":	1787,
-			"mili500":	2140,
-			"mili200":	2599,
-			"mili100":	1433,
-			"mili50":	1795,
-			"mili20":	2281,
-			"mili10":	2672
+			"volt2":	1417,
+			"volt1":	1770,
+			"mili500":	2122,
+			"mili200":	2586,
+			"mili100":	1413,
+			"mili50":	1765,
+			"mili20":	2238,
+			"mili10":	2596
 		},
 		"offsetsGenerator":	{
-			"channel0":	-2,
-			"channel1":	-2
+			"channel0":	2,
+			"channel1":	4
 		}
 	},
 	"callibrated500Mhz":	{
 		"offsetsCh0":	{
-			"volt2":	-2,
-			"volt1":	50,
-			"mili500":	153,
-			"mili200":	400,
-			"mili100":	-2,
-			"mili50":	50,
-			"mili20":	199,
-			"mili10":	400
+			"volt2":	3,
+			"volt1":	3,
+			"mili500":	-3,
+			"mili200":	-12,
+			"mili100":	3,
+			"mili50":	3,
+			"mili20":	-5,
+			"mili10":	-12
 		},
 		"offsetsCh1":	{
-			"volt2":	-2,
-			"volt1":	39,
-			"mili500":	124,
-			"mili200":	335,
-			"mili100":	-2,
-			"mili50":	40,
-			"mili20":	166,
-			"mili10":	336
+			"volt2":	-38,
+			"volt1":	-40,
+			"mili500":	-40,
+			"mili200":	-44,
+			"mili100":	-38,
+			"mili50":	-40,
+			"mili20":	-41,
+			"mili10":	-44
 		},
 		"voltageStepCh0":	{
-			"volt2":	-1.577741,
-			"volt1":	-0.799764,
-			"mili500":	-0.407954,
-			"mili200":	-0.156636,
-			"mili100":	-0.079036,
-			"mili50":	-0.040064,
-			"mili20":	-0.016126,
-			"mili10":	-0.007736
+			"volt2":	-1.565248,
+			"volt1":	-0.783702,
+			"mili500":	-0.390971,
+			"mili200":	-0.156397,
+			"mili100":	-0.078257,
+			"mili50":	-0.039174,
+			"mili20":	-0.015625,
+			"mili10":	-0.007823
 		},
 		"voltageStepCh1":	{
-			"volt2":	-1.570359,
-			"volt1":	-0.790299,
-			"mili500":	-0.401794,
-			"mili200":	-0.155768,
-			"mili100":	-0.078667,
-			"mili50":	-0.039614,
-			"mili20":	-0.015945,
-			"mili10":	-0.007724
+			"volt2":	-1.556114,
+			"volt1":	-0.777591,
+			"mili500":	-0.388545,
+			"mili200":	-0.155525,
+			"mili100":	-0.077809,
+			"mili50":	-0.038872,
+			"mili20":	-0.015551,
+			"mili10":	-0.007776
 		},
 		"gainValueCh0":	{
-			"volt2":	1438,
-			"volt1":	1789,
-			"mili500":	2146,
-			"mili200":	2611,
-			"mili100":	1420,
-			"mili50":	1783,
-			"mili20":	2256,
-			"mili10":	2619
+			"volt2":	1423,
+			"volt1":	1778,
+			"mili500":	2127,
+			"mili200":	2594,
+			"mili100":	1416,
+			"mili50":	1770,
+			"mili20":	2242,
+			"mili10":	2601
 		},
 		"gainValueCh1":	{
-			"volt2":	1443,
-			"volt1":	1789,
-			"mili500":	2149,
-			"mili200":	2631,
-			"mili100":	1423,
-			"mili50":	1785,
-			"mili20":	2262,
-			"mili10":	2642
+			"volt2":	1417,
+			"volt1":	1771,
+			"mili500":	2122,
+			"mili200":	2586,
+			"mili100":	1413,
+			"mili50":	1764,
+			"mili20":	2237,
+			"mili10":	2594
 		},
 		"offsetsGenerator":	{
-			"channel0":	-2,
-			"channel1":	-2
+			"channel0":	2,
+			"channel1":	4
 		}
 	}
 }
