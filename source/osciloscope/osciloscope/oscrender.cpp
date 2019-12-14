@@ -493,7 +493,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     ////////////////////////////////////////////////////////////////////////////////
     // size
     ////////////////////////////////////////////////////////////////////////////////
-    pFont->setSize(threadid, 0.25f);
+    pFont->setSize(threadid, 0.42f);
     double charHeight = pFont->getLineHeight(threadid);
     double sizeX = 0.035f * render.oscScaleX;
     double sizeY = 0.035f * render.oscScaleY;
@@ -503,18 +503,27 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     // trigger
     ////////////////////////////////////////////////////////////////////////////////
     double triggerVoltage = float(double(wndMain.trigger.Level + wndMain.trigger.His) * getTriggerVoltagePerStep(wndMain, yCount));
-    double triggerY = (triggerVoltage / (getTriggerVoltage(wndMain) * (yCount / 2.f))) * 0.5f;
-    FORMAT("Trigger", bufferTrigger);
-    pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, triggerY + charHeight / 2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
-    pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
-    pCanvas3d->bLine(threadid, Vector4(xMin - sizeX,              triggerY, 0, 1),   Vector4(xMin, triggerY, 0, 1));
-    pCanvas3d->bLine(threadid, Vector4(xMin - sizeX / 4, triggerY - sizeY / 4, 0, 1),   Vector4(xMin, triggerY, 0, 1));
-    pCanvas3d->bLine(threadid, Vector4(xMin - sizeX / 4, triggerY + sizeY / 4, 0, 1),   Vector4(xMin, triggerY, 0, 1));
+    double triggerY = (triggerVoltage / (getTriggerVoltage(wndMain) * (yCount / 2.f))) * 0.50f;
+    FORMAT(" Trigger", bufferTrigger);
+    pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, triggerY + charHeight/2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
+
+    Vector4        tip = Vector4(xMin, triggerY, 0, 1);
+    Vector4    arrowUp = Vector4(xMin - sizeX / 2, triggerY - sizeY / 2, 0, 1);
+    Vector4  arrowDown = Vector4(xMin - sizeX / 2, triggerY + sizeY / 2, 0, 1);
+    Vector4      start = Vector4(xMin - sizeX, triggerY, 0, 1);
+    Vector4          a = Vector4(start.x, arrowUp.y, 0, 1);
+    Vector4          b = Vector4(start.x, arrowDown.y, 0, 1);
+
+    pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_TRIANGLE, 3);
+    pCanvas3d->bTriangle(threadid, tip, arrowUp, arrowDown);
+    pCanvas3d->bTriangle(threadid, arrowDown, a, b);
+    pCanvas3d->bTriangle(threadid, arrowUp, a, arrowDown);
     pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTrigger);
+
     ////////////////////////////////////////////////////////////////////////////////
     // 0 volt for both channels
     ////////////////////////////////////////////////////////////////////////////////
-    FORMAT("%s", "0V");
+    FORMAT("%s", " 0V");
     uint yellow = render.colorChannel0;
     uint blue   = render.colorChannel1;
     double zeroBlue   = 0.f;
@@ -566,19 +575,27 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
             zeroY = (wndMain.channel02.YPosition / (wndMain.channel02.Capture * yCount));
         }
         pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, zeroY + sizeY / 2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, i == 0 ? yellow : blue, render.oscScaleX, render.oscScaleY);
-        pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
-        pCanvas3d->bLine(threadid, Vector4(xMin - sizeX,                 zeroY, 0, 1), Vector4(xMin, zeroY, 0, 1));
-        pCanvas3d->bLine(threadid, Vector4(xMin - sizeX / 4, zeroY - sizeY / 4, 0, 1), Vector4(xMin, zeroY, 0, 1));
-        pCanvas3d->bLine(threadid, Vector4(xMin - sizeX / 4, zeroY + sizeY / 4, 0, 1), Vector4(xMin, zeroY, 0, 1));
-        if(i == 0)
+        Vector4        tip = Vector4(xMin, zeroY, 0, 1);
+        Vector4  arrowUp   = Vector4(xMin - sizeX / 2, zeroY - sizeY / 2, 0, 1);
+        Vector4  arrowDown = Vector4(xMin - sizeX / 2, zeroY + sizeY / 2, 0, 1);
+        Vector4  start     = Vector4(xMin - sizeX, zeroY, 0, 1);
+        Vector4         a  = Vector4(start.x, arrowUp.y,0,1);
+        Vector4         b  = Vector4(start.x, arrowDown.y,0,1);
+
+        pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_TRIANGLE, 3);
+        pCanvas3d->bTriangle(threadid, tip, arrowUp, arrowDown);
+        pCanvas3d->bTriangle(threadid, arrowDown, a, b );
+        pCanvas3d->bTriangle(threadid, arrowUp, a, arrowDown );
+        if (i == 0)
         {
-            pCanvas3d->endBatch(threadid, render.cameraOsc.Final, yellow);
+           pCanvas3d->endBatch(threadid, render.cameraOsc.Final, yellow);
         }
-        if(i == 1)
+        if (i == 1)
         {
-            pCanvas3d->endBatch(threadid, render.cameraOsc.Final, blue);
+           pCanvas3d->endBatch(threadid, render.cameraOsc.Final, blue);
         }
     }
+
     ////////////////////////////////////////////////////////////////////////////////
     // x units
     ////////////////////////////////////////////////////////////////////////////////
@@ -617,7 +634,9 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     {
         renderCount--;
     }
+
     // units
+    pFont->setSize(threadid, 0.25f);
     uint  lines = 0;
     {
         double     posX  = x;
@@ -651,12 +670,22 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     FORMAT("%s", "Trigger");
     float preTrigPos = (double(wndMain.trigger.Percent) / 100.0) / sz;
     sx = signalStart;
-    pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + sizeY, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
-    pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
-    pCanvas3d->bLine(threadid, Vector4(sx + preTrigPos, yMin - sizeY, 0, 1), Vector4(sx + preTrigPos, yMin, 0, 1));
-    pCanvas3d->bLine(threadid, Vector4(sx + preTrigPos + sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(sx + preTrigPos, yMin, 0, 1));
-    pCanvas3d->bLine(threadid, Vector4(sx + preTrigPos - sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(sx + preTrigPos, yMin, 0, 1));
-    pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTrigger);
+    pFont->setSize(threadid, 0.42f);
+    pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + charHeight, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
+    {
+       Vector4        tip = Vector4(sx + preTrigPos, yMin, 0, 1);
+       Vector4    arrowUp = Vector4(sx + preTrigPos + sizeX / 2, yMin - sizeY / 2, 0, 1);
+       Vector4  arrowDown = Vector4(sx + preTrigPos - sizeX / 2, yMin - sizeY / 2, 0, 1);
+       Vector4      start = Vector4(sx + preTrigPos, yMin - sizeY, 0, 1);
+       Vector4          a = Vector4(arrowUp.x,  start.y, 0, 1);
+       Vector4          b = Vector4(arrowDown.x, start.y, 0, 1);
+
+       pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_TRIANGLE, 3);
+       pCanvas3d->bTriangle(threadid, tip, arrowUp, arrowDown);
+       pCanvas3d->bTriangle(threadid, arrowDown, a, b);
+       pCanvas3d->bTriangle(threadid, arrowUp, a, arrowDown);
+       pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTrigger);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
