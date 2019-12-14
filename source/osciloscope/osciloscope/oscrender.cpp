@@ -508,8 +508,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, triggerY + charHeight/2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
 
     Vector4        tip = Vector4(xMin, triggerY, 0, 1);
-    Vector4    arrowUp = Vector4(xMin - sizeX / 2, triggerY - sizeY / 2, 0, 1);
-    Vector4  arrowDown = Vector4(xMin - sizeX / 2, triggerY + sizeY / 2, 0, 1);
+    Vector4    arrowUp = Vector4(xMin - sizeX / 2, triggerY - sizeY / 4, 0, 1);
+    Vector4  arrowDown = Vector4(xMin - sizeX / 2, triggerY + sizeY / 4, 0, 1);
     Vector4      start = Vector4(xMin - sizeX, triggerY, 0, 1);
     Vector4          a = Vector4(start.x, arrowUp.y, 0, 1);
     Vector4          b = Vector4(start.x, arrowDown.y, 0, 1);
@@ -576,8 +576,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         }
         pFont->writeText3d(threadid, render.cameraOsc.Final, xMax, zeroY + sizeY / 2, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, i == 0 ? yellow : blue, render.oscScaleX, render.oscScaleY);
         Vector4        tip = Vector4(xMin, zeroY, 0, 1);
-        Vector4  arrowUp   = Vector4(xMin - sizeX / 2, zeroY - sizeY / 2, 0, 1);
-        Vector4  arrowDown = Vector4(xMin - sizeX / 2, zeroY + sizeY / 2, 0, 1);
+        Vector4  arrowUp   = Vector4(xMin - sizeX / 2, zeroY - sizeY / 4, 0, 1);
+        Vector4  arrowDown = Vector4(xMin - sizeX / 2, zeroY + sizeY / 4, 0, 1);
         Vector4  start     = Vector4(xMin - sizeX, zeroY, 0, 1);
         Vector4         a  = Vector4(start.x, arrowUp.y,0,1);
         Vector4         b  = Vector4(start.x, arrowDown.y,0,1);
@@ -674,8 +674,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + charHeight, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
     {
        Vector4        tip = Vector4(sx + preTrigPos, yMin, 0, 1);
-       Vector4    arrowUp = Vector4(sx + preTrigPos + sizeX / 2, yMin - sizeY / 2, 0, 1);
-       Vector4  arrowDown = Vector4(sx + preTrigPos - sizeX / 2, yMin - sizeY / 2, 0, 1);
+       Vector4    arrowUp = Vector4(sx + preTrigPos + sizeX / 4, yMin - sizeY / 2, 0, 1);
+       Vector4  arrowDown = Vector4(sx + preTrigPos - sizeX / 4, yMin - sizeY / 2, 0, 1);
        Vector4      start = Vector4(sx + preTrigPos, yMin - sizeY, 0, 1);
        Vector4          a = Vector4(arrowUp.x,  start.y, 0, 1);
        Vector4          b = Vector4(arrowDown.x, start.y, 0, 1);
