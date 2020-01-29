@@ -35,6 +35,15 @@
 #include <wx/config.h>
 #include <wx/app.h>
 
+// on Windows: if you install in program files folder and run as non-admin your write is restricted there
+bool isFileWritable()
+{
+   FORMAT_BUFFER();
+   FORMAT_PATH("data/startup/write.ok");
+   int ret = fileSaveString(formatBuffer, "write ok");
+   return ret == 0 ? true : false;
+}
+
 wxLocale* pLocalization = 0;
 
 int loadLanguageFromConfig()
@@ -425,15 +434,27 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         SetIcons(icoBundle);
 
         m_textCtrlFreqDividerOnTextEnter(version2);
+        m_comboBoxTimeCaptureOnCombobox(version2);
+
+        bool writeOk = isFileWritable();
+        if (!writeOk)
+        {
+           wxMenuItem* item3 = m_menu5->FindItemByPosition(3);
+           if (item3)
+              item3->Enable(false);
+           wxMenuItem* item5 = m_menu5->FindItemByPosition(5);
+           if (item5)
+              item5->Enable(false);
+           wxMenuItem* item6 = m_menu5->FindItemByPosition(6);
+           if (item6)
+              item6->Enable(false);
+        }
 
         if (pOsciloscope->settings.getSettings()->windowDebug != 2)
         {
            wxMenuItem* item8 = m_menu5->FindItemByPosition(8);
            if(item8)
                item8->Enable(false);
-           wxMenuItem* item9 = m_menu5->FindItemByPosition(9);
-           if (item9)
-               item9->Enable(false);
            wxMenuItem* item10 = m_menu5->FindItemByPosition(10);
            if (item10)
               item10->Enable(false);
@@ -483,7 +504,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         if(pOsciloscope->callibrate.resetUI)
         {
             // callibrate
-            pOsciloscope->settings.getHardware()->save();
             pOsciloscope->setupControl(pOsciloscope->window);
             // ui
             pOsciloscope->window.horizontal.Frame = 0;

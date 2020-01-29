@@ -3233,6 +3233,7 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     break;
                 case acSaveSettings:
                     {
+                        pOsciloscope->settings.getHardware()->save();
                         callibrate.mode = acStartMessageBox;
                         callibrate.active = 0;
                         callibrate.debug << "acSaveSettings: \n";

@@ -730,7 +730,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     {
         return;
     }
-    double   etsDelta = (1.f / double(NUM_SAMPLES)) / double(render.maxEts);
+    int    icount = (double)frame.analog[0].getCount();
+    double  count = (double)icount;
+    double   etsDelta = (1.f / icount) / double(render.maxEts);
     double  etsOffset = etsDelta * double(frame.ets);
     if(!wndMain.horizontal.ETS)
     {
@@ -752,7 +754,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     double maxY = max(wndMain.measure.data.pickY0.position.y, wndMain.measure.data.pickY1.position.y);
     double  capture   = wndMain.horizontal.Capture;
     double  frameSize = wndMain.horizontal.FrameSize;
-    double  maxTime   = double(NUM_SAMPLES);
+    double  maxTime   = icount;
     wndMain.measure.data.pick.row[Ch0YV0] = maxTime;
     wndMain.measure.data.pick.row[Ch1YV0] = maxTime;
     wndMain.measure.data.pick.row[FunYV0] = maxTime;
@@ -798,9 +800,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     double y0Middle = 0;
     double y1Middle = 0;
     double yFMiddle = 0;
-    for(uint pt = 0; pt < NUM_SAMPLES; pt++)
+    for(uint pt = 0; pt < icount; pt++)
     {
-        uint idx = clamp<int>(pt, 0, NUM_SAMPLES - 1);
+        uint idx = clamp<int>(pt, 0, icount - 1);
         if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
         {
             continue;
@@ -811,13 +813,15 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         double   y0 = yPosCh0 * yfactor0 - ch0ZeroVolt;
         double   y1 = yPosCh1 * yfactor1 - ch1ZeroVolt;
         double   yF = channelFunction(y0, y1, wndMain.function.Type, wndMain);
-        double xPos = (double(pt) / double(NUM_SAMPLES));
+        double xPos = ( double(pt) / double(icount) );
         double    x = xPos + xposition;
         double time = x * capture * frameSize;
+
         // avg
         y0Avg += y0;
         y1Avg += y1;
         yFAvg += yF;
+
         // recalc
         y0 = yPosCh0 * yfactor0;
         y1 = yPosCh1 * yfactor1;
@@ -849,9 +853,13 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
             yFMax = yF;
         }
     }
-    y0Avg /= frameSize;
-    y1Avg /= frameSize;
-    yFAvg /= frameSize;
+    y0Avg /= count;
+    y1Avg /= count;
+    yFAvg /= count;
+    current.row[Ch0Vavg] = y0Avg;
+    current.row[Ch1Vavg] = y1Avg;
+    current.row[FunVavg] = yFAvg;
+
     y0Middle = y0Min + (y0Max - y0Min) / 2;
     y1Middle = y1Min + (y1Max - y1Min) / 2;
     yFMiddle = yFMin + (yFMax - yFMin) / 2;
@@ -870,9 +878,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     double offset0 = 0.025 * yfactor0;
     double offset1 = 0.025 * yfactor1;
     double offsetF = 0.025 * channelFunction(offset0, offset1, wndMain.function.Type, wndMain);
-    for(uint pt = 0; pt < NUM_SAMPLES; pt++)
+    for(uint pt = 0; pt < icount; pt++)
     {
-        uint idx = clamp<int>(pt, 0, NUM_SAMPLES - 1);
+        uint idx = clamp<int>(pt, 0, icount - 1);
         if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
         {
             continue;
@@ -882,7 +890,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         double   y0 = yPosCh0 * yfactor0 /*- ch0ZeroVolt*/;
         double   y1 = yPosCh1 * yfactor1 /*- ch1ZeroVolt*/;
         double   yF = channelFunction(y0, y1, wndMain.function.Type, wndMain);
-        double xPos = (double(pt) / double(NUM_SAMPLES));
+        double xPos = (double(pt) / double(icount) );
         double    x = xPos + xposition;
         double time = x * capture * frameSize;
         double   dt = time - previousTime;
@@ -1056,9 +1064,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     current.row[Ch1YT1] = capture * frameSize;
     current.row[FunYT0] = capture * frameSize;
     current.row[FunYT1] = capture * frameSize;
-    for(int pt = 0; pt < NUM_SAMPLES; pt++)
+    for(int pt = 0; pt < icount; pt++)
     {
-        uint idx = clamp<uint>(pt, 0, NUM_SAMPLES - 1);
+        uint idx = clamp<uint>(pt, 0, icount - 1);
         if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
         {
             continue;
@@ -1068,7 +1076,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         double   y0 = yPosCh0 * yfactor0 - ch0ZeroVolt;
         double   y1 = yPosCh1 * yfactor1 - ch1ZeroVolt;
         double   yF = channelFunction(y0, y1, wndMain.function.Type, wndMain);
-        double    x = (double(pt) / double(NUM_SAMPLES));
+        double    x = (double(pt) / icount);
         x = x + xposition;
         double time = x * capture * frameSize;
         ///////////////////////////////////////////////////////////////////////
@@ -1109,9 +1117,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         ///////////////////////////////////////////////////////////////////////
         if(x >= xMin && x <= xMax)
         {
-            current.row[Ch0Vavg] += y0;
-            current.row[Ch1Vavg] += y1;
-            current.row[FunVavg] += yF;
+
             current.row[Ch0Vmin] = min(y0, current.row[Ch0Vmin]);
             current.row[Ch0Vmax] = max(y0, current.row[Ch0Vmax]);
             current.row[Ch1Vmin] = min(y1, current.row[Ch1Vmin]);
@@ -1167,9 +1173,6 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     current.row[Ch0XVD] = max(current.row[Ch0XV0], current.row[Ch0XV1]) - min(current.row[Ch0XV0], current.row[Ch0XV1]);
     current.row[Ch1XVD] = max(current.row[Ch1XV0], current.row[Ch1XV1]) - min(current.row[Ch1XV0], current.row[Ch1XV1]);
     current.row[FunXVD] = max(current.row[FunXV0], current.row[FunXV1]) - min(current.row[FunXV0], current.row[FunXV1]);
-    current.row[Ch0Vavg] /= frameSize;
-    current.row[Ch1Vavg] /= frameSize;
-    current.row[FunVavg] /= frameSize;
     current.row[Ch0Vpp]    = current.row[Ch0Vmax] - current.row[Ch0Vmin];
     current.row[Ch1Vpp]    = current.row[Ch1Vmax] - current.row[Ch1Vmin];
     current.row[FunVpp]    = current.row[FunVmax] - current.row[FunVmin];
@@ -1216,7 +1219,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     if(digitalCount)
     {
         uint    count = frame.digital.getCount();
-        double xScale = double(count) / double(NUM_SAMPLES);
+        double xScale = double(count) / icount;
         for(int i = 0; i < 16; i++)
         {
             if(!indicesArray[i])
