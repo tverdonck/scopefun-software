@@ -1,1 +1,1 @@
-ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1D50", ATTR{idProduct}=="6104", MODE:="666"				 
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="6104", MODE="660", GROUP="plugdev", TAG+="uaccess"
