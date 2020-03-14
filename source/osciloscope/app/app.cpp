@@ -109,8 +109,16 @@ public:
 #endif
 
 #ifdef PLATFORM_LINUX
+
+#include <unistd.h>
+
 int main(int argc, char** argv)
 {
+    if (geteuid() != 0)
+    {
+       CORE_MESSAGE("Run program as super user!",0);
+    }
+
     // create
     create();
 
