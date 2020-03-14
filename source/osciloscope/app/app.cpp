@@ -116,7 +116,8 @@ int main(int argc, char** argv)
 {
     if (geteuid() != 0)
     {
-       CORE_MESSAGE("Run program as super user!",0);
+       coreMessage("Access denied. Run program as super user!");
+       return 0;
     }
 
     // create
