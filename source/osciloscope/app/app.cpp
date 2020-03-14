@@ -66,6 +66,11 @@ public:
             setup();
             pManager->start();
             #endif
+
+            #ifdef PLATFORM_LINUX
+               pFormat->setCurrentWorkingPath("/usr/lib/oscilloscope/");
+            #endif      
+
             // used by wxConfig
             SetAppName("Oscilloscope");
             // load localization
