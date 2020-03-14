@@ -101,15 +101,7 @@ void OsciloskopInfo::ThermalOnActivate(wxActivateEvent& event)
 void OsciloskopInfo::InfoOnClose(wxCloseEvent& event)
 {
     // TODO: Implement InfoOnClose
-    int agree = checkAgree();
-    if(!agree)
-    {
-        GetParent()->Close(true);
-    }
-    else
-    {
-        Hide();
-    }
+    Hide();
 }
 
 void OsciloskopInfo::m_textCtrlLicenseOnTextURL(wxTextUrlEvent& event)
