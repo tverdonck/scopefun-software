@@ -540,18 +540,26 @@ int ThreadApi::writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardwa
    usbSize = sizeof(SUsb);
 
    // fx2
-   fx2Size = (uint)SDL_strlen(hw->usbFirmware.asChar());
-   fx2Data.size = fx2Size;
-   SDL_memcpy(fx2Data.data.bytes, hw->usbFirmware.asChar(), fx2Size);
-   fx2Data.data.bytes[fx2Size] = 0;
+   {
+      char usbPath[1024] = { 0 };
+      int         ret = pFormat->formatPath(usbPath, 1024, hw->usbFirmware.asChar());
+      fx2Size = (uint)SDL_strlen(usbPath);
+      fx2Data.size = fx2Size;
+      SDL_memcpy(fx2Data.data.bytes, usbPath, fx2Size);
+      fx2Data.data.bytes[fx2Size] = 0;
+   }
 
    // fpga
-   char*  buffer = 0;
-   ilarge bufferSize = 0;
-   int fret = fileLoad(hw->fpgaFirmware.asChar(), &buffer, &bufferSize);
-   fpgaData.size = fpgaSize = bufferSize;
-   SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
-   pMemory->free(buffer);
+   {
+      char*  buffer = 0;
+      ilarge bufferSize = 0;
+      char fpgaPath[1024] = { 0 };
+      int         ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
+      int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
+      fpgaData.size = fpgaSize = bufferSize;
+      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+      pMemory->free(buffer);
+   }
 
    SDL_AtomicUnlock(&lock);
 
@@ -639,9 +647,11 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
    {
       SDL_AtomicLock(&lock);
 
-      fx2Size = (uint)SDL_strlen(hw->usbFirmware.asChar());
+      char fpgaPath[1024] = { 0 };
+      int         ret = pFormat->formatPath(fpgaPath, 1024, hw->usbFirmware.asChar());
+      fx2Size = (uint)SDL_strlen(fpgaPath);
       fx2Data.size = fx2Size;
-      SDL_memcpy(fx2Data.data.bytes, hw->usbFirmware.asChar(), fx2Size);
+      SDL_memcpy(fx2Data.data.bytes, fpgaPath, fx2Size);
       fx2Data.data.bytes[fx2Size] = 0;
 
       int iversion = SDL_AtomicGet(&version);
@@ -757,7 +767,12 @@ int ThreadApi::readUsbFromEEPROM(OscHardware* hw,int readsize)
          if (iversion == HARDWARE_VERSION_2)
          {
             ilarge size = readsize;
-            if(size==0) fileSize(hw->usbFirmware.asChar(), &size);
+            if (size == 0)
+            {
+               char path[1024] = { 0 };
+               int         ret = pFormat->formatPath(path, 1024, hw->usbFirmware.asChar());
+               fileSize(path, &size);
+            }
             eepromSize   = size;
             eepromOffset = 0;
          }
