@@ -353,6 +353,18 @@ double captureTimeFromEnumVersion(int enumerated, int version)
     return 0.0;
 }
 
+
+uint captureTimeMaxReceive(int enumerated, int version)
+{
+   double captureTimeMax  = 1.0;
+   double captureSamples  = captureTimeMax / captureTimeFromEnumVersion(enumerated, version);
+   double minFrameSamples = 1024.0;
+   uint    toReceiveBytes = max<uint>(minFrameSamples, captureSamples);
+   if (version == 1) toReceiveBytes *= 6;
+   if (version == 2) toReceiveBytes *= 4;
+   return toReceiveBytes;
+}
+
 ECallibrationType getCallibrationType(int enumerated)
 {
    int version = pOsciloscope->thread.getVersion();

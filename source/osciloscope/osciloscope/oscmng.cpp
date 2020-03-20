@@ -3694,6 +3694,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
         time += pTimer->getDelta(TIMER_HARDWARE);
         mbTimer += pTimer->getDelta(TIMER_HARDWARE);
 
+        int capture = SDL_AtomicGet(&pOsciloscope->threadCapture);
+
         // connected
         int isConnected = pOsciloscope->thread.isConnected();
 
@@ -3802,10 +3804,13 @@ int SDLCALL CaptureDataThreadFunction(void* data)
             else
             {
                 // toReceive
-                uint toRecevice = min<uint>(pOsciloscope->sizeHardwareCapture, frameSize - received);
+                uint toReceive  = min<uint>(pOsciloscope->sizeHardwareCapture, frameSize - received);
+                uint maxReceive = captureTimeMaxReceive(capture, version);
+                      toReceive = min<uint>(maxReceive, toReceive);
+
                 // capture
                 int transfered = 0;
-                int  ret = pOsciloscope->thread.captureFrameData( (SFrameData*)(buffer), toRecevice, &transfered, SCOPEFUN_CAPTURE_TYPE_DATA);
+                int  ret = pOsciloscope->thread.captureFrameData( (SFrameData*)(buffer), toReceive, &transfered, SCOPEFUN_CAPTURE_TYPE_DATA);
                 if(transfered > 0)
                 {
                     // samples uncompress

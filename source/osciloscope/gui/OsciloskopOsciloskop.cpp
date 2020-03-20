@@ -1006,7 +1006,7 @@ void OsciloskopOsciloskop::m_menuItemTestsOnMenuSelection(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event)
 {
    pOsciloscope->window.horizontal.Capture = captureTimeFromEnum(m_comboBoxTimeCapture->GetSelection());
-
+   SDL_AtomicSet(&pOsciloscope->threadCapture, m_comboBoxTimeCapture->GetSelection());
    if (captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
    {
       // 500 Mhz help

@@ -182,6 +182,7 @@ double captureTimeFromEnum(int enumerated);
 double captureTimeFromEnumV1(int enumerated);
 double captureTimeFromEnumV2(int enumerated);
 double captureTimeFromEnumVersion(int enumerated, int version);
+uint   captureTimeMaxReceive(int enumerated, int version);
 uint  captureTimeFromValue(float value);
 ECallibrationType getCallibrationType(int enumerated);
 ECallibrationType getCallibrationType(float value);

@@ -86,13 +86,13 @@ public:
 class CaptureFrame
 {
 public:
-    uint version;
-    uint header;
-    uint data;
-    uint packet;
-    uint frameSize;
-    uint packetStart;
-    uint packetCount;
+    ularge version;
+    ularge header;
+    ularge data;
+    ularge packet;
+    ularge frameSize;
+    ularge packetStart;
+    ularge packetCount;
 public:
     CaptureFrame()
     {
@@ -296,15 +296,15 @@ public:
         history = &historySSD;
     };
 public:
-    byte*  displayPtr;
-    uint   displaySize;
-    uint   displayRead;
-    uint   displayFrameSize;
+    byte*    displayPtr;
+    ularge   displaySize;
+    ularge   displayRead;
+    ularge   displayFrameSize;
 public:
-    byte*  rldPtr;
-    uint   rldSize;
-    uint   rldWritten;
-    uint   rldStart;
+    byte*    rldPtr;
+    ularge   rldSize;
+    ularge   rldWritten;
+    ularge   rldStart;
 public:
     CaptureBuffer(byte* display, uint displaySize, byte* rld, uint rldSize);
 public:
@@ -961,7 +961,8 @@ public:
     bool        serverActive;
     SDL_Thread* serverThread;
 public:
-   ThreadApi thread;
+   ThreadApi    thread;
+   SDL_atomic_t threadCapture;
 public:
     SDL_Thread*   pCaptureData;
     SDL_Thread*   pGenerateFrame;
