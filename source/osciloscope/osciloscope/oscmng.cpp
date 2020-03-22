@@ -3673,6 +3673,11 @@ void SendToRenderer(OsciloscopeFrame& captureFrame,
             }
         }
     }
+
+    if (SDL_AtomicGet(&pOsciloscope->captureBuffer->drawState) == DRAWSTATE_FULL)
+    {
+       SDL_AtomicSet(&pOsciloscope->captureBuffer->drawState, DRAWSTATE_NEW);
+    }
 }
 
 int SDLCALL CaptureDataThreadFunction(void* data)

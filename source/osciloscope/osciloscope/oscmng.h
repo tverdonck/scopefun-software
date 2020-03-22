@@ -277,9 +277,16 @@ public:
     void freePacketMemory();
 };
 
+#define DRAWSTATE_NEW   0
+#define DRAWSTATE_DRAW  1
+#define DRAWSTATE_FULL  2
+
 class CaptureBuffer
 {
 public:
+    SDL_atomic_t        lastFrame;
+    SDL_atomic_t        drawState;
+    SDL_atomic_t        drawFrame;
     SFrameHeader1       syncHeader1;
     SFrameHeader2       syncHeader2;
     CapturePacket       transferPacket;

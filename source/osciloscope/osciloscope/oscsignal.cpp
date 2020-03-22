@@ -553,6 +553,9 @@ CaptureBuffer::CaptureBuffer(byte* buff1, uint size1, byte* buff2, uint size2)
     rldStart         = 0;
     SDL_memset(&syncHeader1, 0, sizeof(SFrameHeader1));
     SDL_memset(&syncHeader2, 0, sizeof(SFrameHeader2));
+    SDL_AtomicSet(&lastFrame, 0);
+    SDL_AtomicSet(&drawState, DRAWSTATE_NEW);
+    SDL_AtomicSet(&drawFrame, 0);
 }
 
 void CaptureBuffer::clear()
@@ -706,13 +709,29 @@ SFrameHeader2 CaptureBuffer::getHeader2(byte* buffer, uint size)
 
 uint CaptureBuffer::uncompressNew()
 {
-    // new decoding
-    rldWritten = 0;
-    rldStart   = 0;
-    history->lock();
-    // new frame
-    CaptureFrame captureFrame;
-    captureFrame.packetStart  = history->ringPacket.getWrite();
+   // new decoding
+   rldWritten = 0;
+   rldStart = 0;
+   history->lock();
+
+   // new frame
+   CaptureFrame captureFrame;
+   captureFrame.packetStart = history->ringPacket.getWrite();
+   int nextWrite = history->ringFrame.getWrite();
+   SDL_AtomicSet(&lastFrame, nextWrite);
+   switch (SDL_AtomicGet(&drawState)) {
+   case DRAWSTATE_NEW:
+      {
+         SDL_AtomicSet(&drawState, DRAWSTATE_DRAW);
+         SDL_AtomicSet(&drawFrame, nextWrite);
+      }
+      break;
+   case DRAWSTATE_DRAW:
+      {
+         SDL_AtomicSet(&drawState, DRAWSTATE_FULL);
+      }
+      break;
+    };
     history->ringFrame.write(captureFrame);
     history->unlock();
     return 0;
@@ -788,36 +807,36 @@ uint CaptureBuffer::historyWrite(uint frameSize, uint version, uint headerSize, 
     {
         byte* buffer = &rldPtr[0];
         uint    size = rldWritten - rldStart;
-        if(size > 0)
+        if (size > 0)
         {
-            // write history
-            history->openWrite();
-            uint count = size / packet;
-            uint  left = size % packet;
-            for(uint i = 0; i < count; i++)
-            {
-                transferPacket.size = packet;
-                SDL_memcpy(&transferPacket.data[0], buffer + packet * i, packet);
-                history->writePacket(transferPacket, i == 0 && isHeader);
-            }
-            if(left > 0)
-            {
-                transferPacket.size = left;
-                SDL_memset(&transferPacket.data[0], 0, packet);
-                SDL_memcpy(&transferPacket.data[0], buffer + packet * count, left);
-                history->writePacket(transferPacket, false);
-            }
-            history->closeWrite();
-            // update frame packet data
-            uint        endIndex = history->ringFrame.getLast();
-            CaptureFrame* pFrame = history->ringFrame.peek(endIndex);
-            pFrame->packetCount += count;
-            pFrame->packetCount += min<uint>(left, 1);
-            pFrame->version   = version;
-            pFrame->header    = headerSize;
-            pFrame->data      = data;
-            pFrame->packet    = packet;
-            pFrame->frameSize = frameSize;
+           // write history
+           history->openWrite();
+           uint count = size / packet;
+           uint  left = size % packet;
+           for (uint i = 0; i < count; i++)
+           {
+              transferPacket.size = packet;
+              SDL_memcpy(&transferPacket.data[0], buffer + packet * i, packet);
+              history->writePacket(transferPacket, i == 0 && isHeader);
+           }
+           if (left > 0)
+           {
+              transferPacket.size = left;
+              SDL_memset(&transferPacket.data[0], 0, packet);
+              SDL_memcpy(&transferPacket.data[0], buffer + packet * count, left);
+              history->writePacket(transferPacket, false);
+           }
+           history->closeWrite();
+           // update frame packet data
+           uint        endIndex = SDL_AtomicGet(&lastFrame);
+           CaptureFrame* pFrame = history->ringFrame.peek(endIndex);
+           pFrame->packetCount += count;
+           pFrame->packetCount += min<uint>(left, 1);
+           pFrame->version = version;
+           pFrame->header = headerSize;
+           pFrame->data = data;
+           pFrame->packet = packet;
+           pFrame->frameSize = frameSize;
         }
     }
     // unlock
@@ -833,6 +852,7 @@ uint CaptureBuffer::historyRead(CaptureFrame captureFrame, uint version, uint he
         history->lock();
         uint    size = history->ringPacket.getSize();
         displayRead = 0;
+        SDL_memset(displayPtr, 0, min<ularge>(captureFrame.frameSize, displaySize));
         history->openRead();
         for(uint i = 0; i < captureFrame.packetCount; i++)
         {
@@ -1108,8 +1128,7 @@ uint CaptureBuffer::display(OsciloscopeFrame& frame, int version, int headerSize
 
 uint CaptureBuffer::captureFrameLast()
 {
-    uint last = history->ringFrame.getLast();
-    return last;
+   return SDL_AtomicGet(&drawFrame);
 }
 
 uint CaptureBuffer::captureFrameCount()
