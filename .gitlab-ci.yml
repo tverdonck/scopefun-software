@@ -46,8 +46,8 @@ Build-Exe-Mac:
     artifacts:
       name: "ScopeFun-Mac64"
       paths: 
-         - sfExe/*.dmg
-         - sfExe/*.sha512
+         - sfExe/*Darwin.dmg
+         - sfExe/*Darwin.dmg.sha512
       expire_in: 1 day
     allow_failure: true
     script:
