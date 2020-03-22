@@ -277,9 +277,10 @@ public:
     void freePacketMemory();
 };
 
-#define DRAWSTATE_NEW   0
-#define DRAWSTATE_DRAW  1
-#define DRAWSTATE_FULL  2
+#define DRAWSTATE_NEW  0
+#define DRAWSTATE_FILL 1
+#define DRAWSTATE_DRAW 2
+
 
 class CaptureBuffer
 {

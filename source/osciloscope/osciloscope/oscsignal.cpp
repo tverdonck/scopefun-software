@@ -554,7 +554,7 @@ CaptureBuffer::CaptureBuffer(byte* buff1, uint size1, byte* buff2, uint size2)
     SDL_memset(&syncHeader1, 0, sizeof(SFrameHeader1));
     SDL_memset(&syncHeader2, 0, sizeof(SFrameHeader2));
     SDL_AtomicSet(&lastFrame, 0);
-    SDL_AtomicSet(&drawState, DRAWSTATE_NEW);
+    SDL_AtomicSet(&drawState, DRAWSTATE_DRAW);
     SDL_AtomicSet(&drawFrame, 0);
 }
 
@@ -712,28 +712,20 @@ uint CaptureBuffer::uncompressNew()
    // new decoding
    rldWritten = 0;
    rldStart = 0;
-   history->lock();
 
-   // new frame
-   CaptureFrame captureFrame;
-   captureFrame.packetStart = history->ringPacket.getWrite();
-   int nextWrite = history->ringFrame.getWrite();
-   SDL_AtomicSet(&lastFrame, nextWrite);
-   switch (SDL_AtomicGet(&drawState)) {
-   case DRAWSTATE_NEW:
-      {
-         SDL_AtomicSet(&drawState, DRAWSTATE_DRAW);
-         SDL_AtomicSet(&drawFrame, nextWrite);
-      }
-      break;
-   case DRAWSTATE_DRAW:
-      {
-         SDL_AtomicSet(&drawState, DRAWSTATE_FULL);
-      }
-      break;
-    };
-    history->ringFrame.write(captureFrame);
+   while ( SDL_AtomicGet(&drawState) != DRAWSTATE_DRAW )
+         SDL_Delay(1);
+
+   history->lock();
+      CaptureFrame captureFrame;
+      captureFrame.packetStart = history->ringPacket.getWrite();
+      int nextWrite = history->ringFrame.getWrite();
+      SDL_AtomicSet(&lastFrame, nextWrite);
+      SDL_AtomicSet(&drawFrame, nextWrite);
+      SDL_AtomicSet(&drawState, DRAWSTATE_FILL);
+      history->ringFrame.write(captureFrame);
     history->unlock();
+
     return 0;
 }
 
@@ -837,6 +829,7 @@ uint CaptureBuffer::historyWrite(uint frameSize, uint version, uint headerSize, 
            pFrame->data = data;
            pFrame->packet = packet;
            pFrame->frameSize = frameSize;
+           SDL_AtomicSet(&drawState, DRAWSTATE_FILL);
         }
     }
     // unlock

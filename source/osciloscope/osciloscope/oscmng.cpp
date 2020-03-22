@@ -2477,6 +2477,9 @@ bool OsciloscopeManager::onApplicationIdle()
                 pTimer->deltaTime(TIMER_RENDER);
                 // render
                 renderMain(renderId);
+                if( SDL_AtomicGet(&pOsciloscope->captureBuffer->drawState) == DRAWSTATE_FILL)
+                  SDL_AtomicSet(&pOsciloscope->captureBuffer->drawState, DRAWSTATE_DRAW);
+
                 // measure
                 window.measure.data.pick = measureData[renderId].pick;
                 window.measure.data.history[MEASURE_HISTORY_CURRENT] = measureData[renderId].history[MEASURE_HISTORY_CURRENT];
@@ -3672,11 +3675,6 @@ void SendToRenderer(OsciloscopeFrame& captureFrame,
                 SDL_Delay(delay);
             }
         }
-    }
-
-    if (SDL_AtomicGet(&pOsciloscope->captureBuffer->drawState) == DRAWSTATE_FULL)
-    {
-       SDL_AtomicSet(&pOsciloscope->captureBuffer->drawState, DRAWSTATE_NEW);
     }
 }
 
