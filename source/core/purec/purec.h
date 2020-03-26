@@ -19,16 +19,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __PUREC__
-#define __PUREC__
+    #define __PUREC__
 
-int            cItoA(int value, char* buffer, int base);
-int            cMemSet(char* dst, char val, int size);
-int            cMemCpy(char* dst, char* src, int size);
-void*          cMalloc(int size);
-int            cFree(char* ptr);
-int            cSleep(int ms);
-unsigned short cSwap16(unsigned short* value);
-unsigned int   cSwap32(unsigned int* value);
+    int            cItoA(int value, char* buffer, int base);
+    int            cMemSet(char* dst, char val, int size);
+    int            cMemCpy(char* dst, char* src, int size);
+    void*          cMalloc(int size);
+    int            cFree(char* ptr);
+    int            cSleep(int ms);
+    unsigned short cSwap16(unsigned short* value);
+    unsigned int   cSwap32(unsigned int* value);
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

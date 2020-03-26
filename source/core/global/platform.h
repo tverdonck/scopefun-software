@@ -19,35 +19,35 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __CORE_PLATFORM__
-#define __CORE_PLATFORM__
+    #define __CORE_PLATFORM__
 
-////////////////////////////////////////////////////////////////////////////////
-// gcc
-////////////////////////////////////////////////////////////////////////////////
-#if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC) || defined(PLATFORM_MINGW)
+    ////////////////////////////////////////////////////////////////////////////////
+    // gcc
+    ////////////////////////////////////////////////////////////////////////////////
+    #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC) || defined(PLATFORM_MINGW)
 
-    #define INLINE                  __inline__
-    #define FORCE_INLINE            __inline__
-    #define CLASS_CDECL             __attribute__ ((__cdecl__))
-    #define CLASS_ALIGN(size)       __attribute__ ((aligned(size)))
+        #define INLINE                  __inline__
+        #define FORCE_INLINE            __inline__
+        #define CLASS_CDECL             __attribute__ ((__cdecl__))
+        #define CLASS_ALIGN(size)       __attribute__ ((aligned(size)))
 
-#endif
+    #endif
 
-////////////////////////////////////////////////////////////////////////////////
-// visual studio c++
-////////////////////////////////////////////////////////////////////////////////
-#ifdef PLATFORM_WIN
+    ////////////////////////////////////////////////////////////////////////////////
+    // visual studio c++
+    ////////////////////////////////////////////////////////////////////////////////
+    #ifdef PLATFORM_WIN
 
-    #define INLINE                  __inline__
-    #define FORCE_INLINE            __forceinline
-    #define CLASS_CDECL              __cdecl
-    #define CLASS_ALIGN(size)       __declspec(align(size))
+        #define INLINE                  __inline__
+        #define FORCE_INLINE            __forceinline
+        #define CLASS_CDECL              __cdecl
+        #define CLASS_ALIGN(size)       __declspec(align(size))
 
-    #pragma warning( disable : 4200 )
-    #pragma warning( disable : 4244 )
-    #pragma warning( disable : 4800 )
+        #pragma warning( disable : 4200 )
+        #pragma warning( disable : 4244 )
+        #pragma warning( disable : 4800 )
 
-#endif
+    #endif
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

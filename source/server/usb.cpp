@@ -55,7 +55,7 @@ int SDLCALL CaptureThreadFunction(void* data)
     pTimer->init(TIMER_CAPTURE);
     double      timer  = 0;
     SDL_MemoryBarrierAcquire();
-    while(SDL_AtomicGet(&pServer->serverThreadActive)>0)
+    while(SDL_AtomicGet(&pServer->serverThreadActive) > 0)
     {
         SDL_Delay(1);
         pTimer->deltaTime(TIMER_CAPTURE);
@@ -67,13 +67,12 @@ int SDLCALL CaptureThreadFunction(void* data)
         int ret = sfHardwareIsOpened(&pServer->ctx, &opened);
         if((opened && uploaded && configured) || simulation)
         {
-            Array<ScopeFunClient*,SCOPEFUN_MAX_CLIENT> request;
-
+            Array<ScopeFunClient*, SCOPEFUN_MAX_CLIENT> request;
             // capture frame ?
             bool requestFrame = false;
             while(!requestFrame)
             {
-                Array<ScopeFunClient*,SCOPEFUN_MAX_CLIENT> active;
+                Array<ScopeFunClient*, SCOPEFUN_MAX_CLIENT> active;
                 for(int i = 0; i < pServer->client.getCount(); i++)
                 {
                     ScopeFunClient* pClient = pServer->client[i];
@@ -82,37 +81,36 @@ int SDLCALL CaptureThreadFunction(void* data)
                         active.pushBack(pClient);
                     }
                 }
-                Array<ScopeFunClient*,SCOPEFUN_MAX_CLIENT> requestHeader;
+                Array<ScopeFunClient*, SCOPEFUN_MAX_CLIENT> requestHeader;
                 for(int i = 0; i < active.getCount(); i++)
                 {
                     ScopeFunClient* pClient = active[i];
-                    if( SDL_AtomicGet(&pClient->captureType) == SCOPEFUN_CAPTURE_TYPE_HEADER )
+                    if(SDL_AtomicGet(&pClient->captureType) == SCOPEFUN_CAPTURE_TYPE_HEADER)
                     {
                         requestHeader.pushBack(pClient);
                     }
                 }
-                Array<ScopeFunClient*,SCOPEFUN_MAX_CLIENT> requestData;
+                Array<ScopeFunClient*, SCOPEFUN_MAX_CLIENT> requestData;
                 for(int i = 0; i < active.getCount(); i++)
                 {
                     ScopeFunClient* pClient = active[i];
-                    if( SDL_AtomicGet(&pClient->captureType) == SCOPEFUN_CAPTURE_TYPE_DATA )
+                    if(SDL_AtomicGet(&pClient->captureType) == SCOPEFUN_CAPTURE_TYPE_DATA)
                     {
                         requestData.pushBack(pClient);
                     }
                 }
-
                 request.clear();
-                if( active.getCount() > 0 )
+                if(active.getCount() > 0)
                 {
                     ScopeFunClient* pFirst = active[0];
-                    if( SDL_AtomicGet(&pFirst->captureType) == SCOPEFUN_CAPTURE_TYPE_HEADER )
+                    if(SDL_AtomicGet(&pFirst->captureType) == SCOPEFUN_CAPTURE_TYPE_HEADER)
                     {
                         for(int i = 0; i < requestHeader.getCount(); i++)
                         {
                             request.pushBack(requestHeader[i]);
                         }
                     }
-                    if( SDL_AtomicGet(&pFirst->captureType) == SCOPEFUN_CAPTURE_TYPE_DATA )
+                    if(SDL_AtomicGet(&pFirst->captureType) == SCOPEFUN_CAPTURE_TYPE_DATA)
                     {
                         for(int i = 0; i < requestData.getCount(); i++)
                         {
@@ -121,79 +119,68 @@ int SDLCALL CaptureThreadFunction(void* data)
                     }
                 }
                 if(request.getCount() > 0)
-                    requestFrame = true;
+                { requestFrame = true; }
                 else
                 {
                     SDL_Delay(10);
                 }
             }
-
             // max client memory
             ularge maxClientMemory = pServer->maxMemory;
             for(int i = 0; i < request.getCount(); i++)
             {
                 ScopeFunClient* pClient = request[i];
-                maxClientMemory = min<ularge>(maxClientMemory,pClient->maxMemory);
+                maxClientMemory = min<ularge>(maxClientMemory, pClient->maxMemory);
             }
-
             // bytesToReceive
             ularge bytesToReceive = maxClientMemory;
             for(int i = 0; i < request.getCount(); i++)
             {
                 ScopeFunClient* pClient = request[i];
-                bytesToReceive = min<ularge>( bytesToReceive, SDL_AtomicGet(&pClient->bytes) );
+                bytesToReceive = min<ularge>(bytesToReceive, SDL_AtomicGet(&pClient->bytes));
             }
-
             // simulate ?
-            if( bytesToReceive > 0 )
+            if(bytesToReceive > 0)
             {
                 if(SDL_AtomicGet(&pServer->updateSimulation) > 0)
                 {
                     sfSimulate(&pServer->ctx, timer);
                 }
             }
-
             // just in case
-            if( bytesToReceive == 0 )
+            if(bytesToReceive == 0)
             {
                 // debug
                 FORMAT_BUFFER();
-                FORMAT("bytesToReceive was zero",0);
+                FORMAT("bytesToReceive was zero", 0);
                 errorMessage(formatBuffer);
                 SDL_Delay(100);
                 continue;
             }
-
             // usb
             int transfered = 0;
             int ret = sfHardwareCapture(&pServer->ctx, (SFrameData*)pServer->captureBuffer, bytesToReceive, &transfered, SCOPEFUN_CAPTURE_TYPE_NONE);
-
             // debug
             FORMAT_BUFFER();
-            FORMAT("sfHardwareCapture: toReceive %d transfered %d",bytesToReceive, transfered);
+            FORMAT("sfHardwareCapture: toReceive %d transfered %d", bytesToReceive, transfered);
             errorMessage(formatBuffer);
-
             // copy buffers to send data over network
             for(int i = 0; i < request.getCount(); i++)
             {
                 ScopeFunClient* pClient = request[i];
-
                 // lock
                 while(!pClient->sync.producerLock())
                 {
                     SDL_Delay(1);
                 }
-
                 // copy frame
                 if(transfered > 0)
                 {
                     SDL_AtomicSet(&pClient->transfered, transfered);
                     SDL_memcpy((void*)&pClient->buffer->data.bytes[0], (void*) & ((SFrameData*)pServer->captureBuffer)->data.bytes[0], transfered);
                 }
-
                 // captureType
                 SDL_AtomicSet(&pClient->captureType, SCOPEFUN_CAPTURE_TYPE_NONE);
-
                 // unlock
                 while(!pClient->sync.producerUnlock())
                 {

@@ -665,10 +665,10 @@ typedef struct
 
 typedef struct
 {
-   messageHeader           header;
-   uint                    size;
-   uint                    address;
-   uint                    reserved;
+    messageHeader           header;
+    uint                    size;
+    uint                    address;
+    uint                    reserved;
 } csHardwareEepromReadFirmwareID;
 
 typedef struct
@@ -807,8 +807,8 @@ typedef struct
 
 typedef struct
 {
-   messageHeader           header;
-   SEeprom                 eeprom;
+    messageHeader           header;
+    SEeprom                 eeprom;
 } scHardwareEepromReadFirmwareID;
 
 typedef struct

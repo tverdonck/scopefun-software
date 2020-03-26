@@ -118,11 +118,11 @@ ServerManager::ServerManager()
 
 int ServerManager::startServer(const char* ip, int portNumber)
 {
-    if(SDL_AtomicGet(&serverThreadActive)==0)
+    if(SDL_AtomicGet(&serverThreadActive) == 0)
     {
         ip   = ip;
         port = portNumber;
-        SDL_AtomicSet(&serverThreadActive,1);
+        SDL_AtomicSet(&serverThreadActive, 1);
         serverThread = (SDL_Thread*)createServer(ip, port);
     }
     return 0;
@@ -165,7 +165,7 @@ int ServerManager::killClient(int id)
 
 int ServerManager::stopServer()
 {
-    if(SDL_AtomicGet(&serverThreadActive)>0)
+    if(SDL_AtomicGet(&serverThreadActive) > 0)
     {
         for(int i = 0; i < client.getCount(); i++)
         {
@@ -174,7 +174,7 @@ int ServerManager::stopServer()
                 client[i]->stop(false);
             }
         }
-        SDL_AtomicSet(&serverThreadActive,0);
+        SDL_AtomicSet(&serverThreadActive, 0);
         serverThread = 0;
     }
     return 0;
@@ -189,7 +189,7 @@ int ServerManager::init()
     serverLockApi = 0;
     serverLockMsg = 0;
     serverThread = 0;
-    SDL_AtomicSet(&serverThreadActive,0);
+    SDL_AtomicSet(&serverThreadActive, 0);
     // usb
     usbThreadActive = false;
     usbThread = 0;

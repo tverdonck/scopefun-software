@@ -200,24 +200,24 @@ int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size,
 
 int usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
 {
-   int transfered = 0;
-   if (usbFxxIsConnected(ctx))
-   {
-      // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
-      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
-            0xC0,
-            0xB0,
-            (readadress >> 16) & 0xffff,
-            (readadress) & 0xffff,
-            buffer,
-            size,
-            100000);
-      if (read == size)
-      {
-         return PUREUSB_SUCCESS;
-      }
-   }
-   return PUREUSB_FAILURE;
+    int transfered = 0;
+    if(usbFxxIsConnected(ctx))
+    {
+        // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
+        int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+                                           0xC0,
+                                           0xB0,
+                                           (readadress >> 16) & 0xffff,
+                                           (readadress) & 0xffff,
+                                           buffer,
+                                           size,
+                                           100000);
+        if(read == size)
+        {
+            return PUREUSB_SUCCESS;
+        }
+    }
+    return PUREUSB_FAILURE;
 }
 int usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
 {
@@ -229,26 +229,26 @@ int usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int reada
         int count  = size / packet;
         int left   = size % packet;
         int read   = 0;
-        for (int i = 0; i < count; i++)
+        for(int i = 0; i < count; i++)
         {
-           read += libusb_control_transfer((libusb_device_handle*)ctx->device,
-              0xC0,
-              0xBB,
-              (readadress >> 16) & 0xffff,
-              (readadress) & 0xffff,
-              buffer + i * packet,
-              packet,
-              100000);
-           readadress += packet;
+            read += libusb_control_transfer((libusb_device_handle*)ctx->device,
+                                            0xC0,
+                                            0xBB,
+                                            (readadress >> 16) & 0xffff,
+                                            (readadress) & 0xffff,
+                                            buffer + i * packet,
+                                            packet,
+                                            100000);
+            readadress += packet;
         }
         read += libusb_control_transfer((libusb_device_handle*)ctx->device,
-           0xC0,
-           0xBB,
-           (readadress >> 16) & 0xffff,
-           (readadress) & 0xffff,
-           buffer + count * packet,
-           left,
-           100000);
+                                        0xC0,
+                                        0xBB,
+                                        (readadress >> 16) & 0xffff,
+                                        (readadress) & 0xffff,
+                                        buffer + count * packet,
+                                        left,
+                                        100000);
         if(read == size)
         {
             return PUREUSB_SUCCESS;
@@ -300,9 +300,9 @@ int usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writ
         for(int i = 0; i < loop; i++)
         {
             ret += writeDataEeprom(ctx,
-                                      writeadress + (chunk * i),
-                                      buffer + (chunk * i),
-                                      chunk);
+                                   writeadress + (chunk * i),
+                                   buffer + (chunk * i),
+                                   chunk);
         }
         ret += writeDataEeprom(ctx,
                                writeadress + (chunk * loop),
@@ -318,72 +318,72 @@ int usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writ
 
 int usbFx3WriteLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int writeadress)
 {
-   if (usbFxxIsConnected(ctx))
-   {
-      unsigned short hi = 8;
-      unsigned short lo = writeadress & 0x00ff;
-      int ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
-         LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
-         0xBA,
-         hi,
-         lo,
-         buffer,
-         size,
-         10000);
-      return ret == size ? 0 : 1;
-      if (ret == 0)
-      {
-         return PUREUSB_SUCCESS;
-      }
-   }
-   return PUREUSB_FAILURE;
+    if(usbFxxIsConnected(ctx))
+    {
+        unsigned short hi = 8;
+        unsigned short lo = writeadress & 0x00ff;
+        int ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
+                                          LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
+                                          0xBA,
+                                          hi,
+                                          lo,
+                                          buffer,
+                                          size,
+                                          10000);
+        return ret == size ? 0 : 1;
+        if(ret == 0)
+        {
+            return PUREUSB_SUCCESS;
+        }
+    }
+    return PUREUSB_FAILURE;
 }
 
 int usbFx3ReadLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
 {
-   int transfered = 0;
-   if (usbFxxIsConnected(ctx))
-   {
-      unsigned short hi = 8;
-      unsigned short lo = readadress & 0x00ff;
-      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
-         0xC0,
-         0xBB,
-         hi,
-         lo,
-         buffer,
-         size,
-         100000);
-      if (read == size)
-      {
-         return PUREUSB_SUCCESS;
-      }
-   }
-   return PUREUSB_FAILURE;
+    int transfered = 0;
+    if(usbFxxIsConnected(ctx))
+    {
+        unsigned short hi = 8;
+        unsigned short lo = readadress & 0x00ff;
+        int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+                                           0xC0,
+                                           0xBB,
+                                           hi,
+                                           lo,
+                                           buffer,
+                                           size,
+                                           100000);
+        if(read == size)
+        {
+            return PUREUSB_SUCCESS;
+        }
+    }
+    return PUREUSB_FAILURE;
 }
 
 int usbFx3LockLockableEEPROM(UsbContext* ctx)
 {
-   int transfered = 0;
-   if (usbFxxIsConnected(ctx))
-   {
-      unsigned short hi = 8;
-      unsigned short lo = 0x400;
-      char byte = 0x2;
-      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
-         LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
-         0xBA,
-         hi,
-         lo,
-         &byte,
-         1,
-         100000);
-      if (read == 1)
-      {
-         return PUREUSB_SUCCESS;
-      }
-   }
-   return PUREUSB_FAILURE;
+    int transfered = 0;
+    if(usbFxxIsConnected(ctx))
+    {
+        unsigned short hi = 8;
+        unsigned short lo = 0x400;
+        char byte = 0x2;
+        int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+                                           LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT | LIBUSB_RECIPIENT_DEVICE,
+                                           0xBA,
+                                           hi,
+                                           lo,
+                                           &byte,
+                                           1,
+                                           100000);
+        if(read == 1)
+        {
+            return PUREUSB_SUCCESS;
+        }
+    }
+    return PUREUSB_FAILURE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -611,7 +611,7 @@ int usbFxxTransferDataOut(UsbContext* ctx, int endPoint, char* src, int size, in
     return PUREUSB_FAILURE;
 }
 
-void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId,char serialId)
+void usbFxxGuidVidPid(UsbContext* ctx, struct UsbGuid guid, int vendorId, int productId, char serialId)
 {
     ctx->guid      = guid;
     ctx->vendorId  = vendorId;
@@ -745,7 +745,6 @@ int usbFxxOpen(UsbContext* ctx, usbDevice* device)
     int speed = libusb_get_device_speed((libusb_device*)device);
     // interface
     usbFxxClaimInterface(ctx, 0);
-
     return PUREUSB_SUCCESS;
 }
 

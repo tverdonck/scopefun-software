@@ -71,14 +71,14 @@ int fileLoad(const char* fileName, char** buffer, ilarge* bufferSize)
 
 int fileSize(const char* fileName, ilarge* bufferSize)
 {
-   SDL_RWops* ctx = SDL_RWFromFile(fileName, "rb");
-   if (!ctx)
-   {
-      return 1;
-   }
-   *bufferSize = SDL_RWsize(ctx);
-   SDL_RWclose(ctx);
-   return 0;
+    SDL_RWops* ctx = SDL_RWFromFile(fileName, "rb");
+    if(!ctx)
+    {
+        return 1;
+    }
+    *bufferSize = SDL_RWsize(ctx);
+    SDL_RWclose(ctx);
+    return 0;
 }
 
 int fileLoadPtr(const char* fileName, char* buffer, ilarge* bufferSize)
@@ -88,7 +88,7 @@ int fileLoadPtr(const char* fileName, char* buffer, ilarge* bufferSize)
     {
         return 1;
     }
-    *bufferSize = min<ilarge>( *bufferSize, (ilarge)SDL_RWsize(ctx) );
+    *bufferSize = min<ilarge>(*bufferSize, (ilarge)SDL_RWsize(ctx));
     SDL_RWread(ctx, buffer, 1, *bufferSize);
     SDL_RWclose(ctx);
     return 0;

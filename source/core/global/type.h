@@ -19,15 +19,15 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __TYPE__
-#define __TYPE__
+    #define __TYPE__
 
-typedef unsigned char      byte;
-typedef short              ishort;
-typedef unsigned short     ushort;
-typedef int                iint;
-typedef unsigned int       uint;
-typedef long long          ilarge;
-typedef unsigned long long ularge;
+    typedef unsigned char      byte;
+    typedef short              ishort;
+    typedef unsigned short     ushort;
+    typedef int                iint;
+    typedef unsigned int       uint;
+    typedef long long          ilarge;
+    typedef unsigned long long ularge;
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

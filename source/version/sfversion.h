@@ -1,0 +1,5 @@
+#define EXE_VERSION_MAJOR       "2"
+#define EXE_VERSION_MINOR       "0"
+#define EXE_VERSION_MICRO       "0"
+#define EXE_VERSION_TIMESTAMP   "23:44 26-03-2020"
+#define EXE_VERSION_TYPE        "not for public release"

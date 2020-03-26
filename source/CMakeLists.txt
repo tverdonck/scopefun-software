@@ -1,22 +1,53 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required(VERSION 3.15)
 
-# include and libs
-include( ${CMAKE_SOURCE_DIR}/source/sfLibs.cmake   )
-
-# include
-include_directories("${CMAKE_SOURCE_DIR}/source" "${SCOPEFUN_LIB_INCLUDE_USB}" "${SCOPEFUN_LIB_INCLUDE_USB_EZ}" "${SCOPEFUN_LIB_INCLUDE_SDL2}" "${SCOPEFUN_LIB_INCLUDE_WX_SETUP}" "${SCOPEFUN_LIB_INCLUDE_WX}" "${SCOPEFUN_LIB_INCLUDE_CJSON}" "${SCOPEFUN_LIB_INCLUDE_KISSFFT}" "${SCOPEFUN_LIB_INCLUDE_GLEW}" "${SCOPEFUN_LIB_INCLUDE_PYTHON}" "${SCOPEFUN_LIB_INCLUDE_PYTHON_PC}")
-
-# resource
-if(SCOPEFUN_WINDOWS)
-execute_process(
-    COMMAND windres 	-I ${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.4/include -J rc -O coff -i ${CMAKE_SOURCE_DIR}/source/osciloscope/rc/osc.rc -o ${CMAKE_SOURCE_DIR}/source/osciloscope/rc/osc.res
-    WORKING_DIRECTORY  ${CMAKE_SOURCE_DIR}/source/osciloscope/rc/
-)        
-endif(SCOPEFUN_WINDOWS)
-
+#--------------------------------------------------------------------------------
 # version
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/source/sfversion.h.in ${CMAKE_SOURCE_DIR}/source/sfversion.h @ONLY)
+#--------------------------------------------------------------------------------
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/source/version/sfversion.h.in ${CMAKE_SOURCE_DIR}/source/version/sfversion.h @ONLY)
 
+#--------------------------------------------------------------------------------
+# cpp files
+#--------------------------------------------------------------------------------
+file(
+    GLOB_RECURSE HEADERS_SOURCE
+    LIST_DIRECTORIES false
+    "*.h*"
+)
+
+file(
+    GLOB_RECURSE FILES_CORE
+    LIST_DIRECTORIES false
+    "core/*.c*"
+)
+
+file(
+    GLOB_RECURSE FILES_SCOPEFUN
+    LIST_DIRECTORIES false
+	"ScopeFun/*.c*"
+)
+
+set( FILES_LIB 
+"${CMAKE_SOURCE_DIR}/lib/cJSON/cJSON.c"
+"${CMAKE_SOURCE_DIR}/lib/glew-1.13.0/src/glew.c"
+"${CMAKE_SOURCE_DIR}/lib/kiss_fft130/kiss_fft.c"
+"${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/examples/ezusb.c" )
+
+set( FILES_API "${CMAKE_SOURCE_DIR}/source/api/scopefun.c" )
+
+set( FILES_RES "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm96.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm512.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm64.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm256.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm16.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm32.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm128.c"
+			   "${CMAKE_SOURCE_DIR}/source/scopefun/rc/dpi.manifest"
+			   "${SF_DATA}"
+			   "${SF_LOCALE}" )
+
+#--------------------------------------------------------------------------------
+# executable
+#--------------------------------------------------------------------------------
 if(SCOPEFUN_WINDOWS)
 	set( SCOPEFUN_EXE_TYPE WIN32 )
 endif()
@@ -26,80 +57,221 @@ endif()
 if(SCOPEFUN_LINUX)
 	set( SCOPEFUN_EXE_TYPE "" )
 endif()
+if( SCOPEFUN_VISUALSTUDIO)
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${HEADERS_SOURCE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_RES} )
+else()
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_RES} )
+endif()
+					
+#--------------------------------------------------------------------------------
+# groups
+#--------------------------------------------------------------------------------				
+source_group("Core"     FILES ${FILES_CORE})
+source_group("ScopeFun" FILES ${FILES_SCOPEFUN})
+source_group("Lib"      FILES ${FILES_LIB})
+source_group("Res"      FILES ${FILES_RES})
+source_group("Api"      FILES ${FILES_API})
+source_group("Header"   FILES ${HEADERS_SOURCE})
 
+#--------------------------------------------------------------------------------
 # include
-if (${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
-	include( ${CMAKE_SOURCE_DIR}/source/sfApi.cmake    )
+#--------------------------------------------------------------------------------
+if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Debug" )
+	set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswud )
 endif()
-include( ${CMAKE_SOURCE_DIR}/source/sfServer.cmake )
-include( ${CMAKE_SOURCE_DIR}/source/sfScope.cmake  )
+if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Release" )
+	set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswu )
+endif()
+set(SCOPEFUN_INCLUDE_WX        "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.1.3/include"  CACHE PATH "include fodler for wxWidgets library" FORCE)
+set(SCOPEFUN_INCLUDE_USB       "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/libusb"     CACHE PATH "include folder for libUsb library" FORCE)
+set(SCOPEFUN_INCLUDE_USB_EX    "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/examples"   CACHE PATH "include folder for ezusb load library" FORCE)
+set(SCOPEFUN_INCLUDE_SDL2      "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.12/include"      CACHE PATH "include fodler for SDL2 library " FORCE)
+set(SCOPEFUN_INCLUDE_CJSON     "${CMAKE_SOURCE_DIR}/lib/cJSON"                    CACHE PATH "include folder for cjson" FORCE)
+set(SCOPEFUN_INCLUDE_KISSFFT   "${CMAKE_SOURCE_DIR}/lib/kissfft130"               CACHE PATH "include folder for kissfft" FORCE)
+set(SCOPEFUN_INCLUDE_GLEW      "${CMAKE_SOURCE_DIR}/lib/glew-1.13.0/include"      CACHE PATH "include folder for glew" FORCE)
 
-# license helper
-if(SCOPEFUN_LICENSE_HELPER AND SCOPEFUN_WINDOWS)
-	add_executable( sfLicense WIN32 "${CMAKE_SOURCE_DIR}/source/license/source.cpp" )
-	set_target_properties(sfLicense PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin" )
+target_include_directories(
+    ScopeFun
+    PUBLIC
+	${CMAKE_SOURCE_DIR}/source
+	${SCOPEFUN_INCLUDE_USB}
+	${SCOPEFUN_INCLUDE_USB_EX}
+	${SCOPEFUN_INCLUDE_SDL2}	
+	${SCOPEFUN_INCLUDE_WX}
+	${SCOPEFUN_INCLUDE_WX_SETUP}
+	${SCOPEFUN_INCLUDE_CJSON} 
+	${SCOPEFUN_INCLUDE_KISSFFT} 
+	${SCOPEFUN_INCLUDE_GLEW}
+)
+
+#--------------------------------------------------------------------------------
+# output
+#--------------------------------------------------------------------------------
+set_target_properties( ScopeFun PROPERTIES OUTPUT_NAME "${SCOPEFUN_EXE_NAME}" )
+
+#--------------------------------------------------------------------------------
+# warnings
+#--------------------------------------------------------------------------------
+# target_compile_options(ScopeFun PRIVATE -Wall)
+# target_compile_options(ScopeFun PRIVATE -WX)
+	
+#--------------------------------------------------------------------------------
+# link
+#--------------------------------------------------------------------------------
+if( SCOPEFUN_VISUALSTUDIO )
+	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb-1.0.lib )
+else()
+	 set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${CMAKE_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
+endif()
+list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
+list( APPEND SCOPEFUN_LIB_WX adv base core aui gl html media net propgrid qa ribbon richtext stc webview xml xrc wxexpat wxjpeg wxpng wxregex wxscintilla wxtiff wxzlib )
+if(SCOPEFUN_WINDOWS)
+	if( SCOPEFUN_VISUALSTUDIO )
+		target_link_libraries( ScopeFun  
+			# libs
+			${SCOPEFUN_LIB_USB} 
+			${SCOPEFUN_LIB_SDL2} 
+			${SCOPEFUN_LIB_WX} 
+			# system
+			opengl32.lib 
+			winmm.lib 
+			ole32.lib 
+			imm32.lib 
+			version.lib 
+			uuid.lib 
+			oleaut32.lib 
+			comctl32.lib 
+			winspool.lib 
+			ws2_32.lib 
+			wsock32.lib 
+			setupapi.lib 
+			hid.lib 
+			Rpcrt4.lib 
+			# res
+			${CMAKE_SOURCE_DIR}/source/scopefun/rc/osc.res
+		)
+	else()
+		target_link_libraries(SCOPEFUN_LIBS
+		# mingw
+		mingw32.a
+		# libs
+		${SCOPEFUN_LIB_USB}
+		${SCOPEFUN_LIB_SDL2}
+		${SCOPEFUN_LIB_WX}
+		# system
+		opengl32.a 
+		winmm.a 
+		ole32.a 
+		imm32.a 
+		version.a 
+		uuid.a 
+		oleaut32.a 
+		comctl32.a 
+		winspool.a 
+		ws2_32.a 
+		wsock32.a 
+		setupapi.a 
+		hid.a 
+		# res
+		${CMAKE_SOURCE_DIR}/source/scopefun/rc/osc.res
+		)
+	endif()
+endif()
+if(SCOPEFUN_MACOSX)
+	target_link_libraries(SCOPEFUN_LIBS 
+		# system
+		iconv.a
+		Z.a
+		# libs
+		${SCOPEFUN_LIB_USB}
+		${SCOPEFUN_LIB_SDL2}
+		${SCOPEFUN_LIB_WX}
+		# frameworks
+		"-framework CoreFoundation" 
+		"-framework AudioUnit" 
+		"-framework CoreAudioKit" 
+		"-framework AudioToolbox" 
+		"-framework ForceFeedback" 
+		"-framework IOKit" 
+		"-framework Carbon" 
+		"-framework Cocoa" 
+		"-framework CoreAudio" 
+		"-framework CoreVideo" 
+		"-framework WebKit" 
+		"-framework OpenGL" 
+		"-framework Metal" 
+	)
+endif()
+if(SCOPEFUN_LINUX)
+	target_link_libraries(SCOPEFUN_LIBS
+		# libs
+		${SCOPEFUN_LIB_USB} 
+		${SCOPEFUN_LIB_SDL2} 
+		${SCOPEFUN_LIB_WX} 
+		# system
+		dl 
+		X11 
+		Xext 
+		SM 
+		gtk-3 
+		gdk-3 
+		pango-1.0 
+		cairo 
+		pangocairo-1.0 
+		gdk_pixbuf-2.0 
+		gobject-2.0 
+		glib-2.0 
+		z 
+		m 
+		expat 
+		atk-1.0 
+		gio-2.0 
+		gthread-2.0 
+		pthread 
+		png 
+		GL 
+		udev 
+		Xxf86vm 
+	)
 endif()
 
-# common defines
-add_definitions( 
--D__WX__ 
--D_FILE_OFFSET_BITS=64 
--D_LARGE_FILES
--DwxUSE_UNICODE=1
--DwxUSE_UNICODE_UTF8=0
--DwxUSE_UNICODE_WCHAR=1
--DSDL_MAIN_HANDLED
--DGLEW_STATIC
--DGLEW_NO_GLU
--DDBL_EPSILON=0.0000000000001
--DUSE_LOCKS=1
--DUSE_DL_PREFIX
--DwxUSE_COMBOCTRL=1
--DwxUSE_GLOBAL_MEMORY_OPERATORS=0 )
-
-# debug | release
-if (${CMAKE_BUILD_TYPE} MATCHES "^[Rr]elease")
+#--------------------------------------------------------------------------------
+# defines
+#--------------------------------------------------------------------------------
+if (${SCOPEFUN_BUILD_TYPE} MATCHES "Release")
 	 add_definitions(-DNDEBUG)
 endif()
-if (${CMAKE_BUILD_TYPE} MATCHES "^[Dd]ebug")
+if (${SCOPEFUN_BUILD_TYPE} MATCHES "Debug")
    	 add_definitions(-D_DEBUG)
 endif()
-
-# WINDOWS
+add_definitions(-D__WX__)
+add_definitions(-DwxUSE_UNICODE=1)
+add_definitions(-DwxUSE_UNICODE_UTF8=0)
+add_definitions(-DwxUSE_UNICODE_WCHAR=1)
+add_definitions(-DwxUSE_COMBOCTRL=1)
+add_definitions(-DwxUSE_GLOBAL_MEMORY_OPERATORS=0) 
+add_definitions(-DSDL_MAIN_HANDLED)
+add_definitions(-DGLEW_STATIC)
+add_definitions(-DGLEW_NO_GLU)
+add_definitions(-DDBL_EPSILON=0.0000000000001)
+add_definitions(-DUSE_LOCKS=1)
+add_definitions(-DUSE_DL_PREFIX)
+add_definitions(-D_FILE_OFFSET_BITS=64) 
+add_definitions(-D_LARGE_FILES)
 if(SCOPEFUN_WINDOWS)
-if( SCOPEFUN_VISUALSTUDIO_X86 )
-   add_definitions(-DWIN32)
-   add_definitions(-D__WIN32__)
-   add_definitions(-DMS_WIN32)
-   add_definitions(-DPLATFORM_WIN)
-   add_definitions(-DCODEBLOCKS)
-   add_definitions(-D_WINDOWS)
-elseif(SCOPEFUN_VISUALSTUDIO_X64)
-   add_definitions(-DWIN64)
-   add_definitions(-D__WIN64__)
-   add_definitions(-DMS_WIN64)
-   add_definitions(-DPLATFORM_WIN)
-   add_definitions(-DCODEBLOCKS)
-   add_definitions(-D_WINDOWS)
-else()
-   if(SCOPEFUN_32BIT)
-      add_definitions(-DWIN32)
-      add_definitions(-D__WIN32__)
-      add_definitions(-D__MINGW32__)
-      add_definitions(-DMS_WIN32)
-   else()
-      add_definitions(-DWIN64)
-      add_definitions(-D__WIN64__)
-      add_definitions(-D__MINGW64__)
-      add_definitions(-DMS_WIN64)
-   endif()
-   add_definitions(-DPLATFORM_MINGW)
-   add_definitions(-DCODEBLOCKS)
-   add_definitions(-D_WINDOWS)
+	add_definitions(-DWIN64)
+	add_definitions(-D__WIN64__)
+	add_definitions(-DPLATFORM_WIN)
+	add_definitions(-D_WINDOWS)
+	if(SCOPEFUN_VISUALSTUDIO)
+	   add_definitions(-DMS_WIN64)
+	   add_definitions(-DMS_WIN64)
+	   add_definitions(-DPLATFORM_MSVC)
+	else()
+	   add_definitions(-D__MINGW64__)
+	   add_definitions(-DPLATFORM_MINGW)
+	endif()
 endif()
-endif(SCOPEFUN_WINDOWS)
-
-# macos
 if(SCOPEFUN_MACOSX)
    add_definitions(-DPLATFORM_MAC)
    add_definitions(-DMAC)
@@ -108,8 +280,6 @@ if(SCOPEFUN_MACOSX)
    add_definitions(-D__WXMAC__)
    add_definitions(-D_WXMAC_XCODE__=1)
 endif()
-
-# linux
 if(SCOPEFUN_LINUX)
    add_definitions(-DPLATFORM_LINUX)
    add_definitions(-DLINUX)
@@ -117,11 +287,23 @@ if(SCOPEFUN_LINUX)
    add_definitions(-D__WXGTK__)
 endif(SCOPEFUN_LINUX)
 
-# permissions
-set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
+#--------------------------------------------------------------------------------
+# post-build
+#--------------------------------------------------------------------------------
+add_custom_command(
+			TARGET ScopeFun POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy
+					$<TARGET_FILE:ScopeFun>
+					${CMAKE_SOURCE_DIR}/bin/${SCOPEFUN_EXE_NAME}.exe 
+)
 
+#--------------------------------------------------------------------------------
 # install
+#--------------------------------------------------------------------------------
 if(SCOPEFUN_LINUX)
+	
+	set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
+
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/DEBIAN"   DESTINATION "../" 
 	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/usr"      DESTINATION "../" 
@@ -131,60 +313,35 @@ if(SCOPEFUN_LINUX)
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale"                                       DESTINATION "./share" 
 	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"                                         DESTINATION "./lib/oscilloscope" FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
-    install(TARGETS sfScope sfServer
+    install(TARGETS ScopeFun
             PERMISSIONS ${ALL_PERMISSIONS}
             RUNTIME  DESTINATION "./bin"
-            BUNDLE   DESTINATION "./bin"
-            LIBRARY  DESTINATION "./share/api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
+            BUNDLE   DESTINATION "./bin" )
 else()
-	install(TARGETS sfScope sfServer
+	install(TARGETS ScopeFun
 	        PERMISSIONS ${ALL_PERMISSIONS}
 			RUNTIME  DESTINATION "."
-			BUNDLE   DESTINATION "."
-			LIBRARY  DESTINATION "api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
+			BUNDLE   DESTINATION "." )
 endif()
-
-if(SCOPEFUN_WINDOWS)
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/api" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
-endif()
-
-# macosx packing
 if(SCOPEFUN_MACOSX)
 	add_custom_command(
-			TARGET sfScope POST_BUILD
+			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
 					${CMAKE_SOURCE_DIR}/bin/data
-					${CMAKE_SOURCE_DIR}/bin/sfScope${SCOPEFUN_TYPE}.app/Contents/Resources/data)
+					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources/data)
 					
 	add_custom_command(
-			TARGET sfScope POST_BUILD
+			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
 					${CMAKE_SOURCE_DIR}/bin/locale
-					${CMAKE_SOURCE_DIR}/bin/sfScope${SCOPEFUN_TYPE}.app/Contents/Resources/locale)
+					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources/locale)
 					
 	add_custom_command(
-			TARGET sfScope POST_BUILD
+			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy
 					${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns
-					${CMAKE_SOURCE_DIR}/bin/sfScope${SCOPEFUN_TYPE}.app/Contents/Resources)
+					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources)
 	
-	add_custom_command(
-			TARGET sfServer POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E make_directory
-					${CMAKE_SOURCE_DIR}/bin/sfServer${SCOPEFUN_TYPE}.app/Contents/Resources)
-					
-	add_custom_command(
-			TARGET sfServer POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy
-					${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns
-					${CMAKE_SOURCE_DIR}/bin/sfServer${SCOPEFUN_TYPE}.app/Contents/Resources)
-					
 	set(MACOSX_BUNDLE_INFO_STRING           "ScopeFun open source oscilloscope" )
 	set(MACOSX_BUNDLE_ICON_FILE    			AppIcon )
 	set(MACOSX_BUNDLE_GUI_IDENTIFIER		"ScopeFun.Oscilloscope" )
@@ -198,9 +355,15 @@ if(SCOPEFUN_MACOSX)
 	set(CPACK_BUNDLE_ICON  ${CMAKE_SOURCE_DIR}/package/scopefun-mac/appicon.icns )
 	set(CPACK_BUNDLE_NAME "ScopeFun")
 endif()
-
-# windows packing
 if(SCOPEFUN_WINDOWS)
+
+	set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
+
+	# install
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+	
+    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+
 	# generator
 	set(CPACK_GENERATOR "NSIS") 
 
@@ -209,17 +372,15 @@ if(SCOPEFUN_WINDOWS)
 
 	# create links
 	LIST(APPEND CPACK_NSIS_CREATE_ICONS_EXTRA  "
-		CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\sfServer.lnk' '$INSTDIR\\\\sfServer${SCOPEFUN_TYPE}.exe'
-		CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\sfScope.lnk'  '$INSTDIR\\\\sfScope${SCOPEFUN_TYPE}.exe'
-		CreateShortCut '$DESKTOP\\\\sfScope.lnk'  '$INSTDIR\\\\sfScope${SCOPEFUN_TYPE}.exe'
-		CreateShortCut '$DESKTOP\\\\sfServer.lnk' '$INSTDIR\\\\sfServer${SCOPEFUN_TYPE}.exe'")
+		CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\ScopeFun.lnk'  '$INSTDIR\\\\ScopeFun${SCOPEFUN_TYPE}.exe'
+		CreateShortCut '$DESKTOP\\\\ScopeFun.lnk'  '$INSTDIR\\\\ScopeFun${SCOPEFUN_TYPE}.exe'")
 		
 	# delete links
 	LIST(APPEND CPACK_NSIS_DELETE_ICONS_EXTRA  "  
-		Delete '$SMPROGRAMS\\\\$START_MENU\\\\sfScope.lnk'
-		Delete '$SMPROGRAMS\\\\$START_MENU\\\\sfServer.lnk'
-		Delete '$DESKTOP\\\\sfScope.lnk'
-		Delete '$DESKTOP\\\\sfServer.lnk'")
+		Delete '$SMPROGRAMS\\\\$START_MENU\\\\ScopeFun.lnk'
+		Delete '$SMPROGRAMS\\\\$START_MENU\\\\ScopeFun.lnk'
+		Delete '$DESKTOP\\\\ScopeFun.lnk'
+		Delete '$DESKTOP\\\\ScopeFun.lnk'")
 
 	#icons
 	set(CPACK_NSIS_MUI_ICON                       "${CMAKE_SOURCE_DIR}/package/scopefun-win\\\\logo.ico")
@@ -227,6 +388,10 @@ if(SCOPEFUN_WINDOWS)
 	set(CPACK_NSIS_MUI_WELCOMEFINISHPAGE_BITMAP   "${CMAKE_SOURCE_DIR}/package/scopefun-win\\\\setup.bmp")
 	set(CPACK_NSIS_MUI_UNWELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}/package/scopefun-win\\\\setup.bmp")
 endif(SCOPEFUN_WINDOWS)
+
+#--------------------------------------------------------------------------------
+# pack
+#--------------------------------------------------------------------------------
 
 # url
 set( CPACK_PACKAGE_HOMEPAGE_URL www.scopefun.com)
@@ -264,18 +429,16 @@ set(CPACK_SOURCE_IGNORE_FILES  ""
 "/\\\\.git/;"
 "/\\\\sfExe/;"
 "/\\\\sfSrc/;"
-"/\\\\bin/sfServer64r.exe/;"
-"/\\\\bin/sfScope64r.exe/;"
-"/\\\\bin/_scopefunapi.pyd/;"
-"/\\\\lib/libusb-1.0.22/sfBuild64r/;"
+"/\\\\bin/ScopeFun.exe/;"
+"/\\\\bin/sfBuild.exe/;"
+"/\\\\lib/libusb-1.0.22/Build/;"
 "/\\\\lib/libusb-1.0.22/src/;"
 "/\\\\lib/libusb-1.0.22/tmp/;"
-"/\\\\lib/SDL2-2.0.9/sfBuild64r/;"
-"/\\\\lib/SDL2-2.0.9/tmp/;"
-"/\\\\lib/wxWidgets-3.0.4/sfBuild64r/;"
-"/\\\\lib/wxWidgets-3.0.4/src/wxWidgets304-stamp/;"
-"/\\\\lib/wxWidgets-3.0.4/tmp/;"
+"/\\\\lib/SDL2-2.0.12/Build/;"
+"/\\\\lib/SDL2-2.0.12/tmp/;"
+"/\\\\lib/wxWidgets-3.1.3/Build/;"
+"/\\\\lib/wxWidgets-3.1.3/src/wxWidgets313-stamp/;"
+"/\\\\lib/wxWidgets-3.1.3/tmp/;"
 )
 
-# pack
 include(CPack)

@@ -19,49 +19,49 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __MACRO__
-#define __MACRO__
+    #define __MACRO__
 
-////////////////////////////////////////////////////////////////////////////////
-// color
-////////////////////////////////////////////////////////////////////////////////
-#define COLOR_ARGB(a,r,g,b) ((unsigned int)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
-#define COLOR_A(c) ((unsigned int)(((c>>24)&0xff)))
-#define COLOR_R(c) ((unsigned int)(((c>>16)&0xff)))
-#define COLOR_G(c) ((unsigned int)(((c>>8)&0xff)))
-#define COLOR_B(c) ((unsigned int)(((c>>0)&0xff)))
+    ////////////////////////////////////////////////////////////////////////////////
+    // color
+    ////////////////////////////////////////////////////////////////////////////////
+    #define COLOR_ARGB(a,r,g,b) ((unsigned int)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
+    #define COLOR_A(c) ((unsigned int)(((c>>24)&0xff)))
+    #define COLOR_R(c) ((unsigned int)(((c>>16)&0xff)))
+    #define COLOR_G(c) ((unsigned int)(((c>>8)&0xff)))
+    #define COLOR_B(c) ((unsigned int)(((c>>0)&0xff)))
 
 
-////////////////////////////////////////////////////////////////////////////////
-// bit
-////////////////////////////////////////////////////////////////////////////////
-#define BIT(index) (1<<index)
+    ////////////////////////////////////////////////////////////////////////////////
+    // bit
+    ////////////////////////////////////////////////////////////////////////////////
+    #define BIT(index) (1<<index)
 
-////////////////////////////////////////////////////////////////////////////////
-// macro
-////////////////////////////////////////////////////////////////////////////////
-int  macroString(char* buffer, int size, const char* msg, ...);
-int  macroPath(char* buffer, int size, const char* path);
+    ////////////////////////////////////////////////////////////////////////////////
+    // macro
+    ////////////////////////////////////////////////////////////////////////////////
+    int  macroString(char* buffer, int size, const char* msg, ...);
+    int  macroPath(char* buffer, int size, const char* path);
 
-////////////////////////////////////////////////////////////////////////////////
-// format
-////////////////////////////////////////////////////////////////////////////////
-#define FORMAT_BUFFER_SIZE 1024
-#define FORMAT_BUFFER()   char formatBuffer[1024] = {0}
-#define FORMAT(msg,...)   macroString( formatBuffer, 1024, msg, __VA_ARGS__ );
-#define FORMAT_PATH(path) macroPath( formatBuffer, 1024, path );
+    ////////////////////////////////////////////////////////////////////////////////
+    // format
+    ////////////////////////////////////////////////////////////////////////////////
+    #define FORMAT_BUFFER_SIZE 1024
+    #define FORMAT_BUFFER()   char formatBuffer[1024] = {0}
+    #define FORMAT(msg,...)   macroString( formatBuffer, 1024, msg, __VA_ARGS__ );
+    #define FORMAT_PATH(path) macroPath( formatBuffer, 1024, path );
 
-////////////////////////////////////////////////////////////////////////////////
-// abort,message,break
-////////////////////////////////////////////////////////////////////////////////
-#define CORE_MESSAGE(msg,...) { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); }
-#define CORE_ERROR(msg,...)   { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); coreDebugBreak(); }
-#define CORE_ABORT(msg,...)   { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); coreDebugBreak(); coreTerminate(); }
-#define CORE_BREAK_IF(cond)   { cond ? coreDebugBreak() : {} }
+    ////////////////////////////////////////////////////////////////////////////////
+    // abort,message,break
+    ////////////////////////////////////////////////////////////////////////////////
+    #define CORE_MESSAGE(msg,...) { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); }
+    #define CORE_ERROR(msg,...)   { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); coreDebugBreak(); }
+    #define CORE_ABORT(msg,...)   { char buffer[1024]={0}; char bufferMsg[1024]={0}; macroString( bufferMsg, 1024, msg, __VA_ARGS__); macroString( buffer, 1024, "message: %s \n file: %s \n function: %s \n line: %d", bufferMsg,__FILE__,__FUNCTION__,__LINE__); coreMessage(buffer); coreDebugBreak(); coreTerminate(); }
+    #define CORE_BREAK_IF(cond)   { cond ? coreDebugBreak() : {} }
 
-////////////////////////////////////////////////////////////////////////////////
-// safe release
-////////////////////////////////////////////////////////////////////////////////
-#define SAFE_RELEASE(p) p ? p->Release() : 0; p = 0
+    ////////////////////////////////////////////////////////////////////////////////
+    // safe release
+    ////////////////////////////////////////////////////////////////////////////////
+    #define SAFE_RELEASE(p) p ? p->Release() : 0; p = 0
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

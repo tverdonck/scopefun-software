@@ -45,7 +45,7 @@ int SDLCALL ScopeFunServer(void* data)
     socketNonBlocking(&serverSocket, 1);
     socketBind(&serverSocket, pServer->ip.asChar(), pServer->port);
     int id = 0;
-    while(SDL_AtomicGet(&pServer->serverThreadActive)>0)
+    while(SDL_AtomicGet(&pServer->serverThreadActive) > 0)
     {
         int listen = socketListen(&serverSocket, SCOPEFUN_MAX_CLIENT);
         SocketContext clientSocket = { 0 };
@@ -123,15 +123,15 @@ struct StaticCheck<false>
 void errorMessage(const char* msg)
 {
     FORMAT_BUFFER();
-    FORMAT(msg,0);
+    FORMAT(msg, 0);
     msgListBoxAdd(getListBox1(), formatBuffer);
 }
 
 
 int SDLCALL ClientFunServer(void* data)
 {
-    try {
-
+    try
+    {
         // client
         ScopeFunClient* pClient = (ScopeFunClient*)data;
         // list box
@@ -391,19 +391,15 @@ int SDLCALL ClientFunServer(void* data)
                 {
                     // acquire
                     SDL_MemoryBarrierAcquire();
-
                     // amount of data to capture
-                    SDL_AtomicSet(&pClient->bytes,recvMessage->len);
-
-                     // captureType
+                    SDL_AtomicSet(&pClient->bytes, recvMessage->len);
+                    // captureType
                     SDL_AtomicSet(&pClient->captureType, recvMessage->type);
-
                     // lock
                     while(!pClient->sync.consumerLock())
                     {
                         SDL_Delay(1);
                     }
-
                     // send data to client
                     SERVER_HEADER(scHardwareCapture, mHardwareCapture);
                     if(server_header == SCOPEFUN_SUCCESS)
@@ -422,30 +418,27 @@ int SDLCALL ClientFunServer(void* data)
                             else
                             {
                                 int debug = 1;
-                                errorMessage( "error - 5" );
+                                errorMessage("error - 5");
                             }
                         }
                         else
                         {
                             int debug = 1;
-                            errorMessage( "error - 6" );
+                            errorMessage("error - 6");
                         }
                     }
                     else
                     {
                         int debug = 1;
-                        errorMessage( "error - 7" );
+                        errorMessage("error - 7");
                     }
-
                     // amount of data to capture
-                    SDL_AtomicSet(&pClient->bytes,0);
-
+                    SDL_AtomicSet(&pClient->bytes, 0);
                     // unlock
                     while(!pClient->sync.consumerUnlock())
                     {
                         SDL_Delay(1);
                     }
-
                     // release
                     SDL_MemoryBarrierRelease();
                 }
@@ -511,19 +504,19 @@ int SDLCALL ClientFunServer(void* data)
                 }
                 continue;
             }
-            if (recvHeader->message == mHardwareEepromReadFirmwareID)
+            if(recvHeader->message == mHardwareEepromReadFirmwareID)
             {
-               SERVER_RECV_MSG(csHardwareEepromReadFirmwareID);
-               if (server_recv_msg == SCOPEFUN_SUCCESS)
-               {
-                  SERVER_HEADER(scHardwareEepromReadFirmwareID, mHardwareEepromReadFirmwareID);
-                  if (server_header == SCOPEFUN_SUCCESS)
-                  {
-                     sendMessage->header.error = sfHardwareEepromReadFirmwareID(&pServer->ctx, &sendMessage->eeprom, recvMessage->size, recvMessage->address);
-                     SERVER_SEND_MSG(scHardwareEepromReadFirmwareID);
-                  }
-               }
-               continue;
+                SERVER_RECV_MSG(csHardwareEepromReadFirmwareID);
+                if(server_recv_msg == SCOPEFUN_SUCCESS)
+                {
+                    SERVER_HEADER(scHardwareEepromReadFirmwareID, mHardwareEepromReadFirmwareID);
+                    if(server_header == SCOPEFUN_SUCCESS)
+                    {
+                        sendMessage->header.error = sfHardwareEepromReadFirmwareID(&pServer->ctx, &sendMessage->eeprom, recvMessage->size, recvMessage->address);
+                        SERVER_SEND_MSG(scHardwareEepromReadFirmwareID);
+                    }
+                }
+                continue;
             }
             if(recvHeader->message == mHardwareEepromWrite)
             {
@@ -580,7 +573,7 @@ int SDLCALL ClientFunServer(void* data)
 
 void* createServer(const char* serveraddr, int port)
 {
-    SDL_AtomicSet(&pServer->serverThreadActive,1);
+    SDL_AtomicSet(&pServer->serverThreadActive, 1);
     pServer->serverThread = SDL_CreateThread(ScopeFunServer, "scopefun_server", pServer);
     return pServer->serverThread;
 }
@@ -593,7 +586,7 @@ void* createClient(ScopeFunClient* pClient)
 
 int closeServer()
 {
-     SDL_AtomicSet(&pServer->serverThreadActive,0);
+    SDL_AtomicSet(&pServer->serverThreadActive, 0);
     int status = 0;
     SDL_WaitThread(pServer->serverThread, &status);
     return 0;
