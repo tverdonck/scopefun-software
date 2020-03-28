@@ -136,16 +136,18 @@ if(SCOPEFUN_LINUX)
             RUNTIME  DESTINATION "./bin"
             BUNDLE   DESTINATION "./bin"
             LIBRARY  DESTINATION "./share/api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/api/scopefunapi.py"  DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"     DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py"   DESTINATION "./share/api" PERMISSIONS ${ALL_PERMISSIONS} )
 else()
 	install(TARGETS sfScope sfServer
 	        PERMISSIONS ${ALL_PERMISSIONS}
 			RUNTIME  DESTINATION "."
 			BUNDLE   DESTINATION "."
 			LIBRARY  DESTINATION "api" )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"   DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
-	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py" DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/api/scopefunapi.py"  DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/capture.py"     DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
+	install( FILES "${CMAKE_SOURCE_DIR}/source/test/histogram.py"   DESTINATION "api" PERMISSIONS ${ALL_PERMISSIONS} )
 endif()
 
 if(SCOPEFUN_WINDOWS)

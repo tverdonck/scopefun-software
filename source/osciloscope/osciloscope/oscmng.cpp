@@ -997,7 +997,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // api
     ////////////////////////////////////////////////
-    pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE,0,1,0);
+    pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE,1,1,0);
     pOsciloscope->thread.function(afInit);
     sim = pOsciloscope->GetServerSim();
     pOsciloscope->transmitSim(sim);
@@ -1196,9 +1196,11 @@ void OsciloscopeManager::startThreads()
     ///////////////////////////////////////////////
     SDL_zero(renderWindow);
     SDL_zero(renderData);
-    pCaptureData     = SDL_CreateThread(CaptureDataThreadFunction,      "CaptureData",     this);
-    pGenerateFrame   = SDL_CreateThread(GenerateFrameThreadFunction,    "GenerateFrame",   this);
     pControlHardware = SDL_CreateThread(ControlHardwareThreadFunction,  "ControlHardware", this);
+    thread.wait();
+
+    pCaptureData = SDL_CreateThread(CaptureDataThreadFunction, "CaptureData", this);
+    pGenerateFrame = SDL_CreateThread(GenerateFrameThreadFunction, "GenerateFrame", this);
 }
 
 void OsciloscopeManager::exitThreads()
