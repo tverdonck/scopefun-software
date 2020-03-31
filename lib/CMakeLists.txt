@@ -7,10 +7,10 @@ if( SCOPEFUN_VISUALSTUDIO )
 else()
 	include(ExternalProject)
 	externalproject_add(libUsb
-		PREFIX            ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22
-		BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${CMAKE_BUILD_TYPE}
-		SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22
-		CONFIGURE_COMMAND sh ../configure --disable-shared  --enable-shared=no --enable-static
+		PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+		SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+		BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
+		CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no --enable-static --without-pcre
 		BUILD_COMMAND     make
 		UPDATE_COMMAND    ""
 		INSTALL_COMMAND   ""
@@ -22,19 +22,19 @@ set( SDL_STATIC   ON  CACHE BOOL "" FORCE )
 set( SDL_SHARED   OFF CACHE BOOL "" FORCE )
 set( SDL_HAPTIC   OFF CACHE BOOL "" FORCE )
 set( SDL_JOYSTICK OFF CACHE BOOL "" FORCE )
-add_subdirectory ( SDL2-2.0.12 )
+add_subdirectory ( SDL2-2.0.12 EXCLUDE_FROM_ALL )
 set_target_properties (SDL2main     PROPERTIES FOLDER SDL2 )
 set_target_properties (SDL2-static  PROPERTIES FOLDER SDL2 )
 set_target_properties (uninstall    PROPERTIES FOLDER SDL2 )
 
 # wxWidgets
 set(wxBUILD_USE_STATIC_RUNTIME TRUE)
-set(wxBUILD_SHARED FALSE)
-add_subdirectory ( wxwidgets-3.1.3 )
-set_target_properties(clean_cotire PROPERTIES FOLDER wxwidgets/cotire )
-set_target_properties(adv          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(base         PROPERTIES FOLDER wxwidgets/libraries )
+set(wxBUILD_SHARED  FALSE)
+set(wxBUILD_PRECOMP FALSE)
+add_subdirectory ( wxwidgets-3.1.3 EXCLUDE_FROM_ALL )
 set_target_properties(core         PROPERTIES FOLDER wxwidgets/libraries )
+set_target_properties(base         PROPERTIES FOLDER wxwidgets/libraries )
+set_target_properties(adv          PROPERTIES FOLDER wxwidgets/libraries )
 set_target_properties(aui          PROPERTIES FOLDER wxwidgets/libraries )
 set_target_properties(gl           PROPERTIES FOLDER wxwidgets/libraries )
 set_target_properties(html         PROPERTIES FOLDER wxwidgets/libraries )

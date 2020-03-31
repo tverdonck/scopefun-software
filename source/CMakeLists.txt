@@ -62,7 +62,7 @@ if( SCOPEFUN_VISUALSTUDIO)
 else()
 	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_RES} )
 endif()
-					
+	
 #--------------------------------------------------------------------------------
 # groups
 #--------------------------------------------------------------------------------				
@@ -77,10 +77,18 @@ source_group("Header"   FILES ${HEADERS_SOURCE})
 # include
 #--------------------------------------------------------------------------------
 if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Debug" )
-	set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswud )
+	if( ${SCOPEFUN_VISUALSTUDIO} )
+		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswud )
+	else()
+		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswud )
+	endif()
 endif()
 if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Release" )
-	set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswu )
+	if( ${SCOPEFUN_VISUALSTUDIO} )
+		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswu )
+	else()
+		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswu )
+	endif()
 endif()
 set(SCOPEFUN_INCLUDE_WX        "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.1.3/include"  CACHE PATH "include fodler for wxWidgets library" FORCE)
 set(SCOPEFUN_INCLUDE_USB       "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/libusb"     CACHE PATH "include folder for libUsb library" FORCE)
@@ -121,15 +129,15 @@ set_target_properties( ScopeFun PROPERTIES OUTPUT_NAME "${SCOPEFUN_EXE_NAME}" )
 if( SCOPEFUN_VISUALSTUDIO )
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb-1.0.lib )
 else()
-	 set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${CMAKE_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
+	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
-list( APPEND SCOPEFUN_LIB_WX adv base core aui gl html media net propgrid qa ribbon richtext stc webview xml xrc wxexpat wxjpeg wxpng wxregex wxscintilla wxtiff wxzlib )
+list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext )
 if(SCOPEFUN_WINDOWS)
 	if( SCOPEFUN_VISUALSTUDIO )
 		target_link_libraries( ScopeFun  
 			# libs
-			${SCOPEFUN_LIB_USB} 
+			# ${SCOPEFUN_LIB_USB} 
 			${SCOPEFUN_LIB_SDL2} 
 			${SCOPEFUN_LIB_WX} 
 			# system
@@ -151,7 +159,7 @@ if(SCOPEFUN_WINDOWS)
 			${CMAKE_SOURCE_DIR}/source/scopefun/rc/osc.res
 		)
 	else()
-		target_link_libraries(SCOPEFUN_LIBS
+		target_link_libraries(ScopeFun 
 		# mingw
 		mingw32.a
 		# libs
@@ -178,7 +186,7 @@ if(SCOPEFUN_WINDOWS)
 	endif()
 endif()
 if(SCOPEFUN_MACOSX)
-	target_link_libraries(SCOPEFUN_LIBS 
+	target_link_libraries(ScopeFun 
 		# system
 		iconv.a
 		Z.a
@@ -203,7 +211,7 @@ if(SCOPEFUN_MACOSX)
 	)
 endif()
 if(SCOPEFUN_LINUX)
-	target_link_libraries(SCOPEFUN_LIBS
+	target_link_libraries(ScopeFun
 		# libs
 		${SCOPEFUN_LIB_USB} 
 		${SCOPEFUN_LIB_SDL2} 
