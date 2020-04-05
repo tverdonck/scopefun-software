@@ -74,7 +74,7 @@ int OsciloscopeManager::saveToFile(const char* file)
     if(fileThread.file.posReverse(".osc") > 0)
     {
         SDL_AtomicSet(&fileThread.atomic, 1);
-        fileThread.thread = SDL_CreateThread(_saveToFile, "OscFileSave", &fileThread);
+        fileThread.thread = SDL_CreateThreadWithStackSize(_saveToFile, "OscFileSave", 1024*1024, &fileThread);
         // _saveToFile(  &fileThread );
     }
     return 0;
@@ -262,7 +262,7 @@ int OsciloscopeManager::loadFromFile(const char* file)
     if(fileThread.file.posReverse(".osc") > 0)
     {
         SDL_AtomicSet(&fileThread.atomic, 1);
-        fileThread.thread = SDL_CreateThread(_loadFromFile, "OscFileLoad", &fileThread);
+        fileThread.thread = SDL_CreateThreadWithStackSize(_loadFromFile, "OscFileLoad", 1024*1024, &fileThread);
     }
     return 0;
 }
@@ -273,7 +273,7 @@ int OsciloscopeManager::convertToText(const char* file)
     if(fileThread.file.posReverse(".osc") > 0)
     {
         SDL_AtomicSet(&fileThread.atomic, 1);
-        fileThread.thread = SDL_CreateThread(_convertToText, "OscConvertToText", &fileThread);
+        fileThread.thread = SDL_CreateThreadWithStackSize(_convertToText, "OscConvertToText", 1024*1024, &fileThread);
     }
     return 0;
 }

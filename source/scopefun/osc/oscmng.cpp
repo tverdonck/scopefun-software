@@ -160,9 +160,9 @@ ThreadApi::ThreadApi()
 void ThreadApi::function(EThreadApiFunction f)
 {
     SDL_AtomicLock(&lock);
-    SDL_AtomicAdd(&sync, 1);
-    SDL_AtomicSet(&ret[func], 0);
-    func.pushBack(f);
+       SDL_AtomicAdd(&sync, 1);
+       SDL_AtomicSet(&ret[func], 0);
+       func.pushBack(f);
     SDL_AtomicUnlock(&lock);
 }
 
@@ -192,6 +192,18 @@ void ThreadApi::resultClearAll()
 
 void ThreadApi::update()
 {
+    // functions
+    int decr = 0;
+    Array<EThreadApiFunction, 22>  execute;
+    SDL_AtomicLock(&lock);
+       decr = -1 * func.getCount();
+       for(int i = 0; i < func.getCount(); i++)
+       {
+          execute.pushBack(func[i]);
+       }
+       func.clear();
+    SDL_AtomicUnlock(&lock);
+   
     // default
     int iconnected = 0;
     int iopened = 0;
@@ -203,15 +215,7 @@ void ThreadApi::update()
     SDL_AtomicSet(&connected, iconnected);
     SDL_AtomicSet(&simulate, isimulate);
     SDL_AtomicSet(&open, iopened);
-    // functions
-    int decr = 0;
-    Array<EThreadApiFunction, 22>  execute;
-    SDL_AtomicLock(&lock);
-    decr = -1 * func.getCount();
-    for(int i = 0; i < func.getCount(); i++)
-    { execute.pushBack(func[i]); }
-    func.clear();
-    SDL_AtomicUnlock(&lock);
+   
     while(true)
     {
         uint count = execute.getCount();
@@ -223,7 +227,6 @@ void ThreadApi::update()
         {
             case afInit:
                 SDL_AtomicLock(&lock);
-                sfApiCreateContext(getCtx(), memory);
                 sfApiInit();
                 sfSetThreadSafe(getCtx(), threadSafe);
                 sfSetActive(getCtx(), active);
@@ -395,6 +398,7 @@ void ThreadApi::setInit(int mem, int ithread, int iactive, int tt)
     threadSafe = ithread;
     active = iactive;
     timeout = tt;
+    sfApiCreateContext(getCtx(), memory);
     SDL_AtomicUnlock(&lock);
 }
 void ThreadApi::setFrame(int  v, int  h, int  d, int  p)
@@ -919,6 +923,7 @@ OsciloscopeManager::OsciloscopeManager()
     SDL_AtomicSet(&etsClear, 1);
     signalMode = SIGNAL_MODE_PAUSE;
     windowSlot = 0;
+    SDL_AtomicSet(&oscExit,0);
 }
 
 void* malloc_fn2(size_t sz)
@@ -963,8 +968,7 @@ int OsciloscopeManager::start()
     sim = pOsciloscope->GetServerSim();
     pOsciloscope->transmitSim(sim);
     pOsciloscope->thread.setFrame(HARDWARE_VERSION_2, SCOPEFUN_FRAME_2_HEADER, 40000, SCOPEFUN_FRAME_2_PACKET);
-    pOsciloscope->thread.function(afSetFrame);
-    ////////////////////////////////////////////////
+    pOsciloscope->thread.function(afSetFrame);    ////////////////////////////////////////////////
     // apply settings
     ////////////////////////////////////////////////
     control.setYRangeScaleA(vc2Volt, 1.f);
@@ -1122,6 +1126,7 @@ int OsciloscopeManager::start()
     // launch capture and update thread
     //////////////////////////////////////////////////////////
     startThreads();
+   
     ////////////////////////////////////////////////
     // callbacks
     ////////////////////////////////////////////////
@@ -1156,9 +1161,9 @@ void OsciloscopeManager::startThreads()
     ///////////////////////////////////////////////
     SDL_zero(renderWindow);
     SDL_zero(renderData);
-    pCaptureData     = SDL_CreateThread(CaptureDataThreadFunction,      "CaptureData",     this);
-    pGenerateFrame   = SDL_CreateThread(GenerateFrameThreadFunction,    "GenerateFrame",   this);
-    pControlHardware = SDL_CreateThread(ControlHardwareThreadFunction,  "ControlHardware", this);
+    pControlHardware = SDL_CreateThreadWithStackSize(ControlHardwareThreadFunction,  "ControlHardware", 1024*1024, this);
+    pCaptureData     = SDL_CreateThreadWithStackSize(CaptureDataThreadFunction,      "CaptureData",   1024*1024,  this);
+    pGenerateFrame   = SDL_CreateThreadWithStackSize(GenerateFrameThreadFunction,    "GenerateFrame",  1024*1024, this);
 }
 
 void OsciloscopeManager::exitThreads()
@@ -1166,18 +1171,25 @@ void OsciloscopeManager::exitThreads()
     int status = 0;
     ///////////////////////////////////////////////
     // thread cleanup
-    ///////////////////////////////////////////////
+    //////////////////////////////////////////////
+    SDL_AtomicSet(&oscExit,1);
+   
+    renderThreadActive = false;
+    SDL_WaitThread(pRenderThread, &status);
+    pRenderThread  = 0;
+   
     captureDataThreadActive = false;
+    SDL_AtomicSet(&captureBuffer->drawState,DRAWSTATE_DRAW);
     SDL_WaitThread(pCaptureData, &status);
     pCaptureData = 0;
+   
     generateFrameThreadActive = false;
     SDL_WaitThread(pGenerateFrame, &status);
     pGenerateFrame = 0;
+   
     controlHardwareThreadActive = false;
     SDL_WaitThread(pControlHardware, &status);
     pControlHardware = 0;
-    renderThreadActive = false;
-    pRenderThread  = 0;
 }
 
 
@@ -2257,6 +2269,11 @@ void OsciloscopeManager::renderMain(uint threadId)
 
 int OsciloscopeManager::stop()
 {
+#ifndef PLATFORM_MAC
+    // close renderer
+    SDL_DestroyWindow(pOsciloscope->sdlWindow);
+#endif
+   
     //////////////////////////////////////////////////
     // cleanup
     //////////////////////////////////////////////////
@@ -2264,7 +2281,6 @@ int OsciloscopeManager::stop()
     pCanvas2d->stop();
     pCanvas3d->stop();
     pFont->stop();
-    SDL_DestroyWindow(pOsciloscope->sdlWindow);
     deallocate();
     return 0;
 }
@@ -2425,7 +2441,7 @@ bool OsciloscopeManager::onApplicationIdle()
         // lock
         uint renderId = 0;
         bool ret = false;
-        while(!ret)
+        while(!ret && !SDL_AtomicGet(&oscExit) )
         {
             ret = pOsciloscope->threadLoop.update.consumerLock(renderId, false);
             if(ret)

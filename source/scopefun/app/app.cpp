@@ -92,10 +92,9 @@ public:
     {
     }
 
-    int OnExit()
+    virtual int OnExit() override
     {
         // stop
-        pOsciloscope->exitThreads();
         pManager->stop();
         return 0;
     }

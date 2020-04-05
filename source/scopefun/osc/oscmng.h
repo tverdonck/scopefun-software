@@ -956,6 +956,7 @@ public:
     uint    sizeRunLengthDecode;
 public:
     SDL_atomic_t  bandWidth;
+    SDL_atomic_t  oscExit;
 public:
     SSimulate      sim;
 public:

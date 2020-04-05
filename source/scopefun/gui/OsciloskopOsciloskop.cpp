@@ -465,13 +465,13 @@ void OsciloskopOsciloskop::onActivateApp(wxActivateEvent& event)
 
 void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
 {
-    // main.state save
-    wxFileName fn = GetOscDataFolder();
-    wxString string = fn.GetPath().append(_("/data/state/main.state"));
-    SDL_RWops* ctx = SDL_RWFromFile(string.ToAscii().data(), "wb+");
-    if(ctx)
-    {
-        SDL_RWwrite(ctx, &pOsciloscope->windowName[0], 1, 4 * sizeof(String));
+   // main.state save
+   wxFileName fn = GetOscDataFolder();
+   wxString string = fn.GetPath().append(_("/data/state/main.state"));
+   SDL_RWops* ctx = SDL_RWFromFile(string.ToAscii().data(), "wb+");
+   if(ctx)
+   {
+      SDL_RWwrite(ctx, &pOsciloscope->windowName[0], 1, 4 * sizeof(String));
         SDL_RWclose(ctx);
     }
     // save slot
@@ -479,8 +479,12 @@ void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
     SaveSlot(1, pOsciloscope->windowName[1].asChar());
     SaveSlot(2, pOsciloscope->windowName[2].asChar());
     SaveSlot(3, pOsciloscope->windowName[3].asChar());
+   
+    // threds exit
+    pOsciloscope->exitThreads();
+   
     // exit
-    wxExit();
+    Destroy();
 }
 
 // wxDialog  *dlg = 0;
