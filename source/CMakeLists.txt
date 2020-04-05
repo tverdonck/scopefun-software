@@ -34,16 +34,7 @@ set( FILES_LIB
 
 set( FILES_API "${CMAKE_SOURCE_DIR}/source/api/scopefun.c" )
 
-set( FILES_RES "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm96.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm512.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm64.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm256.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm16.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm32.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm128.c"
-			   "${CMAKE_SOURCE_DIR}/source/scopefun/rc/dpi.manifest"
-			   "${SF_DATA}"
-			   "${SF_LOCALE}" )
+set( FILES_RES "" )
 
 #--------------------------------------------------------------------------------
 # executable
@@ -78,16 +69,26 @@ source_group("Header"   FILES ${HEADERS_SOURCE})
 #--------------------------------------------------------------------------------
 if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Debug" )
 	if( ${SCOPEFUN_VISUALSTUDIO} )
-		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswud )
+			set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswud )
 	else()
-		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswud )
+		if(SCOPEFUN_WINDOWS)
+			set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswud )
+		endif()
+		if(SCOPEFUN_MACOSX)
+			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_BINARY_DIR}/lib/wx/include/osx_cocoa-unicode-static-3.1)
+		endif()
 	endif()
 endif()
 if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Release" )
 	if( ${SCOPEFUN_VISUALSTUDIO} )
-		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswu )
+			set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/vc_x64_lib/mswu )
 	else()
-		set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswu )
+		if(SCOPEFUN_WINDOWS)
+			set(SCOPEFUN_INCLUDE_WX_SETUP   ${CMAKE_BINARY_DIR}/lib/gcc_x64_lib/mswu )
+		endif()
+		if(SCOPEFUN_MACOSX)
+			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_BINARY_DIR}/lib/wx/include/osx_cocoa-unicode-static-3.1)
+		endif()
 	endif()
 endif()
 set(SCOPEFUN_INCLUDE_WX        "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.1.3/include"  CACHE PATH "include fodler for wxWidgets library" FORCE)
@@ -295,15 +296,6 @@ if(SCOPEFUN_LINUX)
    add_definitions(-D__WXGTK__)
 endif(SCOPEFUN_LINUX)
 
-#--------------------------------------------------------------------------------
-# post-build
-#--------------------------------------------------------------------------------
-add_custom_command(
-			TARGET ScopeFun POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy
-					$<TARGET_FILE:ScopeFun>
-					${CMAKE_SOURCE_DIR}/bin/${SCOPEFUN_EXE_NAME}.exe 
-)
 
 #--------------------------------------------------------------------------------
 # install
@@ -335,24 +327,24 @@ if(SCOPEFUN_MACOSX)
 	add_custom_command(
 			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
-					${CMAKE_SOURCE_DIR}/bin/data
-					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources/data)
+			${CMAKE_SOURCE_DIR}/bin/data
+			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources/data)
 					
 	add_custom_command(
 			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
-					${CMAKE_SOURCE_DIR}/bin/locale
-					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources/locale)
+			${CMAKE_SOURCE_DIR}/bin/locale
+			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources/locale)
 					
 	add_custom_command(
 			TARGET ScopeFun POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy
-					${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns
-					${CMAKE_SOURCE_DIR}/bin/ScopeFun${SCOPEFUN_TYPE}.app/Contents/Resources)
+			${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns
+			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources)
 	
 	set(MACOSX_BUNDLE_INFO_STRING           "ScopeFun open source oscilloscope" )
-	set(MACOSX_BUNDLE_ICON_FILE    			AppIcon )
-	set(MACOSX_BUNDLE_GUI_IDENTIFIER		"ScopeFun.Oscilloscope" )
+	set(MACOSX_BUNDLE_ICON_FILE    			 AppIcon )
+	set(MACOSX_BUNDLE_GUI_IDENTIFIER		    "ScopeFun.Oscilloscope" )
 	set(MACOSX_BUNDLE_BUNDLE_NAME           "ScopeFun" )
 	set(MACOSX_BUNDLE_LONG_VERSION_STRING   ${SCOPEFUN_VERSION_MAJOR}.${SCOPEFUN_VERSION_MINOR}.${SCOPEFUN_VERSION_MICRO} )
 	set(MACOSX_BUNDLE_SHORT_VERSION_STRING  ${SCOPEFUN_VERSION_MAJOR}.${SCOPEFUN_VERSION_MINOR}.${SCOPEFUN_VERSION_MICRO} )
@@ -368,9 +360,8 @@ if(SCOPEFUN_WINDOWS)
 	set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
 
 	# install
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
-	
-    install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+    	install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"   DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
+    	install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale" DESTINATION "." FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS} )
 
 	# generator
 	set(CPACK_GENERATOR "NSIS") 
@@ -396,6 +387,23 @@ if(SCOPEFUN_WINDOWS)
 	set(CPACK_NSIS_MUI_WELCOMEFINISHPAGE_BITMAP   "${CMAKE_SOURCE_DIR}/package/scopefun-win\\\\setup.bmp")
 	set(CPACK_NSIS_MUI_UNWELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}/package/scopefun-win\\\\setup.bmp")
 endif(SCOPEFUN_WINDOWS)
+
+#--------------------------------------------------------------------------------
+# post-build
+#--------------------------------------------------------------------------------
+if(SCOPEFUN_MACOSX)
+	add_custom_command(
+			TARGET ScopeFun POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy
+			$<TARGET_FILE_DIR:ScopeFun>/../../../${SCOPEFUN_EXE_NAME}.app
+			${CMAKE_SOURCE_DIR}/bin/ )
+else()
+	add_custom_command(
+			TARGET ScopeFun POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy
+			$<TARGET_FILE:ScopeFun>
+			${CMAKE_SOURCE_DIR}/bin/${SCOPEFUN_EXE_NAME}.exe )
+endif()
 
 #--------------------------------------------------------------------------------
 # pack

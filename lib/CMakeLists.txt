@@ -6,15 +6,27 @@ if( SCOPEFUN_VISUALSTUDIO )
 	set_target_properties(libUsb PROPERTIES FOLDER libUsb )
 else()
 	include(ExternalProject)
-	externalproject_add(libUsb
-		PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
-		SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
-		BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
-		CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no --enable-static --without-pcre
-		BUILD_COMMAND     make
-		UPDATE_COMMAND    ""
-		INSTALL_COMMAND   ""
-	 )
+	if( SCOPEFUN_MACOSX )
+		externalproject_add(libUsb
+			PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
+			CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no
+			BUILD_COMMAND     make
+			UPDATE_COMMAND    ""
+			INSTALL_COMMAND   ""
+		 )
+	else()
+		externalproject_add(libUsb
+			PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
+			CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no --enable-static --without-pcre
+			BUILD_COMMAND     make
+			UPDATE_COMMAND    ""
+			INSTALL_COMMAND   ""
+		 )
+	endif()
 endif()
 
 # SDL2
@@ -31,28 +43,32 @@ set_target_properties (uninstall    PROPERTIES FOLDER SDL2 )
 set(wxBUILD_USE_STATIC_RUNTIME TRUE)
 set(wxBUILD_SHARED  FALSE)
 set(wxBUILD_PRECOMP FALSE)
+set(wxUSE_LIBTIFF OFF CACHE STRING "" FORCE) 
 add_subdirectory ( wxwidgets-3.1.3 EXCLUDE_FROM_ALL )
-set_target_properties(core         PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(base         PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(adv          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(aui          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(gl           PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(html         PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(media        PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(net          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(propgrid     PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(qa           PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(ribbon       PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(richtext     PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(stc          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(webview      PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(xml          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(xrc          PROPERTIES FOLDER wxwidgets/libraries )
-set_target_properties(wxexpat      PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxjpeg       PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxpng        PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxregex      PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxscintilla  PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxtiff       PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxzlib       PROPERTIES FOLDER wxwidgets/thirdparty )
-set_target_properties(wxrc         PROPERTIES FOLDER wxwidgets/utilities )
+set_target_properties(core         PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(base         PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(adv          PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(aui          PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(gl           PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(html         PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(media        PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(net          PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(propgrid     PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(qa           PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(ribbon       PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(richtext     PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(stc          PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(webview      PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(xml          PROPERTIES FOLDER wxWidgets/libraries )
+set_target_properties(xrc          PROPERTIES FOLDER wxWidgets/libraries )
+if( SCOPEFUN_VISUALSTUDIO OR SCOPEFUN_WINDOWS )
+	set_target_properties(wxexpat      PROPERTIES FOLDER wxWidgets/thirdparty )
+	set_target_properties(wxzlib       PROPERTIES FOLDER wxWidgets/thirdparty )
+	set_target_properties(wxtiff       PROPERTIES FOLDER wxWidgets/thirdparty )
+endif()
+set_target_properties(wxjpeg       PROPERTIES FOLDER wxWidgets/thirdparty )
+set_target_properties(wxpng        PROPERTIES FOLDER wxWidgets/thirdparty )
+set_target_properties(wxregex      PROPERTIES FOLDER wxWidgets/thirdparty )
+set_target_properties(wxscintilla  PROPERTIES FOLDER wxWidgets/thirdparty )
+set_target_properties(wxrc         PROPERTIES FOLDER wxWidgets/utilities )
+
