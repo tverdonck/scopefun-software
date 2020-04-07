@@ -138,7 +138,7 @@ if(SCOPEFUN_WINDOWS)
 	if( SCOPEFUN_VISUALSTUDIO )
 		target_link_libraries( ScopeFun  
 			# libs
-			# ${SCOPEFUN_LIB_USB} 
+			${SCOPEFUN_LIB_USB} 
 			${SCOPEFUN_LIB_SDL2} 
 			${SCOPEFUN_LIB_WX} 
 			# system

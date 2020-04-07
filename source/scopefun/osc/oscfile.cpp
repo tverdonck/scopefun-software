@@ -74,7 +74,7 @@ int OsciloscopeManager::saveToFile(const char* file)
     if(fileThread.file.posReverse(".osc") > 0)
     {
         SDL_AtomicSet(&fileThread.atomic, 1);
-        fileThread.thread = SDL_CreateThreadWithStackSize(_saveToFile, "OscFileSave", 1024*1024, &fileThread);
+        fileThread.thread = SDL_CreateThreadWithStackSize(_saveToFile, "OscFileSave", (1024*1024), &fileThread);
         // _saveToFile(  &fileThread );
     }
     return 0;
