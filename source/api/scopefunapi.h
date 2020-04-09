@@ -617,30 +617,12 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfFrameDisplay(SFContext* INPUT, SFrameData* INOUT, int INPUT, int INPUT, SDisplay* INOUT);
 
     /*----------------------------------------
-      Transformations
-    ----------------------------------------*/
-    SCOPEFUN_API int sfTransformFrameToHeader(SFContext* INPUT, SFrameData* INOUT, SFrameHeader* INOUT);
-    SCOPEFUN_API int sfTransformHeaderToHardware(SFContext* INPUT, SFrameHeader* INOUT, SHardware* INOUT);
-    SCOPEFUN_API int sfTransformHardwareToConfiguration(SFContext* INPUT, SHardware* INOUT, SConfiguration* INOUT);
-    SCOPEFUN_API int sfTransformConfigurationToHardware(SFContext* INPUT, SConfiguration* INOUT, SHardware* INOUT);
-
-    /*----------------------------------------
-     Get Configuration
-    ----------------------------------------*/
-    SCOPEFUN_API int sfGetFrameSize(SHardware*  INPUT, uint* OUTPUT);
-    SCOPEFUN_API int sfGetNumSamples(SHardware* INPUT, uint* OUTPUT);
-
-    /*----------------------------------------
-       Set Configuration
-    ----------------------------------------*/
-    SCOPEFUN_API int sfSetFrameSize(SHardware*  INPUT, uint  INPUT);
-    SCOPEFUN_API int sfSetNumSamples(SHardware* INPUT, uint  INPUT);
-
-    /*----------------------------------------
-      Header
-    ----------------------------------------*/
-    SCOPEFUN_API int sfHeaderEts( SFrameHeader* INPUT, uint* OUTPUT);
-    SCOPEFUN_API int sfHeaderTemperature(SFrameHeader* INPUT, float* OUTPUT);
+       Header
+     ----------------------------------------*/
+    SCOPEFUN_API int sfGetHeader(SFContext* INPUT, SFrameData* INOUT, SFrameHeader* INOUT);
+    SCOPEFUN_API int sfGetHeaderHardware(SFContext* INPUT, SFrameHeader* INOUT, SHardware* INOUT);
+    SCOPEFUN_API int sfGetHeaderEts( SFrameHeader* INPUT, uint* OUTPUT);
+    SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* INPUT, float* OUTPUT);
 
     /*----------------------------------------
       Simulate
@@ -650,6 +632,121 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfSetSimulateOnOff(SFContext* INPUT, int INPUT);
     SCOPEFUN_API int sfGetSimulateData(SFContext* INPUT, SSimulate* INOUT);
     SCOPEFUN_API int sfSimulate(SFContext* INPUT, double INPUT);
+
+    /*----------------------------------------
+      Set
+    ----------------------------------------*/
+
+    // analog
+    SCOPEFUN_API int    sfDefault(SHardware* INOUT);
+    SCOPEFUN_API int    sfSetFrameSize(SHardware*  INOUT, uint  INPUT);
+    SCOPEFUN_API int    sfSetNumSamples(SHardware* INOUT, uint  INPUT);
+    SCOPEFUN_API int    sfAnalogSwitchBit(SHardware* INOUT, int INPUT, int INPUT);
+    SCOPEFUN_API int    sfSetEts(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetYRangeScaleA(SHardware* INOUT, ushort INPUT, ushort INPUT);
+    SCOPEFUN_API int    sfSetYPositionA(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetYRangeScaleB(SHardware* INOUT, ushort INPUT, ushort INPUT);
+    SCOPEFUN_API int    sfSetYPositionB(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetXRange(SHardware* INOUT, ishort INPUT);
+    SCOPEFUN_API int    sfSetControl(SHardware* INOUT, uint INPUT);
+    SCOPEFUN_API int    sfSetSampleSize(SHardware* INOUT, uint INPUT);
+    SCOPEFUN_API int    sfSetTriggerSource(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetTriggerReArm(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetTriggerMode(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetTriggerSlope(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetTriggerPre(SHardware* INOUT, float INPUT);
+    SCOPEFUN_API int    sfSetTriggerHis(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetTriggerLevel(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetHoldoff(SHardware* INOUT, uint INPUT);
+
+    // generator 0
+    SCOPEFUN_API int    sfSetGeneratorType0(SHardware* INOUT, ushort INPUT);
+    SCOPEFUN_API int    sfSetGeneratorOn0(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorSlope0(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorVoltage0(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorOffset0(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorFrequency0(SHardware* INOUT, float INPUT, float INPUT);
+    SCOPEFUN_API int    sfSetGeneratorSquareDuty0(SHardware* INOUT, float INPUT);
+
+    // generator 1
+    SCOPEFUN_API int    sfSetGeneratorType1(SHardware* INOUT, ushort INPUT);
+    SCOPEFUN_API int    sfSetGeneratorOn1(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorSlope1(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorVoltage1(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorOffset1(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetGeneratorFrequency1(SHardware* INOUT, float INPUT, float INPUT);
+    SCOPEFUN_API int    sfSetGeneratorSquareDuty1(SHardware* INOUT, float INPUT);
+    SCOPEFUN_API int    sfSetDigitalVoltage(SHardware* INOUT, double INPUT, double INPUT);
+    SCOPEFUN_API int    sfSetDigitalInputOutput(SHardware* INOUT, int INPUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalOutputBit(SHardware* INOUT, int INPUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalClockDivide(SHardware* INOUT, uint INPUT);
+    SCOPEFUN_API int    sfSetAverage(SHardware* INOUT, int INPUT);
+
+    // digital
+    SCOPEFUN_API int    sfSetDigitalStart(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalMode(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalChannel(SHardware* INOUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalDelay(SHardware* INOUT, uint INPUT, ushort INPUT);
+    SCOPEFUN_API int    sfSetDigitalMask(SHardware* INOUT, uint INPUT, uint INPUT, int INPUT);
+    SCOPEFUN_API int    sfSetDigitalPattern(SHardware* INOUT, ushort INPUT, ushort INPUT, ushort INPUT);
+
+    /*----------------------------------------
+       Get
+    ----------------------------------------*/
+
+    // analog
+    SCOPEFUN_API uint   sfGetFrameSize(SHardware*  INPUT);
+    SCOPEFUN_API uint   sfGetNumSamples(SHardware* INPUT);
+    SCOPEFUN_API ushort sfGetAnalogSwitch(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetEts(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetControl(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetYRangeA(SHardware* INPUT);
+    SCOPEFUN_API float  sfGetYScaleA(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetYPositionA(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetYRangeB(SHardware* INPUT);
+    SCOPEFUN_API float  sfGetYScaleB(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetYPositionB(SHardware* INPUT);
+    SCOPEFUN_API ushort sfGetTriggerSource(SHardware* INPUT);
+    SCOPEFUN_API ushort sfGetTriggerMode(SHardware* INPUT);
+    SCOPEFUN_API ushort sfGetTriggerSlope(SHardware* INPUT);
+    SCOPEFUN_API float  sfGetTriggerPre(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetTriggerHis(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetTriggerLevel(SHardware* INPUT);
+    SCOPEFUN_API ishort sfGetXRange(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetSampleSize(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetHoldoff(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetAverage(SHardware* INPUT);
+
+    // generator 0
+    SCOPEFUN_API ushort sfGetGeneratorType0(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorOn0(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorSlope0(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorVoltage0(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorOffset0(SHardware* INPUT);
+    SCOPEFUN_API float  sfGetGeneratorFrequency0(SHardware* INPUT, float INPUT);
+    SCOPEFUN_API float  sfGetGeneratorSquareDuty0(SHardware* INPUT);
+
+    // generator 1
+    SCOPEFUN_API ushort sfGetGeneratorType1(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorOn1(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorSlope1(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorVoltage1(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetGeneratorOffset1(SHardware* INPUT);
+    SCOPEFUN_API float  sfGetGeneratorFrequency1(SHardware* INPUT, float INPUT);
+    SCOPEFUN_API float  sfGetGeneratorSquareDuty1(SHardware* INPUT);
+
+    // digital
+    SCOPEFUN_API int    sfGetDigitalStart(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetDigitalMode(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetDigitalChannel(SHardware* INPUT);
+    SCOPEFUN_API ushort sfGetDigitalDelay(SHardware* INPUT, ushort INPUT);
+    SCOPEFUN_API int    sfGetDigitalMask(SHardware* INPUT, ushort INPUT, ushort INPUT);
+    SCOPEFUN_API ushort sfGetDigitalPattern(SHardware* INPUT, ushort INPUT, ushort INPUT);
+    SCOPEFUN_API double sfGetDigitalVoltage(SHardware* INPUT, double INPUT);
+    SCOPEFUN_API int    sfGetDigitalInputOutput15(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetDigitalInputOutput7(SHardware* INPUT);
+    SCOPEFUN_API int    sfGetDigitalOutputBit(SHardware* INPUT, int INPUT);
+    SCOPEFUN_API uint   sfGetDigitalClockDivide(SHardware* INPUT);
 
 #else
 
@@ -672,7 +769,7 @@ SCOPEFUN_DELETE(SEeprom)
     #endif
 
     /*----------------------------------------
-      API
+      Initialization
     ----------------------------------------*/
     SCOPEFUN_API int sfApiInit();
     SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int maxMemory);
@@ -709,41 +806,139 @@ SCOPEFUN_DELETE(SEeprom)
     ----------------------------------------*/
     SCOPEFUN_API int sfFrameCapture(SFContext* ctx,  SFrameData* buffer, int len, int* received);
     SCOPEFUN_API int sfFrameDisplay(SFContext* ctx,  SFrameData* buffer, int len, int received, SDisplay* display);
-   
-    /*----------------------------------------
-      Transformations
-    ----------------------------------------*/
-    SCOPEFUN_API int sfTransformFrameToHeader(SFContext* ctx, SFrameData* frame, SFrameHeader* header);
-    SCOPEFUN_API int sfTransformHeaderToHardware(SFContext* ctx, SFrameHeader* header, SHardware* hw);
-    SCOPEFUN_API int sfTransformHardwareToConfiguration(SFContext* ctx, SHardware* hw, SConfiguration* cfg);
-    SCOPEFUN_API int sfTransformConfigurationToHardware(SFContext* ctx, SConfiguration* cfg, SHardware* hw);
-
-    /*----------------------------------------
-       Get Configuration
-    ----------------------------------------*/
-    SCOPEFUN_API int sfGetFrameSize(SHardware*  hw, uint* frameSize);
-    SCOPEFUN_API int sfGetNumSamples(SHardware* hw, uint* numSamples);
-
-    /*----------------------------------------
-       Set Configuration
-    ----------------------------------------*/
-    SCOPEFUN_API int sfSetFrameSize(SHardware*  hw, uint  frameSize);
-    SCOPEFUN_API int sfSetNumSamples(SHardware* hw, uint  numSamples);
-
+  
     /*----------------------------------------
       Header
     ----------------------------------------*/
-    SCOPEFUN_API int sfHeaderEts( SFrameHeader* header,uint* ets);
-    SCOPEFUN_API int sfHeaderTemperature(SFrameHeader* header,float* temperature);
-
+    SCOPEFUN_API int sfGetHeader(SFContext* ctx, SFrameData* frame, SFrameHeader* header);
+    SCOPEFUN_API int sfGetHeaderHardware(SFContext* ctx, SFrameHeader* header, SHardware* hw);
+    SCOPEFUN_API int sfGetHeaderEts(SFrameHeader* header, uint* ets);
+    SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* header, float* temperature);
+   
     /*----------------------------------------
-      Simulate
+       Simulate
     ----------------------------------------*/
     SCOPEFUN_API int sfIsSimulate(SFContext* ctx);
     SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim);
     SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* sim);
     SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on);
     SCOPEFUN_API int sfSimulate(SFContext* ctx, double time);
+
+    /*----------------------------------------
+       Set
+    ----------------------------------------*/
+
+    // analog
+    SCOPEFUN_API int    sfDefault(SHardware* hw);
+    SCOPEFUN_API int    sfSetFrameSize(SHardware*  hw, uint  frameSize);
+    SCOPEFUN_API int    sfSetNumSamples(SHardware* hw, uint  numSamples);
+    SCOPEFUN_API int    sfAnalogSwitchBit(SHardware* hw, int bit, int value);
+    SCOPEFUN_API int    sfSetEts(SHardware* hw, int enable);
+    SCOPEFUN_API int    sfSetYRangeScaleA(SHardware* hw, ushort attr, ushort gain);
+    SCOPEFUN_API int    sfSetYPositionA(SHardware* hw, int pos);
+    SCOPEFUN_API int    sfSetYRangeScaleB(SHardware* hw, ushort attr, ushort gain);
+    SCOPEFUN_API int    sfSetYPositionB(SHardware* hw, int pos);
+    SCOPEFUN_API int    sfSetXRange(SHardware* hw, ishort range);
+    SCOPEFUN_API int    sfSetControl(SHardware* hw, uint selected);
+    SCOPEFUN_API int    sfSetSampleSize(SHardware* hw, uint value);
+    SCOPEFUN_API int    sfSetTriggerSource(SHardware* hw, int value);
+    SCOPEFUN_API int    sfSetTriggerReArm(SHardware* hw, int on);
+    SCOPEFUN_API int    sfSetTriggerMode(SHardware* hw, int value);
+    SCOPEFUN_API int    sfSetTriggerSlope(SHardware* hw, int value);
+    SCOPEFUN_API int    sfSetTriggerPre(SHardware* hw, float perc);
+    SCOPEFUN_API int    sfSetTriggerHis(SHardware* hw, int perc);
+    SCOPEFUN_API int    sfSetTriggerLevel(SHardware* hw, int perc);
+    SCOPEFUN_API int    sfSetHoldoff(SHardware* hw, uint holdoff);
+    
+    // generator 0
+    SCOPEFUN_API int    sfSetGeneratorType0(SHardware* hw, ushort type);
+    SCOPEFUN_API int    sfSetGeneratorOn0(SHardware* hw, int onoff);
+    SCOPEFUN_API int    sfSetGeneratorSlope0(SHardware* hw, int onoff);
+    SCOPEFUN_API int    sfSetGeneratorVoltage0(SHardware* hw, int volt);
+    SCOPEFUN_API int    sfSetGeneratorOffset0(SHardware* hw, int perc);
+    SCOPEFUN_API int    sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs);
+    SCOPEFUN_API int    sfSetGeneratorSquareDuty0(SHardware* hw, float perc);
+
+    // generator 1
+    SCOPEFUN_API int    sfSetGeneratorType1(SHardware* hw, ushort type);
+    SCOPEFUN_API int    sfSetGeneratorOn1(SHardware* hw, int onoff);
+    SCOPEFUN_API int    sfSetGeneratorSlope1(SHardware* hw, int onoff);
+    SCOPEFUN_API int    sfSetGeneratorVoltage1(SHardware* hw, int volt);
+    SCOPEFUN_API int    sfSetGeneratorOffset1(SHardware* hw, int perc);
+    SCOPEFUN_API int    sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs);
+    SCOPEFUN_API int    sfSetGeneratorSquareDuty1(SHardware* hw, float perc);
+    SCOPEFUN_API int    sfSetDigitalVoltage(SHardware* hw, double volt, double kDigital);
+    SCOPEFUN_API int    sfSetDigitalInputOutput(SHardware* hw, int inout15, int inout7);
+    SCOPEFUN_API int    sfSetDigitalOutputBit(SHardware* hw, int bit, int onoff);
+    SCOPEFUN_API int    sfSetDigitalClockDivide(SHardware* hw, uint divider);
+    SCOPEFUN_API int    sfSetAverage(SHardware* hw, int enable);
+
+    // digital
+    SCOPEFUN_API int    sfSetDigitalStart(SHardware* hw, int start);
+    SCOPEFUN_API int    sfSetDigitalMode(SHardware* hw, int mode);
+    SCOPEFUN_API int    sfSetDigitalChannel(SHardware* hw, int channel);
+    SCOPEFUN_API int    sfSetDigitalDelay(SHardware* hw, uint stage, ushort delay);
+    SCOPEFUN_API int    sfSetDigitalMask(SHardware* hw, uint stage, uint bit, int value);
+    SCOPEFUN_API int    sfSetDigitalPattern(SHardware* hw, ushort stage, ushort bit, ushort pattern);
+
+    /*----------------------------------------
+       Get
+    ----------------------------------------*/
+
+    // analog
+    SCOPEFUN_API uint   sfGetFrameSize(SHardware*  hw);
+    SCOPEFUN_API uint   sfGetNumSamples(SHardware* hw);
+    SCOPEFUN_API ushort sfGetAnalogSwitch(SHardware* hw);
+    SCOPEFUN_API int    sfGetEts(SHardware* hw);
+    SCOPEFUN_API uint   sfGetControl(SHardware* hw);
+    SCOPEFUN_API uint   sfGetYRangeA(SHardware* hw);
+    SCOPEFUN_API float  sfGetYScaleA(SHardware* hw);
+    SCOPEFUN_API int    sfGetYPositionA(SHardware* hw);
+    SCOPEFUN_API uint   sfGetYRangeB(SHardware* hw);
+    SCOPEFUN_API float  sfGetYScaleB(SHardware* hw);
+    SCOPEFUN_API int    sfGetYPositionB(SHardware* hw);
+    SCOPEFUN_API ushort sfGetTriggerSource(SHardware* hw);
+    SCOPEFUN_API ushort sfGetTriggerMode(SHardware* hw);
+    SCOPEFUN_API ushort sfGetTriggerSlope(SHardware* hw);
+    SCOPEFUN_API float  sfGetTriggerPre(SHardware* hw);
+    SCOPEFUN_API int    sfGetTriggerHis(SHardware* hw);
+    SCOPEFUN_API int    sfGetTriggerLevel(SHardware* hw);
+    SCOPEFUN_API ishort sfGetXRange(SHardware* hw);
+    SCOPEFUN_API uint   sfGetSampleSize(SHardware* hw);
+    SCOPEFUN_API uint   sfGetHoldoff(SHardware* hw);
+    SCOPEFUN_API int    sfGetAverage(SHardware* hw);
+
+    // generator 0
+    SCOPEFUN_API ushort sfGetGeneratorType0(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorOn0(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorSlope0(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorVoltage0(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorOffset0(SHardware* hw);
+    SCOPEFUN_API float  sfGetGeneratorFrequency0(SHardware* hw, float fs);
+    SCOPEFUN_API float  sfGetGeneratorSquareDuty0(SHardware* hw);
+
+    // generator 1
+    SCOPEFUN_API ushort sfGetGeneratorType1(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorOn1(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorSlope1(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorVoltage1(SHardware* hw);
+    SCOPEFUN_API int    sfGetGeneratorOffset1(SHardware* hw);
+    SCOPEFUN_API float  sfGetGeneratorFrequency1(SHardware* hw, float fs);
+    SCOPEFUN_API float  sfGetGeneratorSquareDuty1(SHardware* hw);
+   
+    // digital
+    SCOPEFUN_API int    sfGetDigitalStart(SHardware* hw);
+    SCOPEFUN_API int    sfGetDigitalMode(SHardware* hw);
+    SCOPEFUN_API int    sfGetDigitalChannel(SHardware* hw);
+    SCOPEFUN_API ushort sfGetDigitalDelay(SHardware* hw, ushort stage);
+    SCOPEFUN_API int    sfGetDigitalMask(SHardware* hw, ushort stage, ushort bit);
+    SCOPEFUN_API ushort sfGetDigitalPattern(SHardware* hw, ushort stage, ushort bit);
+    SCOPEFUN_API double sfGetDigitalVoltage(SHardware* hw, double kDigital);
+    SCOPEFUN_API int    sfGetDigitalInputOutput15(SHardware* hw);
+    SCOPEFUN_API int    sfGetDigitalInputOutput7(SHardware* hw);
+    SCOPEFUN_API int    sfGetDigitalOutputBit(SHardware* hw, int bit);
+    SCOPEFUN_API uint   sfGetDigitalClockDivide(SHardware* hw);
+
 #endif
 
 /*----------------------------------------
