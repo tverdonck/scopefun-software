@@ -22,11 +22,8 @@
 #define SCOPEFUN_API_HEADER
 
 /*----------------------------------------
-
       ScopeFun API - Types
-
 ----------------------------------------*/
-
 typedef unsigned char      byte;
 typedef short              ishort;
 typedef unsigned short     ushort;
@@ -38,47 +35,144 @@ typedef unsigned long long ularge;
 /*----------------------------------------
    version
 ----------------------------------------*/
-#define HARDWARE_VERSION_1 1
-#define HARDWARE_VERSION_2 2
+#define HARDWARE_VERSION 2
+
+/*----------------------------------------
+   bit
+----------------------------------------*/
+#define BIT(index) (1<<index)
+
+/*----------------------------------------
+   Control
+-----------------------------------------*/
+enum AnalogFunction
+{
+   ANALOG_FUNCTION_MEDIUM = 0,
+   ANALOG_FUNCTION_SUB_CH0_CH1,
+   ANALOG_FUNCTION_SUB_CH1_CH0,
+   ANALOG_FUNCTION_ADD,
+   ANALOG_FUNCTION_MIN,
+   ANALOG_FUNCTION_MAX,
+   ANALOG_FUNCTION_CUSTOM,
+   ANALOG_FUNCTION_UPLOADED,
+};
+
+enum AnalogFlag
+{
+   CHANNEL_ATTR_B = BIT(0),
+   CHANNEL_ATTR_A = BIT(1),
+   CHANNEL_B_GROUND = BIT(2),
+   CHANNEL_A_GROUND = BIT(3),
+   CHANNEL_B_ACDC = BIT(4),
+   CHANNEL_A_ACDC = BIT(5),
+   CHANNEL_INTERLEAVE = BIT(6),
+   CHANNEL_ETS = BIT(7),
+};
+
+enum GeneratorType
+{
+   GENERATOR_CUSTOM,
+   GENERATOR_SIN,
+   GENERATOR_COS,
+   GENERATOR_TRIANGLE,
+   GENERATOR_RAMP_UP,
+   GENERATOR_RAMP_DOWN,
+   GENERATOR_SQUARE,
+   GENERATOR_DELTA,
+   GENERATOR_DC,
+   GENERATOR_NOISE,
+};
+
+enum ControllType1
+{
+   CONTROLL1_SHUTDOWN = 0x0000,
+   CONTROLL1_RESET = 0x0A5A,
+   CONTROLL1_TEST = 0x0640,
+   CONTROLL1_WAKEUP = 0x0003,
+   CONTROLL1_NORMAL = 0x0600,
+};
+
+enum ControllType2
+{
+   CONTROLL2_NORMAL = 0x0000,
+   CONTROLL2_TEST = 0x0002,
+   CONTROLL2_RESET = 0x0004,
+};
+
+enum CallibrateFreq
+{
+   CALLIBRATE_1K,
+   CALLIBRATE_5K,
+   CALLIBRATE_10K,
+   CALLIBRATE_100K,
+   CALLIBRATE_200K,
+   CALLIBRATE_500K,
+   CALLIBRATE_1M,
+   CALLIBRATE_2M,
+};
+
+enum DigitalPattern
+{
+   DIGITAL_PATTERN_0,
+   DIGITAL_PATTERN_1,
+   DIGITAL_PATTERN_RISING,
+   DIGITAL_PATTERN_FALLING,
+};
+
+enum DigitalStage
+{
+   DIGITAL_STAGE_0,
+   DIGITAL_STAGE_1,
+   DIGITAL_STAGE_2,
+   DIGITAL_STAGE_3,
+};
+
+enum DigitalBit
+{
+   DIGITAL_BIT_0,
+   DIGITAL_BIT_1,
+   DIGITAL_BIT_2,
+   DIGITAL_BIT_3,
+   DIGITAL_BIT_4,
+   DIGITAL_BIT_5,
+   DIGITAL_BIT_6,
+   DIGITAL_BIT_7,
+   DIGITAL_BIT_8,
+   DIGITAL_BIT_9,
+   DIGITAL_BIT_10,
+   DIGITAL_BIT_11,
+   DIGITAL_BIT_12,
+   DIGITAL_BIT_13,
+   DIGITAL_BIT_14,
+   DIGITAL_BIT_15,
+};
+
 
 /*----------------------------------------
 
       ScopeFun API - Frame Constants
 
 ----------------------------------------*/
-#define SCOPEFUN_FRAME_1_HEADER                  (2464)
-#define SCOPEFUN_FRAME_1_DATA                   (60000)
-#define SCOPEFUN_FRAME_1_PACKET                   (512)
-#define SCOPEFUN_FRAME_2_HEADER                  (1024)
-#define SCOPEFUN_FRAME_2_DATA           (512*1000*1000)
-#define SCOPEFUN_FRAME_2_PACKET             (1024*1024)
-#define SCOPEFUN_FRAME_DATA             (512*1000*1000)
-#define SCOPEFUN_FRAME_MEMORY           (512*1024*1024)
-#define SCOPEFUN_FRAME_PACKET               (1024*1024)
+#define SCOPEFUN_FRAME_HEADER                  (1024)
+#define SCOPEFUN_FRAME_DATA           (512*1000*1000)
+#define SCOPEFUN_FRAME_PACKET             (1024*1024)
+#define SCOPEFUN_FRAME_DATA           (512*1000*1000)
+#define SCOPEFUN_FRAME_MEMORY         (512*1024*1024)
+#define SCOPEFUN_FRAME_PACKET             (1024*1024)
 
 /*----------------------------------------
 
       ScopeFun API - Constants
 
 ----------------------------------------*/
-#define SCOPEFUN_INVALID_CLIENT             -1
-#define SCOPEFUN_MAX_CLIENT                 8
-#define SCOPEFUN_SERVER_ID                  SCOPEFUN_MAX_CLIENT
+#define SCOPEFUN_MAX_VOLTAGE                (+511)
+#define SCOPEFUN_MIN_VOLTAGE                (-511)
 #define SCOPEFUN_DISPLAY                    10000
-#define SCOPEFUN_FIRMWARE_FX2               16384
+#define SCOPEFUN_FIRMWARE_FX3               16384
 #define SCOPEFUN_FIRMWARE_FPGA              (4*1024*1024)
 #define SCOPEFUN_EEPROM_BYTES               (256*1024)
 #define SCOPEFUN_EEPROM_FIRMWARE_NAME_BYTES (16)
 #define SCOPEFUN_GENERATOR                  32768
-
-/*----------------------------------------
-
-      ScopeFun API - capture type
-
-----------------------------------------*/
-#define SCOPEFUN_CAPTURE_TYPE_NONE   0
-#define SCOPEFUN_CAPTURE_TYPE_HEADER 1
-#define SCOPEFUN_CAPTURE_TYPE_DATA   2
 
 /*----------------------------------------
 
@@ -138,70 +232,35 @@ typedef unsigned long long ularge;
    ScopeFun API - Structures
 
 ----------------------------------------*/
+typedef enum _EDisplayFunction
+{
+   dfMax,
+   dfMin,
+   dfMedium,
+   dfAdd,
+   dfCh0SubCh1,
+   dfCh1SubCh0,
+   dfCustomScript,
+} EDisplayFunction;
 
 /*----------------------------------------
-   SHardware1
+   SConfiguration
 ----------------------------------------*/
 typedef struct
 {
-    ushort control;
-    ushort vgaina;
-    ushort vgainb;
-    ishort offseta;
-    ishort offsetb;
-    ushort siggen;
-    ushort trigger;
-    ushort analogswitch;
-    ushort triggerMode;
-    ushort triggerSource;
-    ushort triggerSlope;
-    ishort triggerLevel;
-    ushort triggerHis;
-    ushort triggerPercent;
-    ushort xRange;
-    ushort sampleSize;
-    ushort holdoffH;
-    ushort holdoffL;
-    ushort generatorType0;
-    ushort generatorVoltage0;
-    ishort generatorOffset0;
-    ushort generatorDeltaH0;
-    ushort generatorDeltaL0;
-    ushort generatorSqueareDuty0;
-    ushort generatorType1;
-    ushort generatorVoltage1;
-    ishort generatorOffset1;
-    ushort generatorDeltaH1;
-    ushort generatorDeltaL1;
-    ushort generatorSqueareDuty1;
-    ushort digitalPattern1a;
-    ushort digitalPattern1b;
-    ushort digitalMask1;
-    ushort digitalPattern2a;
-    ushort digitalPattern2b;
-    ushort digitalMask2;
-    ushort digitalPattern3a;
-    ushort digitalPattern3b;
-    ushort digitalMask3;
-    ushort digitalPattern4a;
-    ushort digitalPattern4b;
-    ushort digitalMask4;
-    ushort dt_delayMaxcnt1;
-    ushort dt_delayMaxcnt2;
-    ushort dt_delayMaxcnt3;
-    ushort dt_delayMaxcnt4;
-    ushort dt_control;
-    ushort digitalVoltage;
-    ushort digitalInputOutput;
-    ushort digitalOutputBit;
-    ushort digitalOutputMask;
-    ushort digitalClkDivideH;
-    ushort digitalClkDivideL;
-} SHardware1;
+   uint timeCapture;
+   uint voltageCh0;
+   uint voltageCh1;
+   uint triggerPos;
+   uint triggerHis;
+   uint triggerPre;
 
+   EDisplayFunction displayFunction;
+   // todo ...
+} SConfiguration;
 
 /*----------------------------------------
-SHardware2
+SHardware
 ----------------------------------------*/
 typedef struct
 {
@@ -264,42 +323,26 @@ typedef struct
     uint   reserved4;
     uint   reserved5;
     uint   reserved6;
-} SHardware2;
+} SHardware;
 
 /*----------------------------------------
    SFrameHeader
 ----------------------------------------*/
-SCOPEFUN_ARRAY(SArrayMagic1,     byte,   2);
-SCOPEFUN_ARRAY(SArrayTrigger1,   byte,   8);
-SCOPEFUN_ARRAY(SArrayHardware1,  ushort, 53);
-SCOPEFUN_ARRAY(SArrayPadding1,   byte, 2343);
-SCOPEFUN_ARRAY(SArrayFrameSize1, byte, 4);
-
-SCOPEFUN_ARRAY(SArrayMagic2,            byte,    4);
-SCOPEFUN_ARRAY(SArrayETS2,              byte,    1);
-SCOPEFUN_ARRAY(SArrayPaddingBefore2,    byte,   251);
-SCOPEFUN_ARRAY(SArrayHardware2,         byte,   128);
-SCOPEFUN_ARRAY(SArrayPaddingAfter2,     byte,   639);
-SCOPEFUN_ARRAY(SArrayCrc2,              byte,     1);
+SCOPEFUN_ARRAY(SArrayMagic,             byte,    4);
+SCOPEFUN_ARRAY(SArrayETS,               byte,    1);
+SCOPEFUN_ARRAY(SArrayPaddingBefore,     byte,   251);
+SCOPEFUN_ARRAY(SArrayHardware,          byte,   128);
+SCOPEFUN_ARRAY(SArrayPaddingAfter,      byte,   639);
+SCOPEFUN_ARRAY(SArrayCrc,               byte,     1);
 typedef struct
 {
-    SArrayMagic1     magic;
-    SArrayTrigger1   trigger;
-    SArrayHardware1  hardware;
-    SArrayPadding1   padding;
-    SArrayFrameSize1 frameSize;
-    byte             crc;
-} SFrameHeader1;
-
-typedef struct
-{
-    SArrayMagic2         magic;
-    SArrayETS2           etsDelay;
-    SArrayPaddingBefore2 paddBefore;
-    SArrayHardware2      hardware;
-    SArrayPaddingAfter2  paddAfter;
-    SArrayCrc2           crc;
-} SFrameHeader2;
+    SArrayMagic          magic;
+    SArrayETS            etsDelay;
+    SArrayPaddingBefore  paddBefore;
+    SArrayHardware       hardware;
+    SArrayPaddingAfter   paddAfter;
+    SArrayCrc            crc;
+} SFrameHeader;
 
 /*----------------------------------------
    SFrameData
@@ -324,21 +367,21 @@ typedef struct
 ----------------------------------------*/
 typedef struct
 {
-    unsigned int    data1;
-    unsigned short  data2;
-    unsigned short  data3;
-    unsigned char   data4[8];
+    uint    data1;
+    ushort  data2;
+    ushort  data3;
+    byte    data4[8];
 } SGUID;
 
 /*----------------------------------------
    SFx2
 ----------------------------------------*/
-SCOPEFUN_ARRAY(SArrayFx2, byte, SCOPEFUN_FIRMWARE_FX2);
+SCOPEFUN_ARRAY(SArrayFx3, byte, SCOPEFUN_FIRMWARE_FX3);
 typedef struct
 {
     uint      size;
-    SArrayFx2 data;
-} SFx2;
+    SArrayFx3 data;
+} SFx3;
 
 /*----------------------------------------
    SFpga
@@ -352,6 +395,10 @@ typedef struct
 
 /*----------------------------------------
    SGenerator
+----------------------------------------*/
+
+/*----------------------------------------
+   ESimulateType
 ----------------------------------------*/
 SCOPEFUN_ARRAY(SArrayGeneratorAnalog0, ishort, SCOPEFUN_GENERATOR);
 SCOPEFUN_ARRAY(SArrayGeneratorAnalog1, ishort, SCOPEFUN_GENERATOR);
@@ -379,16 +426,6 @@ typedef enum _ESimulateType
 } ESimulateType;
 
 /*----------------------------------------
-EMode
-----------------------------------------*/
-typedef enum _EMode
-{
-    mIdle,
-    mCapture,
-    mSimulate,
-} EMode;
-
-/*----------------------------------------
    SSimulate
 ----------------------------------------*/
 typedef struct
@@ -413,16 +450,6 @@ typedef struct
     float                   voltage1;
 } SSimulate;
 
-/*----------------------------------------
-   SUsbGuid
-----------------------------------------*/
-typedef struct
-{
-    uint   data1;
-    ushort data2;
-    ushort data3;
-    byte   data4[8];
-} SUsbGuid;
 
 /*----------------------------------------
    SUsb
@@ -436,7 +463,7 @@ typedef struct
     uint         timeoutEp4;
     uint         timeoutEp6;
     uint         xferSize;
-    SUsbGuid     guid;
+    SGUID        guid;
 } SUsb;
 
 /*----------------------------------------
@@ -452,392 +479,14 @@ typedef struct
     SArrayDisplayAnalog1 analog1;
     SArrayDisplayAnalogF analogF;
     SArrayDisplayDigital digital;
-    byte                 ch0;
-    byte                 ch1;
-    byte                 fun;
-    byte                 dig;
 } SDisplay;
-
-/*----------------------------------------
-   EUpload
-----------------------------------------*/
-typedef enum _EUpload
-{
-    uChannel0,
-    uChannel1,
-    uDigital,
-    uFunction,
-} EUpload;
-
-/*----------------------------------------
-   EApiMode
-----------------------------------------*/
-typedef enum _EHardwareMode
-{
-    amUSB,
-    amNetwork,
-} EApiMode;
-
-/*----------------------------------------
-   SActiveClients
-----------------------------------------*/
-SCOPEFUN_ARRAY(SArraySClientId, byte, SCOPEFUN_MAX_CLIENT);
-typedef struct
-{
-    byte            cnt;
-    SArraySClientId client;
-} SActiveClients;
-
-/*----------------------------------------
-   ECaptureMode
-----------------------------------------*/
-typedef enum _ECaptureMode
-{
-    cmOff,
-    cmAllFrames,
-    cmRequest,
-} ECaptureMode;
-
-/*----------------------------------------
-   SFrameInfo
-----------------------------------------*/
-typedef struct
-{
-    uint                    version;
-    uint                    header;
-    uint                    data;
-    uint                    packet;
-} SFrameInfo;
-
-/*--------------------------------------
-
-      ScopeFun API - Network
-
---------------------------------------*/
-typedef enum _EMessage
-{
-    mClientConnect,
-    mClientDisconnect,
-    mClientDisplay,
-    mUpload,
-    mDownload,
-    mHardwareOpen,
-    mHardwareIsOpened,
-    mHardwareReset,
-    mHardwareConfig1,
-    mHardwareConfig2,
-    mHardwareCapture,
-    mHardwareCaptureFrame,
-    mHardwareUploadFx2,
-    mHardwareUploadFpga,
-    mHardwareUploadGenerator,
-    mHardwareEepromRead,
-    mHardwareEepromReadFirmwareID,
-    mHardwareEepromWrite,
-    mHardwareEepromErase,
-    mHardwareClose,
-    mLast,
-} EMessage;
-
-typedef struct
-{
-    char                    magic[8];
-    uint                    size;
-    uint                    message;
-    uint                    error;
-} messageHeader;
-
-/*----------------------------------------
-
-           Client -> Server
-
-----------------------------------------*/
-
-/*----------------------------------------
-   client
-----------------------------------------*/
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    maxMemory;
-} csClientConnect;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} csClientDisconnect;
-
-typedef struct
-{
-    messageHeader           header;
-    SDisplay                display;
-    uint                    clientId;
-} csClientDisplay;
-
-/*----------------------------------------
-   upload
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    SFrameInfo              frame;
-    SSimulate               simulate;
-    uint                    simOnOff;
-} csUpload;
-
-/*----------------------------------------
-   download
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} csDownload;
-
-/*----------------------------------------
-   hardware
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    SUsb                    usb;
-    uint                    version;
-} csHardwareOpen;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} csHardwareIsOpened;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} csHardwareReset;
-
-typedef struct
-{
-    messageHeader           header;
-    SHardware1              config;
-} csHardwareConfig1;
-
-typedef struct
-{
-    messageHeader           header;
-    SHardware2              config;
-} csHardwareConfig2;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    len;
-    uint                    type;
-} csHardwareCapture;
-
-typedef struct
-{
-    messageHeader           header;
-    SFx2                    fx2;
-} csHardwareUploadFx2;
-
-typedef struct
-{
-    messageHeader           header;
-    SFpga                   fpga;
-} csHardwareUploadFpga;
-
-typedef struct
-{
-    messageHeader           header;
-    SGenerator              data;
-} csHardwareUploadGenerator;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    size;
-    uint                    address;
-    uint                    reserved;
-} csHardwareEepromRead;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    size;
-    uint                    address;
-    uint                    reserved;
-} csHardwareEepromReadFirmwareID;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    size;
-    uint                    address;
-    SEeprom                 eeprom;
-} csHardwareEepromWrite;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    erase;
-} csHardwareEepromErase;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} csHardwareClose;
-
-/*----------------------------------------
-
-         Server -> Client
-
-----------------------------------------*/
-
-/*----------------------------------------
-   client
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    uint                    id;
-} scClientConnect;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scClientDisconnect;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scClientDisplay;
-
-/*----------------------------------------
-   upload
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scUpload;
-
-/*----------------------------------------
-   download
-----------------------------------------*/
-typedef struct
-{
-    messageHeader           header;
-    SFrameInfo              frame;
-    SSimulate               simulate;
-    uint                    simOnOff;
-    SDisplay                display;
-    SActiveClients          active;
-} scDownload;
-
-/*----------------------------------------
-hardware
-----------------------------------------*/
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareOpen;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    opened;
-} scHardwareIsOpened;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareReset;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareConfig1;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareConfig2;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    bytes;
-    SFrameData              data;
-} scHardwareCapture;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareUploadFx2;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareUploadFpga;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareUploadGenerator;
-
-typedef struct
-{
-    messageHeader           header;
-    SEeprom                 eeprom;
-} scHardwareEepromRead;
-
-typedef struct
-{
-    messageHeader           header;
-    SEeprom                 eeprom;
-} scHardwareEepromReadFirmwareID;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareEepromWrite;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareEepromErase;
-
-typedef struct
-{
-    messageHeader           header;
-    uint                    reserved;
-} scHardwareClose;
 
 /*----------------------------------------
 
 ScopeFun API - Context
 
 ----------------------------------------*/
-typedef struct
-{
-    int value;
-} SAtomic;
+typedef struct { int value; } SAtomic;
 typedef int SSpinLock;
 
 typedef struct
@@ -851,8 +500,8 @@ typedef struct
 {
     uint              maxMemory;
     SFrameData*       data;
-    SFrameInfo        info;
     uint              received;
+    uint              frameSize;
 } SCtxFrame;
 
 typedef struct
@@ -866,7 +515,6 @@ typedef struct
     uint              major;
     uint              minor;
     uint              active;
-    EApiMode          mode;
     SAtomic           thread;
     SSpinLock         lock;
     uint              timeout;
@@ -874,24 +522,10 @@ typedef struct
 
 typedef struct
 {
-    SActiveClients    active;
-} SCtxServer;
-
-typedef struct
-{
-    uint              id;
-    uint              connected;
-    SDisplay          display;
-} SCtxClient;
-
-typedef struct
-{
     SCtxApi           api;
     SCtxSimulate      simulate;
     SCtxFrame         frame;
-    SCtxServer        server;
-    SCtxClient        client;
-    byte*             net;
+    SConfiguration    configuration;
     byte*             usb;
 } SFContext;
 
@@ -913,15 +547,14 @@ typedef struct
 SCOPEFUN_CREATE(SFContext)
 SCOPEFUN_CREATE(SDisplay)
 SCOPEFUN_CREATE(SSimulate)
-SCOPEFUN_CREATE(SFrameInfo)
 SCOPEFUN_CREATE(SUsb)
-SCOPEFUN_CREATE(SHardware1)
-SCOPEFUN_CREATE(SHardware2)
-SCOPEFUN_CREATE(SFx2)
+SCOPEFUN_CREATE(SHardware)
+SCOPEFUN_CREATE(SConfiguration)
+SCOPEFUN_CREATE(SFx3)
 SCOPEFUN_CREATE(SFpga)
 SCOPEFUN_CREATE(SGenerator)
 SCOPEFUN_CREATE(SEeprom)
-SCOPEFUN_CREATE(SActiveClients)
+
 extern SFrameData* sfCreateSFrameData(SFContext* ctx, int memory);
 
 /*----------------------------------------
@@ -930,94 +563,45 @@ extern SFrameData* sfCreateSFrameData(SFContext* ctx, int memory);
 SCOPEFUN_DELETE(SFContext)
 SCOPEFUN_DELETE(SDisplay)
 SCOPEFUN_DELETE(SSimulate)
-SCOPEFUN_DELETE(SFrameInfo)
 SCOPEFUN_DELETE(SFrameData)
 SCOPEFUN_DELETE(SUsb)
-SCOPEFUN_DELETE(SHardware1)
-SCOPEFUN_DELETE(SHardware2)
+SCOPEFUN_DELETE(SHardware)
+SCOPEFUN_DELETE(SConfiguration)
 SCOPEFUN_DELETE(SFrameData)
-SCOPEFUN_DELETE(SFx2)
+SCOPEFUN_DELETE(SFx3)
 SCOPEFUN_DELETE(SFpga)
 SCOPEFUN_DELETE(SGenerator)
 SCOPEFUN_DELETE(SEeprom)
-SCOPEFUN_DELETE(SActiveClients)
 
 #ifdef SWIG
 
     #define SCOPEFUN_API extern
 
     /*----------------------------------------
-    api
+      API
     ----------------------------------------*/
     SCOPEFUN_API int sfApiInit();
     SCOPEFUN_API int sfApiCreateContext(SFContext* INOUT, int INPUT);
     SCOPEFUN_API int sfApiDeleteContext(SFContext* INPUT);
     SCOPEFUN_API int sfApiVersion(SFContext* INPUT, int* OUTPUT, int* OUTPUT, int* OUTPUT);
+    SCOPEFUN_API int sfSetActive(SFContext* INPUT, int INPUT);
+    SCOPEFUN_API int sfIsActive(SFContext* INPUT);
+    SCOPEFUN_API int sfSetThreadSafe(SFContext* INPUT, int INPUT);
+    SCOPEFUN_API int sfIsThreadSafe(SFContext* INPUT);
+    SCOPEFUN_API int sfSetTimeOut(SFContext* INPUT, int INPUT);
+    SCOPEFUN_API int sfGetTimeOut(SFContext* INPUT, int* OUTPUT);
     SCOPEFUN_API int sfApiExit();
 
-    /*----------------------------------------
-    is
-    ----------------------------------------*/
-    SCOPEFUN_API int sfIsUsb(SFContext* INPUT);
-    SCOPEFUN_API int sfIsNetwork(SFContext* INPUT);
-    SCOPEFUN_API int sfIsSimulate(SFContext* INPUT);
-    SCOPEFUN_API int sfIsActive(SFContext* INPUT);
-    SCOPEFUN_API int sfIsConnected(SFContext* INPUT);
-    SCOPEFUN_API int sfIsThreadSafe(SFContext* INPUT);
 
     /*----------------------------------------
-    set
-    ----------------------------------------*/
-    SCOPEFUN_API int sfSetThreadSafe(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetNetwork(SFContext* INPUT);
-    SCOPEFUN_API int sfSetUsb(SFContext* INPUT);
-    SCOPEFUN_API int sfSetActive(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetTimeOut(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetFrameVersion(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetFrameHeader(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetFrameData(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetFramePacket(SFContext* INPUT, int INPUT);
-    SCOPEFUN_API int sfSetSimulateData(SFContext* INPUT, SSimulate* INPUT);
-    SCOPEFUN_API int sfSetSimulateOnOff(SFContext* INPUT, int INPUT);
-
-
-    /*----------------------------------------
-    get
-    ----------------------------------------*/
-    SCOPEFUN_API int sfGetTimeOut(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetFrameVersion(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetFrameHeader(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetFrameData(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetFramePacket(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetClientDisplay(SFContext* INPUT, SDisplay* INOUT);
-    SCOPEFUN_API int sfGetClientId(SFContext* INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfGetClientActiveIds(SFContext* INPUT, SActiveClients* INOUT);
-    SCOPEFUN_API int sfGetSimulateData(SFContext* INPUT, SSimulate* INOUT);
-
-
-    /*----------------------------------------
-    client
-    ----------------------------------------*/
-    SCOPEFUN_API int sfClientConnect(SFContext* INPUT, const char* INPUT, int INPUT);
-    SCOPEFUN_API int sfClientDisconnect(SFContext* INPUT);
-    SCOPEFUN_API int sfClientDisplay(SFContext* INPUT, int INPUT, SDisplay* INPUT);
-
-    /*----------------------------------------
-    server
-    ----------------------------------------*/
-    SCOPEFUN_API int sfServerDownload(SFContext* INPUT);
-    SCOPEFUN_API int sfServerUpload(SFContext* INPUT);
-
-    /*----------------------------------------
-    hardware
+      Hardware
     ----------------------------------------*/
     SCOPEFUN_API int sfHardwareOpen(SFContext* INPUT, SUsb* INPUT, int INPUT);
     SCOPEFUN_API int sfHardwareIsOpened(SFContext* INPUT, int* OUTPUT);
     SCOPEFUN_API int sfHardwareReset(SFContext* INPUT);
-    SCOPEFUN_API int sfHardwareConfig1(SFContext* INPUT, SHardware1* INPUT);
-    SCOPEFUN_API int sfHardwareConfig2(SFContext* INPUT, SHardware2* INPUT);
+    SCOPEFUN_API int sfHardwareConfig(SFContext* INPUT, SHardware2* INPUT);
     SCOPEFUN_API int sfHardwareCapture(SFContext* INPUT, SFrameData* INOUT, int INPUT, int* OUTPUT, int INPUT);
-    SCOPEFUN_API int sfHardwareUploadFx2(SFContext* INPUT, SFx2* INPUT);
+    SCOPEFUN_API int sfHardwareUploadFx3(SFContext* INPUT, SFx2* INPUT);
     SCOPEFUN_API int sfHardwareUploadFpga(SFContext* INPUT, SFpga* INPUT);
     SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* INPUT, SGenerator* INPUT);
     SCOPEFUN_API int sfHardwareEepromRead(SFContext* INPUT, SEeprom* INOUT, int INPUT, int INPUT);
@@ -1027,8 +611,44 @@ SCOPEFUN_DELETE(SActiveClients)
     SCOPEFUN_API int sfHardwareClose(SFContext* INPUT);
 
     /*----------------------------------------
-    Simulate
+     Frame
+   ----------------------------------------*/
+    SCOPEFUN_API int sfFrameCapture(SFContext* INPUT, SFrameData* INOUT, int INPUT, int* OUTPUT);
+    SCOPEFUN_API int sfFrameDisplay(SFContext* INPUT, SFrameData* INOUT, int INPUT, int INPUT, SDisplay* INOUT);
+
+    /*----------------------------------------
+      Transformations
     ----------------------------------------*/
+    SCOPEFUN_API int sfTransformFrameToHeader(SFContext* INPUT, SFrameData* INOUT, SFrameHeader* INOUT);
+    SCOPEFUN_API int sfTransformHeaderToHardware(SFContext* INPUT, SFrameHeader* INOUT, SHardware* INOUT);
+    SCOPEFUN_API int sfTransformHardwareToConfiguration(SFContext* INPUT, SHardware* INOUT, SConfiguration* INOUT);
+    SCOPEFUN_API int sfTransformConfigurationToHardware(SFContext* INPUT, SConfiguration* INOUT, SHardware* INOUT);
+
+    /*----------------------------------------
+     Get Configuration
+    ----------------------------------------*/
+    SCOPEFUN_API int sfGetFrameSize(SHardware*  INPUT, uint* OUTPUT);
+    SCOPEFUN_API int sfGetNumSamples(SHardware* INPUT, uint* OUTPUT);
+
+    /*----------------------------------------
+       Set Configuration
+    ----------------------------------------*/
+    SCOPEFUN_API int sfSetFrameSize(SHardware*  INPUT, uint  INPUT);
+    SCOPEFUN_API int sfSetNumSamples(SHardware* INPUT, uint  INPUT);
+
+    /*----------------------------------------
+      Header
+    ----------------------------------------*/
+    SCOPEFUN_API int sfHeaderEts( SFrameHeader* INPUT, uint* OUTPUT);
+    SCOPEFUN_API int sfHeaderTemperature(SFrameHeader* INPUT, float* OUTPUT);
+
+    /*----------------------------------------
+      Simulate
+    ----------------------------------------*/
+    SCOPEFUN_API int sfIsSimulate(SFContext* INPUT);
+    SCOPEFUN_API int sfSetSimulateData(SFContext* INPUT, SSimulate* INPUT);
+    SCOPEFUN_API int sfSetSimulateOnOff(SFContext* INPUT, int INPUT);
+    SCOPEFUN_API int sfGetSimulateData(SFContext* INPUT, SSimulate* INOUT);
     SCOPEFUN_API int sfSimulate(SFContext* INPUT, double INPUT);
 
 #else
@@ -1052,76 +672,30 @@ SCOPEFUN_DELETE(SActiveClients)
     #endif
 
     /*----------------------------------------
-    api
+      API
     ----------------------------------------*/
     SCOPEFUN_API int sfApiInit();
     SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int maxMemory);
     SCOPEFUN_API int sfApiDeleteContext(SFContext* ctx);
     SCOPEFUN_API int sfApiVersion(SFContext* ctx, int* version, int* major, int* minor);
+    SCOPEFUN_API int sfSetThreadSafe(SFContext* ctx, int threadSafe);
+    SCOPEFUN_API int sfIsThreadSafe(SFContext* ctx);
+    SCOPEFUN_API int sfSetActive(SFContext* ctx,  int  active);
+    SCOPEFUN_API int sfIsActive(SFContext* ctx);
+    SCOPEFUN_API int sfSetTimeOut(SFContext* ctx, int  timeout);
+    SCOPEFUN_API int sfGetTimeOut(SFContext* ctx, int* timeout);
     SCOPEFUN_API int sfApiExit();
 
     /*----------------------------------------
-    is
-    ----------------------------------------*/
-    SCOPEFUN_API int sfIsUsb(SFContext* ctx);
-    SCOPEFUN_API int sfIsNetwork(SFContext* ctx);
-    SCOPEFUN_API int sfIsSimulate(SFContext* ctx);
-    SCOPEFUN_API int sfIsActive(SFContext* ctx);
-    SCOPEFUN_API int sfIsConnected(SFContext* ctx);
-    SCOPEFUN_API int sfIsThreadSafe(SFContext* ctx);
-
-    /*----------------------------------------
-    set
-    ----------------------------------------*/
-    SCOPEFUN_API int sfSetThreadSafe(SFContext* ctx, int threadSafe);
-    SCOPEFUN_API int sfSetNetwork(SFContext* ctx);
-    SCOPEFUN_API int sfSetUsb(SFContext* ctx);
-    SCOPEFUN_API int sfSetActive(SFContext* ctx, int active);
-    SCOPEFUN_API int sfSetTimeOut(SFContext* ctx, int timeout);
-    SCOPEFUN_API int sfSetFrameVersion(SFContext* ctx, int version);
-    SCOPEFUN_API int sfSetFrameHeader(SFContext* ctx, int header);
-    SCOPEFUN_API int sfSetFrameData(SFContext* ctx, int data);
-    SCOPEFUN_API int sfSetFramePacket(SFContext* ctx, int packet);
-    SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim);
-    SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on);
-
-    /*----------------------------------------
-    get
-    ----------------------------------------*/
-    SCOPEFUN_API int sfGetTimeOut(SFContext* ctx, int* timeout);
-    SCOPEFUN_API int sfGetFrameVersion(SFContext* ctx, int* version);
-    SCOPEFUN_API int sfGetFrameHeader(SFContext* ctx, int* header);
-    SCOPEFUN_API int sfGetFrameData(SFContext* ctx, int* data);
-    SCOPEFUN_API int sfGetFramePacket(SFContext* ctx, int* packet);
-    SCOPEFUN_API int sfGetClientId(SFContext* ctx, int* id);
-    SCOPEFUN_API int sfGetClientActiveIds(SFContext* ctx, SActiveClients* id);
-    SCOPEFUN_API int sfGetClientDisplay(SFContext* ctx, SDisplay* display);
-    SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* sim);
-
-    /*----------------------------------------
-    client
-    ----------------------------------------*/
-    SCOPEFUN_API int sfClientConnect(SFContext* ctx, const char* ip, int port);
-    SCOPEFUN_API int sfClientDisconnect(SFContext* ctx);
-    SCOPEFUN_API int sfClientDisplay(SFContext* ctx, int clientId, SDisplay* display);
-
-    /*----------------------------------------
-    server
-    ----------------------------------------*/
-    SCOPEFUN_API int sfServerDownload(SFContext* ctx);
-    SCOPEFUN_API int sfServerUpload(SFContext* ctx);
-
-    /*----------------------------------------
-    hardware
+      Hardware
     ----------------------------------------*/
     SCOPEFUN_API int sfHardwareOpen(SFContext* ctx, SUsb* usb, int version);
     SCOPEFUN_API int sfHardwareReset(SFContext* ctx);
     SCOPEFUN_API int sfHardwareIsOpened(SFContext* ctx, int* open);
-    SCOPEFUN_API int sfHardwareConfig1(SFContext* ctx, SHardware1* hw);
-    SCOPEFUN_API int sfHardwareConfig2(SFContext* ctx, SHardware2* hw);
-    SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int* received, int type);
+    SCOPEFUN_API int sfHardwareConfig(SFContext* ctx, SHardware* hw);
+    SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int offset, int* received);
     SCOPEFUN_API int sfHardwareCaptureOff(SFContext* ctx);
-    SCOPEFUN_API int sfHardwareUploadFx2(SFContext* ctx, SFx2* fx2);
+    SCOPEFUN_API int sfHardwareUploadFx3(SFContext* ctx, SFx3* fx2);
     SCOPEFUN_API int sfHardwareUploadFpga(SFContext* ctx, SFpga* fpgs);
     SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* ctx, SGenerator* gen);
     SCOPEFUN_API int sfHardwareEepromRead(SFContext* ctx, SEeprom* eeprom, int size, int adrees);
@@ -1131,21 +705,48 @@ SCOPEFUN_DELETE(SActiveClients)
     SCOPEFUN_API int sfHardwareClose(SFContext* ctx);
 
     /*----------------------------------------
-    simulate
+      Frame
     ----------------------------------------*/
+    SCOPEFUN_API int sfFrameCapture(SFContext* ctx,  SFrameData* buffer, int len, int* received);
+    SCOPEFUN_API int sfFrameDisplay(SFContext* ctx,  SFrameData* buffer, int len, int received, SDisplay* display);
+   
+    /*----------------------------------------
+      Transformations
+    ----------------------------------------*/
+    SCOPEFUN_API int sfTransformFrameToHeader(SFContext* ctx, SFrameData* frame, SFrameHeader* header);
+    SCOPEFUN_API int sfTransformHeaderToHardware(SFContext* ctx, SFrameHeader* header, SHardware* hw);
+    SCOPEFUN_API int sfTransformHardwareToConfiguration(SFContext* ctx, SHardware* hw, SConfiguration* cfg);
+    SCOPEFUN_API int sfTransformConfigurationToHardware(SFContext* ctx, SConfiguration* cfg, SHardware* hw);
+
+    /*----------------------------------------
+       Get Configuration
+    ----------------------------------------*/
+    SCOPEFUN_API int sfGetFrameSize(SHardware*  hw, uint* frameSize);
+    SCOPEFUN_API int sfGetNumSamples(SHardware* hw, uint* numSamples);
+
+    /*----------------------------------------
+       Set Configuration
+    ----------------------------------------*/
+    SCOPEFUN_API int sfSetFrameSize(SHardware*  hw, uint  frameSize);
+    SCOPEFUN_API int sfSetNumSamples(SHardware* hw, uint  numSamples);
+
+    /*----------------------------------------
+      Header
+    ----------------------------------------*/
+    SCOPEFUN_API int sfHeaderEts( SFrameHeader* header,uint* ets);
+    SCOPEFUN_API int sfHeaderTemperature(SFrameHeader* header,float* temperature);
+
+    /*----------------------------------------
+      Simulate
+    ----------------------------------------*/
+    SCOPEFUN_API int sfIsSimulate(SFContext* ctx);
+    SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim);
+    SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* sim);
+    SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on);
     SCOPEFUN_API int sfSimulate(SFContext* ctx, double time);
 #endif
 
 /*----------------------------------------
-   helpers
-----------------------------------------*/
-const char* messageName(EMessage message);
-int clientMessageHeader(messageHeader* dest, EMessage message);
-int serverMessageHeader(messageHeader* dest, EMessage message);
-int isClientHeaderOk(messageHeader* header);
-int isServerHeaderOk(messageHeader* header);
-
-#endif
-/*----------------------------------------
   http://www.ScopeFun.com
 ----------------------------------------*/
+#endif
