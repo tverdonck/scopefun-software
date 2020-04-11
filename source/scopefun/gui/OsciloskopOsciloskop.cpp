@@ -2159,7 +2159,7 @@ void OsciloskopOsciloskop::m_menuItemClipboardCurrentOnMenuSelection(wxCommandEv
 }
 void OsciloskopOsciloskop::m_menuItemClipboardAllOnMenuSelection(wxCommandEvent& event)
 {
-    if(wxTheClipboard->Open())
+    /*if(wxTheClipboard->Open())
     {
         SDL_AtomicLock(&pOsciloscope->displayLock);
         FORMAT_BUFFER();
@@ -2247,7 +2247,7 @@ void OsciloskopOsciloskop::m_menuItemClipboardAllOnMenuSelection(wxCommandEvent&
         wxTheClipboard->Close();
         pOsciloscope->captureBuffer->history->unlock();
         SDL_AtomicUnlock(&pOsciloscope->displayLock);
-    }
+    }*/
 }
 
 void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection(wxCommandEvent& event)
@@ -3277,7 +3277,7 @@ void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection(wxCommandEven
     cJSON* json = save->json;
     save->load();
     SDL_memcpy(save, &eeprom, size);
-    save->json - json;
+    save->json = json;
     save->save();
     // debug
     wxCommandEvent et;

@@ -73,17 +73,7 @@ void OsciloskopConnection::m_checkBoxConnectedOnCheckBox(wxCommandEvent& event)
 
 void OsciloskopConnection::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
-    // TODO: Implement m_buttonConnectOnButtonClick
-    pOsciloscope->thread.setIpPort((const char*)m_textCtrlIP->GetValue(), (int)atoi(m_textCtrlPort->GetValue()));
-    wxApp* app = (wxApp*)wxApp::GetInstance();
-    if(app)
-    {
-        OsciloskopOsciloskop* osc = (OsciloskopOsciloskop*)app->GetTopWindow();
-        if(osc)
-        {
-            osc->setCompatibility();
-        }
-    }
+
 }
 
 void OsciloskopConnection::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)

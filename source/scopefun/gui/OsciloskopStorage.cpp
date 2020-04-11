@@ -65,17 +65,7 @@ void OsciloskopStorage::m_textCtrlStorageOnTextEnter(wxCommandEvent& event)
 
 void OsciloskopStorage::m_choicePacketSizeOnChoice(wxCommandEvent& event)
 {
-    // TODO: Implement m_choicePacketSizeOnChoice
-    pOsciloscope->window.storage.packet = (PacketType)m_choicePacketSize->GetSelection();
-    int version = 0;
-    int header  = 0;
-    int data    = 0;
-    int packet  = 0;
-    pOsciloscope->thread.getFrame(&version, &header, &data, &packet);
-    packet = pOsciloscope->window.storage.getPacketSize(version);
-    pOsciloscope->thread.setFrame(version, header, data, packet);
-    pOsciloscope->thread.function(afSetFrame);
-    pOsciloscope->thread.function(afServerUpload);
+
 }
 
 void OsciloskopStorage::m_buttonOkOnButtonClick(wxCommandEvent& event)

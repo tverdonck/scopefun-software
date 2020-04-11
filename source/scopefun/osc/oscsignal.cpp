@@ -20,15 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include<ScopeFun/ScopeFun.h>
 
-ishort leadBitShift(ushort value)
-{
-    ishort isLeadBit = value & 0x200;
-    if(isLeadBit)
-    {
-        return (value | 0xFE00);
-    }
-    return value;
-}
+extern "C" ishort leadBitShift(ushort value);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -794,230 +787,230 @@ uint CaptureBuffer::uncompress(byte* buffer, uint received, uint transfered, uin
 
 uint CaptureBuffer::display(OsciloscopeFrame& frame, int version, int headerSize, int dataSize, int packetSize)
 {
-    OsciloscopeCamera camera   = pOsciloscope->cameraOsc;
-    double signalZoom          = pOsciloscope->signalZoom;
-    double signalPosition      = pOsciloscope->signalPosition;
-    double signalMin           = -0.5 / signalZoom;
-    double signalMax           =  0.5 / signalZoom;
-    double signalDelta         = signalMax - signalMin;
-    double signalPosNormalized = 1.0 - (signalPosition + signalMax) / signalDelta;
-    int extraEdgeSamples  = 2;
-    ularge      captureStart = 0;
-    ularge       captureFreq = 0;
-    // samples
-    uint frameSamples = getFrameSamples(displayPtr, version, headerSize, dataSize, packetSize);
-    uint oneSampleBytes = getOneSampleBytes(version);
-    // samples
-    if(frameSamples > 0 && displayRead > uint(headerSize))
-    {
-        // data
-        byte* dataStart = displayPtr + uint(headerSize);
-        uint  dataBytes = displayRead - uint(headerSize);
-        frameSamples += extraEdgeSamples;
-        // increment
-        double   dSamples = double(frameSamples) * signalZoom;
-        double   cameraIncrement = dSamples / double(NUM_SAMPLES);
-        int    sampleStart = 0;
-        int    sampleEnd = frameSamples;
-        double signalOffset = 0.0;
-        // visibility
-        uint visibility = 1;
-        uint signalHide = 0;
-        if(visibility)
-        {
-            if(pOsciloscope->window.fftDigital.is(VIEW_SELECT_OSC_3D))
-            {
-                signalPosNormalized = 0.5;
-                signalZoom = 1.0;
-            }
-            // cameraSampleSize
-            int sampleFull = ceil(double(dSamples));
-            int sampleHalf = ceil(double(sampleFull) / 2);
-            sampleHalf = max(1, sampleHalf);
-            int sampleCenter = double(frameSamples) * signalPosNormalized;
-            signalOffset = (signalPosNormalized - (double(sampleCenter) / double(frameSamples))) / signalZoom;
-            // start
-            sampleStart = sampleCenter - sampleHalf;
-            if(sampleStart < 0)
-            {
-                sampleCenter = sampleCenter + (-sampleStart);
-                sampleStart = 0;
-            }
-            sampleStart = clamp<int>(sampleStart, 0, frameSamples);
-            // end
-            sampleEnd = sampleCenter + sampleHalf;
-            sampleEnd = clamp<int>(sampleEnd, 0, frameSamples);
-        }
-        // count
-        uint sampleCount = sampleEnd - sampleStart;
-        sampleCount = clamp<uint>(sampleCount, 0, frameSamples);
-        // safety, this must be last becouse of zoom
-        sampleStart = clamp<int>(sampleStart, 0, frameSamples);
-        // clear frame
-        frame.clear();
-        // must always start rendering at the sample, so extra edge samples are needed
-        float sampleDelta = 1.0f / max<float>(1.0, (sampleCount));
-        frame.edgeOffset = signalOffset;
-        frame.edgeSample = extraEdgeSamples;
-        // samples loop
-        ishort minCh0 = 512; // todo: change with new firmware
-        ishort minCh1 = 512;
-        ishort maxCh0 = -512;
-        ishort maxCh1 = -512;
-        ishort digital = 0;
-        byte attribute = 0;
-        double inc = 0.f;
-        for(uint i = sampleStart; i < (sampleStart + sampleCount);)
-        {
-            uint offset = 0;
-            ushort ch0 = 0;
-            ushort ch1 = 0;
-            ushort dig = 0;
-            if(version == 1)
-            {
-                offset = i * 6;
-                ch0 = *(ushort*)(dataStart + offset + 0);
-                ch1 = *(ushort*)(dataStart + offset + 2);
-                dig = *(ushort*)(dataStart + offset + 4);
-            }
-            if(version == 2)
-            {
-                offset = i * 4;
-                byte byte0 = *(dataStart + offset + 0);
-                byte byte1 = *(dataStart + offset + 1);
-                byte byte2 = *(dataStart + offset + 2);
-                byte byte3 = *(dataStart + offset + 3);
-                ch0 |= byte0;
-                ch0 = ch0 << 2;
-                ch0 |= ((byte1 >> 6) & 0x3F);
-                ch1 |= (byte1 & 0x3F);
-                ch1 = ch1 << 4;
-                ch1 |= ((byte2 >> 4) & 0xF);
-                dig |= (byte2 & 0xF);
-                dig = dig << 8;
-                dig |= byte3;
-            }
-            // attribute
-            if(version == 1)
-            {
-                if(ch0 & 0x8000)
-                {
-                    attribute |= FRAME_ATTRIBUTE_HIDE_SIGNAL;
-                }
-                if(ch0 & 0x4000)
-                {
-                    attribute |= FRAME_ATTRIBUTE_TRIGGERED_LED;
-                }
-                if(ch0 & 0x2000)
-                {
-                    attribute |= FRAME_ATTRIBUTE_ROLL_DISPLAY;
-                }
-            }
-            // channels
-            ishort singedShort0 = leadBitShift(ch0 & 0x000003FF);
-            ishort singedShort1 = leadBitShift(ch1 & 0x000003FF);
-            // analog
-            minCh0 = min(minCh0, singedShort0);
-            maxCh0 = max(maxCh0, singedShort0);
-            minCh1 = min(minCh1, singedShort1);
-            maxCh1 = max(maxCh1, singedShort1);
-            // digital
-            digital = digital | dig; // todo: user interface function choice
-            // display sample ?
-            bool display = false;
-            if(cameraIncrement < 1.0)
-            {
-                display = true;
-                i++;
-            }
-            if(cameraIncrement >= 1.0)
-            {
-                uint iInc = uint(cameraIncrement);
-                if(i % iInc == 0)
-                {
-                    display = true;
-                    i += iInc;
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            if(display)
-            {
-                // mix / max -> value
-                ishort value0 = 0;
-                ishort value1 = 0;
-                if(-minCh0 > maxCh0)
-                {
-                    value0 = minCh0;
-                }
-                else
-                {
-                    value0 = maxCh0;
-                }
-                if(-minCh1 > maxCh1)
-                {
-                    value1 = minCh1;
-                }
-                else
-                {
-                    value1 = maxCh1;
-                }
-                // analog
-                if(frame.analog[0].getCount() < NUM_SAMPLES)
-                {
-                    frame.analog[0].pushBack(value0);
-                }
-                if(frame.analog[1].getCount() < NUM_SAMPLES)
-                {
-                    frame.analog[1].pushBack(value1);
-                }
-                // attribute
-                if(frame.attr.getCount() < NUM_SAMPLES)
-                {
-                    frame.attr.pushBack(attribute);
-                }
-                // digital
-                if(frame.digital.getCount() < NUM_SAMPLES)
-                {
-                    frame.digital.pushBack(digital);
-                }
-                minCh0 = 512; // todo: change with new firmware
-                minCh1 = 512;
-                maxCh0 = -512;
-                maxCh1 = -512;
-                digital = 0;
-                attribute = 0;
-            }
-        }
-        // ets & trigger
-        int index = clamp<int>(pOsciloscope->settings.getHardware()->fpgaEtsIndex, 0, headerSize);
-        frame.ets = (displayPtr)[index];
-        // temperature
-        unsigned short adc0 = (displayPtr)[6] << 8;
-        unsigned short adc1 = (displayPtr)[7];
-        unsigned short adc = adc1 | adc0;
-        float temperature = ((float(adc) * 503.975) / 4096) - 273.15;
-        frame.debug.setCount(2464);
-        frame.debug[0] = 0;
-        frame.debug[1] = temperature;
-        for(int i = 0; i < 62; i++)
-        {
-            frame.debug[i + 2] = displayPtr[i + 8];
-        }
-        // trigger
-        frame.triggerTime = *(ularge*)(displayPtr + 2);
-        if(frame.triggerTime == 0)
-        {
-            frame.firstFrame = SDL_GetPerformanceCounter();
-            frame.utc = ::time(0);
-        }
-        frame.thisFrame = SDL_GetPerformanceCounter();
-        // captureTime
-        frame.captureTime = double(frame.thisFrame - captureStart) / double(captureFreq);
-        return 1;
-    }
+    //OsciloscopeCamera camera   = pOsciloscope->cameraOsc;
+    //double signalZoom          = pOsciloscope->signalZoom;
+    //double signalPosition      = pOsciloscope->signalPosition;
+    //double signalMin           = -0.5 / signalZoom;
+    //double signalMax           =  0.5 / signalZoom;
+    //double signalDelta         = signalMax - signalMin;
+    //double signalPosNormalized = 1.0 - (signalPosition + signalMax) / signalDelta;
+    //int extraEdgeSamples  = 2;
+    //ularge      captureStart = 0;
+    //ularge       captureFreq = 0;
+    //// samples
+    //uint frameSamples = getFrameSamples(displayPtr, version, headerSize, dataSize, packetSize);
+    //uint oneSampleBytes = getOneSampleBytes(version);
+    //// samples
+    //if(frameSamples > 0 && displayRead > uint(headerSize))
+    //{
+    //    // data
+    //    byte* dataStart = displayPtr + uint(headerSize);
+    //    uint  dataBytes = displayRead - uint(headerSize);
+    //    frameSamples += extraEdgeSamples;
+    //    // increment
+    //    double   dSamples = double(frameSamples) * signalZoom;
+    //    double   cameraIncrement = dSamples / double(NUM_SAMPLES);
+    //    int    sampleStart = 0;
+    //    int    sampleEnd = frameSamples;
+    //    double signalOffset = 0.0;
+    //    // visibility
+    //    uint visibility = 1;
+    //    uint signalHide = 0;
+    //    if(visibility)
+    //    {
+    //        if(pOsciloscope->window.fftDigital.is(VIEW_SELECT_OSC_3D))
+    //        {
+    //            signalPosNormalized = 0.5;
+    //            signalZoom = 1.0;
+    //        }
+    //        // cameraSampleSize
+    //        int sampleFull = ceil(double(dSamples));
+    //        int sampleHalf = ceil(double(sampleFull) / 2);
+    //        sampleHalf = max(1, sampleHalf);
+    //        int sampleCenter = double(frameSamples) * signalPosNormalized;
+    //        signalOffset = (signalPosNormalized - (double(sampleCenter) / double(frameSamples))) / signalZoom;
+    //        // start
+    //        sampleStart = sampleCenter - sampleHalf;
+    //        if(sampleStart < 0)
+    //        {
+    //            sampleCenter = sampleCenter + (-sampleStart);
+    //            sampleStart = 0;
+    //        }
+    //        sampleStart = clamp<int>(sampleStart, 0, frameSamples);
+    //        // end
+    //        sampleEnd = sampleCenter + sampleHalf;
+    //        sampleEnd = clamp<int>(sampleEnd, 0, frameSamples);
+    //    }
+    //    // count
+    //    uint sampleCount = sampleEnd - sampleStart;
+    //    sampleCount = clamp<uint>(sampleCount, 0, frameSamples);
+    //    // safety, this must be last becouse of zoom
+    //    sampleStart = clamp<int>(sampleStart, 0, frameSamples);
+    //    // clear frame
+    //    frame.clear();
+    //    // must always start rendering at the sample, so extra edge samples are needed
+    //    float sampleDelta = 1.0f / max<float>(1.0, (sampleCount));
+    //    frame.edgeOffset = signalOffset;
+    //    frame.edgeSample = extraEdgeSamples;
+    //    // samples loop
+    //    ishort minCh0 = 512; // todo: change with new firmware
+    //    ishort minCh1 = 512;
+    //    ishort maxCh0 = -512;
+    //    ishort maxCh1 = -512;
+    //    ishort digital = 0;
+    //    byte attribute = 0;
+    //    double inc = 0.f;
+    //    for(uint i = sampleStart; i < (sampleStart + sampleCount);)
+    //    {
+    //        uint offset = 0;
+    //        ushort ch0 = 0;
+    //        ushort ch1 = 0;
+    //        ushort dig = 0;
+    //        if(version == 1)
+    //        {
+    //            offset = i * 6;
+    //            ch0 = *(ushort*)(dataStart + offset + 0);
+    //            ch1 = *(ushort*)(dataStart + offset + 2);
+    //            dig = *(ushort*)(dataStart + offset + 4);
+    //        }
+    //        if(version == 2)
+    //        {
+    //            offset = i * 4;
+    //            byte byte0 = *(dataStart + offset + 0);
+    //            byte byte1 = *(dataStart + offset + 1);
+    //            byte byte2 = *(dataStart + offset + 2);
+    //            byte byte3 = *(dataStart + offset + 3);
+    //            ch0 |= byte0;
+    //            ch0 = ch0 << 2;
+    //            ch0 |= ((byte1 >> 6) & 0x3F);
+    //            ch1 |= (byte1 & 0x3F);
+    //            ch1 = ch1 << 4;
+    //            ch1 |= ((byte2 >> 4) & 0xF);
+    //            dig |= (byte2 & 0xF);
+    //            dig = dig << 8;
+    //            dig |= byte3;
+    //        }
+    //        // attribute
+    //        if(version == 1)
+    //        {
+    //            if(ch0 & 0x8000)
+    //            {
+    //                attribute |= FRAME_ATTRIBUTE_HIDE_SIGNAL;
+    //            }
+    //            if(ch0 & 0x4000)
+    //            {
+    //                attribute |= FRAME_ATTRIBUTE_TRIGGERED_LED;
+    //            }
+    //            if(ch0 & 0x2000)
+    //            {
+    //                attribute |= FRAME_ATTRIBUTE_ROLL_DISPLAY;
+    //            }
+    //        }
+    //        // channels
+    //        ishort singedShort0 = leadBitShift(ch0 & 0x000003FF);
+    //        ishort singedShort1 = leadBitShift(ch1 & 0x000003FF);
+    //        // analog
+    //        minCh0 = min(minCh0, singedShort0);
+    //        maxCh0 = max(maxCh0, singedShort0);
+    //        minCh1 = min(minCh1, singedShort1);
+    //        maxCh1 = max(maxCh1, singedShort1);
+    //        // digital
+    //        digital = digital | dig; // todo: user interface function choice
+    //        // display sample ?
+    //        bool display = false;
+    //        if(cameraIncrement < 1.0)
+    //        {
+    //            display = true;
+    //            i++;
+    //        }
+    //        if(cameraIncrement >= 1.0)
+    //        {
+    //            uint iInc = uint(cameraIncrement);
+    //            if(i % iInc == 0)
+    //            {
+    //                display = true;
+    //                i += iInc;
+    //            }
+    //            else
+    //            {
+    //                i++;
+    //            }
+    //        }
+    //        if(display)
+    //        {
+    //            // mix / max -> value
+    //            ishort value0 = 0;
+    //            ishort value1 = 0;
+    //            if(-minCh0 > maxCh0)
+    //            {
+    //                value0 = minCh0;
+    //            }
+    //            else
+    //            {
+    //                value0 = maxCh0;
+    //            }
+    //            if(-minCh1 > maxCh1)
+    //            {
+    //                value1 = minCh1;
+    //            }
+    //            else
+    //            {
+    //                value1 = maxCh1;
+    //            }
+    //            // analog
+    //            if(frame.analog[0].getCount() < NUM_SAMPLES)
+    //            {
+    //                frame.analog[0].pushBack(value0);
+    //            }
+    //            if(frame.analog[1].getCount() < NUM_SAMPLES)
+    //            {
+    //                frame.analog[1].pushBack(value1);
+    //            }
+    //            // attribute
+    //            if(frame.attr.getCount() < NUM_SAMPLES)
+    //            {
+    //                frame.attr.pushBack(attribute);
+    //            }
+    //            // digital
+    //            if(frame.digital.getCount() < NUM_SAMPLES)
+    //            {
+    //                frame.digital.pushBack(digital);
+    //            }
+    //            minCh0 = 512; // todo: change with new firmware
+    //            minCh1 = 512;
+    //            maxCh0 = -512;
+    //            maxCh1 = -512;
+    //            digital = 0;
+    //            attribute = 0;
+    //        }
+    //    }
+    //    // ets & trigger
+    //    int index = clamp<int>(pOsciloscope->settings.getHardware()->fpgaEtsIndex, 0, headerSize);
+    //    frame.ets = (displayPtr)[index];
+    //    // temperature
+    //    unsigned short adc0 = (displayPtr)[6] << 8;
+    //    unsigned short adc1 = (displayPtr)[7];
+    //    unsigned short adc = adc1 | adc0;
+    //    float temperature = ((float(adc) * 503.975) / 4096) - 273.15;
+    //    frame.debug.setCount(2464);
+    //    frame.debug[0] = 0;
+    //    frame.debug[1] = temperature;
+    //    for(int i = 0; i < 62; i++)
+    //    {
+    //        frame.debug[i + 2] = displayPtr[i + 8];
+    //    }
+    //    // trigger
+    //    frame.triggerTime = *(ularge*)(displayPtr + 2);
+    //    if(frame.triggerTime == 0)
+    //    {
+    //        frame.firstFrame = SDL_GetPerformanceCounter();
+    //        frame.utc = ::time(0);
+    //    }
+    //    frame.thisFrame = SDL_GetPerformanceCounter();
+    //    // captureTime
+    //    frame.captureTime = double(frame.thisFrame - captureStart) / double(captureFreq);
+    //    return 1;
+    //}
     return 0;
 }
 

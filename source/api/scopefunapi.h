@@ -240,7 +240,7 @@ typedef enum _EDisplayFunction
    dfAdd,
    dfCh0SubCh1,
    dfCh1SubCh0,
-   dfCustomScript,
+   dfCustom,
 } EDisplayFunction;
 
 /*----------------------------------------
@@ -522,12 +522,20 @@ typedef struct
     uint              timeout;
 } SCtxApi;
 
+typedef struct _SDisplayCallback {
+   int (*onFrame)(SFrameData* data, uint len, float* pos, float* zoom,void* user);
+   int (*onSample)(ushort* ch0,ushort* ch1,ushort* dig, float* pos, float* zoom,void* user);
+   int (*onDisplay)(SDisplay* data, float* pos, float* zoom,void* user);
+}SDisplayCallback;
+
 typedef struct
 {
     SCtxApi           api;
     SCtxSimulate      simulate;
     SCtxFrame         frame;
-    SConfiguration    configuration;
+    EDisplayFunction  function;
+    SDisplayCallback* callback;
+    void*             userData;
     byte*             usb;
 } SFContext;
 
@@ -618,6 +626,8 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfFrameCapture(SFContext* INPUT, int* OUTPUT, int* OUTPUT);
     SCOPEFUN_API int sfFrameOutput(SFContext*  INPUT, SFrameData* INOUT, int INPUT);
     SCOPEFUN_API int sfFrameDisplay(SFContext* INPUT, SFrameData* INOUT, int INPUT, SDisplay* INOUT,float INPUT,float INPUT);
+    SCOPEFUN_API int sfFrameDisplayFunction(SFContext* INOUT, EDisplayFunction  INOUT);
+    SCOPEFUN_API int sfFrameDisplayCallback(SFContext* INOUT, SDisplayCallback* INOUT, void* INOUT);
 
     /*----------------------------------------
        Header
@@ -703,10 +713,10 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API ushort sfGetAnalogSwitch(SHardware* INPUT);
     SCOPEFUN_API int    sfGetEts(SHardware* INPUT);
     SCOPEFUN_API uint   sfGetControl(SHardware* INPUT);
-    SCOPEFUN_API uint   sfGetYRangeA(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetYGainA(SHardware* INPUT);
     SCOPEFUN_API float  sfGetYScaleA(SHardware* INPUT);
     SCOPEFUN_API int    sfGetYPositionA(SHardware* INPUT);
-    SCOPEFUN_API uint   sfGetYRangeB(SHardware* INPUT);
+    SCOPEFUN_API uint   sfGetYGainB(SHardware* INPUT);
     SCOPEFUN_API float  sfGetYScaleB(SHardware* INPUT);
     SCOPEFUN_API int    sfGetYPositionB(SHardware* INPUT);
     SCOPEFUN_API ushort sfGetTriggerSource(SHardware* INPUT);
@@ -810,7 +820,9 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize );
     SCOPEFUN_API int sfFrameOutput(SFContext*  ctx, SFrameData* data, int len );
     SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom);
-  
+    SCOPEFUN_API int sfFrameDisplayFunction(SFContext* ctx, EDisplayFunction  function);
+    SCOPEFUN_API int sfFrameDisplayCallback(SFContext* ctx, SDisplayCallback* callback,void* userData);
+
     /*----------------------------------------
       Header
     ----------------------------------------*/
@@ -895,10 +907,10 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API ushort sfGetAnalogSwitch(SHardware* hw);
     SCOPEFUN_API int    sfGetEts(SHardware* hw);
     SCOPEFUN_API uint   sfGetControl(SHardware* hw);
-    SCOPEFUN_API uint   sfGetYRangeA(SHardware* hw);
+    SCOPEFUN_API uint   sfGetYGainA(SHardware* hw);
     SCOPEFUN_API float  sfGetYScaleA(SHardware* hw);
     SCOPEFUN_API int    sfGetYPositionA(SHardware* hw);
-    SCOPEFUN_API uint   sfGetYRangeB(SHardware* hw);
+    SCOPEFUN_API uint   sfGetYGainB(SHardware* hw);
     SCOPEFUN_API float  sfGetYScaleB(SHardware* hw);
     SCOPEFUN_API int    sfGetYPositionB(SHardware* hw);
     SCOPEFUN_API ushort sfGetTriggerSource(SHardware* hw);

@@ -53,9 +53,31 @@ float clamp(float a, float min, float max)
    return a;
 }
 
+uint cMin(uint a, uint b)
+{
+   if (a < b) return a;
+   else       return b;
+}
+
+uint cMax(uint a, uint b)
+{
+   if (a > b) return a;
+   else       return b;
+}
+
 float rand_FloatRange(float a, float b)
 {
    return (float)((b - a) * ((float)rand() / RAND_MAX)) + a;
+}
+
+ishort leadBitShift(ushort value)
+{
+   ishort isLeadBit = value & 0x200;
+   if (isLeadBit)
+   {
+      return (value | 0xFE00);
+   }
+   return value;
 }
 
 ushort raiseFlag16(ushort attr, ushort bits)
@@ -792,7 +814,9 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
    // data
    if (ctx->frame.received >= SCOPEFUN_FRAME_HEADER)
    {
-      sfHeaderFrameSize( (SFrameHeader*)&ctx->frame.data->data.bytes[0], &ctx->frame.frameSize );
+      SHardware hw = { 0 };
+      sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data->data.bytes[0], &hw );
+      ctx->frame.frameSize = sfGetFrameSize( &hw );
 
       int         transfered = 0;
       int frameLeftToReceive = ctx->frame.frameSize - ctx->frame.received;
@@ -816,16 +840,48 @@ SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
    return SCOPEFUN_SUCCESS;
 }
 
+SCOPEFUN_API int sfFrameDisplayFunction(SFContext* ctx, EDisplayFunction fun)
+{
+   ctx->function = fun;
+   return SCOPEFUN_SUCCESS;
+}
+SCOPEFUN_API int sfFrameDisplayCallback(SFContext* ctx, SDisplayCallback* callback,void* userData)
+{
+   ctx->callback = callback;
+   ctx->userData = userData;
+   return SCOPEFUN_SUCCESS;
+}
+
+SCOPEFUN_API int cDisplayFunction(EDisplayFunction function, ushort channel0, ushort channel1, ushort digital)
+{
+   switch (function) {
+   case dfMax:
+      return cMin(channel0, channel1);
+   case dfMin:
+      return cMin(channel0, channel1);
+   case dfMedium:
+      return (channel0 + channel1) / 2;
+   case dfAdd:
+      return channel0 + channel1;
+   case dfCh0SubCh1:
+      return channel0 - channel1;
+   case dfCh1SubCh0:
+      return channel1 - channel0;
+   }
+   return 0;
+}
+
 SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom)
 {
+   SHardware hw = { 0 };
+   sfGetHeaderHardware(ctx, (SFrameHeader*)&buffer->data.bytes[0], &hw);
+
    // frame size
-   uint frameSize = 0;
-   sfHeaderFrameSize( (SFrameHeader*)&buffer->data.bytes[0], &frameSize);
+   uint frameSize = sfGetFrameSize( &hw );
    frameSize = min(frameSize, len);
 
    // num of samples
-   uint numSamples = 0;
-   sfHeaderNumSamples( (SFrameHeader*)&buffer->data.bytes[0], &numSamples);
+   uint numSamples = sfGetNumSamples( &hw );
    numSamples = min(numSamples*4+SCOPEFUN_FRAME_HEADER, len);
    display->samples = numSamples;
 
@@ -848,6 +904,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    EDisplayFunction function = dfMedium;
    if (frameSize > 0 && numSamples > 0)
    {
+      if (ctx->callback)
+         ctx->callback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
+
       byte* dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
       for (uint sample = zoomSampleMin; sample < zoomSampleMax; sample++)
       {
@@ -874,21 +933,27 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
          // channels
          ishort channel0 = leadBitShift(ch0 & 0x000003FF);
          ishort channel1 = leadBitShift(ch1 & 0x000003FF);
-         ushort digital = dig;
-
+         ushort digital  = dig;
+         ushort function = cDisplayFunction( ctx->function, channel0, channel1, digital);
+         if (ctx->callback && ctx->function == dfCustom )
+            ctx->callback->onSample( &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
+         
          // sample index
          uint index = (uint)(((double)(zoomSampleMin-sample) / (double)zoomSampleCount) * (double)SCOPEFUN_DISPLAY);
 
          // floats
-         float fChannel0 = display->analog0.bytes[index] = clamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-         float fChannel1 = display->analog1.bytes[index] = clamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fChannel0 = clamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fChannel1 = clamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fFunction = clamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
 
          // output
          display->analog0.bytes[index] = fChannel0;
          display->analog1.bytes[index] = fChannel1;
          display->digital.bytes[index] = digital;
-         display->analogF.bytes[index] = sfDisplayFunction(fChannel0, fChannel1, function);
+         display->analogF.bytes[index] = function;
       }
+      if (ctx->callback)
+         ctx->callback->onDisplay(display, &displayPos, &displayZoom, ctx->userData);
    }
    return SCOPEFUN_SUCCESS;
 }
@@ -1565,9 +1630,9 @@ SCOPEFUN_API uint sfGetControl(SHardware* hw)
    return 0;
 }
 
-SCOPEFUN_API uint sfGetYRangeA(SHardware* hw)
+SCOPEFUN_API uint sfGetYGainA(SHardware* hw)
 {
-   return getVolt(0, hw->vgaina);
+   return hw->vgaina;
 }
 
 SCOPEFUN_API float sfGetYScaleA(SHardware* hw)
@@ -1580,9 +1645,9 @@ SCOPEFUN_API int sfGetYPositionA(SHardware* hw)
    return (int)hw->offseta;
 }
 
-SCOPEFUN_API uint sfGetYRangeB(SHardware* hw)
+SCOPEFUN_API uint sfGetYGainB(SHardware* hw)
 {
-   return getVolt(1, hw->vgainb);
+   return hw->vgainb;
 }
 SCOPEFUN_API float sfGetYScaleB(SHardware* hw)
 {

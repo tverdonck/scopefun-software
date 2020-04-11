@@ -32,7 +32,7 @@
 #include <ctype.h>
 #include "cJSON.h"
 
-#define DBL_EPSILON = 0.0000000000001
+#define DBL_EPSILON 0.0000000000001
 
 static const char *ep;
 

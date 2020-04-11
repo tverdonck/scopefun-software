@@ -371,14 +371,7 @@ void OscHardware::loadCallibrated(cJSON* jsonCallibrated, ECallibrationType type
 void OscHardware::load()
 {
     FORMAT_BUFFER();
-    if(version == HARDWARE_VERSION_1)
-    {
-        FORMAT_PATH("data/startup/hardware1.json");
-    }
-    if(version == HARDWARE_VERSION_2)
-    {
-        FORMAT_PATH("data/startup/hardware2.json");
-    }
+    FORMAT_PATH("data/startup/hardware2.json");
     char*  memory = 0;
     ilarge memorySize = 0;
     fileLoadString(formatBuffer, &memory, &memorySize);
@@ -642,15 +635,8 @@ void OscHardware::save()
     {
         CORE_MESSAGE("settings.json error before: [%.256s]\n", cJSON_GetErrorPtr());
     }
-    FORMAT_BUFFER();
-    if(version == HARDWARE_VERSION_1)
-    {
-        FORMAT_PATH("data/startup/hardware1.json");
-    }
-    if(version == HARDWARE_VERSION_2)
-    {
-        FORMAT_PATH("data/startup/hardware2.json");
-    }
+    FORMAT_BUFFER(); 
+    FORMAT_PATH("data/startup/hardware2.json");
     fileSaveString(formatBuffer, jsonString);
     cJSON_Delete(jsonRoot);
     pMemory->free(jsonString);
@@ -1103,14 +1089,7 @@ void OscSettingsInterface::save()
 
 void OscSettingsInterface::setVersion(int version)
 {
-    if(version == HARDWARE_VERSION_1)
-    {
-        pHardware = &hardware1;
-    }
-    if(version == HARDWARE_VERSION_2)
-    {
-        pHardware = &hardware2;
-    }
+  
 }
 
 OscHardware* OscSettingsInterface::getHardware()

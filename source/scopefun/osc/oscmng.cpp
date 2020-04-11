@@ -3139,14 +3139,14 @@ void OsciloscopeManager::allocate()
     pOsciloscope->ptrHardwareCapture  = (byte*)pMemory->allocate(pOsciloscope->sizeHardwareCapture);
     SDL_memset(pOsciloscope->ptrHardwareCapture, 0, pOsciloscope->sizeHardwareCapture);
 
-    // allocate capture buffer
-    byte* display = (byte*)pMemory->allocate(SCOPEFUN_FRAME_MEMORY);
-    byte* rld = 0;
-    if(settings.getSettings()->memoryRld)
-    {
-        rld = (byte*)pMemory->allocate(settings.getSettings()->memoryRld * MEGABYTE);
-    }
-    captureBuffer = new CaptureBuffer(display, SCOPEFUN_FRAME_MEMORY, rld, settings.getSettings()->memoryRld * MEGABYTE);
+    //// allocate capture buffer
+    //byte* display = (byte*)pMemory->allocate(SCOPEFUN_FRAME_MEMORY);
+    //byte* rld = 0;
+    //if(settings.getSettings()->memoryRld)
+    //{
+    //    rld = (byte*)pMemory->allocate(settings.getSettings()->memoryRld * MEGABYTE);
+    //}
+    //captureBuffer = new CaptureBuffer(display, SCOPEFUN_FRAME_MEMORY, rld, settings.getSettings()->memoryRld * MEGABYTE);
 
     // display
     uint toAllocateDisplay = settings.getSettings()->historyFrameDisplay * sizeof(OsciloscopeFrame);
@@ -3403,20 +3403,20 @@ void OsciloscopeETS::redraw(OsciloscopeRenderData& render, SDL_atomic_t* redrawE
 
 void OsciloscopeETS::onFrameChange(int framechange, Ring<CapturePacket> threadHistory, OsciloscopeRenderData& render)
 {
-    // return;
-    render.flags.raise(rfClearRenderTarget);
-    // ets, display
-    clear();
-    // frame
-    CaptureFrame frame;
-    for(int i = max<int>(0, framechange - 32); i < framechange; i++)
-    {
-        pOsciloscope->captureBuffer->captureFrame(frame, i);
-        pOsciloscope->captureBuffer->historyRead(frame, frame.version, frame.header, frame.data, frame.packet);
-        pOsciloscope->captureBuffer->display(oscFrame, frame.version, frame.header, frame.data, frame.packet);
-        onCapture(oscFrame, render);
-    }
-    redraw(render, &pOsciloscope->etsClear);
+    //// return;
+    //render.flags.raise(rfClearRenderTarget);
+    //// ets, display
+    //clear();
+    //// frame
+    //CaptureFrame frame;
+    //for(int i = max<int>(0, framechange - 32); i < framechange; i++)
+    //{
+    //    pOsciloscope->captureBuffer->captureFrame(frame, i);
+    //    pOsciloscope->captureBuffer->historyRead(frame, frame.version, frame.header, frame.data, frame.packet);
+    //    pOsciloscope->captureBuffer->display(oscFrame, frame.version, frame.header, frame.data, frame.packet);
+    //    onCapture(oscFrame, render);
+    //}
+    //redraw(render, &pOsciloscope->etsClear);
 }
 
 void OsciloscopeETS::onCapture(OsciloscopeFrame& frame, OsciloscopeRenderData& render)
