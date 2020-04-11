@@ -230,23 +230,27 @@ void GrStaticMesh::draw(GrVertexShader* vs, PrimitiveType type, uint numIndices,
             case VERTEX_TYPE_COLOR:
                 if(grGetMode() == OPENGL_MODE_21)
                 {
-                    glColorPointer(dim, format, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeOffset = (startoffset + offset);
+                    glColorPointer(dim, format, stride, (GLvoid*)(largeOffset));
                     glEnableClientState(GL_COLOR_ARRAY);
                 }
                 else
                 {
-                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeOffset = (startoffset + offset);
+                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(largeOffset));
                 }
                 break;
             case VERTEX_TYPE_NORMAL:
                 if(grGetMode() == OPENGL_MODE_21)
                 {
-                    glNormalPointer(GL_FLOAT, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeOffset = (startoffset + offset);
+                    glNormalPointer(GL_FLOAT, stride, (GLvoid*)(largeOffset));
                     glEnableClientState(GL_NORMAL_ARRAY);
                 }
                 else
                 {
-                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeOffset = (startoffset + offset);
+                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(largeOffset));
                 }
                 break;
             case VERTEX_TYPE_POSITION:

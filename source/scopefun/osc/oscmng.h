@@ -21,7 +21,8 @@
 #ifndef __TOOL__OSCILOSCOPE__
 #define __TOOL__OSCILOSCOPE__
 
-#define CAPTURE_PACKET_SIZE (16*1024)
+#define SCOPEFUN_MAX_FRAMES   1000000
+#define SCOPEFUN_MAX_HISTORY  32
 
 enum ETimer
 {
@@ -288,8 +289,7 @@ public:
     SDL_atomic_t        lastFrame;
     SDL_atomic_t        drawState;
     SDL_atomic_t        drawFrame;
-    SFrameHeader1       syncHeader1;
-    SFrameHeader2       syncHeader2;
+    SFrameHeader        syncHeader;
     CapturePacket       transferPacket;
     CaptureMemory       historyMemory;
     CaptureSSD          historySSD;
@@ -316,8 +316,8 @@ public:
 public:
     CaptureBuffer(byte* display, uint displaySize, byte* rld, uint rldSize);
 public:
-    SFrameHeader1 getHeader1(byte* buffer, uint size);
-    SFrameHeader2 getHeader2(byte* buffer, uint size);
+    SFrameHeader  getHeader1(byte* buffer, uint size);
+    SFrameHeader  getHeader2(byte* buffer, uint size);
     uint          getFrameSize(byte* buffer, uint version, uint header, uint data, uint packet);
     uint          getFrameSamples(byte* buffer, uint version, uint header, uint data, uint packet);
     uint          getFrameDataSize(byte* buffer, uint version, uint header, uint data, uint packet);
@@ -609,16 +609,23 @@ public:
 class OsciloscopeThreadData
 {
 public:
-    OsciloscopeFrame          etsClear;
-    OsciloscopeFrame          frame;
-    Ring<OsciloscopeFrame>    history;
-    WndMain                   window;
-    OsciloscopeRenderData     render;
-    byte                      customCh0;
-    byte                      customCh1;
-    byte                      customFun;
-    byte                      customDig;
-    SDisplay                  customData;
+    //OsciloscopeFrame          etsClear;
+    //OsciloscopeFrame          frame;
+    //Ring<OsciloscopeFrame>    history;
+    //WndMain                   window;
+    //OsciloscopeRenderData     render;
+    //byte                      customCh0;
+    //byte                      customCh1;
+    //byte                      customFun;
+    //byte                      customDig;
+    //SDisplay                  customData;
+public:
+    WndMain               m_window;
+    OsciloscopeRenderData m_render;
+    SDisplay              m_history[SCOPEFUN_MAX_HISTORY];
+    uint                  m_historyCount;
+    SDisplay              m_frame;
+    SHardware             m_hw;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -713,18 +720,18 @@ public:
     void renderAnalogGrid(uint threadId, OsciloscopeThreadData& threadData);
     void renderAnalogAxis(uint threadId, OsciloscopeThreadData& threadData);
     void renderAnalogUnits(uint threadid, OsciloscopeThreadData& threadData);
-    void renderAnalog(uint threadId, OsciloscopeThreadData& threadData, float z, uint channelId, uint shadow, OsciloscopeFrame& frame, float captureTime, float captureVolt, uint color, bool invert);
-    void renderAnalog3d(uint threadid, OsciloscopeThreadData& threadData, int frameIndex, float z, uint channelId, OsciloscopeFrame& frame, float captureTime, float captureVolt, uint color, bool invert);
+    void renderAnalog(uint threadId, OsciloscopeThreadData& threadData, float z, uint channelId, uint shadow, SDisplay& frame, float captureTime, float captureVolt, uint color, bool invert);
+    void renderAnalog3d(uint threadid, OsciloscopeThreadData& threadData, int frameIndex, float z, uint channelId, SDisplay& frame, float captureTime, float captureVolt, uint color, bool invert);
     void renderSurface3d(uint threadId, OsciloscopeThreadData& threadData, int channelId, uint color);
-    void renderAnalogFunction(uint threadid, OsciloscopeThreadData& threadData, float z, int function, OsciloscopeFrame& frame, float xCapture, float yCapture0, float yCapture1, uint color, bool invert0, bool invert1);
-    void renderAnalogFunctionXY(uint threadid, OsciloscopeThreadData& threadData, OsciloscopeFrame& frame, float xCapture, float yCapture0, float yCapture1, uint color);
-    void renderAnalogFunction3d(uint threadid, OsciloscopeThreadData& threadData, OsciloscopeFrame& frame, int frameIndex, float z, uint color);
+    void renderAnalogFunction(uint threadid, OsciloscopeThreadData& threadData, float z, int function, SDisplay& frame, float xCapture, float yCapture0, float yCapture1, uint color, bool invert0, bool invert1);
+    void renderAnalogFunctionXY(uint threadid, OsciloscopeThreadData& threadData, SDisplay& frame, float xCapture, float yCapture0, float yCapture1, uint color);
+    void renderAnalogFunction3d(uint threadid, OsciloscopeThreadData& threadData, SDisplay& frame, int frameIndex, float z, uint color);
     void renderMeasure(uint threadid, OsciloscopeThreadData& threadData);
     void renderMeasureFFT(uint threadId, OsciloscopeThreadData& threadData);
     void renderFFTGrid(uint threadid, OsciloscopeThreadData& threadData);
     void renderFFTAxis(uint threadid, OsciloscopeThreadData& threadData);
     void renderFFTUnits(uint threadid, OsciloscopeThreadData& threadData);
-    void renderFFT(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, OsciloscopeFFT& fft, OsciloscopeFrame& frame, bool function, float z, uint channelId, uint color);
+    void renderFFT(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, OsciloscopeFFT& fft, SDisplay& frame, bool function, float z, uint channelId, uint color);
     void renderDigitalAxis(uint threadid, OsciloscopeThreadData& threadData, uint xdiv, uint ydiv);
     void renderDigitalGrid(uint threadid, OsciloscopeThreadData& threadData, uint xdiv, uint ydiv);
     void renderDigitalUnit(uint threadid, OsciloscopeThreadData& threadData, uint xdiv, uint ydiv);
@@ -813,21 +820,11 @@ enum EThreadApiFunction
     afEEPROMReadFirmwareID,
     afEEPROMWrite,
     afEEPROMErase,
-    afSetFrame,
-    afGetFrame,
-    afHardwareConfig1,
-    afHardwareConfig2,
+    afHardwareConfig,
     afSimulate,
     afSetSimulateData,
     afSetSimulateOnOff,
-    afServerUpload,
-    afServerDownload,
-    afGetClientDisplay,
-    afUploadGenerator,
-    afSetUsb,
-    afSetNetwork,
-    afClientConnect,
-    afClientDisconnect,
+    afUploadGenerator,   
     afLast,
 };
 
@@ -836,7 +833,7 @@ class ThreadApi
 private:
     SDL_SpinLock                  lock;
     SDL_atomic_t                  sync;
-    Array<EThreadApiFunction, 16>  func;
+    Array<EThreadApiFunction, 16> func;
     SDL_atomic_t                  ret[afLast];
 private:
     SDL_atomic_t open;
@@ -852,8 +849,8 @@ private:
 public:
     SUsb         usbData;
     ilarge       usbSize;
-    SFx2         fx2Data;
-    ilarge       fx2Size;
+    SFx3         fx3Data;
+    ilarge       fx3Size;
     SFpga        fpgaData;
     ilarge       fpgaSize;
     SEeprom      eepromData;
@@ -872,8 +869,7 @@ public:
     SDL_atomic_t simulateOnOff;
     SDisplay     displayData;
     SGenerator   generatorData;
-    SHardware1   config1;
-    SHardware2   config2;
+    SHardware    config;
 public:
     ThreadApi();
 public:
@@ -896,10 +892,8 @@ public:
     void getFrame(int* version, int* header, int* data, int* packet);
     void setUSB(SUsb* usb);
     void getUSB(SUsb* usb);
-    void setConfig1(SHardware1* config);
-    void getConfig1(SHardware1* config);
-    void setConfig2(SHardware2* config);
-    void getConfig2(SHardware2* config);
+    void setConfig(SHardware* config);
+    void getConfig(SHardware* config);
     void setEEPROM(SEeprom* data, int  size, int  offset);
     void getEEPROM(SEeprom* data, int* size, int* offset);
     void setSimulateData(SSimulate* sim);
@@ -915,7 +909,7 @@ public:
     // controlThread
     int  openUSB(OscHardware* hw);
     int  useEepromCallibration(OscHardware* hw);
-    int  writeFpgaToArtix7(SHardware1* ctrl1, SHardware2* ctrl2, OscHardware* hw);
+    int  writeFpgaToArtix7(SHardware* ctrl, OscHardware* hw);
 
     int  writeUsbToEEPROM(OscHardware* hw);
     int  readFirmwareIDFromEEPROM(OscHardware* hw);
@@ -924,11 +918,29 @@ public:
     int  readCallibrateSettingsFromEEPROM(OscHardware* hw);
     int  eraseEEPROM(OscHardware* hw);
     int  simulateTime(double time);
-    int  hardwareControlFunction(SHardware1* hw1, SHardware2* hw2);
+    int  hardwareControlFunction(SHardware* hw);
 public:
     // captureThread
     int  captureFrameData(SFrameData* buffer, int toReceive, int* transfered, int type);
 };
+
+
+// ScopeFunFrame
+struct ScopeFunFrame {
+   ularge m_memPos;
+   ularge m_memSize;
+   ularge m_dataLen;
+};
+
+// ScopeFunCaptureBuffer
+class ScopeFunCaptureBuffer {
+public:
+   byte*                                     m_dataPtr;
+   ularge                                    m_dataMax;
+   Array<ScopeFunFrame, SCOPEFUN_MAX_FRAMES> m_frame;
+   SDL_SpinLock                              m_lock;
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -966,7 +978,10 @@ public:
 public:
     CaptureBuffer*  captureBuffer;
 public:
-    SFx2        fx2;
+    ScopeFunCaptureBuffer m_captureBuffer;
+    SDisplay              m_displayBuffer;
+public:
+    SFx3        fx2;
     SFpga       fpga;
 public:
     bool        serverActive;
@@ -1089,7 +1104,8 @@ public:
 public:
     OsciloscopeGrid grid;
 public:
-    OsciloscopeMainControl control;
+    // OsciloscopeMainControl control;
+    SHardware              m_hw;
 public:
     int clearRenderTarget;
     int clearThermal;
@@ -1145,9 +1161,15 @@ public:
     void      simOnOff(int value);
 public:
     void clearEts(int value);
+public:
+   ushort getAttr(uint volt);
+   ushort getGain(int channel, uint volt);
+public:
+   void transferData();
 };
 
 SFContext* getCtx();
+SHardware* getHw();
 
 MANAGER_POINTER(Osciloscope);
 

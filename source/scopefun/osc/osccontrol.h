@@ -21,123 +21,6 @@
 #ifndef __OSC_CONTROL__
 #define __OSC_CONTROL__
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// AnalogFunction
-//
-////////////////////////////////////////////////////////////////////////////////
-enum AnalogFunction
-{
-    ANALOG_FUNCTION_MEDIUM = 0,
-    ANALOG_FUNCTION_SUB_CH0_CH1,
-    ANALOG_FUNCTION_SUB_CH1_CH0,
-    ANALOG_FUNCTION_ADD,
-    ANALOG_FUNCTION_MIN,
-    ANALOG_FUNCTION_MAX,
-    ANALOG_FUNCTION_CUSTOM,
-    ANALOG_FUNCTION_UPLOADED,
-};
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// AnalogFlag
-//
-////////////////////////////////////////////////////////////////////////////////
-enum AnalogFlag
-{
-    CHANNEL_ATTR_B = BIT(0),
-    CHANNEL_ATTR_A = BIT(1),
-    CHANNEL_B_GROUND = BIT(2),
-    CHANNEL_A_GROUND = BIT(3),
-    CHANNEL_B_ACDC = BIT(4),
-    CHANNEL_A_ACDC = BIT(5),
-    CHANNEL_INTERLEAVE = BIT(6),
-    CHANNEL_ETS = BIT(7),
-};
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// GeneratorType
-//
-////////////////////////////////////////////////////////////////////////////////
-enum GeneratorType
-{
-    GENERATOR_CUSTOM,
-    GENERATOR_SIN,
-    GENERATOR_COS,
-    GENERATOR_TRIANGLE,
-    GENERATOR_RAMP_UP,
-    GENERATOR_RAMP_DOWN,
-    GENERATOR_SQUARE,
-    GENERATOR_DELTA,
-    GENERATOR_DC,
-    GENERATOR_NOISE,
-};
-
-enum ControllType1
-{
-    CONTROLL1_SHUTDOWN = 0x0000,
-    CONTROLL1_RESET = 0x0A5A,
-    CONTROLL1_TEST = 0x0640,
-    CONTROLL1_WAKEUP = 0x0003,
-    CONTROLL1_NORMAL = 0x0600,
-};
-
-enum ControllType2
-{
-    CONTROLL2_NORMAL = 0x0000,
-    CONTROLL2_TEST   = 0x0002,
-    CONTROLL2_RESET  = 0x0004,
-};
-
-enum CallibrateFreq
-{
-    CALLIBRATE_1K,
-    CALLIBRATE_5K,
-    CALLIBRATE_10K,
-    CALLIBRATE_100K,
-    CALLIBRATE_200K,
-    CALLIBRATE_500K,
-    CALLIBRATE_1M,
-    CALLIBRATE_2M,
-};
-
-enum DigitalPattern
-{
-    DIGITAL_PATTERN_0,
-    DIGITAL_PATTERN_1,
-    DIGITAL_PATTERN_RISING,
-    DIGITAL_PATTERN_FALLING,
-};
-
-enum DigitalStage
-{
-    DIGITAL_STAGE_0,
-    DIGITAL_STAGE_1,
-    DIGITAL_STAGE_2,
-    DIGITAL_STAGE_3,
-};
-
-enum DigitalBit
-{
-    DIGITAL_BIT_0,
-    DIGITAL_BIT_1,
-    DIGITAL_BIT_2,
-    DIGITAL_BIT_3,
-    DIGITAL_BIT_4,
-    DIGITAL_BIT_5,
-    DIGITAL_BIT_6,
-    DIGITAL_BIT_7,
-    DIGITAL_BIT_8,
-    DIGITAL_BIT_9,
-    DIGITAL_BIT_10,
-    DIGITAL_BIT_11,
-    DIGITAL_BIT_12,
-    DIGITAL_BIT_13,
-    DIGITAL_BIT_14,
-    DIGITAL_BIT_15,
-};
-
 class OsciloscopeControlInterface
 {
 public:
@@ -436,9 +319,6 @@ public:
     virtual ushort getGain(int channel, uint volt);
 public:
     virtual int getAverage() {return 0;};
-public:
-    void       client1Set(SHardware1& configure);
-    SHardware1 client1Get();
 }
 #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC)
     __attribute__((packed));
@@ -638,9 +518,6 @@ public:
     virtual ushort getGain(int channel, uint volt);
 public:
     virtual int getAverage();
-public:
-    void       client2Set(SHardware2& configure);
-    SHardware2 client2Get();
 }
 #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC)
     __attribute__((packed));
@@ -660,8 +537,8 @@ public:
 class OsciloscopeMainControl : public OsciloscopeControlInterface
 {
 private:
-    SHardware1                   hw1;
-    SHardware2                   hw2;
+    SHardware                    hw1;
+    SHardware                    hw2;
     SDL_SpinLock                 lock;
     int                          version;
     OsciloscopeControlInterface* pControl;

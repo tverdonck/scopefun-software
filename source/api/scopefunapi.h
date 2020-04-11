@@ -479,6 +479,8 @@ typedef struct
     SArrayDisplayAnalog1 analog1;
     SArrayDisplayAnalogF analogF;
     SArrayDisplayDigital digital;
+    uint                 samples;
+    uint                 ets;
 } SDisplay;
 
 /*----------------------------------------
@@ -613,8 +615,9 @@ SCOPEFUN_DELETE(SEeprom)
     /*----------------------------------------
      Frame
    ----------------------------------------*/
-    SCOPEFUN_API int sfFrameCapture(SFContext* INPUT, SFrameData* INOUT, int INPUT, int* OUTPUT);
-    SCOPEFUN_API int sfFrameDisplay(SFContext* INPUT, SFrameData* INOUT, int INPUT, int INPUT, SDisplay* INOUT);
+    SCOPEFUN_API int sfFrameCapture(SFContext* INPUT, int* OUTPUT, int* OUTPUT);
+    SCOPEFUN_API int sfFrameOutput(SFContext*  INPUT, SFrameData* INOUT, int INPUT);
+    SCOPEFUN_API int sfFrameDisplay(SFContext* INPUT, SFrameData* INOUT, int INPUT, SDisplay* INOUT,float INPUT,float INPUT);
 
     /*----------------------------------------
        Header
@@ -638,10 +641,10 @@ SCOPEFUN_DELETE(SEeprom)
     ----------------------------------------*/
 
     // analog
-    SCOPEFUN_API int    sfDefault(SHardware* INOUT);
+    SCOPEFUN_API int    sfSetDefault(SHardware* INOUT);
     SCOPEFUN_API int    sfSetFrameSize(SHardware*  INOUT, uint  INPUT);
     SCOPEFUN_API int    sfSetNumSamples(SHardware* INOUT, uint  INPUT);
-    SCOPEFUN_API int    sfAnalogSwitchBit(SHardware* INOUT, int INPUT, int INPUT);
+    SCOPEFUN_API int    sfSetAnalogSwitchBit(SHardware* INOUT, int INPUT, int INPUT);
     SCOPEFUN_API int    sfSetEts(SHardware* INOUT, int INPUT);
     SCOPEFUN_API int    sfSetYRangeScaleA(SHardware* INOUT, ushort INPUT, ushort INPUT);
     SCOPEFUN_API int    sfSetYPositionA(SHardware* INOUT, int INPUT);
@@ -804,8 +807,9 @@ SCOPEFUN_DELETE(SEeprom)
     /*----------------------------------------
       Frame
     ----------------------------------------*/
-    SCOPEFUN_API int sfFrameCapture(SFContext* ctx,  SFrameData* buffer, int len, int* received);
-    SCOPEFUN_API int sfFrameDisplay(SFContext* ctx,  SFrameData* buffer, int len, int received, SDisplay* display);
+    SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize );
+    SCOPEFUN_API int sfFrameOutput(SFContext*  ctx, SFrameData* data, int len );
+    SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom);
   
     /*----------------------------------------
       Header
@@ -829,10 +833,10 @@ SCOPEFUN_DELETE(SEeprom)
     ----------------------------------------*/
 
     // analog
-    SCOPEFUN_API int    sfDefault(SHardware* hw);
+    SCOPEFUN_API int    sfSetDefault(SHardware* hw);
     SCOPEFUN_API int    sfSetFrameSize(SHardware*  hw, uint  frameSize);
     SCOPEFUN_API int    sfSetNumSamples(SHardware* hw, uint  numSamples);
-    SCOPEFUN_API int    sfAnalogSwitchBit(SHardware* hw, int bit, int value);
+    SCOPEFUN_API int    sfSetAnalogSwitchBit(SHardware* hw, int bit, int value);
     SCOPEFUN_API int    sfSetEts(SHardware* hw, int enable);
     SCOPEFUN_API int    sfSetYRangeScaleA(SHardware* hw, ushort attr, ushort gain);
     SCOPEFUN_API int    sfSetYPositionA(SHardware* hw, int pos);

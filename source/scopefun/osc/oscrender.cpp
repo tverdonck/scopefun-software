@@ -130,8 +130,8 @@ float channelFunction(float ch0value, float ch1value, int function, WndMain& win
 
 void OsciloscopeThreadRenderer::preOscRender(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     float zoom = 1.0;
     if(wndMain.fftDigital.is(VIEW_SELECT_OSC_3D))
     {
@@ -152,8 +152,8 @@ void OsciloscopeThreadRenderer::preOscRender(uint threadId, OsciloscopeThreadDat
 
 void OsciloscopeThreadRenderer::preFftRender(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     float zoom = render.zoomFFT;
     if(wndMain.fftDigital.is(VIEW_SELECT_FFT_3D))
     {
@@ -174,8 +174,8 @@ void OsciloscopeThreadRenderer::preFftRender(uint threadId, OsciloscopeThreadDat
 
 void OsciloscopeThreadRenderer::renderFps(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     if(pOsciloscope->settings.getSettings()->renderFps)
     {
         FORMAT_BUFFER();
@@ -244,8 +244,8 @@ void renderCircleXY(uint threadid, int n, float r, float z, Matrix4x4 final)
 
 void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     float sx = render.signalPosition;
     float sz = render.signalZoom;
     uint xCount = 10;
@@ -388,8 +388,8 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderAnalogAxis(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     ////////////////////////////////////////////////////////////////////////////////
     // Axis
     ////////////////////////////////////////////////////////////////////////////////
@@ -447,8 +447,8 @@ double getTriggerVoltage(WndMain& window)
 
 void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     ////////////////////////////////////////////////////////////////////////////////
     // Units
     ////////////////////////////////////////////////////////////////////////////////
@@ -714,16 +714,15 @@ double freqFromPosition(int index, int maxIndex, double maxHertz);
 
 void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, OsciloscopeFFT& fft)
 {
-    WndMain&               wndMain    = threadData.window;
-    // WndMain&            windowMain    = threadData.window;
-    OsciloscopeRenderData&  render    = threadData.render;
-    OsciloscopeFrame&       frame     = threadData.frame;
+    WndMain&               wndMain    = threadData.m_window;
+    OsciloscopeRenderData&  render    = threadData.m_render;
+    SDisplay&               frame     = threadData.m_frame;
     MeasureChannelData&       current = measure.history[MEASURE_HISTORY_CURRENT];
     if(!wndMain.measure.uiOpen)
     {
         return;
     }
-    int    icount = (double)frame.analog[0].getCount();
+    int    icount = (double)frame.samples;
     double  count = (double)icount;
     double   etsDelta = (1.f / icount) / double(render.maxEts);
     double  etsOffset = etsDelta * double(frame.ets);
@@ -796,12 +795,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(uint pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<int>(pt, 0, icount - 1);
-        if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        double   yPosCh0 = frame.getAnalogDouble(0, idx);
-        double   yPosCh1 = frame.getAnalogDouble(1, idx);
+        
+        double   yPosCh0 = frame.analog0.bytes[idx];
+        double   yPosCh1 = frame.analog1.bytes[idx];
         double   yPosChF = channelFunction(yPosCh0, yPosCh1, wndMain.function.Type, wndMain);
         double   y0 = yPosCh0 * yfactor0 - ch0ZeroVolt;
         double   y1 = yPosCh1 * yfactor1 - ch1ZeroVolt;
@@ -871,12 +867,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(uint pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<int>(pt, 0, icount - 1);
-        if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        double   yPosCh0 = frame.getAnalogDouble(0, idx);
-        double   yPosCh1 = frame.getAnalogDouble(1, idx);
+        
+        double   yPosCh0 = frame.analog0.bytes[idx];
+        double   yPosCh1 = frame.analog1.bytes[idx];
         double   y0 = yPosCh0 * yfactor0 /*- ch0ZeroVolt*/;
         double   y1 = yPosCh1 * yfactor1 /*- ch1ZeroVolt*/;
         double   yF = channelFunction(y0, y1, wndMain.function.Type, wndMain);
@@ -1057,12 +1050,9 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(int pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<uint>(pt, 0, icount - 1);
-        if(idx < (uint)frame.attr.getCount() && frame.attr[idx] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        double   yPosCh0 = frame.getAnalogDouble(0, idx);
-        double   yPosCh1 = frame.getAnalogDouble(1, idx);
+        
+        double   yPosCh0 = frame.analog0.bytes[idx];
+        double   yPosCh1 = frame.analog1.bytes[idx];
         double   y0 = yPosCh0 * yfactor0 - ch0ZeroVolt;
         double   y1 = yPosCh1 * yfactor1 - ch1ZeroVolt;
         double   yF = channelFunction(y0, y1, wndMain.function.Type, wndMain);
@@ -1207,7 +1197,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     }
     if(digitalCount)
     {
-        uint    count = frame.digital.getCount();
+        uint    count = frame.samples;
         double xScale = double(count) / icount;
         for(int i = 0; i < 16; i++)
         {
@@ -1220,7 +1210,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
             for(uint j = 0; j < count; j++)
             {
                 int    idx = clamp(j, 0U, count - 1);
-                ishort bit = frame.getDigital(i, idx);
+                ishort bit = frame.digital.bytes[idx];
                 double delta = 1.f / double(count);
                 double  xmin = (double(j) / double(count - 1)) * xScale - 0.5 - delta / 2.0;
                 double  xmax = (double(j) / double(count - 1)) * xScale - 0.5 + delta / 2.0;
@@ -1266,17 +1256,18 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         {
             if(isFunction)
             {
-                float ch0 = frame.getAnalog(0, j);
-                float ch1 = frame.getAnalog(1, j);
+                float ch0 = frame.analog0.bytes[j];
+                float ch1 = frame.analog1.bytes[j];
                 fft.aRe[j]   = channelFunction(ch0, ch1, wndMain.function.Type, wndMain);
                 fft.aIm[j]   = 0.0;
                 fft.aAmpl[j] = 0.0;
-                n = min(frame.analog[0].getCount(), frame.analog[1].getCount());
+                n = min(frame.samples, frame.samples);
             }
             else
             {
-                n = frame.analog[ch].getCount();
-                fft.aRe[j]   = frame.getAnalog(ch, j);
+                n = frame.samples;
+                if(ch==0) fft.aRe[j] = frame.analog0.bytes[j];
+                if(ch==1) fft.aRe[j] = frame.analog1.bytes[j];
                 fft.aIm[j]   = 0.0;
                 fft.aAmpl[j] = 0.0;
             }
@@ -1290,7 +1281,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         ////////////////////////////////////////////////////////////////////////////////
         // increment
         ////////////////////////////////////////////////////////////////////////////////
-        float fresolution = (float)threadData.render.width;
+        float fresolution = (float)threadData.m_render.width;
         float fsignalpoints = (float)count;
         iint increment = (iint)((fsignalpoints / fresolution));
         increment = max<uint>(increment, 1);
@@ -1420,22 +1411,21 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     };
 }
 
-void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadData& threadData, float z, uint channelId, uint shadow, OsciloscopeFrame& frame, float captureTime, float captureVolt, uint color, bool invert)
+void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadData& threadData, float z, uint channelId, uint shadow, SDisplay& frame, float captureTime, float captureVolt, uint color, bool invert)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(frame.analog[channelId].getCount() == 0)
-    {
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+
+    if(frame.samples == 0)
         return;
-    }
-    if(frame.analog[channelId].getCount() > NUM_SAMPLES)
-    {
+   
+    if(frame.samples > SCOPEFUN_DISPLAY)
         return;
-    }
+    
     ////////////////////////////////////////////////////////////////////////////////
     // samples
     ////////////////////////////////////////////////////////////////////////////////
-    uint  isamples = frame.analog[channelId].getCount();
+    uint  isamples = frame.samples;
     if(!isamples)
     {
         return;
@@ -1444,7 +1434,7 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     // start/end/increment/xgridsize
     ////////////////////////////////////////////////////////////////////////////////
     uint  start = 0;
-    uint  end = NUM_SAMPLES - 1;
+    uint  end   = SCOPEFUN_DISPLAY - 1;
     uint  increment = wndMain.display.tessalation2d;
     ////////////////////////////////////////////////////////////////////////////////
     // render
@@ -1455,14 +1445,6 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     {
         uint idx0 = clamp<uint>(point, 0, isamples);
         uint idx1 = clamp<uint>(point + increment, 0, isamples);
-        if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
         count++;
     }
     ////////////////////////////////////////////////////////////////////////////////
@@ -1474,7 +1456,7 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     int packet  = 0;
     pOsciloscope->thread.getFrame(&version, &header, &data, &packet);
     uint doubleFreq = 0;
-    if(version == HARDWARE_VERSION_2 && wndMain.horizontal.ETS == 0)
+    if(version == HARDWARE_VERSION && wndMain.horizontal.ETS == 0)
     {
         if(captureTimeFromValue(wndMain.horizontal.Capture) == (uint)t2c2ns)
         {
@@ -1507,7 +1489,7 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     float     yGridMax = 0.5f;
     float      yfactor = yGridMax;
     float      xfactor = 1.f;
-    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor) + etsOffset * xfactor - frame.edgeOffset;
+    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor)+etsOffset * xfactor;
     if(invert)
     {
         yfactor = -yfactor;
@@ -1515,8 +1497,8 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     double yOffset = 0;
     if(isamples)
     {
-        isamples -= frame.edgeSample;
-        isamples  = max(frame.edgeSample, isamples);
+        // isamples -= frame.edgeSample;
+        // isamples  = max(frame.edgeSample, isamples);
         float displaySampleOffset = 1.0 / (isamples);
         float offset2ns = ((2.0 * DOUBLE_NANO) * displaySampleOffset) / wndMain.horizontal.Capture;
         if(doubleFreq == 1)
@@ -1525,18 +1507,11 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
             {
                 uint idx0 = clamp<uint>(point, 0, isamples);
                 uint idx1 = clamp<uint>(point + increment, 0, isamples);
-                if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-                {
-                    continue;
-                }
-                if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-                {
-                    continue;
-                }
-                float ystart0 = frame.getAnalog(0, idx0) * yfactor + float(yOffset);
-                float yend0   = frame.getAnalog(0, idx1) * yfactor + float(yOffset);
-                float ystart1 = frame.getAnalog(1, idx0) * yfactor + float(yOffset);
-                float yend1   = frame.getAnalog(1, idx1) * yfactor + float(yOffset);
+                
+                float ystart0 = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
+                float yend0   = frame.analog0.bytes[idx1] * yfactor + float(yOffset);
+                float ystart1 = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
+                float yend1   = frame.analog1.bytes[idx1] * yfactor + float(yOffset);
                 float fstart0 = (float(point) / float(isamples)) - 0.5f;
                 float fstart1  = fstart0 + displaySampleOffset / 2;
                 float fend0    = fstart0 + displaySampleOffset;
@@ -1566,16 +1541,20 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
             {
                 uint idx0 = clamp<uint>(point, 0, isamples);
                 uint idx1 = clamp<uint>(point + increment, 0, isamples);
-                if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
+               
+                float ystart = 0;
+                float yend   = 0;
+                if(channelId==0)
                 {
-                    continue;
+                     ystart = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
+                     yend   = frame.analog0.bytes[idx1] * yfactor + float(yOffset);
                 }
-                if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
+                if (channelId==1)
                 {
-                    continue;
+                   ystart = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
+                   yend = frame.analog1.bytes[idx1] * yfactor + float(yOffset);
                 }
-                float ystart = frame.getAnalog(channelId, idx0) * yfactor + float(yOffset);
-                float yend = frame.getAnalog(channelId, idx1) * yfactor + float(yOffset);
+                
                 float fstart = (float(point) / float(isamples)) - 0.5f;
                 float fend = (float(point + increment) / float(isamples)) - 0.5f;
                 if(channelId == 1)
@@ -1588,16 +1567,7 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
                 }
                 float xstart = fstart * xfactor + xposition;
                 float xend = fend * xfactor + xposition;
-                if(threadData.customCh0 && channelId == 0)
-                {
-                    ystart = threadData.customData.analog0.bytes[idx0];
-                    yend = threadData.customData.analog0.bytes[idx1];
-                }
-                if(threadData.customCh1 && channelId == 1)
-                {
-                    ystart = threadData.customData.analog1.bytes[idx0];
-                    yend = threadData.customData.analog1.bytes[idx1];
-                }
+               
                 Vector4 vstart = Vector4(xstart, ystart, z, 1.f);
                 Vector4 vend = Vector4(xend, yend, z, 1.f);
                 if(wndMain.horizontal.ETS)
@@ -1654,18 +1624,18 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     }
 }
 
-void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadData& threadData, int frameIndex, float z, uint channelId, OsciloscopeFrame& frame, float captureTime, float captureVolt, uint color, bool invert)
+void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadData& threadData, int frameIndex, float z, uint channelId, SDisplay& frame, float captureTime, float captureVolt, uint color, bool invert)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(frame.analog[channelId].getCount() == 0 || frame.analog[channelId].getCount() > NUM_SAMPLES)
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(frame.samples == 0 || frame.samples > NUM_SAMPLES)
     {
         return;
     }
     ////////////////////////////////////////////////////////////////////////////////
     // samples
     ////////////////////////////////////////////////////////////////////////////////
-    uint  isamples = frame.analog[channelId].getCount();
+    uint  isamples = frame.samples;
     ////////////////////////////////////////////////////////////////////////////////
     // start/end/increment/xgridsize
     ////////////////////////////////////////////////////////////////////////////////
@@ -1682,14 +1652,6 @@ void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadD
     {
         uint idx0 = clamp<uint>(point, 0, isamples);
         uint idx1 = clamp<uint>(point + increment, 0, isamples);
-        if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
         count++;
     }
     uint type = wndMain.display.signalType;
@@ -1714,15 +1676,14 @@ void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadD
         for(uint point = start; point <= end; point += increment)
         {
             uint idx0 = clamp<uint>(point, 0, isamples);
-            if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
+           
             // x
             float fstart  = (float(point) / NUM_SAMPLES) - 0.5f;
             float xstart  = fstart * xfactor + xposition;
             // y
-            float ystart = frame.getAnalog(channelId, idx0) * yfactor + float(yOffset);
+            float ystart = 0;
+            if (channelId == 0) ystart = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
+            if( channelId==1)   ystart = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
             if(channelId == 0)
             {
                 surfaceFrame0[frameIndex].point[i].pos = Vector4(xstart, ystart, z, 1.f);
@@ -1747,8 +1708,8 @@ void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadD
 
 void OsciloscopeThreadRenderer::renderSurface3d(uint threadId, OsciloscopeThreadData& threadData, int channelId, uint color)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     SurfaceFrame* surface = 0;
     if(channelId ==  0)
     {
@@ -1762,7 +1723,7 @@ void OsciloscopeThreadRenderer::renderSurface3d(uint threadId, OsciloscopeThread
     {
         surface = surfaceFrameF;
     }
-    uint historyFrameDisplay = threadData.history.getCount();
+    uint historyFrameDisplay = threadData.m_historyCount;
     if(historyFrameDisplay < 16)
     {
         int debug = 1;
@@ -1819,35 +1780,35 @@ void OsciloscopeThreadRenderer::renderSurface3d(uint threadId, OsciloscopeThread
     }
 }
 
-void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeThreadData& threadData, float z, int function, OsciloscopeFrame& frame, float xCapture, float yCapture0, float yCapture1, uint color, bool invert0, bool invert1)
+void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeThreadData& threadData, float z, int function, SDisplay& frame, float xCapture, float yCapture0, float yCapture1, uint color, bool invert0, bool invert1)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(frame.analog[0].getCount() == 0)
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(frame.samples == 0)
     {
         return;
     }
-    if(frame.analog[1].getCount() == 0)
+    if(frame.samples == 0)
     {
         return;
     }
-    if(frame.analog[0].getCount() > NUM_SAMPLES)
+    if(frame.samples > NUM_SAMPLES)
     {
         return;
     }
-    if(frame.analog[1].getCount() > NUM_SAMPLES)
+    if(frame.samples > NUM_SAMPLES)
     {
         return;
     }
     ////////////////////////////////////////////////////////////////////////////////
     // samples
     ////////////////////////////////////////////////////////////////////////////////
-    uint  isamples0 = frame.analog[0].getCount();
+    uint  isamples0 = frame.samples;
     if(!isamples0)
     {
         return;
     }
-    uint  isamples1 = frame.analog[1].getCount();
+    uint  isamples1 = frame.samples;
     if(!isamples1)
     {
         return;
@@ -1871,14 +1832,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-        if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
         count++;
     }
     uint type = wndMain.display.signalType;
@@ -1914,28 +1867,15 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-            //
-            if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
-            if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
+           
             float ystart  = 0;
             float yend    = 0;
-            float ystart0 = frame.getAnalog(0, idx0) * yfactor0 + float(yOffset0);
-            float yend0   = frame.getAnalog(0, idx1) * yfactor0 + float(yOffset0);
-            float ystart1 = frame.getAnalog(1, idx0) * yfactor1 + float(yOffset1);
-            float yend1   = frame.getAnalog(1, idx1) * yfactor1 + float(yOffset1);
+            float ystart0 = frame.analog0.bytes[idx0] * yfactor0 + float(yOffset0);
+            float yend0   = frame.analog0.bytes[idx1] * yfactor0 + float(yOffset0);
+            float ystart1 = frame.analog1.bytes[idx0] * yfactor1 + float(yOffset1);
+            float yend1   = frame.analog1.bytes[idx1] * yfactor1 + float(yOffset1);
             ystart = channelFunction(ystart0, ystart1, function, wndMain);
             yend   = channelFunction(yend0, yend1, function, wndMain);
-            if(threadData.customFun)
-            {
-                ystart = threadData.customData.analogF.bytes[idx0];
-                yend   = threadData.customData.analogF.bytes[idx1];
-            }
             float fstart = (float(point) / NUM_SAMPLES) - 0.5f;
             float fend = (float(point + increment) / NUM_SAMPLES) - 0.5f;
             float xstart = fstart * xfactor + xposition;
@@ -1950,39 +1890,32 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
 }
 
 
-void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, OsciloscopeThreadData& threadData, OsciloscopeFrame& frame, float xCapture, float yCapture0, float yCapture1, uint color)
+void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, OsciloscopeThreadData& threadData, SDisplay& frame, float xCapture, float yCapture0, float yCapture1, uint color)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     if(!wndMain.function.xyGraph)
     {
         return;
     }
-    if(frame.analog[0].getCount() == 0)
+    if(frame.samples == 0)
     {
         return;
     }
-    if(frame.analog[1].getCount() == 0)
-    {
-        return;
-    }
-    if(frame.analog[0].getCount() > NUM_SAMPLES)
-    {
-        return;
-    }
-    if(frame.analog[1].getCount() > NUM_SAMPLES)
+  
+    if(frame.samples > NUM_SAMPLES)
     {
         return;
     }
     ////////////////////////////////////////////////////////////////////////////////
     // samples
     ////////////////////////////////////////////////////////////////////////////////
-    uint  isamples0 = frame.analog[0].getCount();
+    uint  isamples0 = frame.samples;
     if(!isamples0)
     {
         return;
     }
-    uint  isamples1 = frame.analog[1].getCount();
+    uint  isamples1 = frame.samples;
     if(!isamples1)
     {
         return;
@@ -2006,14 +1939,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-        if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
         count++;
     }
     uint type = wndMain.display.signalType;
@@ -2051,19 +1976,11 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-            //
-            if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
-            if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
-            float x0 = frame.getAnalog(0, idx0) * yfactor0 - float(yOffset0);
-            float y0 = frame.getAnalog(1, idx0) * yfactor0 - float(yOffset1);
-            float x1 = frame.getAnalog(0, idx1) * yfactor1 - float(yOffset0);
-            float y1 = frame.getAnalog(1, idx1) * yfactor1 - float(yOffset1);
+            
+            float x0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset0);
+            float y0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset1);
+            float x1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset0);
+            float y1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset1);
             float fstart = (float(point) / NUM_SAMPLES) - 0.5f;
             float fend = (float(point + increment) / NUM_SAMPLES) - 0.5f;
             float xstart = fstart * xfactor + xposition;
@@ -2077,14 +1994,14 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
     pCanvas3d->endBatch(threadid, render.cameraOsc.Final, color, 0, BLEND_MODE_COPY, CANVAS3D_SHADER_DEFAULT);
 }
 
-void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, OsciloscopeThreadData& threadData, OsciloscopeFrame& frame, int frameIndex, float z, uint color)
+void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, OsciloscopeThreadData& threadData, SDisplay& frame, int frameIndex, float z, uint color)
 {
-    if(frame.analog[0].getCount() == 0 || frame.analog[1].getCount() == 0 || frame.analog[0].getCount() > NUM_SAMPLES || frame.analog[1].getCount() > NUM_SAMPLES)
+    if(frame.samples == 0 || frame.samples > NUM_SAMPLES)
     {
         return;
     }
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     bool invert0 = wndMain.channel01.Invert;
     bool invert1 = wndMain.channel02.Invert;
     float xCapture = wndMain.horizontal.Capture;
@@ -2092,12 +2009,12 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
     ////////////////////////////////////////////////////////////////////////////////
     // samples
     ////////////////////////////////////////////////////////////////////////////////
-    uint  isamples0 = frame.analog[0].getCount();
+    uint  isamples0 = frame.samples;
     if(!isamples0)
     {
         return;
     }
-    uint  isamples1 = frame.analog[1].getCount();
+    uint  isamples1 = frame.samples;
     if(!isamples1)
     {
         return;
@@ -2122,14 +2039,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-        if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
-        if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-        {
-            continue;
-        }
         count++;
     }
     uint type = wndMain.display.signalType;
@@ -2161,17 +2070,10 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-            if(idx0 < (uint)frame.attr.getCount() && frame.attr[idx0] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
-            if(idx1 < (uint)frame.attr.getCount() && frame.attr[idx1] & FRAME_ATTRIBUTE_HIDE_SIGNAL)
-            {
-                continue;
-            }
+        
             // y
-            float y0 = frame.getAnalog(0, idx0) * yfactor0 + float(yOffset0);
-            float y1 = frame.getAnalog(1, idx0) * yfactor1 + float(yOffset1);
+            float y0 = frame.analog0.bytes[idx0] * yfactor0 + float(yOffset0);
+            float y1 = frame.analog1.bytes[idx0] * yfactor1 + float(yOffset1);
             float y      = channelFunction(y0, y1, wndMain.function.Type, wndMain);
             // x
             float fpoint = (float(point) / NUM_SAMPLES) - 0.5f;
@@ -2187,9 +2089,9 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
 
 void OsciloscopeThreadRenderer::renderMeasureFFT(uint threadId, OsciloscopeThreadData& threadData)
 {
-    OsciloscopeFrame&    frame = threadData.frame;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    SDisplay&            frame = threadData.m_frame;
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     Matrix4x4&   final = render.cameraFFT.Final;
     float FFT0PickX = wndMain.measure.data.pickFFT0.position.x;
     float FFT0PickY = wndMain.measure.data.pickFFT0.position.y;
@@ -2274,9 +2176,9 @@ void OsciloscopeThreadRenderer::renderMeasureFFT(uint threadId, OsciloscopeThrea
 
 void OsciloscopeThreadRenderer::renderMeasure(uint threadId, OsciloscopeThreadData& threadData)
 {
-    OsciloscopeFrame&    frame = threadData.frame;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    SDisplay&            frame = threadData.m_frame;
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     Matrix4x4&   final = render.cameraOsc.Final;
     float pre = wndMain.trigger.Percent / 100.0;
     float X0PickX = wndMain.measure.data.pickX0.position.x - 0.5;
@@ -2426,9 +2328,9 @@ void OsciloscopeThreadRenderer::renderMeasure(uint threadId, OsciloscopeThreadDa
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderFFTGrid(uint threadid, OsciloscopeThreadData& threadData)
 {
-    OsciloscopeFrame&    frame = threadData.frame;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    SDisplay&            frame = threadData.m_frame;
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     ////////////////////////////////////////////////////////////////////////////////
     // Grid
     ////////////////////////////////////////////////////////////////////////////////
@@ -2471,9 +2373,9 @@ void OsciloscopeThreadRenderer::renderFFTGrid(uint threadid, OsciloscopeThreadDa
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderFFTAxis(uint threadid, OsciloscopeThreadData& threadData)
 {
-    OsciloscopeFrame&    frame = threadData.frame;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    SDisplay&           frame = threadData.m_frame;
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     ////////////////////////////////////////////////////////////////////////////////
     // Axis
     ////////////////////////////////////////////////////////////////////////////////
@@ -2496,15 +2398,14 @@ void OsciloscopeThreadRenderer::renderFFTAxis(uint threadid, OsciloscopeThreadDa
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderFFTUnits(uint threadid, OsciloscopeThreadData& threadData)
 {
-    OsciloscopeFrame&    frame = threadData.frame;
-    MeasureData&          data = threadData.window.measure.data;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(frame.analog[0].getCount() > NUM_SAMPLES)
-    {
+    SDisplay&    frame = threadData.m_frame;
+    MeasureData&          data = threadData.m_window.measure.data;
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(frame.samples > NUM_SAMPLES)
         return;
-    }
-    iint n = frame.analog[0].getCount();
+    
+    iint n = frame.samples;
     pFont->setSize(threadid, 0.25f);
     iint p = wndMain.horizontal.FFTSize;
     if(!p)
@@ -2625,20 +2526,20 @@ void OsciloscopeThreadRenderer::renderFFTUnits(uint threadid, OsciloscopeThreadD
 ////////////////////////////////////////////////////////////////////////////////
 double freqFromPosition(int index, int maxIndex, double maxHertz);
 
-void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, OsciloscopeFFT& fft, OsciloscopeFrame& frame, bool funtion, float z, uint channelId, uint color)
+void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, OsciloscopeFFT& fft, SDisplay& frame, bool funtion, float z, uint channelId, uint color)
 {
     MeasureData&          data = measure;
-    WndMain&           wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(!frame.analog[channelId].getCount())
+    WndMain&           wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(!frame.samples)
     {
         return;
     }
-    if(frame.analog[channelId].getCount() > NUM_SAMPLES)
+    if(frame.samples > NUM_SAMPLES)
     {
         return;
     }
-    iint n = frame.analog[channelId].getCount();
+    iint n = frame.samples;
     iint p = wndMain.horizontal.FFTSize;
     if(!p)
     {
@@ -2651,15 +2552,16 @@ void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& 
     {
         if(funtion)
         {
-            float ch0  = frame.getAnalog(0, i);
-            float ch1  = frame.getAnalog(1, i);
+            float ch0  = frame.analog0.bytes[i];
+            float ch1  = frame.analog1.bytes[i];
             fft.aRe[i]   = channelFunction(ch0, ch1, wndMain.function.Type, wndMain);
             fft.aIm[i]   = 0.0;
             fft.aAmpl[i] = 0.0;
         }
         else
         {
-            fft.aRe[i] = frame.getAnalog(channelId, i);
+            if( channelId==0) fft.aRe[i] = frame.analog0.bytes[i];
+            if (channelId==1) fft.aRe[i] = frame.analog1.bytes[i];
             fft.aIm[i] = 0.0;
             fft.aAmpl[i] = 0.0;
         }
@@ -2673,7 +2575,7 @@ void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& 
     ////////////////////////////////////////////////////////////////////////////////
     // increment
     ////////////////////////////////////////////////////////////////////////////////
-    float fresolution   = (float)threadData.render.width;
+    float fresolution   = (float)threadData.m_render.width;
     float fsignalpoints = (float)count;
     iint increment      = (iint)((fsignalpoints / fresolution));
     increment           = max<uint>(increment, 1);
@@ -2758,10 +2660,10 @@ void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& 
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderDigitalAxis(uint threadid, OsciloscopeThreadData& threadData, uint xdivisions, uint ydivisions)
 {
-    OsciloscopeFrame&        frame = threadData.frame;
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(!threadData.window.display.digitalAxis)
+    SDisplay&                frame = threadData.m_frame;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(!threadData.m_window.display.digitalAxis)
     {
         return;
     }
@@ -2780,10 +2682,10 @@ void OsciloscopeThreadRenderer::renderDigitalAxis(uint threadid, OsciloscopeThre
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderDigitalGrid(uint threadId, OsciloscopeThreadData& threadData, uint xdivisions, uint ydivisions)
 {
-    OsciloscopeFrame&        frame = threadData.frame;
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(!threadData.window.display.digitalGrid)
+    SDisplay&                frame = threadData.m_frame;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(!threadData.m_window.display.digitalGrid)
     {
         return;
     }
@@ -2805,10 +2707,10 @@ void OsciloscopeThreadRenderer::renderDigitalGrid(uint threadId, OsciloscopeThre
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderDigitalUnit(uint threadid, OsciloscopeThreadData& threadData, uint xdivisions, uint ydivisions)
 {
-    OsciloscopeFrame&        frame = threadData.frame;
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
-    if(!threadData.window.display.digitalUnits)
+    SDisplay&        frame = threadData.m_frame;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(!threadData.m_window.display.digitalUnits)
     {
         return;
     }
@@ -2833,10 +2735,10 @@ void OsciloscopeThreadRenderer::renderDigitalUnit(uint threadid, OsciloscopeThre
 ////////////////////////////////////////////////////////////////////////////////
 void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadData& threadData, MeasureData& measure, uint xdivisions, uint ydivisions)
 {
-    OsciloscopeFrame&        frame = threadData.frame;
+    SDisplay&                frame = threadData.m_frame;
     MeasureData&              data = measure;
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     if(wndMain.digital.digital.getCount() == 0)
     {
         return;
@@ -2853,7 +2755,7 @@ void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadDa
     }
     if(digitalCount)
     {
-        uint    count = frame.digital.getCount();
+        uint    count = frame.samples;
         double xScale = 1.0;
         pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, digitalCount * count * 2);
         for(int i = 0; i < 16; i++)
@@ -2867,11 +2769,7 @@ void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadDa
             for(uint j = 0; j < count; j++)
             {
                 int    idx  = clamp(j, 0U, count - 1);
-                ushort bits = frame.getDigitalChannels(idx);
-                if(threadData.customDig)
-                {
-                    bits = threadData.customData.digital.bytes[idx];
-                }
+                ushort bits = frame.digital.bytes[idx];
                 ishort bit = (bits >> i) & 0x0001;
                 double delta =  1.f / double(count - 1);
                 double  xmin = (double(j) / double(count - 1)) * xScale - 0.5 - delta / 2.0;
@@ -2885,20 +2783,12 @@ void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadDa
                     pCanvas3d->bLine(threadId, Vector4(xmin, ymin, 0.f, 1.f), Vector4(xmax, ymin, 0.f, 1.f));
                 }
             }
-            ushort pbits = frame.getDigitalChannels(0);
-            if(threadData.customDig)
-            {
-                pbits = threadData.customData.digital.bytes[0];
-            }
+            ushort pbits = frame.digital.bytes[0];
             ishort previus = (pbits >> i) & 0x0001;
             for(uint j = 0; j < count; j++)
             {
                 int    idx      = clamp(j, 0U, count - 1);
-                ushort bits     = frame.getDigitalChannels(idx);
-                if(threadData.customDig)
-                {
-                    bits = threadData.customData.digital.bytes[idx];
-                }
+                ushort bits     = frame.digital.bytes[idx];
                 ishort    bit   = (bits >> i) & 0x0001;
                 double delta =  1.f / double(count - 1);
                 double  xmin = (double(j) / double(count - 1)) * xScale - 0.5 - delta / 2.0;
@@ -2949,8 +2839,8 @@ void OsciloscopeSlider::MinMax(float& xMinimum, float& xMaximum, uint width, uin
 
 void OsciloscopeThreadRenderer::renderSlider(uint threadId, OsciloscopeThreadData& threadData)
 {
-    WndMain&               wndMain = threadData.window;
-    OsciloscopeRenderData&  render = threadData.render;
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
     float posX = (render.sliderPosition - 0.5);
     if(wndMain.fftDigital.is(VIEW_SELECT_FFT_3D))
     {

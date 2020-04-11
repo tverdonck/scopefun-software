@@ -192,7 +192,7 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
     struct UsbContext* pCtx = (UsbContext*)ctx->usb;
     cMemSet((char*)pCtx, 0, sizeof(struct UsbContext));
     // version
-    ctx->api.version = 2;
+    ctx->api.version = HARDWARE_VERSION;
     ctx->api.major   = 0;
     ctx->api.minor   = 0;
     apiUnlock(ctx);
@@ -779,7 +779,7 @@ SCOPEFUN_API int sfSimulate(SFContext* ctx, double time)
 /*--------------------------------------------------------------------
    Frame
 ---------------------------------------------------------------------*/
-SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SFrameData* buffer, int len, int* received)
+SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
 {
    // header
    if (ctx->frame.received < SCOPEFUN_FRAME_HEADER )
@@ -800,11 +800,8 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SFrameData* buffer, int len, int
       ctx->frame.received += transfered;
    }
 
-   // ouput
-   SDL_memcpy( &buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], ctx->frame.received );
-
-   // output
-   *received = ctx->frame.received;
+   *received  = ctx->frame.received;
+   *frameSize = ctx->frame.frameSize;
 
    // new frame ?
    if (ctx->frame.received == ctx->frame.frameSize)
@@ -813,19 +810,46 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SFrameData* buffer, int len, int
    return SCOPEFUN_SUCCESS;
 }
 
-SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, int received, SDisplay* display)
+SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
+   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], min(ctx->frame.received,len) );
+   return SCOPEFUN_SUCCESS;
+}
+
+SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom)
+{
+   // frame size
    uint frameSize = 0;
    sfHeaderFrameSize( (SFrameHeader*)&buffer->data.bytes[0], &frameSize);
+   frameSize = min(frameSize, len);
 
+   // num of samples
    uint numSamples = 0;
    sfHeaderNumSamples( (SFrameHeader*)&buffer->data.bytes[0], &numSamples);
+   numSamples = min(numSamples*4+SCOPEFUN_FRAME_HEADER, len);
+   display->samples = numSamples;
 
+   // ets
+   sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
+
+   // input
+   displayZoom = clamp(displayZoom,0.f,1.f);   // [0....1]
+   displayPos  = clamp(displayPos,-0.5f,0.5f); // [-0.5....0....+0.5]
+
+   // zoom
+   double zoomMin         = (double)displayPos - (0.5 * (double)displayZoom); // [-0.5....0....+0.5]
+   double zoomMax         = (double)displayPos + (0.5 * (double)displayZoom); // [-0.5....0....+0.5]
+   double zoomDelta       = zoomMax - zoomMin;  // [0....1]
+   ularge zoomSampleCount = zoomDelta * (double)numSamples;
+   ularge zoomSampleMin   = (zoomMin + 0.5) * (double)numSamples;
+   ularge zoomSampleMax   = (zoomMax + 0.5) * (double)numSamples;
+
+   // samples
    EDisplayFunction function = dfMedium;
    if (frameSize > 0 && numSamples > 0)
    {
       byte* dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
-      for (uint sample = 0; sample < numSamples; sample++)
+      for (uint sample = zoomSampleMin; sample < zoomSampleMax; sample++)
       {
          uint offset = 0;
          ushort  ch0 = 0;
@@ -852,8 +876,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, int
          ishort channel1 = leadBitShift(ch1 & 0x000003FF);
          ushort digital = dig;
 
-         // index
-         uint index = (uint)(((double)sample / (double)numSamples) * (double)SCOPEFUN_DISPLAY);
+         // sample index
+         uint index = (uint)(((double)(zoomSampleMin-sample) / (double)zoomSampleCount) * (double)SCOPEFUN_DISPLAY);
 
          // floats
          float fChannel0 = display->analog0.bytes[index] = clamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
@@ -903,7 +927,7 @@ SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* header, float* temperature
   Set
 --------------------------------------------------------------------------------*/
 
-SCOPEFUN_API int sfDefault(SHardware* hw)
+SCOPEFUN_API int sfSetDefault(SHardware* hw)
 {
    SDL_memset(hw, 0, sizeof(SHardware));
    hw->controlAddr = 0x000D;
@@ -936,7 +960,7 @@ SCOPEFUN_API int sfSetNumSamples(SHardware* hw, uint  numSamples)
 }
 
 
-SCOPEFUN_API int sfAnalogSwitchBit(SHardware* hw, int bit, int value)
+SCOPEFUN_API int sfSetAnalogSwitchBit(SHardware* hw, int bit, int value)
 {
    hw->analogswitch ^= ((~value + 1) ^ hw->analogswitch) & bit;
    return SCOPEFUN_SUCCESS;

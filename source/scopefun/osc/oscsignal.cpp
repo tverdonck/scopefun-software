@@ -541,6 +541,7 @@ uint CaptureSSD::closeRead()
 // CaptureBuffer
 //
 ////////////////////////////////////////////////////////////////////////////////
+/*
 CaptureBuffer::CaptureBuffer(byte* buff1, uint size1, byte* buff2, uint size2)
 {
     displayPtr       = buff1;
@@ -788,103 +789,8 @@ uint CaptureBuffer::uncompress(byte* buffer, uint received, uint transfered, uin
     }
     return 0;
 }
+*/
 
-uint CaptureBuffer::historyWrite(uint frameSize, uint version, uint headerSize, uint data, uint packet, bool isHeader)
-{
-    // lock
-    history->lock();
-    {
-        byte* buffer = &rldPtr[0];
-        uint    size = rldWritten - rldStart;
-        if(size > 0)
-        {
-            // write history
-            history->openWrite();
-            uint count = size / packet;
-            uint  left = size % packet;
-            for(uint i = 0; i < count; i++)
-            {
-                transferPacket.size = packet;
-                SDL_memcpy(&transferPacket.data[0], buffer + packet * i, packet);
-                history->writePacket(transferPacket, i == 0 && isHeader);
-            }
-            if(left > 0)
-            {
-                transferPacket.size = left;
-                SDL_memset(&transferPacket.data[0], 0, packet);
-                SDL_memcpy(&transferPacket.data[0], buffer + packet * count, left);
-                history->writePacket(transferPacket, false);
-            }
-            history->closeWrite();
-            // update frame packet data
-            uint        endIndex = SDL_AtomicGet(&lastFrame);
-            CaptureFrame* pFrame = history->ringFrame.peek(endIndex);
-            pFrame->packetCount += count;
-            pFrame->packetCount += min<uint>(left, 1);
-            pFrame->version = version;
-            pFrame->header = headerSize;
-            pFrame->data = data;
-            pFrame->packet = packet;
-            pFrame->frameSize = frameSize;
-            SDL_AtomicSet(&drawState, DRAWSTATE_FILL);
-        }
-    }
-    // unlock
-    history->unlock();
-    return 0;
-}
-
-uint CaptureBuffer::historyRead(CaptureFrame captureFrame, uint version, uint headerSize, uint data, uint packetSize)
-{
-    if(captureFrame.packetCount > 0)
-    {
-        // lock
-        history->lock();
-        uint    size = history->ringPacket.getSize();
-        displayRead = 0;
-        SDL_memset(displayPtr, 0, min<ularge>(captureFrame.frameSize, displaySize));
-        history->openRead();
-        for(uint i = 0; i < captureFrame.packetCount; i++)
-        {
-            // safety
-            if(history->ringPacket.isEmpty())
-            {
-                break;
-            }
-            // read
-            PacketData* packetData = history->ringPacket.peek((captureFrame.packetStart + i) % size);
-            history->read(packetData->offset, (byte*)transferPacket.data, packetData->size);
-            // safety
-            uint copySize = packetData->size;
-            if(displayRead + copySize > displaySize)
-            {
-                copySize = displaySize - displayRead;
-            }
-            // copy
-            SDL_memcpy(&displayPtr[displayRead], &transferPacket.data[0], copySize);
-            // read
-            displayRead += copySize;
-            displayRead  = min(displayRead, displaySize);
-        }
-        history->closeRead();
-        // unlock
-        history->unlock();
-        // syncHeader
-        if(version == HARDWARE_VERSION_1)
-        {
-            syncHeader1 = getHeader1(displayPtr, headerSize);
-        }
-        if(version == HARDWARE_VERSION_2)
-        {
-            syncHeader2 = getHeader2(displayPtr, headerSize);
-        }
-    }
-    else
-    {
-        displayRead = 0;
-    }
-    return displayRead;
-}
 
 uint CaptureBuffer::display(OsciloscopeFrame& frame, int version, int headerSize, int dataSize, int packetSize)
 {

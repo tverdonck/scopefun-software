@@ -84,11 +84,11 @@ public:
     double                     generateTime[2];
     double                     deltaTime[2];
 public:
-    uint                      edgeSample;
-    double                    edgeOffset;
-    Array<byte, NUM_SAMPLES>   attr;
-    Array<ishort, NUM_SAMPLES> analog[2];
-    Array<ushort, NUM_SAMPLES> digital;
+    uint                       edgeSample;
+    double                     edgeOffset;
+    Array<byte,NUM_SAMPLES>    attr;
+    Array<ishort,NUM_SAMPLES>  analog[2];
+    Array<ushort,NUM_SAMPLES>  digital;
     Array<byte, 2464>          debug;
 public:
     uint                       ets;
