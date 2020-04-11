@@ -755,7 +755,6 @@ OsciloscopeManager::OsciloscopeManager()
     dtRender = 0.0;
     ctx = new OscContext();
     captureBuffer = 0;
-    sfSetDefault(getHw());
     serverThread = 0;
     serverActive = false;
     scrollThread = false;
@@ -808,6 +807,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // api
     ////////////////////////////////////////////////
+    sfSetDefault(getHw());
     pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE, 0, 1, 0);
     pOsciloscope->thread.function(afInit);
     sim = pOsciloscope->GetServerSim();
@@ -1925,6 +1925,7 @@ void OsciloscopeManager::renderMain(uint threadId)
     ////////////////////////////////////////////////////////////////////////////////
     grSetRenderTarget(depth, color);
     grClearDepthStencil(depth, 0, 1.f, 0);
+
     ////////////////////////////////////////////////////////////////////////////////
     // clear
     ////////////////////////////////////////////////////////////////////////////////
@@ -2286,8 +2287,7 @@ bool OsciloscopeManager::onApplicationIdle()
                 pTimer->deltaTime(TIMER_RENDER);
                 // render
                 renderMain(renderId);
-                if(SDL_AtomicGet(&pOsciloscope->captureBuffer->drawState) == DRAWSTATE_FILL)
-                { SDL_AtomicSet(&pOsciloscope->captureBuffer->drawState, DRAWSTATE_DRAW); }
+               
                 // measure
                 window.measure.data.pick = measureData[renderId].pick;
                 window.measure.data.history[MEASURE_HISTORY_CURRENT] = measureData[renderId].history[MEASURE_HISTORY_CURRENT];
@@ -3133,6 +3133,7 @@ void OsciloscopeManager::allocate()
     // frames
     m_captureBuffer.m_dataPtr = (byte*)pMemory->allocate( settings.getSettings()->memoryFrame * MEGABYTE );
     m_captureBuffer.m_dataMax = settings.getSettings()->memoryFrame * MEGABYTE;
+    SDL_memset( m_captureBuffer.m_dataPtr, 0, m_captureBuffer.m_dataMax );
 
     // hardware capture buffer
     pOsciloscope->sizeHardwareCapture = settings.getSettings()->memoryFrame * MEGABYTE;
@@ -3171,14 +3172,14 @@ void OsciloscopeManager::allocate()
     ularge toAllocate = clamp(free, min, max);
 
     // history
-    byte* pPacketData = (byte*)pMemory->allocate(toAllocate);
-    captureBuffer->historyMemory.init(pPacketData, toAllocate, window.storage.getPacketSize());
+    //byte* pPacketData = (byte*)pMemory->allocate(toAllocate);
+    //captureBuffer->historyMemory.init(pPacketData, toAllocate, window.storage.getPacketSize());
 
-    // memory
-    captureBuffer->setMemory();
+    //// memory
+    //captureBuffer->setMemory();
 
-    // settings
-    settings.getSettings()->historyFrameCount = captureBuffer->historyMemory.ringFrame.getSize();
+    //// settings
+    //settings.getSettings()->historyFrameCount = captureBuffer->historyMemory.ringFrame.getSize();
 }
 
 
@@ -3511,9 +3512,9 @@ void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, O
             captureData.render   = render;
             captureData.window   = window;*/
 
-           // clear
-           renderer.clearFast();
-           fft.clear();
+            // clear
+            renderer.clearFast();
+            fft.clear();
 
             // render
             pOsciloscope->renderThread(captureId, captureData, renderer, fft);
@@ -3615,9 +3616,30 @@ int SDLCALL CaptureDataThreadFunction(void* data)
    return 0;
 }
 
-int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
+int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffer, OsciloscopeRenderData& captureRender, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
 {
-   index = clamp<uint>(index, 0, SCOPEFUN_MAX_FRAMES);
+   captureRender.flags.raise(rfClearRenderTarget);
+
+   if (captureBuffer.m_frame.getCount() == 0)
+   {
+      // header
+      SDL_memset(&captureBuffer.m_dataPtr[0], 0, SCOPEFUN_FRAME_HEADER);
+
+      // display
+      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[0], SCOPEFUN_FRAME_HEADER, &threadData.m_frame, pos, zoom);
+
+      // samples
+      threadData.m_frame.samples = SCOPEFUN_DISPLAY;
+
+      // window
+      threadData.m_window = window;
+
+      // render
+      SendToRenderer(renderer, fft, threadData, delay);
+      return 0;
+   }
+
+   index = clamp<uint>(index, 0, captureBuffer.m_frame.getCount() );
 
    // frames
    SDL_AtomicLock(&captureBuffer.m_lock);
@@ -3629,7 +3651,7 @@ int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffe
       history[historyCount] = captureBuffer.m_frame[frame];
       historyCount++;
    }
-   SDL_AtomicLock(&captureBuffer.m_lock);
+   SDL_AtomicUnlock(&captureBuffer.m_lock);
 
    // display
    sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_dataLen, &threadData.m_frame,pos,zoom);
@@ -3792,13 +3814,13 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
                     SendToRenderer(captureFrame, captureWindow, captureRender, ets, renderer, fft, *pCaptureData, delayCapture);*/
 
                     playFrameIdx = (playFrameIdx++) % SCOPEFUN_MAX_FRAMES;
-                    DisplayFrame(playFrameIdx, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+                    DisplayFrame(playFrameIdx, captureWindow, captureBuffer, captureRender, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 }
             case SIGNAL_MODE_SIMULATE:
             case SIGNAL_MODE_CAPTURE:
                 {
-                    DisplayFrame(captureBuffer.m_frame.getCount() - 1, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+                    DisplayFrame(captureBuffer.m_frame.getCount() - 1, captureWindow, captureBuffer, captureRender, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 };
             case SIGNAL_MODE_CLEAR:
@@ -3806,7 +3828,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
                 {
                     // captureWindow.horizontal.Frame = min<uint>(captureWindow.horizontal.Frame, captureBuffer.m_frame.getCount()-1);
                     
-                    DisplayFrame(captureWindow.horizontal.Frame, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture,pos,zoom);
+                    DisplayFrame(captureWindow.horizontal.Frame, captureWindow, captureBuffer, captureRender, *pCaptureData, renderer, fft, delayCapture,pos,zoom);
 
                    /* CaptureFrame cf;
                     pOsciloscope->captureBuffer->captureFrame(cf, captureWindow.horizontal.Frame);

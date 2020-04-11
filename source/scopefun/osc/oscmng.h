@@ -939,6 +939,13 @@ public:
    ularge                                    m_dataMax;
    Array<ScopeFunFrame, SCOPEFUN_MAX_FRAMES> m_frame;
    SDL_SpinLock                              m_lock;
+public:
+   ScopeFunCaptureBuffer()
+   {
+      m_dataPtr = 0;
+      m_dataMax = 0;
+      m_lock    = 0;
+   }
 };
 
 

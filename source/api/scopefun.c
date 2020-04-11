@@ -876,14 +876,14 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    SHardware hw = { 0 };
    sfGetHeaderHardware(ctx, (SFrameHeader*)&buffer->data.bytes[0], &hw);
 
-   // frame size
-   uint frameSize = sfGetFrameSize( &hw );
-   frameSize = min(frameSize, len);
-
    // num of samples
-   uint numSamples = sfGetNumSamples( &hw );
-   numSamples = min(numSamples*4+SCOPEFUN_FRAME_HEADER, len);
+   uint numSamples  = sfGetNumSamples( &hw );
    display->samples = numSamples;
+
+   // frame size
+   uint frameSize = sfGetFrameSize(&hw);
+        frameSize = min(frameSize, len);
+        frameSize = min(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
 
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
