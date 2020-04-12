@@ -524,7 +524,7 @@ typedef struct
 
 typedef struct _SDisplayCallback {
    int (*onFrame)(SFrameData* data, uint len, float* pos, float* zoom,void* user);
-   int (*onSample)(ushort* ch0,ushort* ch1,ushort* dig, float* pos, float* zoom,void* user);
+   int (*onSample)(uint sample,ushort* ch0,ushort* ch1,ushort* dig, float* pos, float* zoom,void* user);
    int (*onDisplay)(SDisplay* data, float* pos, float* zoom,void* user);
 }SDisplayCallback;
 
