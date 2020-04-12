@@ -580,11 +580,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         {
             timer = 0.0;
             int open = 0;
-            if(pConnection)
-            {
-                open = pOsciloscope->thread.isConnected();
-                pConnection->setConnectedCheckBox(open);
-            }
             int usb = pOsciloscope->thread.isOpen();
             m_checkBox26->SetValue(usb);
         }

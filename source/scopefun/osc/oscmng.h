@@ -837,7 +837,7 @@ private:
     SDL_atomic_t                  ret[afLast];
 private:
     SDL_atomic_t open;
-    SDL_atomic_t connected;
+    SDL_atomic_t fpga;
     SDL_atomic_t simulate;
     SDL_atomic_t vid;
     SDL_atomic_t pid;
@@ -885,7 +885,7 @@ public:
     // data
     int  getVersion();
     int  isOpen();
-    int  isConnected();
+    int  isFpga();
     int  isSimulate();
     void setInit(int memory, int thread, int active, int timeout);
     void setFrame(int  version, int  header, int  data, int  packet);
@@ -928,8 +928,8 @@ public:
 // ScopeFunFrame
 struct ScopeFunFrame {
    ularge m_memPos;
-   ularge m_memSize;
-   ularge m_dataLen;
+   ularge m_memLen;
+   ularge m_length;
 };
 
 // ScopeFunCaptureBuffer
@@ -938,12 +938,14 @@ public:
    byte*                                     m_dataPtr;
    ularge                                    m_dataMax;
    Array<ScopeFunFrame, SCOPEFUN_MAX_FRAMES> m_frame;
+   SDL_atomic_t                              m_index;
    SDL_SpinLock                              m_lock;
 public:
    ScopeFunCaptureBuffer()
    {
       m_dataPtr = 0;
       m_dataMax = 0;
+      SDL_AtomicSet(&m_index, 0);
       m_lock    = 0;
    }
 };

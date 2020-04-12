@@ -53,6 +53,19 @@ float clamp(float a, float min, float max)
    return a;
 }
 
+ularge clampL(ularge a, ularge min, ularge max)
+{
+   if (a < min)
+   {
+      return min;
+   }
+   if (a > max)
+   {
+      return max;
+   }
+   return a;
+}
+
 uint cMin(uint a, uint b)
 {
    if (a < b) return a;
@@ -217,6 +230,10 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
     ctx->api.version = HARDWARE_VERSION;
     ctx->api.major   = 0;
     ctx->api.minor   = 0;
+    // callback
+    ctx->callback = 0;
+    // function
+    ctx->function = dfMedium;
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
@@ -368,7 +385,7 @@ SCOPEFUN_API int sfHardwareConfig(SFContext* ctx, SHardware* hw)
 }
 SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int offset, int* received)
 {
-    if(sfIsSimulate(ctx))
+   /* if(sfIsSimulate(ctx))
     {
         apiLock(ctx);
         int simLen = apiMin(len, ctx->frame.maxMemory);
@@ -381,7 +398,7 @@ SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, 
         *received = simLen;
         apiUnlock(ctx);
         return SCOPEFUN_SUCCESS;
-    }
+    }*/
     int result = SCOPEFUN_FAILURE;
     apiLock(ctx);
        uint size = apiMin(len, SCOPEFUN_FRAME_MEMORY);
@@ -389,7 +406,7 @@ SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, 
        {
           struct UsbContext* pUsbCtx = (struct UsbContext*)ctx->usb;
           int swap = 0;
-          int ret = usbFxxTransferDataIn(pUsbCtx, 6, (byte*)buffer->data.bytes[offset], size, swap, ctx->api.timeout, received);
+          int ret = usbFxxTransferDataIn(pUsbCtx, 6, (byte*)&buffer->data.bytes[offset], size, swap, ctx->api.timeout, received);
           result = apiResult(ret);
        }
     apiUnlock(ctx);
@@ -803,6 +820,8 @@ SCOPEFUN_API int sfSimulate(SFContext* ctx, double time)
 ---------------------------------------------------------------------*/
 SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
 {
+   apiLock(ctx);
+
    // header
    if (ctx->frame.received < SCOPEFUN_FRAME_HEADER )
    {
@@ -815,13 +834,16 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
    if (ctx->frame.received >= SCOPEFUN_FRAME_HEADER)
    {
       SHardware hw = { 0 };
-      sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data->data.bytes[0], &hw );
-      ctx->frame.frameSize = sfGetFrameSize( &hw );
+      sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data->data.bytes[0], &hw);
+      ctx->frame.frameSize = sfGetFrameSize(&hw);
 
       int         transfered = 0;
-      int frameLeftToReceive = ctx->frame.frameSize - ctx->frame.received;
-      int  ret = sfHardwareCapture(ctx, ctx->frame.data, frameLeftToReceive, ctx->frame.received, &transfered);
-      ctx->frame.received += transfered;
+      int frameLeftToReceive = (int)ctx->frame.frameSize - (int)ctx->frame.received;
+      if (frameLeftToReceive > 0)
+      {
+         int  ret = sfHardwareCapture(ctx, ctx->frame.data, frameLeftToReceive, ctx->frame.received, &transfered);
+         ctx->frame.received += transfered;
+      }
    }
 
    *received  = ctx->frame.received;
@@ -831,12 +853,13 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
    if (ctx->frame.received == ctx->frame.frameSize)
       ctx->frame.received = 0;
 
+   apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
 
 SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
-   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], min(ctx->frame.received,len) );
+   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], min(ctx->frame.frameSize,len) );
    return SCOPEFUN_SUCCESS;
 }
 
@@ -908,7 +931,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
          ctx->callback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
 
       byte* dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
-      for (uint sample = zoomSampleMin; sample < zoomSampleMax; sample++)
+      for (ularge sample = zoomSampleMin; sample < zoomSampleMax; sample++)
       {
          uint offset = 0;
          ushort  ch0 = 0;
@@ -939,7 +962,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             ctx->callback->onSample( &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
          
          // sample index
-         uint index = (uint)(((double)(zoomSampleMin-sample) / (double)zoomSampleCount) * (double)SCOPEFUN_DISPLAY);
+         ularge index = ( (sample - zoomSampleMin)*(ularge)(SCOPEFUN_DISPLAY - 1) ) / (zoomSampleCount-1);
+                index = clampL(index, 0, SCOPEFUN_DISPLAY - 1);
 
          // floats
          float fChannel0 = clamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
@@ -970,6 +994,12 @@ SCOPEFUN_API int sfGetHeader(SFContext* ctx,SFrameData* frame, SFrameHeader* hea
 SCOPEFUN_API int sfGetHeaderHardware(SFContext* ctx, SFrameHeader* header, SHardware* hw)
 {
    SDL_memcpy( hw, &header->hardware.bytes[0], sizeof(SHardware));
+   uint         count = sizeof(SHardware) / 2;
+   ushort* swapBuffer = (ushort*)hw;
+   for (int i = 0; i < count; i++)
+   {
+      swapBuffer[i] = cSwap16(&swapBuffer[i]);
+   }
    return SCOPEFUN_SUCCESS;
 }
 SCOPEFUN_API int sfGetHeaderEts(SFrameHeader* header, uint* ets)
@@ -1012,7 +1042,7 @@ SCOPEFUN_API int sfSetFrameSize(SHardware*  hw, uint  frameSize)
 {
    uint   dataSize = frameSize - SCOPEFUN_FRAME_HEADER;
    uint numSamples = dataSize / 4;
-   hw->sampleSizeL = numSamples & 0x0000ffff;
+   hw->sampleSizeL =         numSamples & 0x0000ffff;
    hw->sampleSizeH = (numSamples >> 16) & 0x0000ffff;
    return SCOPEFUN_SUCCESS;
 }
@@ -1149,7 +1179,7 @@ SCOPEFUN_API int  sfSetTriggerSlope(SHardware* hw, int value)
 
 SCOPEFUN_API int  sfSetTriggerPre(SHardware* hw, float perc)
 {
-   uint numSamples = (hw->sampleSizeH << 16) & hw->sampleSizeL;
+   uint numSamples = (((uint)hw->sampleSizeH) << 16) | (uint)hw->sampleSizeL;
    hw->triggerPercent = (perc / 100.f) * (float)numSamples - 1;
    hw->triggerPercent = (hw->triggerPercent / 4);
    return SCOPEFUN_SUCCESS;
@@ -1592,16 +1622,17 @@ SCOPEFUN_API int sfSetDigitalPattern(SHardware* hw, ushort stage, ushort bit, us
 
 SCOPEFUN_API uint sfGetFrameSize(SHardware*  hw)
 {
-   uint numSamples = (hw->sampleSizeH << 16) & hw->sampleSizeL;
+   uint numSamples = (((uint)hw->sampleSizeH) << 16) | (uint)hw->sampleSizeL;
    uint   dataSize = numSamples * 4;
+   if (dataSize % 1024 != 0)
+      dataSize = ((dataSize / 1024) + 1) * 1024;
    uint  frameSize = dataSize + SCOPEFUN_FRAME_HEADER;
-   frameSize += frameSize % 1024;
    return frameSize;
 }
 
 SCOPEFUN_API uint sfGetNumSamples(SHardware* hw)
 {
-   uint numSamples = (hw->sampleSizeH << 16) & hw->sampleSizeL;
+   uint numSamples = (((uint)hw->sampleSizeH) << 16) | (uint)hw->sampleSizeL;
    return numSamples;
 }
 
