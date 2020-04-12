@@ -609,17 +609,6 @@ public:
 class OsciloscopeThreadData
 {
 public:
-    //OsciloscopeFrame          etsClear;
-    //OsciloscopeFrame          frame;
-    //Ring<OsciloscopeFrame>    history;
-    //WndMain                   window;
-    //OsciloscopeRenderData     render;
-    //byte                      customCh0;
-    //byte                      customCh1;
-    //byte                      customFun;
-    //byte                      customDig;
-    //SDisplay                  customData;
-public:
     WndMain               m_window;
     OsciloscopeRenderData m_render;
     SDisplay              m_history[SCOPEFUN_MAX_HISTORY];
@@ -985,8 +974,6 @@ public:
 public:
     SDL_atomic_t   syncUI;
 public:
-    CaptureBuffer*  captureBuffer;
-public:
     ScopeFunCaptureBuffer m_captureBuffer;
     SDisplay              m_displayBuffer;
 public:
@@ -1002,7 +989,6 @@ public:
     SDL_Thread*   pCaptureData;
     SDL_Thread*   pGenerateFrame;
     SDL_Thread*   pControlHardware;
-    SDL_Thread*   pRenderThread;
     SDL_Thread*   aUpdateThread[MAX_THREAD];
 public:
     bool          scrollThread;
@@ -1097,7 +1083,6 @@ public:
     OsciloscopeFrame       tmpDisplay;
     Ring<OsciloscopeFrame> tmpHistory;
 public:
-    bool                   renderThreadActive;
     bool                   captureDataThreadActive;
     bool                   generateFrameThreadActive;
     bool                   controlHardwareThreadActive;

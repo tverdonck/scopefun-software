@@ -38,29 +38,18 @@ void OsciloskopStorage::m_choiceStorageOnChoice(wxCommandEvent& event)
     if(m_choiceStorage->GetSelection() == 0)
     {
         m_textCtrlStorage->Disable();
-        pOsciloscope->captureBuffer->setMemory();
     }
     else
     {
         wxString tempDir = wxStandardPaths::Get().GetTempDir();
         FORMAT_BUFFER();
         FORMAT("%s/memory.ssd", tempDir.data().AsChar());
-        pOsciloscope->captureBuffer->historySSD.init(formatBuffer, 2048 * MEGABYTE, pOsciloscope->window.storage.getPacketSize());
-        m_textCtrlStorage->Enable();
-        pOsciloscope->captureBuffer->setSSD();
     }
 }
 
 void OsciloskopStorage::m_textCtrlStorageOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlStorageOnTextEnter
-    ularge newsize = atoi(m_textCtrlStorage->GetValue());
-    newsize = max<ularge>(newsize, 64U);
-    newsize *= MEGABYTE;
-    pOsciloscope->captureBuffer->history->resize(newsize, 0);
-    FORMAT_BUFFER();
-    FORMAT("%d", newsize / MEGABYTE);
-    m_textCtrlStorage->SetValue(wxString::FromAscii(formatBuffer));
+   
 }
 
 void OsciloskopStorage::m_choicePacketSizeOnChoice(wxCommandEvent& event)

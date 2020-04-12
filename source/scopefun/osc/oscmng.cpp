@@ -753,7 +753,6 @@ OsciloscopeManager::OsciloscopeManager()
     dtUpdate = 0.0;
     dtRender = 0.0;
     ctx = new OscContext();
-    captureBuffer = 0;
     serverThread = 0;
     serverActive = false;
     scrollThread = false;
@@ -846,7 +845,6 @@ int OsciloscopeManager::start()
     //////////////////////////////////////////////////////////
     // setup thread data
     //////////////////////////////////////////////////////////
-    renderThreadActive = true;
     captureDataThreadActive = true;
     generateFrameThreadActive = true;
     controlHardwareThreadActive = true;
@@ -1017,12 +1015,7 @@ void OsciloscopeManager::exitThreads()
     //////////////////////////////////////////////
     SDL_AtomicSet(&oscExit,1);
    
-    renderThreadActive = false;
-    SDL_WaitThread(pRenderThread, &status);
-    pRenderThread  = 0;
-   
     captureDataThreadActive = false;
-    SDL_AtomicSet(&captureBuffer->drawState,DRAWSTATE_DRAW);
     SDL_WaitThread(pCaptureData, &status);
     pCaptureData = 0;
    
@@ -2162,27 +2155,6 @@ int SDLCALL EventFilter(void* userdata, SDL_Event* event)
     if(event->type == SDL_SYSWMEVENT)
     {
         return 1;
-    }
-    return 0;
-}
-
-int SDLCALL RenderThreadFunction(void* data)
-{
-    return 0;
-    pOsciloscope->setThreadPriority(THREAD_ID_RENDER);
-    //////////////////////////////////////////////////
-    // timer
-    //////////////////////////////////////////////////
-    pTimer->init(TIMER_MAIN);
-    pTimer->init(TIMER_RENDER);
-    pTimer->init(TIMER_RENDER_THREAD);
-    while(SDL_AtomicCAS(&pOsciloscope->contextCreated, 0, 1) == SDL_FALSE) {};
-    //////////////////////////////////////////////////
-    // main loop
-    //////////////////////////////////////////////////
-    while(pOsciloscope->renderThreadActive)
-    {
-        pOsciloscope->onApplicationIdle();
     }
     return 0;
 }
@@ -3600,7 +3572,7 @@ int SDLCALL CaptureDataThreadFunction(void* data)
    return 0;
 }
 
-int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
+int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
 {
    // null frame
    if (captureBuffer.m_frame.getCount() == 0)
@@ -3610,9 +3582,6 @@ int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffe
 
       // display
       sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[0], SCOPEFUN_FRAME_HEADER, &threadData.m_frame, pos, zoom);
-
-      // window
-      threadData.m_window = window;
 
       // render
       SendToRenderer(renderer, fft, threadData, delay);
@@ -3646,9 +3615,6 @@ int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffe
       sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[history[i].m_memPos], history[i].m_length, &threadData.m_history[i],pos,zoom);
    }
 
-   // window
-   threadData.m_window = window;
-
    // render
    SendToRenderer(renderer, fft, threadData, delay);
 
@@ -3657,191 +3623,86 @@ int DisplayFrame(uint index, WndMain& window,ScopeFunCaptureBuffer& captureBuffe
 
 int SDLCALL GenerateFrameThreadFunction(void* data)
 {
-    pOsciloscope->setThreadPriority(THREAD_ID_CAPTURE);
-    pTimer->init(TIMER_CAPTURE);
-    pTimer->init(TIMER_GENERATE);
-    OsciloscopeFrame       captureFrame;
-    WndMain                captureWindow;
-    OsciloscopeRenderData  captureRender;
-    ularge captureFreq            = SDL_GetPerformanceFrequency();
-    ularge captureStart           = 0;
-    ularge captureTime            = 0;
-    uint       frame = 0;
-    SignalMode mode  = SIGNAL_MODE_PAUSE;
-    SDL_zero(captureWindow);
-    SDL_zero(captureRender);
-    SDL_zero(captureFrame);
+    pOsciloscope->setThreadPriority(THREAD_ID_RENDER);
+    pTimer->init(TIMER_RENDER);
+   
+    OsciloscopeRenderData     captureRender;
     OsciloscopeThreadRenderer renderer;
     OsciloscopeFFT            fft;
-    OsciloscopeThreadData* pCaptureData = (OsciloscopeThreadData*)new OsciloscopeThreadData();
-    uint              toAllocate = pOsciloscope->settings.getSettings()->historyFrameDisplay * sizeof(OsciloscopeFrame);
-    OsciloscopeFrame* memory     = (OsciloscopeFrame*)pMemory->allocate(toAllocate);
-    // pCaptureData->history.init(memory, pOsciloscope->settings.getSettings()->historyFrameDisplay);
+    OsciloscopeThreadData*    pCaptureData   = new OsciloscopeThreadData();
+    ScopeFunCaptureBuffer*    pCaptureBuffer = &pOsciloscope->m_captureBuffer;
     fft.init();
     renderer.init(pOsciloscope->settings.getSettings()->historyFrameDisplay);
     renderer.clear();
-    OsciloscopeETS&     ets = pOsciloscope->ets;
-    ularge              playFrameIdx = 0;
-    uint delayCapture = pOsciloscope->settings.getSettings()->delayCapture;
-    int received = 0;
 
-    ScopeFunCaptureBuffer& captureBuffer = pOsciloscope->m_captureBuffer;
+    ularge playFrameIdx = 0;
+    uint   delayCapture = 1;
     while(pOsciloscope->generateFrameThreadActive)
     {
-        // sync multiple capture threads
-        SDL_AtomicLock(&pOsciloscope->captureLock);
-        // sync user interface and render data with capture thread
-        SDL_AtomicLock(&pOsciloscope->renderLock);
-        ////////////////////////////////////////////////////////////////////
-        // sync capture thread with user interface
-        ////////////////////////////////////////////////////////////////////
-        switch(mode)
-        {
-            case SIGNAL_MODE_PAUSE:
-                pOsciloscope->renderWindow.horizontal.uiActive = 0;
-                break;
-            case SIGNAL_MODE_PLAY:
-                pOsciloscope->renderWindow.horizontal.uiActive = 1;
-                pOsciloscope->renderWindow.horizontal.uiValue  = playFrameIdx;
-                pOsciloscope->renderWindow.horizontal.Frame    = playFrameIdx;
-                pOsciloscope->renderWindow.horizontal.uiRange  = captureBuffer.m_frame.getCount();
-                break;
-            case SIGNAL_MODE_SIMULATE:
-            case SIGNAL_MODE_CAPTURE:
-                pOsciloscope->renderWindow.horizontal.uiActive = 1;
-                pOsciloscope->renderWindow.horizontal.uiValue  = max<int>(0, captureBuffer.m_frame.getCount() - 1);
-                pOsciloscope->renderWindow.horizontal.Frame    = max<int>(0, captureBuffer.m_frame.getCount() - 1);
-                pOsciloscope->renderWindow.horizontal.uiRange  = captureBuffer.m_frame.getCount();
-                break;
-            case SIGNAL_MODE_CLEAR:
-                pOsciloscope->renderWindow.horizontal.uiActive = 1;
-                pOsciloscope->renderWindow.horizontal.uiValue  = 0;
-                pOsciloscope->renderWindow.horizontal.Frame    = 0;
-                pOsciloscope->renderWindow.horizontal.uiRange  = 0;
-                break;
-        };
-        ////////////////////////////////////////////////////////////////////
-        // sync user interface data with capture thread
-        ////////////////////////////////////////////////////////////////////
-        captureWindow = pOsciloscope->renderWindow;
-        captureRender = pOsciloscope->renderData;
+       // sync capture thread with user interface
+       SDL_AtomicLock(&pOsciloscope->renderLock);
+           SignalMode mode = pOsciloscope->signalMode;
+           switch(mode)
+           {
+               case SIGNAL_MODE_PAUSE:
+                   pOsciloscope->renderWindow.horizontal.uiActive = 0;
+                   break;
+               case SIGNAL_MODE_PLAY:
+                   pOsciloscope->renderWindow.horizontal.uiActive = 1;
+                   pOsciloscope->renderWindow.horizontal.uiValue  = playFrameIdx;
+                   pOsciloscope->renderWindow.horizontal.Frame    = playFrameIdx;
+                   pOsciloscope->renderWindow.horizontal.uiRange  = pCaptureBuffer->m_frame.getCount();
+                   break;
+               case SIGNAL_MODE_SIMULATE:
+               case SIGNAL_MODE_CAPTURE:
+                   pOsciloscope->renderWindow.horizontal.uiActive = 1;
+                   pOsciloscope->renderWindow.horizontal.uiValue  = max<int>(0, pCaptureBuffer->m_frame.getCount() - 1);
+                   pOsciloscope->renderWindow.horizontal.Frame    = max<int>(0, pCaptureBuffer->m_frame.getCount() - 1);
+                   pOsciloscope->renderWindow.horizontal.uiRange  = pCaptureBuffer->m_frame.getCount();
+                   break;
+               case SIGNAL_MODE_CLEAR:
+                   pOsciloscope->renderWindow.horizontal.uiActive = 1;
+                   pOsciloscope->renderWindow.horizontal.uiValue  = 0;
+                   pOsciloscope->renderWindow.horizontal.Frame    = 0;
+                   pOsciloscope->renderWindow.horizontal.uiRange  = 0;
+                   break;
+           };
 
-        pCaptureData->m_render = captureRender;
-        pCaptureData->m_render.flags.bit(rfClearRenderTarget, 1);
+           captureRender = pOsciloscope->renderData;
 
-        float  pos = pOsciloscope->signalPosition;
-        float zoom = pOsciloscope->signalZoom;
+           float  pos = pOsciloscope->signalPosition;
+           float zoom = pOsciloscope->signalZoom;
+             
+           pCaptureData->m_render = captureRender;
+           pCaptureData->m_window = pOsciloscope->renderWindow;
 
-        ////////////////////////////////////////////////////////////////////
-        // sync custom display data
-        ////////////////////////////////////////////////////////////////////
-        // pOsciloscope->thread.getDisplay(&pCaptureData->customData);
         SDL_AtomicUnlock(&pOsciloscope->renderLock);
-        //////////////////////////////////////////////////////////////////////
-        //// change
-        ////////////////////////////////////////////////////////////////////////
-        //if(pOsciloscope->signalMode != mode)
-        //{
-        //    ////////////////////////////////////////////////////////////////////
-        //    // play / stop
-        //    ////////////////////////////////////////////////////////////////////
-        //    switch(pOsciloscope->signalMode)
-        //    {
-        //        case SIGNAL_MODE_PLAY:
-        //            playFrameIdx = clamp<ularge>(captureWindow.horizontal.Frame, 0, captureWindow.horizontal.uiRange - 1);
-        //            ets.clear();
-        //            break;
-        //        case SIGNAL_MODE_PAUSE:
-        //            ets.redraw(captureRender, &pOsciloscope->etsClear);
-        //            break;
-        //        case SIGNAL_MODE_CLEAR:
-        //            pOsciloscope->captureBuffer->clear();
-        //            captureFrame.clear();
-        //            break;
-        //        case SIGNAL_MODE_CAPTURE:
-        //            ets.clear();
-        //            captureFreq  = SDL_GetPerformanceFrequency();
-        //            captureStart = SDL_GetPerformanceCounter();
-        //            pTimer->init(TIMER_CAPTURE);
-        //            pTimer->init(TIMER_GENERATE);
-        //            break;
-        //        case SIGNAL_MODE_SIMULATE:
-        //            ets.clear();
-        //            captureFreq  = SDL_GetPerformanceFrequency();
-        //            captureStart = SDL_GetPerformanceCounter();
-        //            pTimer->init(TIMER_CAPTURE);
-        //            pTimer->init(TIMER_GENERATE);
-        //            break;
-        //    };
-        //    mode = pOsciloscope->signalMode;
-        //}
-        //// redraw ets ?
-        // ets.redraw(captureRender, &pOsciloscope->etsClear);
 
-        // mode ?
-        mode = pOsciloscope->signalMode;
-
-        ////////////////////////////////////////////////////////////////////
-        // mode
-        ////////////////////////////////////////////////////////////////////
-        SDL_MemoryBarrierAcquire();
+        // capture mode
         switch(mode)
         {
             case SIGNAL_MODE_PLAY:
                 {
-     /*               CaptureFrame cf;
-                    pOsciloscope->captureBuffer->captureFrame(cf, playFrameIdx);
-                    pOsciloscope->captureBuffer->historyRead(cf, cf.version, cf.header, cf.data, cf.packet);
-                    playFrameIdx++;
-                    if(playFrameIdx >= pOsciloscope->captureBuffer->captureFrameCount())
-                    {
-                        playFrameIdx = 0;
-                    }
-                    SDL_AtomicSet(&pOsciloscope->syncUI, 1);
-                    pOsciloscope->captureBuffer->display(captureFrame, cf.version, cf.header, cf.data, cf.packet);
-                    SendToRenderer(captureFrame, captureWindow, captureRender, ets, renderer, fft, *pCaptureData, delayCapture);*/
-
-                    playFrameIdx = (playFrameIdx++) % captureBuffer.m_frame.getCount();
-                    DisplayFrame(playFrameIdx, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+                    playFrameIdx = (playFrameIdx++) % pCaptureBuffer->m_frame.getCount();
+                    DisplayFrame(playFrameIdx, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 }
             case SIGNAL_MODE_SIMULATE:
             case SIGNAL_MODE_CAPTURE:
                 {
-                    int index = SDL_AtomicGet(&captureBuffer.m_index);
-
-                    DisplayFrame( index, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+                    int index = SDL_AtomicGet(&pCaptureBuffer->m_index);
+                    DisplayFrame( index, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 };
             case SIGNAL_MODE_CLEAR:
             case SIGNAL_MODE_PAUSE:
                 {
-                    // captureWindow.horizontal.Frame = min<uint>(captureWindow.horizontal.Frame, captureBuffer.m_frame.getCount()-1);
-                    
-                    DisplayFrame(captureWindow.horizontal.Frame, captureWindow, captureBuffer, *pCaptureData, renderer, fft, delayCapture,pos,zoom);
-
-                   /* CaptureFrame cf;
-                    pOsciloscope->captureBuffer->captureFrame(cf, captureWindow.horizontal.Frame);
-                    pOsciloscope->captureBuffer->historyRead(cf, cf.version, cf.header, cf.data, cf.packet);
-                    pOsciloscope->captureBuffer->display(captureFrame, cf.version, cf.header, cf.data, cf.packet);
-                    if(frame != captureWindow.horizontal.Frame)
-                    {
-                        ets.onFrameChange(captureWindow.horizontal.Frame, pOsciloscope->threadHistory, captureRender);
-                        frame = captureWindow.horizontal.Frame;
-                    }
-                    ets.onPause(captureFrame, captureWindow);
-                    SendToRenderer(captureFrame, captureWindow, captureRender, ets, renderer, fft, *pCaptureData, delayCapture);*/
+                    DisplayFrame(pCaptureData->m_window.horizontal.Frame, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 };
             default:
                 break;
         };
-        SDL_MemoryBarrierRelease();
-        SDL_AtomicUnlock(&pOsciloscope->captureLock);
-        if(delayCapture > 0)
-        {
-            SDL_Delay(delayCapture);
-        }
     }
     return 0;
 }

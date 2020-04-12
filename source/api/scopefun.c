@@ -78,6 +78,19 @@ uint cMax(uint a, uint b)
    else       return b;
 }
 
+
+ularge lMin(ularge a, ularge b)
+{
+   if (a < b) return a;
+   else       return b;
+}
+
+ularge lMax(ularge a, ularge b)
+{
+   if (a > b) return a;
+   else       return b;
+}
+
 float rand_FloatRange(float a, float b)
 {
    return (float)((b - a) * ((float)rand() / RAND_MAX)) + a;
@@ -919,9 +932,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    double zoomMin         = (double)displayPos - (0.5 * (double)displayZoom); // [-0.5....0....+0.5]
    double zoomMax         = (double)displayPos + (0.5 * (double)displayZoom); // [-0.5....0....+0.5]
    double zoomDelta       = zoomMax - zoomMin;  // [0....1]
-   ularge zoomSampleCount = zoomDelta * (double)numSamples;
-   ularge zoomSampleMin   = (zoomMin + 0.5) * (double)numSamples;
-   ularge zoomSampleMax   = (zoomMax + 0.5) * (double)numSamples;
+   ularge zoomSampleCount = cMax(1,zoomDelta * (double)numSamples);
+   ularge zoomSampleMin   = clampL( (zoomMin + 0.5) * (double)numSamples, 0, numSamples );
+   ularge zoomSampleMax   = clampL( (zoomMax + 0.5) * (double)numSamples, 1, numSamples );
 
    // samples
    EDisplayFunction function = dfMedium;
@@ -962,7 +975,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             ctx->callback->onSample( &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
          
          // sample index
-         ularge index = ( (sample - zoomSampleMin)*(ularge)(SCOPEFUN_DISPLAY - 1) ) / (zoomSampleCount-1);
+         ularge index = ( (sample - zoomSampleMin)*(ularge)(SCOPEFUN_DISPLAY - 1) ) / lMax(1,zoomSampleCount-1);
                 index = clampL(index, 0, SCOPEFUN_DISPLAY - 1);
 
          // floats
