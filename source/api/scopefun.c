@@ -872,7 +872,7 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
 
 SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
-   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], min(ctx->frame.frameSize,len) );
+   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], cMin(ctx->frame.frameSize,len) );
    return SCOPEFUN_SUCCESS;
 }
 
@@ -919,8 +919,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
 
    // frame size
    uint frameSize = sfGetFrameSize(&hw);
-        frameSize = min(frameSize, len);
-        frameSize = min(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
+        frameSize = cMin(frameSize, len);
+        frameSize = cMin(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
 
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
@@ -1110,8 +1110,8 @@ SCOPEFUN_API int sfSetYRangeScaleA(SHardware* hw, ushort attr, ushort gain)
 
 SCOPEFUN_API int sfSetYPositionA(SHardware* hw, int pos)
 {
-   pos = min(pos,  1500);
-   pos = max(pos, -1500);
+   pos = cMin(pos,  1500);
+   pos = cMin(pos, -1500);
    hw->offseta = pos;
    return SCOPEFUN_SUCCESS;
 }
@@ -1126,8 +1126,8 @@ SCOPEFUN_API int sfSetYRangeScaleB(SHardware* hw, ushort attr, ushort gain)
 
 SCOPEFUN_API int sfSetYPositionB(SHardware* hw, int pos)
 {
-   pos = min(pos, 1500);
-   pos = max(pos, -1500);
+   pos = cMin(pos,  1500);
+   pos = cMax(pos, -1500);
    hw->offsetb = pos;
    return SCOPEFUN_SUCCESS;
 }
@@ -1170,7 +1170,7 @@ SCOPEFUN_API int  sfSetSampleSize(SHardware* hw, uint value)
 {
    value = cMin(value, (SCOPEFUN_FRAME_DATA / 4));
    uint size = 4 * (value / 4);
-   value = max(256U, size);
+   value = cMax(256U, size);
    hw->sampleSizeH = (value >> 16) & 0xFFFF;
    hw->sampleSizeL = (value & 0xFFFF);
    return SCOPEFUN_SUCCESS;
