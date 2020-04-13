@@ -40,7 +40,7 @@
 #define NUM_SAMPLESF       10000.f
 #define MAXOSCVALUE        511.f
 
-float clamp(float a, float min, float max)
+float fClamp(float a, float min, float max)
 {
    if (a < min)
    {
@@ -53,7 +53,8 @@ float clamp(float a, float min, float max)
    return a;
 }
 
-ularge clampL(ularge a, ularge min, ularge max)
+
+double dClamp(double a, double min, double max)
 {
    if (a < min)
    {
@@ -66,13 +67,39 @@ ularge clampL(ularge a, ularge min, ularge max)
    return a;
 }
 
-uint cMin(uint a, uint b)
+ularge lClamp(ularge a, ularge min, ularge max)
+{
+   if (a < min)
+   {
+      return min;
+   }
+   if (a > max)
+   {
+      return max;
+   }
+   return a;
+}
+
+uint uMin(uint a, uint b)
 {
    if (a < b) return a;
    else       return b;
 }
 
-uint cMax(uint a, uint b)
+uint uMax(uint a, uint b)
+{
+   if (a > b) return a;
+   else       return b;
+}
+
+
+int iMin(int a, int b)
+{
+   if (a < b) return a;
+   else       return b;
+}
+
+int iMax(int a, int b)
 {
    if (a > b) return a;
    else       return b;
@@ -756,7 +783,7 @@ int softwareGenerator(int frameVersion, int frameHeader, int frameData, int fram
                     break;
             };
             float normalized = value / (5.f * captureVolt);
-            normalized = clamp(normalized, -1.0f, 1.0f);
+            normalized = fClamp(normalized, -1.0f, 1.0f);
             ishort ival = (ishort)(normalized * MAXOSCVALUE);
             byte*  data = packet + frameHeader + j * 4;
             byte* byte0 = (byte*)(data + 0);
@@ -872,7 +899,7 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
 
 SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
-   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], cMin(ctx->frame.frameSize,len) );
+   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], iMin(ctx->frame.frameSize,len) );
    return SCOPEFUN_SUCCESS;
 }
 
@@ -892,9 +919,9 @@ SCOPEFUN_API int cDisplayFunction(EDisplayFunction function, ushort channel0, us
 {
    switch (function) {
    case dfMax:
-      return cMin(channel0, channel1);
+      return uMin(channel0, channel1);
    case dfMin:
-      return cMin(channel0, channel1);
+      return uMin(channel0, channel1);
    case dfMedium:
       return (channel0 + channel1) / 2;
    case dfAdd:
@@ -919,15 +946,15 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
 
    // frame size
    uint frameSize = sfGetFrameSize(&hw);
-        frameSize = cMin(frameSize, len);
-        frameSize = cMin(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
+        frameSize = uMin(frameSize, len);
+        frameSize = uMin(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
 
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
 
    // input
-   displayZoom = clamp(displayZoom,0.f,1.f);    // [0....1]
-   displayPos  = clamp(-displayPos,-0.5f,0.5f); // [-0.5....0....0.5]
+   displayZoom = fClamp(displayZoom,0.f,1.f);    // [0....1]
+   displayPos  = fClamp(-displayPos,-0.5f,0.5f); // [-0.5....0....0.5]
 
    // normal
    double displayNormal = displayPos + 0.5; // [0...1]
@@ -935,8 +962,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    // zoom
    double zoomMin         = (double)(displayPos - 0.5)*(double)displayZoom; // [-0.5....0....+0.5]
    double zoomMax         = (double)(displayPos + 0.5)*(double)displayZoom; // [-0.5....0....+0.5]
-   ularge zoomSampleMin   = clampL( (zoomMin + 0.5)*(double)(numSamples-1), 0, numSamples-1 ); // [0..n]
-   ularge zoomSampleMax   = clampL( (zoomMax + 0.5)*(double)(numSamples-1), 1, numSamples-1 ); // [0..n]
+   ularge zoomSampleMin   = lClamp( (zoomMin + 0.5)*(double)(numSamples-1), 0, numSamples-1 ); // [0..n]
+   ularge zoomSampleMax   = lClamp( (zoomMax + 0.5)*(double)(numSamples-1), 1, numSamples-1 ); // [0..n]
    ularge zoomSampleCnt   = zoomSampleMax - zoomSampleMin; // [0..n]
 
    // samples
@@ -978,9 +1005,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             ctx->callback->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
 
          // floats
-         float fChannel0 = clamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-         float fChannel1 = clamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-         float fFunction = clamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fChannel1 = fClamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+         float fFunction = fClamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
 
          // start, end, count
          ularge count = SCOPEFUN_DISPLAY - 1;
@@ -993,9 +1020,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
 
          // index
          ularge iStart = SDL_floor( nStart*(double)count );
-                iStart = clampL(iStart, 0, count);
+                iStart = lClamp(iStart, 0, count);
          ularge   iEnd = SDL_floor(nEnd*(double)count);
-                  iEnd = clampL(iEnd, 0, count);
+                  iEnd = lClamp(iEnd, 0, count);
 
          // Output:
          // Display full interval not only single sample.
@@ -1110,8 +1137,8 @@ SCOPEFUN_API int sfSetYRangeScaleA(SHardware* hw, ushort attr, ushort gain)
 
 SCOPEFUN_API int sfSetYPositionA(SHardware* hw, int pos)
 {
-   pos = cMin(pos,  1500);
-   pos = cMin(pos, -1500);
+   pos = iMin(pos,  1500);
+   pos = iMax(pos, -1500);
    hw->offseta = pos;
    return SCOPEFUN_SUCCESS;
 }
@@ -1126,8 +1153,8 @@ SCOPEFUN_API int sfSetYRangeScaleB(SHardware* hw, ushort attr, ushort gain)
 
 SCOPEFUN_API int sfSetYPositionB(SHardware* hw, int pos)
 {
-   pos = cMin(pos,  1500);
-   pos = cMax(pos, -1500);
+   pos = iMin(pos,  1500);
+   pos = iMax(pos, -1500);
    hw->offsetb = pos;
    return SCOPEFUN_SUCCESS;
 }
@@ -1168,9 +1195,9 @@ SCOPEFUN_API int  sfSetControl(SHardware* hw, uint selected)
 
 SCOPEFUN_API int  sfSetSampleSize(SHardware* hw, uint value)
 {
-   value = cMin(value, (SCOPEFUN_FRAME_DATA / 4));
+   value = uMin(value, (SCOPEFUN_FRAME_DATA / 4));
    uint size = 4 * (value / 4);
-   value = cMax(256U, size);
+   value = uMax(256U, size);
    hw->sampleSizeH = (value >> 16) & 0xFFFF;
    hw->sampleSizeL = (value & 0xFFFF);
    return SCOPEFUN_SUCCESS;
@@ -1429,7 +1456,7 @@ SCOPEFUN_API int  sfSetDigitalVoltage(SHardware* hw, double volt,double kDigital
 {
    double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
    double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
-   double dVolt = clamp((double)volt, Vmin, Vmax);
+   double dVolt = dClamp((double)volt, Vmin, Vmax);
    hw->digitalVoltage = (ushort)((dVolt / 1.25) - 1.0) * kDigital;
    return SCOPEFUN_SUCCESS;
 }
@@ -2014,7 +2041,7 @@ SCOPEFUN_API double sfGetDigitalVoltage(SHardware* hw,double kDigital)
    double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
    double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
    double voltage = 1.25 * (((double)(hw->digitalVoltage) / kDigital) + 1.0);
-   return clamp(voltage, Vmin, Vmax);
+   return dClamp(voltage, Vmin, Vmax);
 }
 
 SCOPEFUN_API int sfGetDigitalInputOutput15(SHardware* hw)
