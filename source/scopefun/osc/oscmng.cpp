@@ -3559,14 +3559,14 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 
                // ring
                index = (++index) % frameCount;
+
+               SDL_AtomicUnlock(&captureBuffer.m_lock);
        
                // copy
                int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[newFrame.m_memPos], newFrame.m_memLen);
 
                // new index
                SDL_AtomicSet(&captureBuffer.m_index, index);
-
-            SDL_AtomicUnlock(&captureBuffer.m_lock);
          }
       }
    }
@@ -3578,7 +3578,7 @@ int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeTh
    SDL_AtomicLock(&captureBuffer.m_lock);
 
       // frames
-      index = clamp<uint>(index, 0, captureBuffer.m_frame.getCount() - 1);
+                    index = index == 0 ? 0 : index % (uint)captureBuffer.m_frame.getCount();
       ScopeFunFrame frame = captureBuffer.m_frame[index];
       ScopeFunFrame history[SCOPEFUN_MAX_HISTORY] = { 0 };
       uint maxHistory   = clamp<int>((int)index-(int)SCOPEFUN_MAX_HISTORY,0, captureBuffer.m_frame.getCount()-1);
@@ -3589,23 +3589,20 @@ int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeTh
          history[i] = captureBuffer.m_frame[historyIndex];
       }
 
+   SDL_AtomicUnlock(&captureBuffer.m_lock);
+     
       // display
-      if (index == 398)
-      {
-         int stop = 1;
-      }
       sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame,pos,zoom);
-      threadData.m_historyCount = historyCount;
+      threadData.m_historyCount = 0;
+      if ( threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D) )
+         threadData.m_historyCount = historyCount;
       for (int i = 0; i < threadData.m_historyCount; i++)
       {
          sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[history[i].m_memPos], history[i].m_length, &threadData.m_history[i],pos,zoom);
       }
 
-   SDL_AtomicUnlock(&captureBuffer.m_lock);
-
    // render
    SendToRenderer(renderer, fft, threadData, delay);
-
    return 0;
 }
 
@@ -3678,7 +3675,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
             case SIGNAL_MODE_SIMULATE:
             case SIGNAL_MODE_CAPTURE:
                 {
-                    int index = SDL_AtomicGet(&pCaptureBuffer->m_index);
+                    int index = SDL_AtomicGet(&pCaptureBuffer->m_index)-1;
                     DisplayFrame( index, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 };

@@ -899,7 +899,9 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
 
 SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
-   SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], iMin(ctx->frame.frameSize,len) );
+   apiLock(ctx);
+      SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], iMin(ctx->frame.frameSize,len) );
+   apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
 

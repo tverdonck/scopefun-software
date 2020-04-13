@@ -1497,8 +1497,8 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     double yOffset = 0;
     if(isamples)
     {
-        // isamples -= frame.edgeSample;
-        // isamples  = max(frame.edgeSample, isamples);
+        isamples -= increment;
+        isamples  = max(increment, isamples);
         float displaySampleOffset = 1.0 / (isamples);
         float offset2ns = ((2.0 * DOUBLE_NANO) * displaySampleOffset) / wndMain.horizontal.Capture;
         if(doubleFreq == 1)

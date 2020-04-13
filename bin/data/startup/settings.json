@@ -25,7 +25,7 @@
 		"high":   500
 	},
     "memory": {
-	   "history":  32,
+	   "history":  16,
        "frame": 512,
        "rld": 16
     },

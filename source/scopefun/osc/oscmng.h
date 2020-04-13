@@ -22,7 +22,7 @@
 #define __TOOL__OSCILOSCOPE__
 
 #define SCOPEFUN_MAX_FRAMES   1000000
-#define SCOPEFUN_MAX_HISTORY  32
+#define SCOPEFUN_MAX_HISTORY  16
 
 enum ETimer
 {
