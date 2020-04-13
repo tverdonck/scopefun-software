@@ -915,7 +915,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    // init display
    uint numSamples  = sfGetNumSamples( &hw );
    SDL_memset(display, 0, sizeof(SDisplay));
-   display->samples = numSamples;
+   display->samples = SCOPEFUN_DISPLAY;
 
    // frame size
    uint frameSize = sfGetFrameSize(&hw);

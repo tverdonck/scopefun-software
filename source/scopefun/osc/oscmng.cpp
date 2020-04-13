@@ -3538,7 +3538,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
                {
                   if (captureBuffer.m_frame[i].m_memLen != frameSize)
                   {
-                     SDL_memset(&captureBuffer.m_frame.first(), 0, sizeof(ScopeFunFrame)*frameCount);
+                     SDL_memset(captureBuffer.m_dataPtr, 0, captureBuffer.m_dataMax);
+                     SDL_memset(&captureBuffer.m_frame[0], 0, sizeof(ScopeFunFrame)*frameCount);
                      for (int j = 0; j < frameCount; j++)
                      {
                         captureBuffer.m_frame[j].m_length = 0;
@@ -3574,46 +3575,33 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 
 int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
 {
-   // null frame
-   if (captureBuffer.m_frame.getCount() == 0)
-   {
-      // header
-      SDL_memset(&captureBuffer.m_dataPtr[0], 0, SCOPEFUN_FRAME_HEADER);
+   SDL_AtomicLock(&captureBuffer.m_lock);
+
+      // frames
+      index = clamp<uint>(index, 0, captureBuffer.m_frame.getCount() - 1);
+      ScopeFunFrame frame = captureBuffer.m_frame[index];
+      ScopeFunFrame history[SCOPEFUN_MAX_HISTORY] = { 0 };
+      uint maxHistory   = clamp<int>((int)index-(int)SCOPEFUN_MAX_HISTORY,0, captureBuffer.m_frame.getCount()-1);
+      uint historyCount = index - maxHistory;
+      for (int i = 0; i < historyCount; i++)
+      {
+         uint historyIndex = maxHistory + i;
+         history[i] = captureBuffer.m_frame[historyIndex];
+      }
 
       // display
-      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[0], SCOPEFUN_FRAME_HEADER, &threadData.m_frame, pos, zoom);
+      if (index == 398)
+      {
+         int stop = 1;
+      }
+      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame,pos,zoom);
+      threadData.m_historyCount = historyCount;
+      for (int i = 0; i < threadData.m_historyCount; i++)
+      {
+         sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[history[i].m_memPos], history[i].m_length, &threadData.m_history[i],pos,zoom);
+      }
 
-      // render
-      SendToRenderer(renderer, fft, threadData, delay);
-      return 0;
-   }
-
-  
-   // frames
-   SDL_AtomicLock(&captureBuffer.m_lock);
-                 index = clamp<uint>(index, 0, captureBuffer.m_frame.getCount() - 1);
-   ScopeFunFrame frame = captureBuffer.m_frame[index];
-   ScopeFunFrame history[SCOPEFUN_MAX_HISTORY] = { 0 };
-   uint maxHistory   = clamp<int>((int)index-(int)SCOPEFUN_MAX_HISTORY,0, captureBuffer.m_frame.getCount()-1);
-   uint historyCount = index - maxHistory;
-   for (int i = 0; i < historyCount; i++)
-   {
-      uint historyIndex = maxHistory + i;
-      history[i] = captureBuffer.m_frame[historyIndex];
-   }
    SDL_AtomicUnlock(&captureBuffer.m_lock);
-
-   // display
-   if (index == 398)
-   {
-      int stop = 1;
-   }
-   sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame,pos,zoom);
-   threadData.m_historyCount = historyCount;
-   for (int i = 0; i < threadData.m_historyCount; i++)
-   {
-      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[history[i].m_memPos], history[i].m_length, &threadData.m_history[i],pos,zoom);
-   }
 
    // render
    SendToRenderer(renderer, fft, threadData, delay);

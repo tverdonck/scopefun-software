@@ -936,6 +936,7 @@ public:
       m_dataMax = 0;
       SDL_AtomicSet(&m_index, 0);
       m_lock    = 0;
+      SDL_memset(&m_frame[0], 0, sizeof(ScopeFunFrame)*SCOPEFUN_MAX_FRAMES);
    }
 };
 
