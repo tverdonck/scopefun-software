@@ -1281,9 +1281,16 @@ int OsciloscopeManager::update(float dt)
                 {
                     clearThermal = 1;
                     sliderMode = 1;
+                    float box = 0.5*(sliderMax-sliderMin) / float(pRender->width-2);
                     sliderPosition += (float(mRelX) / float(pRender->width));
-                    sliderPosition = clamp<float>(sliderPosition, 0.f, 1.f);
-                    signalPosition = clamp<float>(-sliderPosition / signalZoom + 0.5 / signalZoom, signalPosition - 0.6f / signalZoom, signalPosition + 0.6f / signalZoom);
+                    sliderPosition = clamp<float>(sliderPosition, 0.f + box, 1.f - box);
+
+                    // min, max
+                    double  dSamples = (double)sfGetNumSamples(&m_hw);
+                    double     dView = (dSamples / (double)SCOPEFUN_DISPLAY) / (double)signalZoom;
+                    double      dMin =  -0.5*dView + 0.5;
+                    double      dMax =   0.5*dView - 0.5;
+                    signalPosition = clamp<float>(-sliderPosition - dMin, dMin, dMax);
                 }
                 // up / down
                 else if(insideSliderArea)
@@ -3578,7 +3585,7 @@ int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeTh
    SDL_AtomicLock(&captureBuffer.m_lock);
 
       // frames
-                    index = index == 0 ? 0 : index % (uint)captureBuffer.m_frame.getCount();
+                    index = index == 0 ? 0 : index % (uint)max<int>(1,captureBuffer.m_frame.getCount());
       ScopeFunFrame frame = captureBuffer.m_frame[index];
       ScopeFunFrame history[SCOPEFUN_MAX_HISTORY] = { 0 };
       uint maxHistory   = clamp<int>((int)index-(int)SCOPEFUN_MAX_HISTORY,0, captureBuffer.m_frame.getCount()-1);

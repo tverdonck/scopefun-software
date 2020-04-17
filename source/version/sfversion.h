@@ -1,5 +1,5 @@
 #define EXE_VERSION_MAJOR       "2"
 #define EXE_VERSION_MINOR       "0"
 #define EXE_VERSION_MICRO       "0"
-#define EXE_VERSION_TIMESTAMP   "08:40 13-04-2020"
-#define EXE_VERSION_TYPE        "release"
+#define EXE_VERSION_TIMESTAMP   "08:52 16-04-2020"
+#define EXE_VERSION_TYPE        "debug"

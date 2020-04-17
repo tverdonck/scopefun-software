@@ -270,32 +270,15 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         {
             cx = 0.f;
         }
-        float smin = -0.5 / sz;
-        float smax = +0.5 / sz;
-        float sdelta = smax - smin;
-        float snorm  = (sx + smax) / sdelta;
-        int   renderCount = double(xCount + 1);
-        // grid
-        double subCount  = double(xCount) / sz;
-        double subDelta  = sdelta / subCount;
-        double gridDelta = 1.0 / double(xCount);
-        // border
-        double gridStart = cx - 0.5;
-        double gridEnd   = cx + 0.5;
-        // signal
-        double signalStart = sx + cx + (-0.5 / sz);
-        double signalEnd   = sx + cx + (+0.5 / sz);
+
         // visibility
-        double       delta = gridStart - signalStart;
-        double       div   = floor(delta / subDelta);
-        double gridBefore  = signalStart + div * subDelta;
-        double gridAfter   = signalStart + div * subDelta + subDelta;
-        double x    = gridAfter;
-        double     gridCut = x + subDelta * double(renderCount);
-        if(gridCut > 0)
-        {
-            renderCount--;
-        }
+        int   renderCount = double(xCount);
+        double gridDelta  = 1.0/double(xCount);
+        double signalPos  =  -sx - 0.5/sz;
+        double  viewStart = -0.5;
+        double      diffX = (viewStart - signalPos)/sz;
+        double          x = -0.5 + SDL_fmodf(diffX, gridDelta);
+       
         //////////////////////////////////////////////////////////////////////////////////
         // x fine grid lines
         //////////////////////////////////////////////////////////////////////////////////
@@ -600,70 +583,72 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     ////////////////////////////////////////////////////////////////////////////////
     // subgrid with visibility calculation
     ////////////////////////////////////////////////////////////////////////////////
-    double          wx = sx;
-    double smin      = -0.5 / sz;
-    double smax      = +0.5 / sz;
-    double sdelta    = smax - smin;
-    double subCount  = double(xCount) / sz;
-    double subDelta  = sdelta / subCount;
-    double gridDelta = 1.0 / double(xCount);
-    // view
-    double cxMin = -0.5f;
-    double cxMax = +0.5f;
-    double zoomOffset = (1.0 - sz) / 2.0;
-    double viewStart  = cx + cxMin + zoomOffset;
-    double viewEnd    = cx + cxMax - zoomOffset;
-    // border
-    double borderStart = (wx + xMin);
-    double borderEnd   = (wx + xMax);
-    // visibility
-    double offset = (viewStart - borderStart);
-    int   renderCount = double(xCount + 1);
-    double preTriggerZero = wndMain.trigger.Percent / 100.0;
-    double    signalStart = sx + cx + (-0.5 / sz);
-    double          delta = gridStart - signalStart;
-    double            div = floor(delta / subDelta);
-    double              x = signalStart + div * subDelta + subDelta;
-    double        gridCut = x + subDelta * double(renderCount);
-    if(gridCut > 0)
+    pFont->setSize(threadid, 0.35f);
+    int    renderCount = xCount;
+    ilarge iNumSamples = threadData.m_frame.capture;
+   
+    double preTriggerZero = (wndMain.trigger.Percent / 100.0)*wndMain.horizontal.Capture;
+    for (int i = 0; i < renderCount; i++)
     {
-        renderCount--;
+       // zoom
+       double   minZoom = 1.0 / (double)iNumSamples;
+                     sz = clamp<double>(sz, minZoom, 1.0);
+       double    dRange = 1/sz;
+       double   zoomMin = -0.5*(double)sz; // [min..0..max]
+       double   zoomMax =  0.5*(double)sz; // [min..0..max]
+       zoomMin += dRange * 0.5;
+       zoomMin /= dRange; // [0..1]
+       zoomMax += dRange * 0.5;
+       zoomMax /= dRange; // [0..1]
+    
+       // samples
+       ilarge zoomSampleMin = zoomMin * iNumSamples; // [0..n]
+       ilarge zoomSampleMax = zoomMax * iNumSamples; // [0..n]
+    
+       // calc
+       double gridDelta = 1.0 / double(xCount);
+       double signalPos = -sx - 0.5 / sz;
+       double  viewStart = -0.5;
+       double      diffX = (viewStart - signalPos) / sz;
+       double          x = -0.5 + SDL_fmodf(diffX, gridDelta);
+
+       // screen
+       double worldX        = sx; // [-0.5 .. 0 .. 0.5]
+       double screenX       = x;  //
+                   screenX += (double)i * gridDelta; // [-0.5 .. 0 .. 0.5]
+           
+       // units
+       double unitPos       = (screenX + 0.5) - worldX/sz; // [0..1]
+       double unitMin       = (double)wndMain.horizontal.Capture*(double)zoomSampleMin;
+       double unitMax       = (double)wndMain.horizontal.Capture*(double)zoomSampleMax;
+       double unitRange     = (unitMax - unitMin);
+       double unitGrid      = unitRange / 10;
+       double unitValue     = unitMin + unitPos*unitRange;
+    
+       // results
+       double arrowX       = screenX;
+       double unitX        = (unitValue - preTriggerZero);
+              unitX       -= SDL_fmodf( unitX, wndMain.horizontal.Capture);
+                     unitX = clamp<double>(unitX, 0, wndMain.horizontal.Capture*iNumSamples);
+       ToolText::Time(buffer, 1024, unitX);
+    
+       // draw unit
+       pFont->writeText3d(threadid, render.cameraOsc.Final, screenX - sizeX, charYmin, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), buffer, render.colorTime, render.oscScaleX, render.oscScaleY);
+    
+       // draw arrow
+       pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
+          pCanvas3d->bLine(threadid, Vector4(arrowX, charYmin, 0, 1), Vector4(arrowX, yMin, 0, 1));
+          pCanvas3d->bLine(threadid, Vector4(arrowX + sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
+          pCanvas3d->bLine(threadid, Vector4(arrowX - sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
+       pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTime);
     }
-    // units
-    pFont->setSize(threadid, 0.25f);
-    uint  lines = 0;
-    {
-        double     posX  = x;
-        double frameTime = double(wndMain.horizontal.Capture) * double(wndMain.horizontal.FrameSize);
-        for(int i = 0; i < renderCount; i++)
-        {
-            double      posDelta = (posX - signalStart) / sdelta;
-            double         unitX = (posDelta - preTriggerZero) * frameTime;
-            ToolText::Time(buffer, 1024, unitX);
-            pFont->writeText3d(threadid, render.cameraOsc.Final, posX - sizeX, charYmin, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), buffer, render.colorTime, render.oscScaleX, render.oscScaleY);
-            posX  += gridDelta;
-            lines++;
-        }
-    }
-    // arrows
-    {
-        double arrowX = x;
-        pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3 * renderCount);
-        for(int i = 0; i < renderCount; i++)
-        {
-            pCanvas3d->bLine(threadid, Vector4(arrowX, charYmin, 0, 1), Vector4(arrowX, yMin, 0, 1));
-            pCanvas3d->bLine(threadid, Vector4(arrowX + sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
-            pCanvas3d->bLine(threadid, Vector4(arrowX - sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
-            arrowX += gridDelta;
-        }
-        pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTime);
-    }
+
     ////////////////////////////////////////////////////////////////////////////////
     // pre-trigger
     ////////////////////////////////////////////////////////////////////////////////
     FORMAT("%s", "Trigger");
     float preTrigPos = (double(wndMain.trigger.Percent) / 100.0) / sz;
-    sx = signalStart;
+    sx = -0.5 / sz + sx/sz;
     pFont->setSize(threadid, 0.42f);
     pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + charHeight, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
     {
@@ -2858,14 +2843,14 @@ void OsciloscopeThreadRenderer::renderSlider(uint threadId, OsciloscopeThreadDat
     slider.MinMax(xMinimum, xMaximum, render.width, render.height, posX, render.sliderSize, render.signalZoom);
     // slider
     pCanvas2d->beginBatch(threadId, CANVAS2D_BATCH_RECTANGLE, 1);
-    pCanvas2d->bRectangle(threadId, xMinimum + 1, sliderRectY + 1, xMaximum - 1, sliderRectY + sliderRectH - 1);
+    pCanvas2d->bRectangle(threadId, xMinimum+1, sliderRectY + 1, xMaximum, sliderRectY + sliderRectH - 1);
     pCanvas2d->endBatch(threadId, render.sliderMode == 1 ? render.colorBorder : render.colorGrid);
     // border
     pCanvas2d->beginBatch(threadId, CANVAS2D_BATCH_LINE, 4);
     pCanvas2d->bLine(threadId, sliderRectX, sliderRectY, sliderRectX + sliderRectW, sliderRectY);
-    pCanvas2d->bLine(threadId, sliderRectX, sliderRectY + sliderRectH, sliderRectX + sliderRectW, sliderRectY + sliderRectH);
+    pCanvas2d->bLine(threadId, sliderRectX, sliderRectY + sliderRectH, sliderRectX + sliderRectW, sliderRectY + sliderRectH-1);
     pCanvas2d->bLine(threadId, sliderRectX, sliderRectY, sliderRectX, sliderRectY + sliderRectH);
-    pCanvas2d->bLine(threadId, sliderRectX + sliderRectW - 1, sliderRectY, sliderRectX + sliderRectW - 1, sliderRectY + sliderRectH);
+    pCanvas2d->bLine(threadId, sliderRectX + sliderRectW, sliderRectY, sliderRectX + sliderRectW, sliderRectY + sliderRectH);
     pCanvas2d->endBatch(threadId, render.colorBorder);
 }
 

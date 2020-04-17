@@ -480,6 +480,7 @@ typedef struct
     SArrayDisplayAnalogF analogF;
     SArrayDisplayDigital digital;
     uint                 samples;
+    uint                 capture;
     uint                 ets;
 } SDisplay;
 

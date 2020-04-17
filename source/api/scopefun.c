@@ -945,6 +945,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    uint numSamples  = sfGetNumSamples( &hw );
    SDL_memset(display, 0, sizeof(SDisplay));
    display->samples = SCOPEFUN_DISPLAY;
+   display->capture = SCOPEFUN_DISPLAY; // todo .. numSamples;
 
    // frame size
    uint frameSize = sfGetFrameSize(&hw);
@@ -954,19 +955,26 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
 
-   // input
-   displayZoom = fClamp(displayZoom,0.f,1.f);    // [0....1]
-   displayPos  = fClamp(-displayPos,-0.5f,0.5f); // [-0.5....0....0.5]
-
-   // normal
-   double displayNormal = displayPos + 0.5; // [0...1]
-
    // zoom
-   double zoomMin         = (double)(displayPos - 0.5)*(double)displayZoom; // [-0.5....0....+0.5]
-   double zoomMax         = (double)(displayPos + 0.5)*(double)displayZoom; // [-0.5....0....+0.5]
-   ularge zoomSampleMin   = lClamp( (zoomMin + 0.5)*(double)(numSamples-1), 0, numSamples-1 ); // [0..n]
-   ularge zoomSampleMax   = lClamp( (zoomMax + 0.5)*(double)(numSamples-1), 1, numSamples-1 ); // [0..n]
-   ularge zoomSampleCnt   = zoomSampleMax - zoomSampleMin; // [0..n]
+   double minZoom = 1.0 / (double)numSamples;
+      displayZoom = fClamp(displayZoom, minZoom,1.f); // [0....1]
+   double      dMin = -0.5 / (double)displayZoom;
+   double      dMax =  0.5 / (double)displayZoom;
+      double dRange = 1/displayZoom;
+
+   // zoom: min / max
+   double zoomMin         = (double)-displayPos - 0.5*(double)displayZoom; // [min..0..max]
+   double zoomMax         = (double)-displayPos + 0.5*(double)displayZoom; // [min..0..max]
+   zoomMin += dRange * 0.5;
+   zoomMin /= dRange; // [0..1]
+   zoomMax += dRange * 0.5;
+   zoomMax /= dRange; // [0..1]
+   
+   // sample: min / max 
+   double dNumSamples     = (numSamples - 1);
+   ularge zoomSampleMin   = zoomMin*dNumSamples; // [0..n]
+   ularge zoomSampleMax   = zoomMax*dNumSamples; // [0..n]
+   ularge zoomSampleCnt   = lClamp(zoomSampleMax - zoomSampleMin,0,numSamples); // [0..n]
 
    // samples
    EDisplayFunction function = dfMedium;
@@ -976,12 +984,14 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
          ctx->callback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
 
       byte* dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
-      for (ularge sample = zoomSampleMin; sample <= zoomSampleMax; sample++)
+      for (ilarge i = 0; i < zoomSampleCnt; i++)
       {         
          uint offset = 0;
          ushort  ch0 = 0;
          ushort  ch1 = 0;
          ushort  dig = 0;
+
+         ularge sample = lClamp(zoomSampleMin + i, 0, numSamples-1);
 
          offset = sample * 4;
          byte byte0 = *(dataStart + offset + 0);
@@ -1029,12 +1039,12 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
          // Output:
          // Display full interval not only single sample.
          // That is becouse we can zoom to single sample.
-         for (int i = iStart; i <= iEnd; i++)
+         for (int j = iStart; j <= iEnd; j++)
          {
-            display->analog0.bytes[i] = fChannel0;
-            display->analog1.bytes[i] = fChannel1;
-            display->digital.bytes[i] = digital;
-            display->analogF.bytes[i] = function;
+            display->analog0.bytes[j] = fChannel0;
+            display->analog1.bytes[j] = fChannel1;
+            display->digital.bytes[j] = digital;
+            display->analogF.bytes[j] = function;
          }
       }
       if (ctx->callback)
