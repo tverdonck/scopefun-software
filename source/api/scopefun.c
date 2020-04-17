@@ -963,8 +963,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
       double dRange = 1/displayZoom;
 
    // zoom: min / max
-   double zoomMin         = (double)-displayPos - 0.5*(double)displayZoom; // [min..0..max]
-   double zoomMax         = (double)-displayPos + 0.5*(double)displayZoom; // [min..0..max]
+   double zoomMin         = (double)-displayPos/displayZoom - 0.5*(double)displayZoom; // [min..0..max]
+   double zoomMax         = (double)-displayPos/displayZoom + 0.5*(double)displayZoom; // [min..0..max]
    zoomMin += dRange * 0.5;
    zoomMin /= dRange; // [0..1]
    zoomMax += dRange * 0.5;
