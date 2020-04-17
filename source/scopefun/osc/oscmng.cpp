@@ -813,8 +813,8 @@ int OsciloscopeManager::start()
 
     // apply settings
     ////////////////////////////////////////////////
-    sfSetYRangeScaleA(getHw(),vc2Volt, 1.f);
-    sfSetYRangeScaleB(getHw(),vc2Volt, 1.f);
+    sfSetYRangeScaleA(getHw(), getAttr(vc2Volt), getGain(0,vc2Volt) );
+    sfSetYRangeScaleB(getHw(), getAttr(vc2Volt), getGain(1,vc2Volt) );
     ////////////////////////////////////////////////
     // apply canvas allocation settings
     ////////////////////////////////////////////////
@@ -2387,8 +2387,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                 case acOffsetSetup:
                     {
                         callibrate.offset = callibrate.offsetMin + (callibrate.offsetMax - callibrate.offsetMin) / 2.0;
-                        sfSetYRangeScaleA(getHw(), settings.getHardware()->referenceGainValue[callibrate.voltage], (uint)getAttr(callibrate.voltage));
-                        sfSetYRangeScaleB(getHw(), settings.getHardware()->referenceGainValue[callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                        sfSetYRangeScaleA(getHw(), (uint)getAttr(callibrate.voltage), getGain(0,callibrate.voltage) );
+                        sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), getGain(1,callibrate.voltage) );
                         sfSetYPositionA(getHw(), callibrate.offset);
                         sfSetYPositionB(getHw(), callibrate.offset);
                         sfSetAnalogSwitchBit(getHw(), CHANNEL_A_GROUND, 1);
@@ -2547,8 +2547,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         sfSetAnalogSwitchBit(&m_hw, CHANNEL_B_ACDC, 1);
                         sfSetYPositionA(&m_hw, window.channel01.YPosition + settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
                         sfSetYPositionB(&m_hw, window.channel02.YPosition + settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
-                        sfSetYRangeScaleA(&m_hw, settings.getHardware()->referenceGainValue[callibrate.voltage], (uint)getAttr(callibrate.voltage));
-                        sfSetYRangeScaleB(&m_hw, settings.getHardware()->referenceGainValue[callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                        sfSetYRangeScaleA(&m_hw, (uint)getAttr(callibrate.voltage), getGain(0,callibrate.voltage));
+                        sfSetYRangeScaleB(&m_hw, (uint)getAttr(callibrate.voltage), getGain(1,callibrate.voltage));
                         transferData();
                         callibrate.iteration    = 0;
                         callibrate.generatorMax = settings.getHardware()->referenceGeneratorMaxValue;
@@ -2697,8 +2697,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         sfSetYPositionB(getHw(), settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
                         sfSetGeneratorOffset0(getHw(), gainGenOffset + settings.getHardware()->callibratedOffsetsGenerator[callibrate.type][0]);
                         sfSetGeneratorOffset1(getHw(), gainGenOffset + settings.getHardware()->callibratedOffsetsGenerator[callibrate.type][1]);
-                        sfSetYRangeScaleA(getHw(), callibrate.gainSet, (uint)getAttr(callibrate.voltage));
-                        sfSetYRangeScaleB(getHw(), callibrate.gainSet, (uint)getAttr(callibrate.voltage));
+                        sfSetYRangeScaleA(getHw(), (uint)getAttr(callibrate.voltage), getGain(0,callibrate.gainSet));
+                        sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), getGain(1,callibrate.gainSet));
                         transferData();
                         callibrate.mode = acGainCapture;
                         callibrate.debug << "acGainSetup: ";
@@ -2877,16 +2877,16 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         if(callibrate.channel == 0)
                         {
                             sfSetYPositionA(getHw(), callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
-                            sfSetYRangeScaleA(getHw(), settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                            sfSetYRangeScaleA(getHw(), getAttr(callibrate.voltage), (uint)settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage] );
                             sfSetYPositionB(getHw(), settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
-                            sfSetYRangeScaleB(getHw(), settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                            sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage]);
                         }
                         else
                         {
                             sfSetYPositionA(getHw(), settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
-                            sfSetYRangeScaleA(getHw(), settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                            sfSetYRangeScaleA(getHw(), getAttr(callibrate.voltage), (uint)settings.getHardware()->callibratedGainValue[callibrate.type][0][callibrate.voltage]);
                             sfSetYPositionB(getHw(), callibrate.stepReference + settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
-                            sfSetYRangeScaleB(getHw(), settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage], (uint)getAttr(callibrate.voltage));
+                            sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), settings.getHardware()->callibratedGainValue[callibrate.type][1][callibrate.voltage]);
                         }
                         transferData();
                         callibrate.mode = acStepCapture;

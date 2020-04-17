@@ -1001,7 +1001,9 @@ void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event
         pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
         pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
         pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
-        sfSetYRangeScaleB(getHw(),m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+
+        uint capture0 = m_comboBoxCh0Capture->GetSelection();
+        sfSetYRangeScaleB(getHw(), pOsciloscope->getAttr(capture0), pOsciloscope->getGain(1,capture0));
         // steps
         float    time = pOsciloscope->window.horizontal.Capture;
         float capture = pOsciloscope->window.channel01.Capture;
@@ -1210,7 +1212,9 @@ void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
     pOsciloscope->window.channel01.Capture = captureVoltFromEnum(m_comboBoxCh0Capture->GetSelection());
     pOsciloscope->window.channel01.Scale   = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
     pOsciloscope->window.channel01.Display = pOsciloscope->window.channel01.Capture;
-    sfSetYRangeScaleA(getHw(), m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel01.Scale);
+
+    uint capture0 = m_comboBoxCh0Capture->GetSelection();
+    sfSetYRangeScaleA(getHw(), pOsciloscope->getAttr(capture0), pOsciloscope->getGain(0,capture0) );
     // yposition fix
     float captureNew       = pOsciloscope->window.channel01.Capture;
     double slidePos        = m_sliderCh0Position->GetValue();
@@ -1234,7 +1238,8 @@ void OsciloskopOsciloskop::m_textCtrlCh0ScaleOnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlCh0ScaleOnTextEnter
     pOsciloscope->window.channel01.Scale = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
-    sfSetYRangeScaleA(getHw(), m_comboBoxCh0Capture->GetSelection(), pOsciloscope->window.channel01.Scale);
+    uint capture0 = m_comboBoxCh0Capture->GetSelection();
+    sfSetYRangeScaleA(getHw(), pOsciloscope->getAttr( capture0 ), pOsciloscope->getGain(0,capture0) );
     pOsciloscope->transferData();
 }
 
@@ -1349,7 +1354,9 @@ void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
     pOsciloscope->window.channel02.Capture = captureVoltFromEnum(m_comboBoxCh1Capture->GetSelection());
     pOsciloscope->window.channel02.Scale   = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
     pOsciloscope->window.channel02.Display = pOsciloscope->window.channel02.Capture;
-    sfSetYRangeScaleB(getHw(), m_comboBoxCh1Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+
+    uint capture1 = m_comboBoxCh1Capture->GetSelection();
+    sfSetYRangeScaleB(getHw(), pOsciloscope->getAttr(capture1), pOsciloscope->getGain(1,capture1) );
     //
     float volt;
     uint  unit;
@@ -1375,7 +1382,8 @@ void OsciloskopOsciloskop::m_textCtrlCh1ScaleOnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlCh1ScaleOnTextEnter
     pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
-    sfSetYRangeScaleB(getHw(), m_comboBoxCh1Capture->GetSelection(), pOsciloscope->window.channel02.Scale);
+    uint capture1 = m_comboBoxCh1Capture->GetSelection();
+    sfSetYRangeScaleB(getHw(), pOsciloscope->getAttr(capture1), pOsciloscope->getGain(1,capture1));
     pOsciloscope->transferData();
 }
 
