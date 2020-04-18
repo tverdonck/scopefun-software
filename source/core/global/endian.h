@@ -21,14 +21,14 @@
 #ifndef __ENDIAN__
 #define __ENDIAN__
 
-FORCE_INLINE ushort endianSwap16(ushort& value)
+CORE_FORCE_INLINE ushort endianSwap16(ushort& value)
 {
     ushort low  = (value & 0x00FF);
     ushort high = (value & 0xFF00);
     return (low << 8) | (high >> 8);
 }
 
-FORCE_INLINE uint endianSwap32(uint& value)
+CORE_FORCE_INLINE uint endianSwap32(uint& value)
 {
     uint v0 = (value & 0x000000FF);
     uint v1 = (value & 0x0000FF00);

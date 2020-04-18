@@ -256,12 +256,14 @@ void GrStaticMesh::draw(GrVertexShader* vs, PrimitiveType type, uint numIndices,
             case VERTEX_TYPE_POSITION:
                 if(grGetMode() == OPENGL_MODE_21)
                 {
-                    glVertexPointer(dim, format, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeoffset = (startoffset + offset);
+                    glVertexPointer(dim, format, stride, (GLvoid*)largeoffset);
                     glEnableClientState(GL_VERTEX_ARRAY);
                 }
                 else
                 {
-                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeoffset = (startoffset + offset);
+                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)largeoffset);
                 }
                 break;
             case VERTEX_TYPE_POSITIONT:
@@ -271,12 +273,14 @@ void GrStaticMesh::draw(GrVertexShader* vs, PrimitiveType type, uint numIndices,
             case VERTEX_TYPE_TEXCOORD:
                 if(grGetMode() == OPENGL_MODE_21)
                 {
-                    glTexCoordPointer(dim, format, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeoffset = (startoffset + offset);
+                    glTexCoordPointer(dim, format, stride, (GLvoid*)largeoffset);
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                 }
                 else
                 {
-                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)(startoffset + offset));
+                    ularge largeoffset = (startoffset + offset);
+                    glVertexAttribPointer(a, dim, format, normalized, stride, (GLvoid*)largeoffset);
                 }
                 break;
         };

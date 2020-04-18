@@ -73,11 +73,11 @@ class Flag16 : public Flag<ushort> {};
 class Flag32 : public Flag<uint> {};
 class Flag64 : public Flag<ularge> {};
 
-INLINE ushort raiseFlag16(ushort attr, ushort bits)
+CORE_INLINE ushort raiseFlag16(ushort attr, ushort bits)
 {
     return attr |  bits;
 }
-INLINE ushort lowerFlag16(ushort attr, ushort bits)
+CORE_INLINE ushort lowerFlag16(ushort attr, ushort bits)
 {
     return attr & ~bits;
 }

@@ -19,29 +19,29 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __CORE_PLATFORM__
-    #define __CORE_PLATFORM__
+#define __CORE_PLATFORM__
 
     ////////////////////////////////////////////////////////////////////////////////
     // gcc
     ////////////////////////////////////////////////////////////////////////////////
     #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC) || defined(PLATFORM_MINGW)
 
-        #define INLINE                  __inline__
-        #define FORCE_INLINE            __inline__
-        #define CLASS_CDECL             __attribute__ ((__cdecl__))
-        #define CLASS_ALIGN(size)       __attribute__ ((aligned(size)))
+        #define CORE_INLINE                  __inline__
+        #define CORE_FORCE_INLINE            __inline__
+        #define CORE_CLASS_CDECL             __attribute__ ((__cdecl__))
+        #define CORE_CLASS_ALIGN(size)       __attribute__ ((aligned(size)))
 
     #endif
 
     ////////////////////////////////////////////////////////////////////////////////
     // visual studio c++
     ////////////////////////////////////////////////////////////////////////////////
-    #ifdef PLATFORM_WIN
+    #ifdef PLATFORM_MSVC
 
-        #define INLINE                  __inline__
-        #define FORCE_INLINE            __forceinline
-        #define CLASS_CDECL              __cdecl
-        #define CLASS_ALIGN(size)       __declspec(align(size))
+        #define CORE_INLINE                  __inline__
+        #define CORE_FORCE_INLINE            __forceinline
+        #define CORE_CLASS_CDECL              __cdecl
+        #define CORE_CLASS_ALIGN(size)       __declspec(align(size))
 
         #pragma warning( disable : 4200 )
         #pragma warning( disable : 4244 )

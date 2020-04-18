@@ -71,7 +71,7 @@ template<class T> T saturate(T a)
     return a;
 }
 
-FORCE_INLINE float lerp(float a, float b, float t)
+CORE_FORCE_INLINE float lerp(float a, float b, float t)
 {
     return (1 - t) * a + t * b;
 }

@@ -42,7 +42,7 @@ int fileLoadString(const char* fileName, char** buffer, ilarge* bufferSize)
     return 0;
 }
 
-int fileSaveString(const char* fileName, char* string)
+int fileSaveString(const char* fileName, const char* string)
 {
     SDL_RWops* ctx = SDL_RWFromFile(fileName, "wb+");
     if(!ctx)

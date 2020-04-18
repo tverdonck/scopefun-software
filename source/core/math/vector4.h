@@ -212,7 +212,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 // color
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Vector4 vecFromColor(uint color)
+CORE_FORCE_INLINE Vector4 vecFromColor(uint color)
 {
     float A = ((color >> 24) & 0xFF) / 255.f;
     float R = ((color >> 16) & 0xFF) / 255.f;
@@ -220,7 +220,7 @@ FORCE_INLINE Vector4 vecFromColor(uint color)
     float B = ((color >>  0) & 0xFF) / 255.f;
     return Vector4(R, G, B, A);
 }
-FORCE_INLINE uint vecToColor(const Vector4& v)
+CORE_FORCE_INLINE uint vecToColor(const Vector4& v)
 {
     uint R = uint(v.x * 255.f);
     uint G = uint(v.y * 255.f);
@@ -232,16 +232,16 @@ FORCE_INLINE uint vecToColor(const Vector4& v)
 ////////////////////////////////////////////////////////////////////////////////
 // geometric 3d
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE float vecDot3d(const Vector4& a, const Vector4& b)
+CORE_FORCE_INLINE float vecDot3d(const Vector4& a, const Vector4& b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
-FORCE_INLINE float vecLength3d(const Vector4& a)
+CORE_FORCE_INLINE float vecLength3d(const Vector4& a)
 {
     float dot = vecDot3d(a, a);
     return sqrt(dot);
 }
-FORCE_INLINE Vector4 vecNormalize3d(const Vector4& a)
+CORE_FORCE_INLINE Vector4 vecNormalize3d(const Vector4& a)
 {
     float length = vecLength3d(a);
     // prevent divide by zero
@@ -256,7 +256,7 @@ FORCE_INLINE Vector4 vecNormalize3d(const Vector4& a)
     ret.w = 1.f;
     return ret;
 }
-FORCE_INLINE Vector4 vecCross3d(const Vector4& a, const Vector4& b)
+CORE_FORCE_INLINE Vector4 vecCross3d(const Vector4& a, const Vector4& b)
 {
     Vector4 ret;
     ret.x = (a.y * b.z) - (a.z * b.y),
@@ -269,16 +269,16 @@ FORCE_INLINE Vector4 vecCross3d(const Vector4& a, const Vector4& b)
 ////////////////////////////////////////////////////////////////////////////////
 // geometric 4d
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE float vecDot4d(const Vector4& a, const Vector4& b)
+CORE_FORCE_INLINE float vecDot4d(const Vector4& a, const Vector4& b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
-FORCE_INLINE float vecLength4d(const Vector4& a)
+CORE_FORCE_INLINE float vecLength4d(const Vector4& a)
 {
     float dot = vecDot4d(a, a);
     return sqrt(dot);
 }
-FORCE_INLINE Vector4 vecNormalize4d(const Vector4& a)
+CORE_FORCE_INLINE Vector4 vecNormalize4d(const Vector4& a)
 {
     float length = vecLength4d(a);
     // prevent divide by zero
@@ -293,7 +293,7 @@ FORCE_INLINE Vector4 vecNormalize4d(const Vector4& a)
     ret.w = a.w * length;
     return ret;
 }
-FORCE_INLINE Vector4 vecCross4d(const Vector4& a, const Vector4& b, const Vector4& c)
+CORE_FORCE_INLINE Vector4 vecCross4d(const Vector4& a, const Vector4& b, const Vector4& c)
 {
     Vector4 ret;
     ret.x = (((b.z * c.w) - (b.w * c.z)) * a.y) - (((b.y * c.w) - (b.w * c.y)) * a.z) + (((b.y * c.z) - (b.z * c.y)) * a.w);

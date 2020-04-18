@@ -40,7 +40,8 @@ bool isFileWritable()
 {
     FORMAT_BUFFER();
     FORMAT_PATH("data/startup/write.ok");
-    int ret = fileSaveString(formatBuffer, "write ok");
+    const char* writeOk = "write ok";
+    int ret = fileSaveString(formatBuffer, writeOk);
     return ret == 0 ? true : false;
 }
 

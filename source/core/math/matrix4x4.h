@@ -93,7 +93,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 // identity
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matIdentity()
+CORE_FORCE_INLINE Matrix4x4 matIdentity()
 {
     Matrix4x4   ret;
     ret.m11 = 1.f;
@@ -118,7 +118,7 @@ FORCE_INLINE Matrix4x4 matIdentity()
 ////////////////////////////////////////////////////////////////////////////////
 // scale
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matScale(const Vector4& scale)
+CORE_FORCE_INLINE Matrix4x4 matScale(const Vector4& scale)
 {
     Matrix4x4 ret;
     ret.m11 = scale.x;
@@ -143,7 +143,7 @@ FORCE_INLINE Matrix4x4 matScale(const Vector4& scale)
 ////////////////////////////////////////////////////////////////////////////////
 // rotation
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matRotationX(float angle)
+CORE_FORCE_INLINE Matrix4x4 matRotationX(float angle)
 {
     Matrix4x4 ret;
     float sin = sinf(angle);
@@ -167,7 +167,7 @@ FORCE_INLINE Matrix4x4 matRotationX(float angle)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matRotationY(float angle)
+CORE_FORCE_INLINE Matrix4x4 matRotationY(float angle)
 {
     Matrix4x4 ret;
     float sin = sinf(angle);
@@ -191,7 +191,7 @@ FORCE_INLINE Matrix4x4 matRotationY(float angle)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matRotationZ(float angle)
+CORE_FORCE_INLINE Matrix4x4 matRotationZ(float angle)
 {
     Matrix4x4 ret;
     float sin = sinf(angle);
@@ -215,7 +215,7 @@ FORCE_INLINE Matrix4x4 matRotationZ(float angle)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matRotationZYX(float z, float y, float x)
+CORE_FORCE_INLINE Matrix4x4 matRotationZYX(float z, float y, float x)
 {
     Matrix4x4 ret;
     float sinz = sinf(z);
@@ -243,7 +243,7 @@ FORCE_INLINE Matrix4x4 matRotationZYX(float z, float y, float x)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matRotationAxisAngle(const Vector4& axis, float angle)
+CORE_FORCE_INLINE Matrix4x4 matRotationAxisAngle(const Vector4& axis, float angle)
 {
     Matrix4x4 ret;
     Vector4 u  = vecNormalize3d(axis);
@@ -271,7 +271,7 @@ FORCE_INLINE Matrix4x4 matRotationAxisAngle(const Vector4& axis, float angle)
 ////////////////////////////////////////////////////////////////////////////////
 // multiply
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const Matrix4x4& b)
+CORE_FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const Matrix4x4& b)
 {
     Matrix4x4 ret;
     ret.m11 = a.m11 * b.m11 + a.m12 * b.m21 + a.m13 * b.m31 + a.m14 * b.m41;
@@ -293,7 +293,7 @@ FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const Matrix4x4& b)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const float value)
+CORE_FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const float value)
 {
     Matrix4x4 ret = a;
     ret.m11 *= value;
@@ -318,7 +318,7 @@ FORCE_INLINE Matrix4x4 matMultiply(const Matrix4x4& a, const float value)
 ////////////////////////////////////////////////////////////////////////////////
 // add
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const Matrix4x4& b)
+CORE_FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const Matrix4x4& b)
 {
     Matrix4x4 ret;
     ret.m11 = a.m11 + b.m11;
@@ -340,7 +340,7 @@ FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const Matrix4x4& b)
     return ret;
 }
 
-FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const float value)
+CORE_FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const float value)
 {
     Matrix4x4 ret = a;
     ret.m11 += value;
@@ -366,7 +366,7 @@ FORCE_INLINE Matrix4x4 matAdd(const Matrix4x4& a, const float value)
 ////////////////////////////////////////////////////////////////////////////////
 // transform
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Vector4 matTransform3x3(const Vector4& v, const Matrix4x4& m)
+CORE_FORCE_INLINE Vector4 matTransform3x3(const Vector4& v, const Matrix4x4& m)
 {
     Vector4 ret;
     ret.x = v.x * m.m11 + v.y * m.m21 + v.z * m.m31;
@@ -376,7 +376,7 @@ FORCE_INLINE Vector4 matTransform3x3(const Vector4& v, const Matrix4x4& m)
     return ret;
 }
 
-FORCE_INLINE Vector4 matTransform4x4(const Vector4& v, const Matrix4x4& m)
+CORE_FORCE_INLINE Vector4 matTransform4x4(const Vector4& v, const Matrix4x4& m)
 {
     Vector4 ret;
     ret.x = v.x * m.m11 + v.y * m.m21 + v.z * m.m31 + v.w * m.m41;
@@ -389,7 +389,7 @@ FORCE_INLINE Vector4 matTransform4x4(const Vector4& v, const Matrix4x4& m)
 ////////////////////////////////////////////////////////////////////////////////
 // transpose
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matTranspose(const Matrix4x4& a)
+CORE_FORCE_INLINE Matrix4x4 matTranspose(const Matrix4x4& a)
 {
     Matrix4x4 ret;
     ret.m11 = a.m11;
@@ -414,7 +414,7 @@ FORCE_INLINE Matrix4x4 matTranspose(const Matrix4x4& a)
 ////////////////////////////////////////////////////////////////////////////////
 // determinante
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE float matDeterminante(const Matrix4x4& m)
+CORE_FORCE_INLINE float matDeterminante(const Matrix4x4& m)
 {
     float c11 = +(m.m22 * m.m33 * m.m44 + m.m23 * m.m34 * m.m42 + m.m24 * m.m32 * m.m43 - m.m42 * m.m33 * m.m24 - m.m43 * m.m34 * m.m22 - m.m44 * m.m32 * m.m23);
     float c12 = -(m.m21 * m.m33 * m.m44 + m.m23 * m.m34 * m.m41 + m.m24 * m.m31 * m.m43 - m.m41 * m.m33 * m.m24 - m.m43 * m.m34 * m.m21 - m.m44 * m.m31 * m.m23);
@@ -426,7 +426,7 @@ FORCE_INLINE float matDeterminante(const Matrix4x4& m)
 ////////////////////////////////////////////////////////////////////////////////
 // inverse
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Matrix4x4 matInverse(const Matrix4x4& m)
+CORE_FORCE_INLINE Matrix4x4 matInverse(const Matrix4x4& m)
 {
     Matrix4x4 adj;
     float det = matDeterminante(m);
@@ -456,7 +456,7 @@ FORCE_INLINE Matrix4x4 matInverse(const Matrix4x4& m)
 ////////////////////////////////////////////////////////////////////////////////
 // projection
 ////////////////////////////////////////////////////////////////////////////////
-FORCE_INLINE Vector4 matUnprojectScreenSpace(int x, int y, int w, int h, Matrix4x4 inverse, float fz)
+CORE_FORCE_INLINE Vector4 matUnprojectScreenSpace(int x, int y, int w, int h, Matrix4x4 inverse, float fz)
 {
     float fx =  2.f * (float(x) / float(w) - 0.5f);
     float fy =  2.f * (float(y) / float(h) - 0.5f);

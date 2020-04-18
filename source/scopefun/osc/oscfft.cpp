@@ -20,12 +20,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include<ScopeFun/ScopeFun.h>
 
-INLINE float complexMultiplyReal(float aRe, float aIm, float bRe, float bIm)
+CORE_INLINE float complexMultiplyReal(float aRe, float aIm, float bRe, float bIm)
 {
     return aRe * bRe - aIm * bIm;
 }
 
-INLINE float complexMultiplyImag(float aRe, float aIm, float bRe, float bIm)
+CORE_INLINE float complexMultiplyImag(float aRe, float aIm, float bRe, float bIm)
 {
     return aIm * bRe + aRe * bIm;
 }

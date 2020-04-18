@@ -724,7 +724,7 @@ int usbFxxOpenNormal(UsbContext* ctx, usbDevice** foundList, int maxCount)
         if(device)
         {
             int ret = usbFxxOpen(ctx, (usbDevice*)device);
-            ctx->serialBufferSize = libusb_get_string_descriptor_ascii(ctx->device, ctx->serialId, ctx->serialBuffer, 1024);
+            ctx->serialBufferSize = libusb_get_string_descriptor_ascii((libusb_device_handle*)ctx->device, ctx->serialId, ctx->serialBuffer, 1024);
             return ret;
         }
     }
