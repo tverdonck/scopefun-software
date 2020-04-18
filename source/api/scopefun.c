@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016-2019 David Koöenina
+//    Copyright (C) 2016 - 2020 David Ko≈°enina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2019 David Košenina
+//    Copyright (C) 2016 - 2020 David Košenina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -19,17 +19,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef PLATFORM_WIN
-
    #include <windows.h>
    #include <vector>
    #include <string>
 
-   #define MAX_FILE_SIZE 8*1024*1024
+   #define MAX_FILE_SIZE 4*1024*1024
 
    using namespace std;
-
-   char input[MAX_FILE_SIZE]  = { 0 };
-   char output[MAX_FILE_SIZE] = { 0 };
 
    void addFiles(vector<wstring>& names, wstring dir)
    {
@@ -61,13 +57,23 @@
 
    int UpdateLicense()
    {
+      char*  header = (char*)malloc(MAX_FILE_SIZE);
+      char*  input  = (char*)malloc(MAX_FILE_SIZE);
+      char*  output = (char*)malloc(MAX_FILE_SIZE);
+
+      ZeroMemory(header, MAX_FILE_SIZE);
+      ZeroMemory(input, MAX_FILE_SIZE);
+      ZeroMemory(output, MAX_FILE_SIZE);
+
        printf("begin");
+
        // find files
        vector<wstring> names;
        vector<wstring> dir;
        addFiles(names, L"../source/");
        addFiles(names, L"./data/shader21/");
        addFiles(names, L"./data/shader32/");
+
        // read header
        DWORD bytesRead = 0;
        HANDLE handle     = CreateFileW(L"../source/license/license.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -79,15 +85,18 @@
        }
        else
        {
-           BOOL ret = ReadFile(handle, output, headerSize, &bytesRead, NULL);
+           BOOL ret = ReadFile(handle, header, headerSize, &bytesRead, NULL);
        }
+
        CloseHandle(handle);
        WCHAR currentDir[1024] = { 0 };
        int ret = GetCurrentDirectoryW(1024, (WCHAR*) currentDir);
        wstring workingDir = (WCHAR*)currentDir;
        // write output
+       wstring c   = L".c";
+       wstring h   = L".h";
        wstring cpp = L".cpp";
-       wstring hpp = L".h";
+       wstring hpp = L".hpp";
        wstring vs  = L".ps";
        wstring ps  = L".vs";
        for(int i = 0; i < (int)names.size(); i++)
@@ -95,45 +104,32 @@
            wstring file = names[i];
            size_t  last = file.find_last_of('.');
            wstring fend = file.substr(last, file.length() - last);
-           if(fend == cpp || fend == hpp || fend == vs || fend == ps)
+           if(fend == cpp || fend == hpp || fend == vs || fend == ps || fend==c || fend == h )
            {
+               // safety
+               ZeroMemory(input, MAX_FILE_SIZE);
+               ZeroMemory(output, MAX_FILE_SIZE);
+
                // input read
-               wstring path = workingDir + L"\\" + file;
-               HANDLE handle = CreateFileW(path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+               wstring path     = workingDir + L"\\" + file;
+               HANDLE handle    = CreateFileW(path.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
                DWORD  inputSize = GetFileSize(handle, NULL);
-               if(inputSize + headerSize > MAX_FILE_SIZE)
+               if(inputSize > MAX_FILE_SIZE || inputSize < headerSize)
                {
-                   printf("max file size exceeded");
-                   break;
+                   printf("invalid file size: %ws", path.c_str());
+                   continue;
                }
                BOOL ret = ReadFile(handle, input, inputSize, &bytesRead, NULL);
                CloseHandle(handle);
+
                // find header insert place
-               DWORD insertPos;
-               if(fend == cpp || fend == hpp)
-               {
-                   for(int c = 0; c < (int)inputSize; c++)
-                   {
-                       if(input[c] == '#')
-                       {
-                           insertPos = c;
-                           break;
-                       }
-                   }
-               }
-               else
-               {
-                   string code = (char*)input;
-                   int     len = (int)strlen("////////////////////////////////////////////////////////////////////////////////");
-                   insertPos   = (int)code.find("////////////////////////////////////////////////////////////////////////////////", len);
-                   insertPos  += len;
-               }
-               // copy
-               memcpy(&output[headerSize], &input[insertPos], inputSize - insertPos);
+               memcpy(&output[0],          (void*)header,            headerSize);
+               memcpy(&output[headerSize], &input[headerSize], max( (int)0, (int)( (int)inputSize - (int)headerSize) ) );
+
                // output write
                DWORD written = 0;
                handle = CreateFileW(file.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-               ret = WriteFile(handle, output, headerSize + inputSize - insertPos, &written, NULL);
+               ret = WriteFile(handle, output, inputSize, &written, NULL);
                CloseHandle(handle);
            }
        }

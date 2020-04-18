@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2019 David Košenina
+//    Copyright (C) 2016 - 2020 David Košenina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -32,8 +32,9 @@
 #include "wx/thread.h"
 #include "wx/msgdlg.h"
 #include "wx/filename.h"
-
 #include <wx/stdpaths.h>
+#include <wx/wxprec.h>
+#include <wx/cmdline.h>
 
 #if defined(PLATFORM_WIN) || defined(PLATFORM_MINGW)
     #include "wx/msw/wrapwin.h"
@@ -44,21 +45,39 @@ extern void create();
 extern void setup();
 extern int  UpdateLicense();
 
+
+static const wxCmdLineEntryDesc g_cmdLineDesc[] =
+{
+     { wxCMD_LINE_SWITCH, "h",  "help",   "displays help",  wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_HELP },
+     { wxCMD_LINE_SWITCH, "t",  "test",   "run tests"     , wxCMD_LINE_VAL_STRING },
+     { wxCMD_LINE_SWITCH, "l",  "license","license update", wxCMD_LINE_VAL_STRING },
+     { wxCMD_LINE_NONE }
+};
+
 class OscApp : public wxApp
 {
 public:
+    void OnInitCmdLine(wxCmdLineParser& parser)
+    {
+       parser.SetDesc(g_cmdLineDesc);
+       parser.SetSwitchChars(wxT("-"));
+    }
+    bool OnCmdLineParsed(wxCmdLineParser& parser)
+    {
+       bool updateLicense = parser.Found(wxT("l"));
+       if (updateLicense)
+          UpdateLicense();
+
+       // todo: 
+       // bool runTests = parser.Found(wxT("t"));
+       // if (runTests)
+       //    runTests();
+       return true;
+    }
     bool OnInit()
     {
         try
         {
-            // license update
-            wxArrayString argStr = wxApp::argv.GetArguments();
-            if (argStr.GetCount() > 1)
-            {
-               wxString first = wxApp::argv.GetArguments()[1];
-               if( first.CompareTo(L"LicenseUpdate") == 0 )
-                  UpdateLicense();
-            }
             // init
             if(!wxApp::OnInit())
             {
