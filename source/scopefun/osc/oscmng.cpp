@@ -1224,13 +1224,22 @@ int OsciloscopeManager::update(float dt)
                     }
                 }
                 // zoom
-                double zoom = clamp<double>(double(time) / double(gridCount), 0.0, 1.0);
+                // double zoom = clamp<double>(double(time) / double(gridCount), 0.0, 1.0);
                 // zoom
-                double zoomMax = 1.0;
-                double zoomMin = 1.0 / double(window.horizontal.FrameSize);
-                signalZoom = clamp<float>(zoom, zoomMin, zoomMax);
-                cameraFFT.zoom = zoom;
-                cameraOsc.zoom = zoom;
+                // double zoomMax = 1.0;
+                // double zoomMin = 1.0 / double(window.horizontal.FrameSize);
+                // signalZoom = clamp<float>(zoom, zoomMin, zoomMax);
+                // cameraFFT.zoom = zoom;
+                // cameraOsc.zoom = zoom;
+
+                 double numSamples = sfGetNumSamples(getHw());
+                        numSamples = max<double>(1, numSamples);
+                 double    zoomMin = 10 / numSamples;
+                 double  zoomSpeed = (1.0 / SCOPEFUN_DISPLAY);
+                 signalZoom       -= mWheel* zoomSpeed;
+                 signalZoom        = clamp<float>( signalZoom, zoomMin, 1.0 );
+                 cameraFFT.zoom = signalZoom;
+                 cameraOsc.zoom = signalZoom;
             }
             ////////////////////////////////////////////////////////////////////////////////
             // measure
@@ -1286,11 +1295,7 @@ int OsciloscopeManager::update(float dt)
                     sliderPosition = clamp<float>(sliderPosition, 0.f + box, 1.f - box);
 
                     // min, max
-                    double  dSamples = (double)sfGetNumSamples(&m_hw);
-                    double     dView = (dSamples / (double)SCOPEFUN_DISPLAY) / (double)signalZoom;
-                    double      dMin =  -0.5*dView + 0.5;
-                    double      dMax =   0.5*dView - 0.5;
-                    signalPosition = clamp<float>(-sliderPosition - dMin, dMin, dMax);
+                    signalPosition = -sliderPosition;
                 }
                 // up / down
                 else if(insideSliderArea)
@@ -1311,7 +1316,7 @@ int OsciloscopeManager::update(float dt)
                         Vector4 Move = Vector4(-fRelX, 0, 0, 1);
                         Vector4 MoveFFT = Move * CamMoveSpeed * Vector4(cameraFFT.zoom * moveFactor);
                         Vector4 MoveOsc = Move * CamMoveSpeed * Vector4(cameraOsc.zoom);
-                        signalPosition += fRelX;
+                        signalPosition -= fRelX;
                     }
                 }
             }

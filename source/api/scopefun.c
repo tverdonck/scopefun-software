@@ -956,15 +956,15 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
 
    // zoom
+   numSamples = numSamples > 0 ? numSamples : 1;
    double minZoom = 1.0 / (double)numSamples;
       displayZoom = fClamp(displayZoom, minZoom,1.f); // [0....1]
-   double      dMin = -0.5 / (double)displayZoom;
-   double      dMax =  0.5 / (double)displayZoom;
-      double dRange = 1/displayZoom;
+     // double dRange = 1*displayZoom;
 
    // zoom: min / max
-   double zoomMin         = (double)-displayPos/displayZoom - 0.5*(double)displayZoom; // [min..0..max]
-   double zoomMax         = (double)-displayPos/displayZoom + 0.5*(double)displayZoom; // [min..0..max]
+   double zoomMin         = (double)displayPos - 0.5*(double)displayZoom; // [min..0..max]
+   double zoomMax         = (double)displayPos + 0.5*(double)displayZoom; // [min..0..max]
+   double dRange          = (zoomMax - zoomMin)/displayZoom;
    zoomMin += dRange * 0.5;
    zoomMin /= dRange; // [0..1]
    zoomMax += dRange * 0.5;
@@ -972,9 +972,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    
    // sample: min / max 
    double dNumSamples     = (numSamples - 1);
-   ularge zoomSampleMin   = zoomMin*dNumSamples; // [0..n]
-   ularge zoomSampleMax   = zoomMax*dNumSamples; // [0..n]
-   ularge zoomSampleCnt   = lClamp(zoomSampleMax - zoomSampleMin,0,numSamples); // [0..n]
+   ilarge zoomSampleMin   = zoomMin*dNumSamples; // [0..n]
+   ilarge zoomSampleMax   = zoomMax*dNumSamples; // [0..n]
+   ilarge zoomSampleCnt   = lClamp(zoomSampleMax - zoomSampleMin + 1,0,numSamples); // [0..n]
 
    // samples
    EDisplayFunction function = dfMedium;

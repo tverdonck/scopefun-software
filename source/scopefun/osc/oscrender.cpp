@@ -274,7 +274,7 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         // visibility
         int   renderCount = double(xCount);
         double gridDelta  = 1.0/double(xCount);
-        double signalPos  =  -sx - 0.5/sz;
+        double signalPos  =  sx - 0.5/sz;
         double  viewStart = -0.5;
         double      diffX = (viewStart - signalPos)/sz;
         double          x = -0.5 + SDL_fmodf(diffX, gridDelta);
@@ -593,9 +593,10 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
        // zoom
        double   minZoom = 1.0 / (double)iNumSamples;
                      sz = clamp<double>(sz, minZoom, 1.0);
-       double    dRange = 1/sz;
+      // double    dRange = 1/sz;
        double   zoomMin = -0.5*(double)sz; // [min..0..max]
        double   zoomMax =  0.5*(double)sz; // [min..0..max]
+       double    dRange = (zoomMax - zoomMin)/sz;
        zoomMin += dRange * 0.5;
        zoomMin /= dRange; // [0..1]
        zoomMax += dRange * 0.5;
@@ -607,7 +608,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     
        // calc
        double gridDelta = 1.0 / double(xCount);
-       double signalPos = -sx - 0.5 / sz;
+       double signalPos =  sx - 0.5 / sz;
        double  viewStart = -0.5;
        double      diffX = (viewStart - signalPos) / sz;
        double          x = -0.5 + SDL_fmodf(diffX, gridDelta);
@@ -618,7 +619,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
                    screenX += (double)i * gridDelta; // [-0.5 .. 0 .. 0.5]
            
        // units
-       double unitPos       = (screenX + 0.5) - worldX/sz; // [0..1]
+       double unitPos       = (screenX + 0.5) + worldX/sz; // [0..1]
        double unitMin       = (double)wndMain.horizontal.Capture*(double)zoomSampleMin;
        double unitMax       = (double)wndMain.horizontal.Capture*(double)zoomSampleMax;
        double unitRange     = (unitMax - unitMin);
