@@ -42,6 +42,7 @@
 
 extern void create();
 extern void setup();
+extern int  UpdateLicense();
 
 class OscApp : public wxApp
 {
@@ -50,6 +51,14 @@ public:
     {
         try
         {
+            // license update
+            wxArrayString argStr = wxApp::argv.GetArguments();
+            if (argStr.GetCount() > 1)
+            {
+               wxString first = wxApp::argv.GetArguments()[1];
+               if( first.CompareTo(L"LicenseUpdate") == 0 )
+                  UpdateLicense();
+            }
             // init
             if(!wxApp::OnInit())
             {

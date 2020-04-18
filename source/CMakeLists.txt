@@ -34,7 +34,7 @@ set( FILES_LIB
 
 set( FILES_API "${CMAKE_SOURCE_DIR}/source/api/scopefun.c" )
 
-set( FILES_RES "" )
+set( FILES_TOOL "${CMAKE_SOURCE_DIR}/source/license/license.cpp" )
 
 #--------------------------------------------------------------------------------
 # executable
@@ -49,9 +49,9 @@ if(SCOPEFUN_LINUX)
 	set( SCOPEFUN_EXE_TYPE "" )
 endif()
 if( SCOPEFUN_VISUALSTUDIO)
-	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${HEADERS_SOURCE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_RES} )
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${HEADERS_SOURCE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
 else()
-	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_RES} )
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
 endif()
 	
 #--------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ endif()
 source_group("Core"     FILES ${FILES_CORE})
 source_group("ScopeFun" FILES ${FILES_SCOPEFUN})
 source_group("Lib"      FILES ${FILES_LIB})
-source_group("Res"      FILES ${FILES_RES})
+source_group("Tool"     FILES ${FILES_TOOL})
 source_group("Api"      FILES ${FILES_API})
 source_group("Header"   FILES ${HEADERS_SOURCE})
 
