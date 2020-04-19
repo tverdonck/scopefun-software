@@ -2851,6 +2851,15 @@ void OsciloskopOsciloskop::loadSlot(WndMain& slot)
     pOsciloscope->transferData();
 }
 
+void SetupUI(WndMain& window)
+{
+   wxApp*         pApp = (wxApp*)wxApp::GetInstance();
+   wxWindow* topwindow = pApp->GetTopWindow();
+
+   OsciloskopOsciloskop* pOsc = (OsciloskopOsciloskop*)topwindow;
+   pOsc->setupUI(window);
+}
+
 void OsciloskopOsciloskop::setupUI(WndMain window)
 {
     // speed

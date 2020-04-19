@@ -23,6 +23,7 @@
 
 #define SCOPEFUN_MAX_FRAMES   1000000
 #define SCOPEFUN_MAX_HISTORY  16
+#define SCOPEFUN_MAX_UNDO     256
 
 enum ETimer
 {
@@ -1099,8 +1100,11 @@ public:
 public:
     OsciloscopeGrid grid;
 public:
-    // OsciloscopeMainControl control;
-    SHardware              m_hw;
+    Array<SHardware, SCOPEFUN_MAX_UNDO> m_hardware;
+    int                                 m_count;
+    int                                 m_iData;
+    int                                 m_iUndo;
+    SHardware                           m_hw;
 public:
     int clearRenderTarget;
     int clearThermal;
@@ -1159,8 +1163,12 @@ public:
 public:
    ushort getAttr(uint volt);
    ushort getGain(int channel, uint volt);
+   ushort getVolt(int channel, ushort gain);
 public:
    void transferData();
+   void transferUndo();
+   void transferRedo();
+   void transferUI();
 };
 
 SFContext* getCtx();

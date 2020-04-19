@@ -750,6 +750,10 @@ int ThreadApi::hardwareControlFunction(SHardware* hw)
 ////////////////////////////////////////////////////////////////////////////////
 OsciloscopeManager::OsciloscopeManager()
 {
+    m_hardware.setCount(SCOPEFUN_MAX_UNDO);
+    m_count = 0;
+    m_iData = 0;
+    m_iUndo = 0;
     dtUpdate = 0.0;
     dtRender = 0.0;
     ctx = new OscContext();
@@ -1121,6 +1125,19 @@ int OsciloscopeManager::update(float dt)
     int mRelX = pInput->getMouseRelX();
     int mRelY = pInput->getMouseRelY();
     int mWheel = pInput->getMouseWheel();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // undo
+    ////////////////////////////////////////////////////////////////////////////////
+    if( pInput->isKey(SDLK_u) )
+       transferUndo();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // redo
+    ////////////////////////////////////////////////////////////////////////////////
+    if( pInput->isKey(SDLK_r) )
+       transferRedo();
+
     ////////////////////////////////////////////////////////////////////////////////
     // window size
     ////////////////////////////////////////////////////////////////////////////////
@@ -3256,6 +3273,119 @@ void OsciloscopeManager::clearEts(int value)
 void OsciloscopeManager::transferData()
 {
    thread.hardwareControlFunction(&m_hw);
+   m_hardware[m_iData] = m_hw;
+   m_iData++;
+   m_iData = m_iData % SCOPEFUN_MAX_UNDO;
+   m_iUndo = m_iData;
+   m_count++;
+   m_count = clamp<int>(m_count, 1, SCOPEFUN_MAX_UNDO);
+}
+
+void OsciloscopeManager::transferUndo()
+{
+   if (m_count < SCOPEFUN_MAX_UNDO && m_iUndo == 0) return;
+   else if ( (m_iUndo-1) % SCOPEFUN_MAX_UNDO == m_iData) return;
+   m_iUndo--;
+   m_iUndo = m_iUndo % m_count;
+   m_hw = m_hardware[m_iUndo];
+   thread.hardwareControlFunction(&m_hw);
+   transferUI();
+}
+void OsciloscopeManager::transferRedo()
+{
+   if (m_count < SCOPEFUN_MAX_UNDO && m_iUndo == m_count) return;
+   else if ((m_iUndo +1)%SCOPEFUN_MAX_UNDO == m_iData) return;
+   m_iUndo++;
+   m_iUndo = m_iUndo % m_count;
+   m_hw = m_hardware[m_iUndo];
+   thread.hardwareControlFunction(&m_hw);
+   transferUI();
+}
+
+void SetupUI(WndMain& window);
+
+void OsciloscopeManager::transferUI()
+{
+   Flag16 flags;
+   flags.set(sfGetAnalogSwitch(&m_hw));
+   window.channel01.Ground = flags.is(CHANNEL_A_GROUND);
+   window.channel02.Ground = flags.is(CHANNEL_B_GROUND);
+   window.channel01.AcDc = flags.is(CHANNEL_A_ACDC);
+   window.channel02.AcDc = flags.is(CHANNEL_B_ACDC);
+   window.horizontal.ETS = flags.is(CHANNEL_ETS);
+   // channel A, B
+   window.horizontal.Control  = sfGetControl(&m_hw);
+   window.channel01.Capture   = captureVoltFromEnum( getVolt(0,sfGetYGainA(&m_hw)) );
+   window.channel01.Scale     = sfGetYScaleA(&m_hw);
+   window.channel01.YPosition = sfGetYPositionA(&m_hw) - pOsciloscope->settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 0, window.channel01.Capture);
+   window.channel02.Capture   = captureVoltFromEnum( getVolt(1,sfGetYGainB(&m_hw)) );
+   window.channel02.Scale     = sfGetYScaleB(&m_hw);
+   window.channel02.YPosition = sfGetYPositionB(&m_hw) - pOsciloscope->settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 1, window.channel02.Capture);
+   // trigger
+   window.trigger.Source = sfGetTriggerSource(&m_hw);
+   window.trigger.Mode = sfGetTriggerMode(&m_hw);
+   window.trigger.Slope = sfGetTriggerSlope(&m_hw);
+   window.trigger.Percent = sfGetTriggerPre(&m_hw);
+   window.trigger.His = sfGetTriggerHis(&m_hw);
+   window.trigger.Level = sfGetTriggerLevel(&m_hw);
+   window.trigger.Holdoff = sfGetHoldoff(&m_hw);
+   // time
+   window.horizontal.Capture   = captureTimeFromEnum(sfGetXRange(&m_hw));
+   window.horizontal.FrameSize = sfGetSampleSize(&m_hw);
+   // digital
+   window.trigger.stageStart = sfGetDigitalStart(&m_hw);
+   window.trigger.stageMode = sfGetDigitalMode(&m_hw);
+   window.trigger.stageChannel = sfGetDigitalChannel(&m_hw);
+   // digital: delay, mask, pattern
+   for (int stage = 0; stage < 4; stage++)
+   {
+      window.trigger.delay[stage] = sfGetDigitalDelay(&m_hw,(DigitalStage)stage);
+   }
+   for (int stage = 0; stage < 4; stage++)
+   {
+      for (int bit = 0; bit < 16; bit++)
+      {
+         window.trigger.mask[stage][bit] = sfGetDigitalMask(&m_hw,(DigitalStage)stage, (DigitalBit)bit);
+      }
+   }
+   for (int stage = 0; stage < 4; stage++)
+   {
+      for (int bit = 0; bit < 16; bit++)
+      {
+         window.trigger.pattern[stage][bit] = sfGetDigitalPattern(&m_hw,(DigitalStage)stage, (DigitalBit)bit);
+      }
+   }
+
+   double kDigital = pOsciloscope->settings.getHardware()->digitalVoltageCoeficient;
+
+   // digital: voltage, inputoutput, clock
+   window.digitalSetup.voltage = sfGetDigitalVoltage(&m_hw,kDigital);
+   window.digitalSetup.inputOutput15 = sfGetDigitalInputOutput15(&m_hw);
+   window.digitalSetup.inputOutput7 = sfGetDigitalInputOutput7(&m_hw);
+   window.digitalSetup.divider = sfGetDigitalClockDivide(&m_hw);
+   // digital: output
+   for (int i = 0; i < 16; i++)
+   {
+      window.digital.output[i] = sfGetDigitalOutputBit(&m_hw,i);
+   }
+   // generator A
+   window.hardwareGenerator.type0 = sfGetGeneratorType0(&m_hw);
+   window.hardwareGenerator.onOff0 = sfGetGeneratorOn0(&m_hw);
+   window.hardwareGenerator.sawSlopePositive0 = sfGetGeneratorSlope0(&m_hw);
+   window.hardwareGenerator.voltage0 = sfGetGeneratorVoltage0(&m_hw);
+   window.hardwareGenerator.offset0 = sfGetGeneratorOffset0(&m_hw) - pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture, 0);
+   window.hardwareGenerator.frequency0 = sfGetGeneratorFrequency0(&m_hw,pOsciloscope->settings.getHardware()->generatorFs);
+   window.hardwareGenerator.squareDuty0 = sfGetGeneratorSquareDuty0(&m_hw);
+   // generator B
+   window.hardwareGenerator.type1 = sfGetGeneratorType1(&m_hw);
+   window.hardwareGenerator.onOff1 = sfGetGeneratorOn1(&m_hw);
+   window.hardwareGenerator.sawSlopePositive1 = sfGetGeneratorSlope1(&m_hw);
+   window.hardwareGenerator.voltage1 = sfGetGeneratorVoltage1(&m_hw);
+   window.hardwareGenerator.offset1 = sfGetGeneratorOffset1(&m_hw) - pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture, 1);
+   window.hardwareGenerator.frequency1 = sfGetGeneratorFrequency1(&m_hw,pOsciloscope->settings.getHardware()->generatorFs);
+   window.hardwareGenerator.squareDuty1 = sfGetGeneratorSquareDuty1(&m_hw);
+
+   SetupUI(window);
 }
 
 void OsciloscopeManager::setupControl(WndMain window)
@@ -3351,6 +3481,18 @@ ushort OsciloscopeManager::getGain(int channel, uint volt)
    {
       return settings.getHardware()->callibratedGainValue[ctNormal][channel][volt];
    }
+}
+ushort OsciloscopeManager::getVolt(int channel, ushort gain)
+{
+   float capture = pOsciloscope->window.horizontal.Capture;
+   for (int i = 0; i < vcLast; i++)
+   {
+      if (pOsciloscope->settings.getHardware()->callibratedGainValue[getCallibrationType(capture)][channel][i] == gain)
+      {
+         return i;
+      }
+   }
+   return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

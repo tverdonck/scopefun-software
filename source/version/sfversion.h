@@ -18,6 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
+//////////////////
 
 #define EXE_VERSION_MAJOR       "2"
 #define EXE_VERSION_MINOR       "0"
