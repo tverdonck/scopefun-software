@@ -198,6 +198,11 @@ void OsciloskopHardwareGenerator::m_buttonCustomFileOnButtonClick(wxCommandEvent
 void OsciloskopHardwareGenerator::m_buttonOn0OnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.hardwareGenerator.onOff0 = 1;
+    sfSetGeneratorVoltage0(getHw(), pOsciloscope->window.hardwareGenerator.voltage0);
+    sfSetGeneratorFrequency0(getHw(), pOsciloscope->window.hardwareGenerator.frequency0, pOsciloscope->settings.getHardware()->generatorFs);
+    sfSetGeneratorSquareDuty0(getHw(), pOsciloscope->window.hardwareGenerator.squareDuty0);
+    sfSetGeneratorSlope0(getHw(), pOsciloscope->window.hardwareGenerator.sawSlopePositive0);
+    sfSetGeneratorOffset0(getHw(), pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture, 0) );
     sfSetGeneratorOn0(getHw(), 1);
     pOsciloscope->transferData();
     if(!pOsciloscope->settings.getColors()->windowDefault)
@@ -395,6 +400,11 @@ void OsciloskopHardwareGenerator::m_buttonOn1OnButtonClick(wxCommandEvent& event
 {
     // TODO: Implement m_radioBtnOn1OnRadioButton
     pOsciloscope->window.hardwareGenerator.onOff1 = 1;
+    sfSetGeneratorVoltage1(getHw(), pOsciloscope->window.hardwareGenerator.voltage1);
+    sfSetGeneratorFrequency1(getHw(), pOsciloscope->window.hardwareGenerator.frequency1, pOsciloscope->settings.getHardware()->generatorFs);
+    sfSetGeneratorSquareDuty1(getHw(), pOsciloscope->window.hardwareGenerator.squareDuty1);
+    sfSetGeneratorSlope1(getHw(), pOsciloscope->window.hardwareGenerator.sawSlopePositive1);
+    sfSetGeneratorOffset1(getHw(), pOsciloscope->window.hardwareGenerator.offset1 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture, 1));
     sfSetGeneratorOn1(getHw(), 1);
     pOsciloscope->transferData();
     if(!pOsciloscope->settings.getColors()->windowDefault)
@@ -498,8 +508,12 @@ void OsciloskopHardwareGenerator::m_buttonDefaultOnButtonClick(wxCommandEvent& e
 {
     // TODO: Implement m_buttonDefaultOnButtonClick
     pOsciloscope->window.hardwareGenerator.Default();
-    wxInitDialogEvent e;
+    wxInitDialogEvent e = { 0 };
     HardwareGeneratorOnInitDialog(e);
+
+    wxCommandEvent ce = { 0 };
+    m_buttonOn0OnButtonClick(ce);
+    m_buttonOn1OnButtonClick(ce);
 }
 
 void OsciloskopHardwareGenerator::m_buttonCancelOnButtonClick(wxCommandEvent& event)

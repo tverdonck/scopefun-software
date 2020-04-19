@@ -532,10 +532,11 @@ typedef struct _SDisplayCallback {
 typedef struct
 {
     SCtxApi           api;
-    SCtxSimulate      simulate;
+    SAtomic           simulateOn;
+    SSimulate         simulateData;
     SCtxFrame         frame;
-    EDisplayFunction  function;
-    SDisplayCallback* callback;
+    EDisplayFunction  displayFunction;
+    SDisplayCallback* displayCallback;
     void*             userData;
     byte*             usb;
 } SFContext;

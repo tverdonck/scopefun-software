@@ -271,9 +271,9 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
     ctx->api.major   = 0;
     ctx->api.minor   = 0;
     // callback
-    ctx->callback = 0;
+    ctx->displayCallback = 0;
     // function
-    ctx->function = dfMedium;
+    ctx->displayFunction = dfMedium;
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
@@ -400,7 +400,7 @@ SCOPEFUN_API int sfHardwareIsOpened(SFContext* ctx, int* open)
       *open = usbFxxIsConnected(pUsbCtx);
       result = SCOPEFUN_SUCCESS;
    }
-   if (SDL_AtomicGet((SDL_atomic_t*)&ctx->simulate.on) > 0)
+   if (SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn) > 0)
    {
       *open = 1;
       result = SCOPEFUN_SUCCESS;
@@ -573,7 +573,7 @@ SCOPEFUN_API int sfIsSimulate(SFContext* ctx)
 {
    int simulate = 0;
    apiLock(ctx);
-   simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulate.on);
+   simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn);
    apiUnlock(ctx);
    return simulate;
 }
@@ -581,7 +581,7 @@ SCOPEFUN_API int sfIsSimulate(SFContext* ctx)
 SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim)
 {
    apiLock(ctx);
-   ctx->simulate.data = *sim;
+   ctx->simulateData = *sim;
    apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
@@ -589,7 +589,7 @@ SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim)
 SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on)
 {
    apiLock(ctx);
-   SDL_AtomicSet((SDL_atomic_t*)&ctx->simulate.on, on);
+      SDL_AtomicSet((SDL_atomic_t*)&ctx->simulateOn, on);
    apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
@@ -597,7 +597,7 @@ SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on)
 SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* data)
 {
    apiLock(ctx);
-   *data = ctx->simulate.data;
+      *data = ctx->simulateData;
    apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
@@ -846,10 +846,10 @@ int softwareGenerator(int frameVersion, int frameHeader, int frameData, int fram
 SCOPEFUN_API int sfSimulate(SFContext* ctx, double time)
 {
     apiLock(ctx);
-    int simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulate.on);
+    int simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn);
     if(simulate > 0)
     {
-        softwareGenerator(HARDWARE_VERSION, SCOPEFUN_FRAME_HEADER, SCOPEFUN_FRAME_DATA, SCOPEFUN_FRAME_PACKET, ctx, &ctx->simulate.data, time);
+        softwareGenerator(HARDWARE_VERSION, SCOPEFUN_FRAME_HEADER, SCOPEFUN_FRAME_DATA, SCOPEFUN_FRAME_PACKET, ctx, &ctx->simulateData, time);
     }
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
@@ -858,7 +858,7 @@ SCOPEFUN_API int sfSimulate(SFContext* ctx, double time)
 /*--------------------------------------------------------------------
    Frame
 ---------------------------------------------------------------------*/
-SCOPEFUN_API int sfFrameCapture(SFContext* ctx,int* received,int* frameSize)
+SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize)
 {
    apiLock(ctx);
 
@@ -907,12 +907,12 @@ SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 
 SCOPEFUN_API int sfFrameDisplayFunction(SFContext* ctx, EDisplayFunction fun)
 {
-   ctx->function = fun;
+   ctx->displayFunction = fun;
    return SCOPEFUN_SUCCESS;
 }
 SCOPEFUN_API int sfFrameDisplayCallback(SFContext* ctx, SDisplayCallback* callback,void* userData)
 {
-   ctx->callback = callback;
+   ctx->displayCallback = callback;
    ctx->userData = userData;
    return SCOPEFUN_SUCCESS;
 }
@@ -980,8 +980,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    EDisplayFunction function = dfMedium;
    if (frameSize > 0 && numSamples > 0)
    {
-      if (ctx->callback)
-         ctx->callback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
+      if (ctx->displayCallback)
+         ctx->displayCallback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
 
       byte* dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
       for (ilarge i = 0; i < zoomSampleCnt; i++)
@@ -1012,9 +1012,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
          ishort channel0 = leadBitShift(ch0 & 0x000003FF);
          ishort channel1 = leadBitShift(ch1 & 0x000003FF);
          ushort digital = dig;
-         ushort function = cDisplayFunction(ctx->function, channel0, channel1, digital);
-         if (ctx->callback && ctx->function == dfCustom)
-            ctx->callback->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
+         ushort function = cDisplayFunction(ctx->displayFunction, channel0, channel1, digital);
+         if (ctx->displayCallback && ctx->displayFunction == dfCustom)
+            ctx->displayCallback->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
 
          // floats
          float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
@@ -1047,8 +1047,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             display->analogF.bytes[j] = function;
          }
       }
-      if (ctx->callback)
-         ctx->callback->onDisplay(display, &displayPos, &displayZoom, ctx->userData);
+      if (ctx->displayCallback)
+         ctx->displayCallback->onDisplay(display, &displayPos, &displayZoom, ctx->userData);
    }
    return SCOPEFUN_SUCCESS;
 }
@@ -1103,9 +1103,11 @@ SCOPEFUN_API int sfSetDefault(SHardware* hw)
    hw->sampleSizeH = 0;
    hw->sampleSizeL = SCOPEFUN_DISPLAY;
    sfSetGeneratorType0(hw, GENERATOR_SIN);
+   sfSetGeneratorVoltage0(hw, 1);
    sfSetGeneratorFrequency0(hw, 50.f, 457142.81f);
    sfSetGeneratorType1(hw, GENERATOR_SIN);
    sfSetGeneratorFrequency1(hw, 50.f, 457142.81f);
+   sfSetGeneratorVoltage1(hw, 1);
    return SCOPEFUN_SUCCESS;
 }
 
@@ -1173,17 +1175,9 @@ SCOPEFUN_API int sfSetYPositionB(SHardware* hw, int pos)
 
 SCOPEFUN_API int sfSetXRange(SHardware* hw, ishort range)
 {
-   // 4ns and 2ns is 0
-   if (range == 0)
-   {
-      hw->analogswitch = raiseFlag16(hw->analogswitch, CHANNEL_INTERLEAVE);
-      range = 1;
-   }
-   else
-   {
-      hw->analogswitch = lowerFlag16(hw->analogswitch, CHANNEL_INTERLEAVE);
-   }
-   range--;
+   // 2ns is interleaved
+   if (range == 0) hw->analogswitch = raiseFlag16(hw->analogswitch, CHANNEL_INTERLEAVE);
+   else            hw->analogswitch = lowerFlag16(hw->analogswitch, CHANNEL_INTERLEAVE);
    hw->xRange = range;
    return SCOPEFUN_SUCCESS;
 }
@@ -1360,7 +1354,7 @@ SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
       delta = 65536.0 * (double)freq / (double)fs;
       break;
    };
-   uint gDelta = (uint)delta * 131071.0;
+   uint gDelta = (uint)(delta * 131071.0);
    hw->generatorDeltaH0 = (gDelta & 0xFFFF0000) >> 16;
    hw->generatorDeltaL0 = gDelta & 0x0000FFFF;
    return SCOPEFUN_SUCCESS;
@@ -1452,7 +1446,7 @@ SCOPEFUN_API int  sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs)
       break;
    };
    //
-   uint gDelta = (uint)delta * 131071.0;
+   uint gDelta = (uint)(delta * 131071.0);
    hw->generatorDeltaH1 = (gDelta & 0xFFFF0000) >> 16;
    hw->generatorDeltaL1 = gDelta & 0x0000FFFF;
    return SCOPEFUN_SUCCESS;

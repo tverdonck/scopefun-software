@@ -809,11 +809,11 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // api
     ////////////////////////////////////////////////
-    sfSetDefault(getHw());
     pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE, 0, 1, 0);
     pOsciloscope->thread.function(afInit);
     sim = pOsciloscope->GetServerSim();
     pOsciloscope->transmitSim(sim);
+    sfSetDefault(getHw());
 
     // apply settings
     ////////////////////////////////////////////////
@@ -3330,7 +3330,7 @@ void OsciloscopeManager::transferUI()
    window.trigger.Level = sfGetTriggerLevel(&m_hw);
    window.trigger.Holdoff = sfGetHoldoff(&m_hw);
    // time
-   window.horizontal.Capture   = captureTimeFromEnum(sfGetXRange(&m_hw));
+   window.horizontal.Capture   = captureTimeFromEnum( sfGetXRange(&m_hw) );
    window.horizontal.FrameSize = sfGetSampleSize(&m_hw);
    // digital
    window.trigger.stageStart = sfGetDigitalStart(&m_hw);
@@ -3665,8 +3665,10 @@ int SDLCALL CaptureDataThreadFunction(void* data)
       pTimer->deltaTime(TIMER_HARDWARE);
       
       // fpga
+
+      int isSim  = sfIsSimulate(getCtx());
       int isFpga = pOsciloscope->thread.isFpga();
-      if( !isFpga )
+      if( !isFpga && !isSim )
       {
          SDL_Delay(100);
          continue;
@@ -3674,9 +3676,17 @@ int SDLCALL CaptureDataThreadFunction(void* data)
       else
       {
          // capture
-         int received = 0;
+         int ret       = 0;
+         int received  = 0;
          int frameSize = 0;
-         int ret = sfFrameCapture(getCtx(), &received, &frameSize);
+         if (isSim>0)
+         {
+            ret = sfSimulate(getCtx(), pTimer->getDelta(TIMER_HARDWARE));
+         }
+         else
+         {
+            ret = sfFrameCapture(getCtx(), &received, &frameSize);
+         }
          if (received > SCOPEFUN_FRAME_HEADER)
          {
             ScopeFunCaptureBuffer& captureBuffer = pOsciloscope->m_captureBuffer;
@@ -3822,7 +3832,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
         {
             case SIGNAL_MODE_PLAY:
                 {
-                    playFrameIdx = (playFrameIdx++) % pCaptureBuffer->m_frame.getCount();
+                    playFrameIdx = (playFrameIdx++) % max(1,pCaptureBuffer->m_frame.getCount());
                     DisplayFrame(playFrameIdx, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
                     break;
                 }
