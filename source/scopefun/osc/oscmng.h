@@ -811,7 +811,6 @@ enum EThreadApiFunction
     afEEPROMWrite,
     afEEPROMErase,
     afHardwareConfig,
-    afSimulate,
     afSetSimulateData,
     afSetSimulateOnOff,
     afUploadGenerator,   
@@ -907,7 +906,6 @@ public:
     int  writeCallibrateSettingsToEEPROM(OscHardware* hw);
     int  readCallibrateSettingsFromEEPROM(OscHardware* hw);
     int  eraseEEPROM(OscHardware* hw);
-    int  simulateTime(double time);
     int  hardwareControlFunction(SHardware* hw);
 public:
     // captureThread

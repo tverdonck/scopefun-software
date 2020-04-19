@@ -646,7 +646,7 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfSetSimulateData(SFContext* INPUT, SSimulate* INPUT);
     SCOPEFUN_API int sfSetSimulateOnOff(SFContext* INPUT, int INPUT);
     SCOPEFUN_API int sfGetSimulateData(SFContext* INPUT, SSimulate* INOUT);
-    SCOPEFUN_API int sfSimulate(SFContext* INPUT, double INPUT);
+    SCOPEFUN_API int sfSimulate(SFContext* INPUT, SHardware* INPUT, int* OUTPUT,int* OUTPUT,double INPUT);
 
     /*----------------------------------------
       Set
@@ -840,7 +840,7 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfSetSimulateData(SFContext* ctx, SSimulate* sim);
     SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* sim);
     SCOPEFUN_API int sfSetSimulateOnOff(SFContext* ctx, int on);
-    SCOPEFUN_API int sfSimulate(SFContext* ctx, double time);
+    SCOPEFUN_API int sfSimulate(SFContext* ctx, SHardware* hw, int* received,int* frameSize,double time);
 
     /*----------------------------------------
        Set

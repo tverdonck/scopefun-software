@@ -282,14 +282,6 @@ void ThreadApi::update()
                     SDL_AtomicSet(&fpga, iopened);
                 }
                 break;
-            case afSimulate:
-                {
-                    SDL_AtomicLock(&lock);
-                    double time = simulateTimeValue;
-                    SDL_AtomicUnlock(&lock);
-                    iret += sfSimulate(getCtx(), time);
-                }
-                break;
             case afSetSimulateData:
                 SDL_AtomicLock(&lock);
                 iret += sfSetSimulateData(getCtx(), &simulateData);
@@ -718,15 +710,6 @@ int ThreadApi::eraseEEPROM(OscHardware* hw)
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Erase EEPROM failed.", 0);
     }
     return iret;
-}
-
-int ThreadApi::simulateTime(double time)
-{
-    SDL_AtomicLock(&lock);
-    simulateTimeValue = time;
-    SDL_AtomicUnlock(&lock);
-    function(afSimulate);
-    return 0;
 }
 
 int ThreadApi::captureFrameData(SFrameData* buffer, int toReceive, int* transfered, int type)
@@ -3659,13 +3642,14 @@ void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, O
 int SDLCALL CaptureDataThreadFunction(void* data)
 {
    pTimer->init(TIMER_HARDWARE);
+   double time = 0.0;
    while(pOsciloscope->captureDataThreadActive)
    {
       // timer
       pTimer->deltaTime(TIMER_HARDWARE);
+      time += pTimer->getDelta(TIMER_HARDWARE);
       
       // fpga
-
       int isSim  = sfIsSimulate(getCtx());
       int isFpga = pOsciloscope->thread.isFpga();
       if( !isFpga && !isSim )
@@ -3681,7 +3665,7 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          int frameSize = 0;
          if (isSim>0)
          {
-            ret = sfSimulate(getCtx(), pTimer->getDelta(TIMER_HARDWARE));
+            ret = sfSimulate(getCtx(), getHw(), &received, &frameSize, time );
          }
          else
          {
