@@ -744,8 +744,8 @@ OsciloscopeManager::OsciloscopeManager()
     serverActive = false;
     scrollThread = false;
     frameTime = 0.f;
-    clearRenderTarget = 1;
-    clearThermal = 0;
+    SDL_AtomicSet(&clearRenderTarget,1);
+    SDL_AtomicSet(&clearThermal, 0);
     analogWindowSize = 1.f;
     sliderMode  = 0;
     openglFocus = 1;
@@ -1158,9 +1158,9 @@ int OsciloscopeManager::update(float dt)
             ////////////////////////////////////////////////////////////////////////////////
             if(mWheel)
             {
-                clearThermal      = 1;
-                clearRenderTarget = 1;
-                clearEts(1);
+                SDL_AtomicSet(&clearThermal,1);
+                SDL_AtomicSet(&clearRenderTarget,1);
+                //clearEts(1);
                 // capture
                 double captureTime = window.horizontal.Capture;
                 // precision
@@ -1277,8 +1277,8 @@ int OsciloscopeManager::update(float dt)
             window.measure.data.pickFFT1.onUpdate(mouseFFT, mouseY, 0.f, window.horizontal.Frame);
             if(pInput->isMouse(SDL_BUTTON_LEFT))
             {
-                clearRenderTarget = 1;
-                clearEts(1);
+                SDL_AtomicSet(&clearRenderTarget, 1);
+                //clearEts(1);
                 float zoomOffset = (1.f / signalZoom) / 2.f;
                 OsciloscopeSlider slider;
                 slider.Rectangle(sliderRectW, sliderRectH, sliderRectX, sliderRectY, pRender->width, pRender->height, analogWindowSize);
@@ -1288,7 +1288,8 @@ int OsciloscopeManager::update(float dt)
                 // slider
                 if((sliderMode == 1 || insideSliderBox))
                 {
-                    clearThermal = 1;
+                    SDL_AtomicSet(&clearThermal,1);
+                    
                     sliderMode = 1;
                     float box = 0.5*(sliderMax-sliderMin) / float(pRender->width-2);
                     sliderPosition += (float(mRelX) / float(pRender->width));
@@ -1311,7 +1312,7 @@ int OsciloscopeManager::update(float dt)
                 {
                     if(fRelX != 0.0f)
                     {
-                        clearThermal = 1;
+                        SDL_AtomicSet(&clearThermal,1);
                         float moveFactor = (cameraFFT.ortho.width / cameraOsc.ortho.width);
                         Vector4 Move = Vector4(-fRelX, 0, 0, 1);
                         Vector4 MoveFFT = Move * CamMoveSpeed * Vector4(cameraFFT.zoom * moveFactor);
@@ -1329,8 +1330,9 @@ int OsciloscopeManager::update(float dt)
             ////////////////////////////////////////////////////////////////////////////////
             if(pInput->isMouse(SDL_BUTTON_RIGHT))
             {
-                clearThermal = 1;
-                clearRenderTarget = 1;
+                SDL_AtomicSet(&clearThermal,1);
+                SDL_AtomicSet(&clearRenderTarget,1);
+
                 clearEts(1);
                 cameraFFT.ortho.View.Pos() = Vector4(0, 0, -1.f, 1.f);
                 cameraFFT.zoom = 1.f;
@@ -1417,8 +1419,8 @@ int OsciloscopeManager::update(float dt)
             {
                 cameraFFT.theta =  TO_RAD * float(mRelX) / float(sizeX) * dt * 10000.f;
                 cameraFFT.phi   = -TO_RAD * float(mRelY) / float(sizeY) * dt * 10000.f;
-                clearThermal = 1;
-                clearEts(1);
+                SDL_AtomicSet(&clearThermal,1);
+                
             }
             else
             {
@@ -1435,8 +1437,8 @@ int OsciloscopeManager::update(float dt)
         // wheel
         if(mWheel && mouseInView)
         {
-            clearThermal = 1;
-            clearRenderTarget = 1;
+            SDL_AtomicSet(&clearThermal,1);
+            SDL_AtomicSet(&clearRenderTarget,1);
             clearEts(1);
             cameraFFT.zoom -= 0.01f * dt * mWheel;
             cameraFFT.zoom = clamp<float>(cameraFFT.zoom, 0.05f, 2.f);
@@ -1507,8 +1509,7 @@ int OsciloscopeManager::update(float dt)
             {
                 cameraOsc.theta =  TO_RAD * float(mRelX) / float(sizeX) * dt * 10000.f;
                 cameraOsc.phi   = -TO_RAD * float(mRelY) / float(sizeY) * dt * 10000.f;
-                clearThermal = 1;
-                clearEts(1);
+                SDL_AtomicSet(&clearThermal, 1);
             }
             else
             {
@@ -1527,8 +1528,7 @@ int OsciloscopeManager::update(float dt)
         if(mWheel && mouseInView)
         {
             zoomZoom = 0.1f * dt * float(mWheel);
-            clearThermal = 1;
-            clearEts(1);
+            SDL_AtomicSet(&clearThermal,1);
             cameraOsc.zoom -= 0.01f * dt * mWheel;
             cameraOsc.zoom = clamp<float>(cameraOsc.zoom, 0.05f, 2.f);
         }
@@ -1961,9 +1961,9 @@ void OsciloscopeManager::renderMain(uint threadId)
     ////////////////////////////////////////////////////////////////////////////////
     // clear
     ////////////////////////////////////////////////////////////////////////////////
-    if((!window.thermal.enabled || clearThermal) && grGetMode() == OPENGL_MODE_32)
+    if((!window.thermal.enabled || SDL_AtomicGet(&clearThermal)) && grGetMode() == OPENGL_MODE_32)
     {
-        clearThermal = 0;
+        SDL_AtomicSet(&clearThermal,0);
         grSetRenderTarget(depth, aShadow[0]);
         grClearRenderTarget(aShadow[0], 0x00000000);
         grSetRenderTarget(depth, aShadow[1]);
@@ -2257,7 +2257,7 @@ bool OsciloscopeManager::onApplicationIdle()
         renderData.colorTrigger      = settings.getColors()->renderTrigger;
         renderData.colorDigital      = settings.getColors()->renderDigital;
         renderData.etsAttr           = 0;
-        renderData.flags.bit(rfClearRenderTarget, clearRenderTarget);
+        renderData.flags.bit(rfClearRenderTarget, SDL_AtomicGet(&clearRenderTarget) );
         SDL_AtomicUnlock(&renderLock);
         // lock
         uint renderId = 0;
@@ -3248,9 +3248,7 @@ void OsciloscopeManager::simOnOff(int value)
 
 void OsciloscopeManager::clearEts(int value)
 {
-    SDL_AtomicSet(&etsClear, value);
-    if(window.horizontal.ETS)
-    { clearRenderTarget = 0; }
+
 }
 
 void OsciloscopeManager::transferData()
@@ -3582,7 +3580,7 @@ void OsciloscopeETS::onPause(OsciloscopeFrame& frame, WndMain& window)
 //   OsciloscopeFFT& fft,
 //   OsciloscopeThreadData& captureData, uint delay)
 
-void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, OsciloscopeThreadData& captureData, uint delay)
+void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,  OsciloscopeThreadData& captureData, uint delay)
 {
     pTimer->deltaTime(TIMER_CAPTURE);
 
@@ -3595,7 +3593,7 @@ void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, O
     //// history
     //pOsciloscope->tmpHistory.write(captureFrame);
     //// ets
-    //ets.onCapture(captureFrame, render);
+    // ets.onCapture(captureFrame, render);
 
     // send to renderer
     uint captureId = 0;
@@ -3623,6 +3621,10 @@ void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, O
             // clear
             renderer.clearFast();
             fft.clear();
+
+            // clear render target?
+           /* if( captureData.m_frame.attr & daETS )
+               captureData.m_render.flags.bit( rfClearRenderTarget, captureData.m_frame.attr & daETS  );*/
 
             // render
             pOsciloscope->renderThread(captureId, captureData, renderer, fft);

@@ -1104,8 +1104,8 @@ public:
     int                                 m_iUndo;
     SHardware                           m_hw;
 public:
-    int clearRenderTarget;
-    int clearThermal;
+    SDL_atomic_t clearRenderTarget;
+    SDL_atomic_t clearThermal;
 public:
     OsciloscopeManager();
 public:

@@ -510,7 +510,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             pOsciloscope->window.horizontal.Frame = 0;
             pOsciloscope->signalMode = SIGNAL_MODE_PAUSE;
             pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
-            pOsciloscope->clearRenderTarget = 1;
+            SDL_AtomicSet(&pOsciloscope->clearRenderTarget,1);
             setupUI(pOsciloscope->window);
             // progress bar
             pOsciloscope->window.progress.uiActive = 1;
@@ -1050,11 +1050,11 @@ void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
     pOsciloscope->window.horizontal.ETS = m_checkBoxETS->GetValue() ? 1 : 0;
     sfSetEts(getHw(),pOsciloscope->window.horizontal.ETS);
     pOsciloscope->transferData();
-    pOsciloscope->clearEts(pOsciloscope->window.horizontal.ETS);
-    pOsciloscope->clearRenderTarget = !pOsciloscope->window.horizontal.ETS;
-    pOsciloscope->sim = pOsciloscope->GetServerSim();
-    pOsciloscope->thread.setSimulateData(&pOsciloscope->sim);
-    pOsciloscope->thread.function(afSetSimulateData);
+   // pOsciloscope->clearEts(pOsciloscope->window.horizontal.ETS);
+   // pOsciloscope->clearRenderTarget = !pOsciloscope->window.horizontal.ETS;
+  //  pOsciloscope->sim = pOsciloscope->GetServerSim();
+   // pOsciloscope->thread.setSimulateData(&pOsciloscope->sim);
+   // pOsciloscope->thread.function(afSetSimulateData);
 }
 
 void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox(wxCommandEvent& event)
@@ -1107,7 +1107,7 @@ void OsciloskopOsciloskop::m_comboBoxTimeControlOnCombobox(wxCommandEvent& event
 void OsciloskopOsciloskop::m_textCtrlTimePositionOnTextEnter(wxCommandEvent& event)
 {
     // TODO: Implement m_textCtrlTimePositionOnTextEnter
-    pOsciloscope->clearThermal = 1;
+    SDL_AtomicSet(&pOsciloscope->clearThermal,1);
     pOsciloscope->window.horizontal.Position = pFormat->stringToFloat(m_textCtrlTimePosition->GetValue().ToAscii().data());
     m_sliderTimePosition->SetValue(pOsciloscope->window.horizontal.Position);
 }
@@ -1115,7 +1115,7 @@ void OsciloskopOsciloskop::m_textCtrlTimePositionOnTextEnter(wxCommandEvent& eve
 void OsciloskopOsciloskop::m_sliderTimePositionOnScroll(wxScrollEvent& event)
 {
     // TODO: Implement m_sliderTimePositionOnScroll
-    pOsciloscope->clearThermal = 1;
+    SDL_AtomicSet(&pOsciloscope->clearThermal,1);
     pOsciloscope->window.horizontal.Position = m_sliderTimePosition->GetValue();
     m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Position)));
 }
@@ -1152,7 +1152,8 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter(wxCommandEvent& event)
     // TODO: Implement m_textCtrlTimeFrameOnTextEnter
     pOsciloscope->window.horizontal.Frame = pFormat->stringToFloat(m_textCtrlTimeFrame->GetValue().ToAscii().data());
     m_sliderTimeFrame->SetValue(pOsciloscope->window.horizontal.Frame);
-    pOsciloscope->clearRenderTarget = 1;
+    SDL_AtomicSet(&pOsciloscope->clearRenderTarget, 1);
+
 }
 
 void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
@@ -1161,7 +1162,7 @@ void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
     pOsciloscope->window.horizontal.Frame = m_sliderTimeFrame->GetValue();
     m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Frame)));
     pOsciloscope->window.horizontal.Frame = pOsciloscope->window.horizontal.Frame;
-    pOsciloscope->clearRenderTarget = 1;
+    SDL_AtomicSet(&pOsciloscope->clearRenderTarget,1);
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeFFTSizeOnTextEnter(wxCommandEvent& event)

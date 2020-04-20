@@ -166,7 +166,7 @@ enum DigitalBit
 
 ----------------------------------------*/
 #define SCOPEFUN_MAX_VOLTAGE                (+511)
-#define SCOPEFUN_MIN_VOLTAGE                (-511)
+#define SCOPEFUN_MIN_VOLTAGE                (-512)
 #define SCOPEFUN_DISPLAY                    10000
 #define SCOPEFUN_FIRMWARE_FX3               16384
 #define SCOPEFUN_FIRMWARE_FPGA              (4*1024*1024)
@@ -466,9 +466,13 @@ typedef struct
     SGUID        guid;
 } SUsb;
 
+
 /*----------------------------------------
    SDisplay
 ----------------------------------------*/
+enum EDisplayAttribute {
+   daETS = BIT(0),
+};
 SCOPEFUN_ARRAY(SArrayDisplayAnalog0, float,  SCOPEFUN_DISPLAY);
 SCOPEFUN_ARRAY(SArrayDisplayAnalog1, float,  SCOPEFUN_DISPLAY);
 SCOPEFUN_ARRAY(SArrayDisplayAnalogF, float,  SCOPEFUN_DISPLAY);
@@ -482,6 +486,7 @@ typedef struct
     uint                 samples;
     uint                 capture;
     uint                 ets;
+    uint                 attr;
 } SDisplay;
 
 /*----------------------------------------
