@@ -18,10 +18,9 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-//////////////////
 
 #define EXE_VERSION_MAJOR       "2"
 #define EXE_VERSION_MINOR       "0"
 #define EXE_VERSION_MICRO       "0"
-#define EXE_VERSION_TIMESTAMP   "16:56 18-04-2020"
-#define EXE_VERSION_TYPE        "release"
+#define EXE_VERSION_TIMESTAMP   "22:45 20-04-2020"
+#define EXE_VERSION_TYPE        "debug"

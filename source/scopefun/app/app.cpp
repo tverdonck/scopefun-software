@@ -44,14 +44,17 @@
 extern void create();
 extern void setup();
 extern int  UpdateLicense();
+extern int  runLuaScript(const char* script);
 
 
 static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 {
      { wxCMD_LINE_SWITCH, "h",  "help",   "displays help",  wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_HELP },
      { wxCMD_LINE_SWITCH, "t",  "test",   "run tests"     , wxCMD_LINE_VAL_STRING },
+     { wxCMD_LINE_SWITCH, "s",  "script", "run lua script", wxCMD_LINE_VAL_STRING },
+     { wxCMD_LINE_PARAM,  "",   "",       "",               wxCMD_LINE_VAL_STRING },
      { wxCMD_LINE_SWITCH, "l",  "license","license update", wxCMD_LINE_VAL_STRING },
-     { wxCMD_LINE_NONE }
+     { wxCMD_LINE_NONE },
 };
 
 class OscApp : public wxApp
@@ -67,6 +70,10 @@ public:
        bool updateLicense = parser.Found(wxT("l"));
        if (updateLicense)
           UpdateLicense();
+
+       bool luaS = parser.Found(wxT("s"));
+       if (luaS)
+            runLuaScript( parser.GetParam(0).data().AsChar() );
 
        // todo: 
        // bool runTests = parser.Found(wxT("t"));

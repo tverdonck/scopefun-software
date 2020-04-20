@@ -1,5 +1,28 @@
 cmake_minimum_required(VERSION 3.15)
 
+# lua_c
+file(
+    GLOB_RECURSE LUA_C
+    LIST_DIRECTORIES false
+    "lua-5.3.5/src/*.c"
+)
+
+# lua_h
+file(
+    GLOB_RECURSE LUA_H
+    LIST_DIRECTORIES false
+    "lua-5.3.5/src/*.h*"
+)
+
+# lua
+if( SCOPEFUN_VISUALSTUDIO)
+	add_library(lua STATIC ${LUA_H} ${LUA_C} )
+	source_group("Header" FILES ${LUA_H} )
+else()
+	add_library(lua STATIC ${LUA_C} )
+endif()
+set_target_properties(lua PROPERTIES FOLDER Lua )
+
 # libusb
 if( SCOPEFUN_VISUALSTUDIO )
 	include_external_msproject(libUsb ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/msvc/libusb_static_2017.vcxproj )

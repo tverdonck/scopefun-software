@@ -1868,6 +1868,17 @@ double OsciloscopeFunction::evaluate(double ch0, double ch1)
     return stack.last();
 }
 
+#include<lua.hpp>
+
+int runLuaScript(const char* script)
+{
+   lua_State *L = luaL_newstate();
+   luaL_openlibs(L);
+   luaL_dofile(L, script);
+   printf(" Done! \n");
+   lua_close(L);
+   return 0;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 //

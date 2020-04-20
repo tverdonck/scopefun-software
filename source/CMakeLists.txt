@@ -56,7 +56,7 @@ endif()
 	
 #--------------------------------------------------------------------------------
 # groups
-#--------------------------------------------------------------------------------				
+#--------------------------------------------------------------------------------			
 source_group("Core"     FILES ${FILES_CORE})
 source_group("ScopeFun" FILES ${FILES_SCOPEFUN})
 source_group("Lib"      FILES ${FILES_LIB})
@@ -98,6 +98,7 @@ set(SCOPEFUN_INCLUDE_SDL2      "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.12/include"    
 set(SCOPEFUN_INCLUDE_CJSON     "${CMAKE_SOURCE_DIR}/lib/cJSON"                    CACHE PATH "include folder for cjson" FORCE)
 set(SCOPEFUN_INCLUDE_KISSFFT   "${CMAKE_SOURCE_DIR}/lib/kissfft130"               CACHE PATH "include folder for kissfft" FORCE)
 set(SCOPEFUN_INCLUDE_GLEW      "${CMAKE_SOURCE_DIR}/lib/glew-1.13.0/include"      CACHE PATH "include folder for glew" FORCE)
+set(SCOPEFUN_INCLUDE_LUA       "${CMAKE_SOURCE_DIR}/lib/lua-5.3.5/src"            CACHE PATH "include folder for lua" FORCE)
 
 target_include_directories(
     ScopeFun
@@ -111,6 +112,7 @@ target_include_directories(
 	${SCOPEFUN_INCLUDE_CJSON} 
 	${SCOPEFUN_INCLUDE_KISSFFT} 
 	${SCOPEFUN_INCLUDE_GLEW}
+	${SCOPEFUN_INCLUDE_LUA} 
 )
 
 #--------------------------------------------------------------------------------
@@ -132,6 +134,7 @@ if( SCOPEFUN_VISUALSTUDIO )
 else()
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
+set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/${SCOPEFUN_BUILD_TYPE}/lua.lib )
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
 list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext )
 if(SCOPEFUN_WINDOWS)
@@ -141,6 +144,7 @@ if(SCOPEFUN_WINDOWS)
 			${SCOPEFUN_LIB_USB} 
 			${SCOPEFUN_LIB_SDL2} 
 			${SCOPEFUN_LIB_WX} 
+			${SCOPEFUN_LIB_LUA} 
 			# system
 			opengl32.lib 
 			winmm.lib 
@@ -167,6 +171,7 @@ if(SCOPEFUN_WINDOWS)
 		${SCOPEFUN_LIB_USB}
 		${SCOPEFUN_LIB_SDL2}
 		${SCOPEFUN_LIB_WX}
+		${SCOPEFUN_LIB_LUA} 
 		# system
 		opengl32.a 
 		winmm.a 
@@ -195,6 +200,7 @@ if(SCOPEFUN_MACOSX)
 		${SCOPEFUN_LIB_USB}
 		${SCOPEFUN_LIB_SDL2}
 		${SCOPEFUN_LIB_WX}
+		${SCOPEFUN_LIB_LUA} 
 		# frameworks
 		"-framework CoreFoundation" 
 		"-framework AudioUnit" 
@@ -217,6 +223,7 @@ if(SCOPEFUN_LINUX)
 		${SCOPEFUN_LIB_USB} 
 		${SCOPEFUN_LIB_SDL2} 
 		${SCOPEFUN_LIB_WX} 
+		${SCOPEFUN_LIB_LUA} 
 		# system
 		dl 
 		X11 
