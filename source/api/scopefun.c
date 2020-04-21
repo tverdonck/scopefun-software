@@ -271,9 +271,9 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
     ctx->api.major   = 0;
     ctx->api.minor   = 0;
     // callback
-    ctx->displayCallback = 0;
+    ctx->pCallback = 0;
     // function
-    ctx->displayFunction = dfMedium;
+    ctx->functionType = dfMedium;
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
@@ -912,19 +912,19 @@ SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
    return SCOPEFUN_SUCCESS;
 }
 
-SCOPEFUN_API int sfFrameDisplayFunction(SFContext* ctx, EDisplayFunction fun)
+SCOPEFUN_API int sfFrameDisplayFunction(SFContext* ctx, EFunctionType fun)
 {
-   ctx->displayFunction = fun;
+   ctx->functionType = fun;
    return SCOPEFUN_SUCCESS;
 }
-SCOPEFUN_API int sfFrameDisplayCallback(SFContext* ctx, SDisplayCallback* callback,void* userData)
+SCOPEFUN_API int sfFrameDisplayCallback(SFContext* ctx, SCallback* callback,void* userData)
 {
-   ctx->displayCallback = callback;
-   ctx->userData = userData;
+   ctx->pCallback = callback;
+   ctx->pUserData = userData;
    return SCOPEFUN_SUCCESS;
 }
 
-SCOPEFUN_API int cDisplayFunction(EDisplayFunction function, ushort channel0, ushort channel1, ushort digital)
+SCOPEFUN_API int cDisplayFunction(EFunctionType function, ushort channel0, ushort channel1, ushort digital)
 {
    switch (function) {
    case dfMax:
@@ -988,11 +988,11 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    ilarge zoomSampleCnt   = lClamp(zoomSampleMax-zoomSampleMin,0,numSamples); // [0..n]
 
    // samples
-   EDisplayFunction function = dfMedium;
+   EFunctionType function = dfMedium;
    if (frameSize > 0 && numSamples > 0)
    {
-      if (ctx->displayCallback)
-         ctx->displayCallback->onFrame(buffer, len, &displayPos, &displayZoom, ctx->userData);
+      if (ctx->pCallback)
+         ((SCallback*)ctx->pCallback)->onFrame(buffer, len, &displayPos, &displayZoom, ctx->pUserData);
 
       byte*          dataStart = &buffer->data.bytes[SCOPEFUN_FRAME_HEADER];
     
@@ -1048,13 +1048,13 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                digMin = iMin(dig, digMin);
                digMax = iMax(dig, digMax);
 
-               funMin = cDisplayFunction(ctx->displayFunction, ch0Min, ch1Min, digMin);
-               if (ctx->displayCallback && ctx->displayFunction == dfCustom)
-                  ctx->displayCallback->onSample(sample, &ch0Min, &ch1Min, &digMin, &displayPos, &displayZoom, ctx->userData);
+               funMin = cDisplayFunction(ctx->functionType, ch0Min, ch1Min, digMin);
+               if (ctx->pCallback && ctx->functionType == dfScript)
+                  ((SCallback*)ctx->pCallback)->onSample(sample, &ch0Min, &ch1Min, &digMin, &displayPos, &displayZoom, ctx->pUserData);
 
-               funMax = cDisplayFunction(ctx->displayFunction, ch0Max, ch1Max, digMax);
-               if (ctx->displayCallback && ctx->displayFunction == dfCustom)
-                  ctx->displayCallback->onSample(sample, &ch0Max, &ch1Max, &digMax, &displayPos, &displayZoom, ctx->userData);
+               funMax = cDisplayFunction(ctx->functionType, ch0Max, ch1Max, digMax);
+               if (ctx->pCallback && ctx->functionType == dfScript)
+                  ((SCallback*)ctx->pCallback)->onSample(sample, &ch0Max, &ch1Max, &digMax, &displayPos, &displayZoom, ctx->pUserData);
             }
 
             // floats Min
@@ -1080,8 +1080,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             display->analogF.bytes[i * 2 + 0] = funMin;
             display->analogF.bytes[i * 2 + 1] = funMax;
          }
-         if (ctx->displayCallback)
-            ctx->displayCallback->onDisplay(display, &displayPos, &displayZoom, ctx->userData);
+         if (ctx->pCallback)
+            ((SCallback*)ctx->pCallback)->onDisplay(display, &displayPos, &displayZoom, ctx->pUserData);
       }
       else
       {
@@ -1113,9 +1113,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             ishort channel0 = leadBitShift(ch0 & 0x000003FF);
             ishort channel1 = leadBitShift(ch1 & 0x000003FF);
             ushort digital = dig;
-            ushort function = cDisplayFunction(ctx->displayFunction, channel0, channel1, digital);
-            if (ctx->displayCallback && ctx->displayFunction == dfCustom)
-               ctx->displayCallback->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->userData);
+            ushort function = cDisplayFunction(ctx->functionType, channel0, channel1, digital);
+            if (ctx->pCallback && ctx->functionType == dfScript)
+               ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->pUserData);
 
             // floats
             float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
@@ -1148,8 +1148,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                display->analogF.bytes[k] = function;
             }
          }
-         if (ctx->displayCallback)
-            ctx->displayCallback->onDisplay(display, &displayPos, &displayZoom, ctx->userData);
+         if (ctx->pCallback)
+            ((SCallback*)ctx->pCallback)->onDisplay(display, &displayPos, &displayZoom, ctx->pUserData);
       }
    }
    return SCOPEFUN_SUCCESS;

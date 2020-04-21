@@ -1868,17 +1868,265 @@ double OsciloscopeFunction::evaluate(double ch0, double ch1)
     return stack.last();
 }
 
-#include<lua.hpp>
+extern "C"
+{
+   #include "api/scopefunapi_wrap_lua.c"
+}
 
+int LuaOnFrame(lua_State *L, SFrameData* data, int len, float* pos, float* zoom, void* user)
+{
+   // push function
+   lua_getglobal(L, "onFrame");
+
+   // push parameters
+   SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SFrameData, 0);
+   lua_pushinteger(L, len);
+   SWIG_Lua_NewPointerObj(L, pos, SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, zoom, SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, user, SWIGTYPE_p_void, 0);
+
+   // execute
+   lua_call(L, 1, 1);
+
+   // result
+   int result = (int)lua_tointeger(L, -1);
+
+   // cleanup
+   lua_pop(L, 1);
+
+   return 0;
+}
+
+int LuaOnSample(lua_State *L, int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user)
+{
+   // push function
+   lua_getglobal(L, "onSample");
+
+   // push parameters
+   lua_pushinteger(L, sample);
+   SWIG_Lua_NewPointerObj(L, ch1,  SWIGTYPE_p_short, 0);
+   SWIG_Lua_NewPointerObj(L, ch1,  SWIGTYPE_p_short, 0);
+   SWIG_Lua_NewPointerObj(L, dig,  SWIGTYPE_p_unsigned_short, 0);
+   SWIG_Lua_NewPointerObj(L, pos,  SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, zoom, SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, user, SWIGTYPE_p_void,  0);
+
+   // execute
+   lua_call(L, 1, 1);
+
+   // result
+   int result = (int)lua_tointeger(L, -1);
+
+   // cleanup
+   lua_pop(L, 1);
+
+   return 0;
+}
+
+int LuaOnDisplay(lua_State *L, SDisplay* data, float* pos, float* zoom, void* user)
+{
+   // push function
+   lua_getglobal(L, "onDisplay");
+
+   // push parameters
+   SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SDisplay, 0);
+   SWIG_Lua_NewPointerObj(L, pos, SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, zoom, SWIGTYPE_p_float, 0);
+   SWIG_Lua_NewPointerObj(L, user, SWIGTYPE_p_void, 0);
+
+   // execute
+   lua_call(L, 1, 1);
+
+   // result
+   int result = (int)lua_tointeger(L, -1);
+
+   // cleanup
+   lua_pop(L, 1);
+
+   return 0;
+}
+
+int LuaOnConfigure(lua_State *L, SHardware* hw)
+{
+   // push function
+   lua_getglobal(L, "onConfigure");
+
+   // push parameters
+   SWIG_Lua_NewPointerObj(L, hw, SWIGTYPE_p_SHardware, 0);
+
+   // execute
+   lua_call(L, 1, 1);
+
+   // result
+   int result = (int)lua_tointeger(L, -1);
+
+   // cleanup
+   lua_pop(L, 1);
+
+   return 0;
+}
+
+int LuaOnInit(lua_State *L, SFContext* ctx)
+{
+   // push function
+   lua_getglobal(L, "onInit");
+
+   // push parameters
+   SWIG_Lua_NewPointerObj(L, ctx, SWIGTYPE_p_SFContext, 0);
+
+   // execute
+   lua_call(L, 1, 1);
+
+   // result
+   int result = (int)lua_tointeger(L, -1);
+
+   // cleanup
+   lua_pop(L, 1);
+
+   return result;
+}
+
+int OsciloscopeScript::OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user)
+{
+   return LuaOnFrame(m_luaState, data, len, pos, zoom, user);
+}
+int OsciloscopeScript::OnSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user)
+{
+   return LuaOnSample(m_luaState, sample, ch0, ch1, dig, pos, zoom, user);
+}
+int OsciloscopeScript::OnDisplay(SDisplay* data, float* pos, float* zoom, void* user)
+{
+   return LuaOnDisplay(m_luaState, data, pos, zoom, user);
+}
+int OsciloscopeScript::OnConfigure(SHardware* hw)
+{
+   return LuaOnConfigure(m_luaState, hw);
+}
+int OsciloscopeScript::OnInit(SFContext* ctx)
+{
+   return LuaOnInit(m_luaState, ctx);
+}
+
+int OsciloscopeScript::Load(String fileName)
+{
+   m_fileName = fileName;
+   return 0;
+}
+
+int OsciloscopeScript::Run()
+{
+   if (m_luaState == 0)
+   {
+      m_luaState = luaL_newstate();
+      luaopen_base(m_luaState);
+      luaL_openlibs(m_luaState);
+      luaopen_scopefunapi(m_luaState);
+      int ret = luaL_dofile(m_luaState, m_fileName.asChar());
+      if (ret != LUA_OK) 
+         m_error = lua_tostring(m_luaState, -1);
+      else 
+         return LuaOnInit(m_luaState, getCtx());
+   }
+   return 1;
+}
+int OsciloscopeScript::Reload()
+{
+   Stop();
+   Run();
+   return 0;
+}
+
+int OsciloscopeScript::Stop()
+{
+   if(m_luaState>0)
+      lua_close(m_luaState);
+   m_luaState = 0;
+   return 0;
+}
+
+String OsciloscopeScript::GetError()
+{
+   return m_error;
+}
+
+int OsciloscopeCallback::onFrame(SFrameData* data, int len, float* pos, float* zoom, void* user)
+{
+   for (int i = 0; i < m_script.getCount(); i++)
+      m_script[i].OnFrame(data, len, pos, zoom, user);
+   return 0;
+}
+
+int OsciloscopeCallback::onSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user)
+{
+   for (int i = 0; i < m_script.getCount(); i++)
+      m_script[i].OnSample(sample,ch0,ch1,dig,pos,zoom,user);
+   return 0;
+}
+int OsciloscopeCallback::onDisplay(SDisplay* data, float* pos, float* zoom, void* user)
+{
+   for (int i = 0; i < m_script.getCount(); i++)
+      m_script[i].OnDisplay(data,pos,zoom,user);
+   return 0;
+}
+int OsciloscopeCallback::onConfigure(SHardware* hw)
+{
+   for (int i = 0; i < m_script.getCount(); i++)
+      m_script[i].OnConfigure(hw);
+   return 0;
+}
+int OsciloscopeCallback::onInit(SFContext* ctx)
+{
+   for (int i = 0; i < m_script.getCount(); i++)
+      m_script[i].OnInit(ctx);
+   return 0;
+}
+
+int OsciloscopeCallback::Add(String fileName)
+{
+   if (m_script.getCount() < SCOPEFUN_MAX_SCRIPT)
+   {
+      OsciloscopeScript script;
+      script.Load(fileName);
+      m_script.pushBack(script);
+      return 0;
+   }
+   return 1;
+}
+
+int OsciloscopeCallback::Clear()
+{
+   m_script.clear();
+   return 0;
+}
+
+int OsciloscopeCallback::Count()
+{
+   return m_script.getCount();
+}
+
+OsciloscopeScript* OsciloscopeCallback::Get(int i)
+{
+   if (m_script.getCount() > i)
+      return &m_script[i];
+   return 0;
+}
+
+
+/*
 int runLuaScript(const char* script)
 {
    lua_State *L = luaL_newstate();
+   luaopen_base(L);
    luaL_openlibs(L);
-   luaL_dofile(L, script);
+   luaopen_scopefunapi(L);
+   luaL_dofile(L,script);
+   LuaOnInit(L,getCtx());
    printf(" Done! \n");
    lua_close(L);
    return 0;
 }
+*/
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //

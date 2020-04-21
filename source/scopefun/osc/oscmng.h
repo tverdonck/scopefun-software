@@ -948,6 +948,9 @@ public:
 class OsciloscopeManager : public Manager, public RenderCallback
 {
 public:
+   String              m_runScript;
+   OsciloscopeCallback m_callback;
+public:
     uint     renderId;
 public:
     double  dtUpdate;

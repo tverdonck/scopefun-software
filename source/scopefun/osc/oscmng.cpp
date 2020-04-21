@@ -798,6 +798,15 @@ int OsciloscopeManager::start()
     pOsciloscope->transmitSim(sim);
     sfSetDefault(getHw());
 
+    ////////////////////////////////////////////////
+    // script
+    ////////////////////////////////////////////////
+    if (m_runScript.getLength() > 0)
+    {
+       m_callback.Add(m_runScript);
+       m_callback.Get(0)->Run();
+    }
+
     // apply settings
     ////////////////////////////////////////////////
     sfSetYRangeScaleA(getHw(), getAttr(vc2Volt), getGain(0,vc2Volt) );

@@ -52,7 +52,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
      { wxCMD_LINE_SWITCH, "h",  "help",   "displays help",  wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_HELP },
      { wxCMD_LINE_SWITCH, "t",  "test",   "run tests"     , wxCMD_LINE_VAL_STRING },
      { wxCMD_LINE_SWITCH, "s",  "script", "run lua script", wxCMD_LINE_VAL_STRING },
-     { wxCMD_LINE_PARAM,  "",   "",       "",               wxCMD_LINE_VAL_STRING },
+     { wxCMD_LINE_PARAM,  "",   "",       "",               wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
      { wxCMD_LINE_SWITCH, "l",  "license","license update", wxCMD_LINE_VAL_STRING },
      { wxCMD_LINE_NONE },
 };
@@ -73,7 +73,7 @@ public:
 
        bool luaS = parser.Found(wxT("s"));
        if (luaS)
-            runLuaScript( parser.GetParam(0).data().AsChar() );
+          pOsciloscope->m_runScript = parser.GetParam(0).data().AsChar();
 
        // todo: 
        // bool runTests = parser.Found(wxT("t"));
@@ -85,6 +85,7 @@ public:
     {
         try
         {
+          
             // init
             if(!wxApp::OnInit())
             {

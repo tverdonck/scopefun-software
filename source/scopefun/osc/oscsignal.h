@@ -185,6 +185,46 @@ public:
     double         evaluate(double ch0, double ch1);
 };
 
+#define SCOPEFUN_MAX_SCRIPT 8
+
+class OsciloscopeScript
+{
+private:
+   String     m_error;
+   String     m_fileName;
+   lua_State* m_luaState;
+public:
+   int OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
+   int OnSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user);
+   int OnDisplay(SDisplay* data, float* pos, float* zoom, void* user);
+   int OnConfigure(SHardware* hw);
+   int OnInit(SFContext* ctx);
+public:
+   int    Load(String fileName);
+   int    Reload();
+   int    Run();
+   int    Stop();
+public:
+   String GetError();
+};
+
+class OsciloscopeCallback : public SCallback
+{
+private:
+   Array<OsciloscopeScript,SCOPEFUN_MAX_SCRIPT> m_script;
+public:
+   int onFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
+   int onSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user);
+   int onDisplay(SDisplay* data, float* pos, float* zoom, void* user);
+   int onConfigure(SHardware* hw);
+   int onInit(SFContext* ctx);
+public:
+   OsciloscopeScript*  Get(int i);
+   int                 Add(String fileName);
+   int                 Clear();
+   int                 Count();
+};
+
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 //
