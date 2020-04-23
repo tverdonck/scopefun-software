@@ -49,6 +49,7 @@ private:
     OsciloscopeScript*        m_script;
 public:
    void m_button56OnButtonClick(wxCommandEvent& event);
+   void OnDestroy(wxActivateEvent& event);
 public:
     void Clear();
     void AppendText(const char* str);

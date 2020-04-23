@@ -19,6 +19,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopDebug.h"
+#include "OsciloskopOsciloskop.h"
 
 OsciloskopDebug::OsciloskopDebug( wxWindow* parent )
 :
@@ -38,11 +39,25 @@ Debug( parent )
     m_textCtrl41->SetForegroundColour(white);
     SetBackgroundColour(black);
     SetForegroundColour(white);
+    Connect(wxEVT_CLOSE_WINDOW, wxActivateEventHandler(OsciloskopDebug::OnDestroy));
 }
 
 void OsciloskopDebug::ThermalOnActivate( wxActivateEvent& event )
 {
     // TODO: Implement ThermalOnActivate
+}
+
+
+void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
+{
+   // TODO: Implement ThermalOnActivate
+   if (m_script)
+   {
+      m_script->Stop();
+      m_script->ClrPrint();
+   }
+   ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false);
+   Hide();
 }
 
 void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
@@ -71,8 +86,6 @@ OsciloskopDebug::~OsciloskopDebug()
 {
   // delete m_scrollHelp;
    delete m_Redirect;
-   if(m_script)
-      m_script->Stop();
 }
 
 void OsciloskopDebug::AppendText(const char* str)

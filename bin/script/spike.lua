@@ -14,6 +14,11 @@ end
 
 -- onSample
 function onSample(sample,ch0,ch1,fun,dig,pos,zoom,user)
+	spike = 1000
+	if sample%spike == 0 then 
+		ch0  = 500
+		ch1  = 400
+	end
     return sample,ch0,ch1,fun,dig,pos,zoom,user
 end
 

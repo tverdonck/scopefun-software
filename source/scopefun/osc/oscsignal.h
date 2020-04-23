@@ -197,8 +197,9 @@ private:
    lua_State*   m_luaState;
    char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
    void*        m_userData;
+   int          m_arrayIdx;
 public:
-   OsciloscopeScript();
+   OsciloscopeScript(int index);
 public:
    int OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
    int OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
@@ -215,6 +216,7 @@ public:
 public:
    void    SetUserData(void* user);
    void*   GetUserData();
+   int     GetArrayIdx();
 public:
    const char* GetPrint();
    void        ClrPrint();

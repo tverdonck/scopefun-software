@@ -340,6 +340,11 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
     // TODO: Implement onActivate
     if(once)
     {
+       GetMenuBar()->Remove(6);
+       wxMenu* menu = new wxMenu();
+       GetMenuBar()->Insert(6,menu,"Script");
+
+       
        String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
        scriptPath += "/Script/*.*";
        wxString f = wxFindFirstFile(scriptPath.asChar());
@@ -355,8 +360,7 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
           fileName.remove(0, pos + 1);
 
           wxMenu* menu = GetMenuBar()->GetMenu(6);
-          wxMenuItem* menuItem = new wxMenuItem(menu, wxID_ANY, fileName.asChar(), wxEmptyString, wxITEM_NORMAL);
-          menu->Append(menuItem);
+          wxMenuItem* menuItem = menu->AppendCheckItem(wxID_ANY, fileName.asChar(), wxEmptyString);
           Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OsciloskopOsciloskop::MenuScriptSelection), (wxObject*)pOsciloscope->m_callback.Get(i), this);
        
           f = wxFindNextFile();
@@ -387,46 +391,7 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             m_menu7->Remove(m_menuItemTests);
         }
         once = 0;
-        ////////////////////////////////////////////////////////////////////////////////////////
-        // state
-        ////////////////////////////////////////////////////////////////////////////////////////
-        wxString stringSlot0;
-        wxString stringSlot1;
-        wxString stringSlot2;
-        wxString stringSlot3;
-        wxFileName fn = GetOscDataFolder();
-        wxString string = fn.GetPath().append(_("/data/state/main.state"));
-        SDL_RWops* ctx = SDL_RWFromFile(string.ToAscii().data(), "rb");
-        if(ctx)
-        {
-            SDL_RWread(ctx, &pOsciloscope->windowName[0], 1, 4 * sizeof(String));
-            SDL_RWclose(ctx);
-            stringSlot0 = pOsciloscope->windowName[0].asChar();
-            stringSlot1 = pOsciloscope->windowName[1].asChar();
-            stringSlot2 = pOsciloscope->windowName[2].asChar();
-            stringSlot3 = pOsciloscope->windowName[3].asChar();
-        }
-        else
-        {
-            stringSlot0 = fn.GetPath().append("/data/state/slot1.slot");
-            stringSlot1 = fn.GetPath().append("/data/state/slot2.slot");
-            stringSlot2 = fn.GetPath().append("/data/state/slot3.slot");
-            stringSlot3 = fn.GetPath().append("/data/state/slot4.slot");
-        }
-        pOsciloscope->windowName[0] = stringSlot0.ToAscii().data();
-        pOsciloscope->windowName[1] = stringSlot1.ToAscii().data();
-        pOsciloscope->windowName[2] = stringSlot2.ToAscii().data();
-        pOsciloscope->windowName[3] = stringSlot3.ToAscii().data();
-        //// load slot
-        LoadSlot(0, stringSlot0.ToAscii().data());
-        LoadSlot(1, stringSlot1.ToAscii().data());
-        LoadSlot(2, stringSlot2.ToAscii().data());
-        LoadSlot(3, stringSlot3.ToAscii().data());
-        // load window
-        loadWindow(3);
-        loadWindow(2);
-        loadWindow(1);
-        loadWindow(0);
+        
         ////////////////////////////////////////////////////////////////////////////////////////
         // license
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -977,11 +942,26 @@ void OsciloskopOsciloskop::m_menuItemEnglishOnMenuSelection(wxCommandEvent& even
 void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
 {
    OsciloscopeScript* script = (OsciloscopeScript*)(event.m_callbackUserData);
-   OsciloskopDebug*   pDebug = new OsciloskopDebug(this);
-   pDebug->AssignScript(script);
-   script->SetUserData(pDebug);
-   pDebug->Show();
-   script->Run();
+   if ( !GetMenuBar()->GetMenu(6)->GetMenuItems()[script->GetArrayIdx()]->IsChecked() )
+   {
+      script->Stop();
+   }
+   else
+   {
+      script->Run();
+   }
+
+   if (script->GetUserData() == 0)
+   {
+      OsciloskopDebug*   pDebug = new OsciloskopDebug(this);
+      script->SetUserData(pDebug);
+      pDebug->AssignScript(script);
+      pDebug->Show();
+   }
+   else
+   {
+      ((OsciloskopDebug*)script->GetUserData())->Show();
+   }
 }
 
 void OsciloskopOsciloskop::MenuLanguageSelection(wxCommandEvent& event)
