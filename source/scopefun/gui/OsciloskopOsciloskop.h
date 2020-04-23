@@ -237,6 +237,7 @@ protected:
     void m_buttonClearOnButtonClick(wxCommandEvent& event);
 public:
     void MenuLanguageSelection(wxCommandEvent& event);
+    void MenuScriptSelection(wxCommandEvent& event);
 public:
     /** Constructor */
     OsciloskopOsciloskop(wxWindow* parent);

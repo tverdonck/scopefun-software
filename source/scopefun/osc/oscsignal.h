@@ -186,39 +186,49 @@ public:
 };
 
 #define SCOPEFUN_MAX_SCRIPT 8
+#define SCOPEFUN_LUA_BUFFER 1024*1024
+#define SCOPEFUN_LUA_ERROR  2048
 
 class OsciloscopeScript
 {
 private:
-   String     m_error;
-   String     m_fileName;
-   lua_State* m_luaState;
+   SDL_SpinLock m_spinLock;
+   String       m_fileName;
+   lua_State*   m_luaState;
+   char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
+   void*        m_userData;
+public:
+   OsciloscopeScript();
 public:
    int OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
-   int OnSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user);
+   int OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
    int OnDisplay(SDisplay* data, float* pos, float* zoom, void* user);
    int OnConfigure(SHardware* hw);
    int OnInit(SFContext* ctx);
+public:
+   int LuaPrint(const char* str);
 public:
    int    Load(String fileName);
    int    Reload();
    int    Run();
    int    Stop();
 public:
-   String GetError();
+   void    SetUserData(void* user);
+   void*   GetUserData();
+public:
+   const char* GetPrint();
+   void        ClrPrint();
 };
 
-class OsciloscopeCallback : public SCallback
+class OsciloscopeCallback
 {
 private:
-   Array<OsciloscopeScript,SCOPEFUN_MAX_SCRIPT> m_script;
+   SCallback                                     m_callback;
+   Array<OsciloscopeScript*,SCOPEFUN_MAX_SCRIPT> m_script;
 public:
-   int onFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
-   int onSample(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user);
-   int onDisplay(SDisplay* data, float* pos, float* zoom, void* user);
-   int onConfigure(SHardware* hw);
-   int onInit(SFContext* ctx);
+   OsciloscopeCallback();
 public:
+   SCallback*          Ptr();
    OsciloscopeScript*  Get(int i);
    int                 Add(String fileName);
    int                 Clear();

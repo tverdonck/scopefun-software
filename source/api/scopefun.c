@@ -419,6 +419,9 @@ SCOPEFUN_API int sfHardwareConfig(SFContext* ctx, SHardware* hw)
       int transfered = 0;
       int ret = usbFxxTransferDataOut(pUsbCtx, 2, (char*)hw, sizeof(SHardware), swap, ctx->api.timeout, &transfered);
       result = apiResult(ret);
+
+      if (ctx->pCallback)
+         ((SCallback*)ctx->pCallback)->onConfigure(hw);
    }
    apiUnlock(ctx);
    return result;
@@ -1018,7 +1021,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                ushort  ch1 = 0;
                ushort  dig = 0;
 
-               ularge index = (double)(i*zoomSampleCnt) / (double)intervalCount;
+               ularge index  = i*lPointsPerInterval + j;
                ularge sample = lClamp(zoomSampleMin + index, 0, numSamples - 1);
 
                offset = sample * 4;
@@ -1039,6 +1042,10 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                ishort ich0 = leadBitShift(ch0 & 0x000003FF);
                ishort ich1 = leadBitShift(ch1 & 0x000003FF);
 
+               ishort fun = cDisplayFunction(ctx->functionType, ch0, ch1, dig);
+               if (ctx->pCallback)
+                  ((SCallback*)ctx->pCallback)->onSample(sample, &ich0, &ich1, &fun, &dig, &displayPos, &displayZoom, ctx->pUserData);
+
                ch0Min = iMin(ich0, ch0Min);
                ch0Max = iMax(ich0, ch0Max);
 
@@ -1049,12 +1056,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                digMax = iMax(dig, digMax);
 
                funMin = cDisplayFunction(ctx->functionType, ch0Min, ch1Min, digMin);
-               if (ctx->pCallback && ctx->functionType == dfScript)
-                  ((SCallback*)ctx->pCallback)->onSample(sample, &ch0Min, &ch1Min, &digMin, &displayPos, &displayZoom, ctx->pUserData);
-
                funMax = cDisplayFunction(ctx->functionType, ch0Max, ch1Max, digMax);
-               if (ctx->pCallback && ctx->functionType == dfScript)
-                  ((SCallback*)ctx->pCallback)->onSample(sample, &ch0Max, &ch1Max, &digMax, &displayPos, &displayZoom, ctx->pUserData);
             }
 
             // floats Min
@@ -1114,8 +1116,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             ishort channel1 = leadBitShift(ch1 & 0x000003FF);
             ushort digital = dig;
             ushort function = cDisplayFunction(ctx->functionType, channel0, channel1, digital);
-            if (ctx->pCallback && ctx->functionType == dfScript)
-               ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &digital, &displayPos, &displayZoom, ctx->pUserData);
+            if (ctx->pCallback)
+               ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &function, &digital, &displayPos, &displayZoom, ctx->pUserData);
 
             // floats
             float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);

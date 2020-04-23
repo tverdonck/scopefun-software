@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2020 David KoÅ¡enina
+//    Copyright (C) 2016 - 2020 David Košenina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -3304,31 +3304,36 @@ Info::~Info()
     m_buttonOk->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Info::m_buttonOkOnButtonClick), NULL, this);
 }
 
-Debug::Debug(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxDialog(parent, id, title, pos, size, style)
+Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-    this->SetSizeHints(wxSize(-1, -1), wxDefaultSize);
-    wxBoxSizer* bSizer55;
-    bSizer55 = new wxBoxSizer(wxVERTICAL);
-    m_panel24 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-    wxBoxSizer* bSizer155;
-    bSizer155 = new wxBoxSizer(wxHORIZONTAL);
-    m_textCtrl41 = new wxTextCtrl(m_panel24, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxTE_DONTWRAP | wxTE_MULTILINE);
-    bSizer155->Add(m_textCtrl41, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxEXPAND, 5);
-    m_panel24->SetSizer(bSizer155);
-    m_panel24->Layout();
-    bSizer155->Fit(m_panel24);
-    bSizer55->Add(m_panel24, 1, wxEXPAND | wxALL, 5);
-    this->SetSizer(bSizer55);
-    this->Layout();
-    this->Centre(wxBOTH);
-    // Connect Events
-    this->Connect(wxEVT_ACTIVATE, wxActivateEventHandler(Debug::ThermalOnActivate));
+	this->SetSizeHints( wxSize( -1,-1 ), wxDefaultSize );
+
+	wxBoxSizer* bSizer55;
+	bSizer55 = new wxBoxSizer( wxVERTICAL );
+
+	m_textCtrl41 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_DONTWRAP|wxTE_MULTILINE );
+	bSizer55->Add( m_textCtrl41, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+
+	m_button56 = new wxButton( this, wxID_ANY, _("Reload"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer55->Add( m_button56, 0, wxALL, 5 );
+
+
+	this->SetSizer( bSizer55 );
+	this->Layout();
+
+	this->Centre( wxBOTH );
+
+	// Connect Events
+	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( Debug::ThermalOnActivate ) );
+	m_button56->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button56OnButtonClick ), NULL, this );
 }
 
 Debug::~Debug()
 {
-    // Disconnect Events
-    this->Disconnect(wxEVT_ACTIVATE, wxActivateEventHandler(Debug::ThermalOnActivate));
+	// Disconnect Events
+	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( Debug::ThermalOnActivate ) );
+	m_button56->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button56OnButtonClick ), NULL, this );
+
 }
 
 Storage::Storage(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxDialog(parent, id, title, pos, size, style)

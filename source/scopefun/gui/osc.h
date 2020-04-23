@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2020 David Ko≈°enina
+//    Copyright (C) 2016 - 2020 David Koöenina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -1004,20 +1004,21 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 class Debug : public wxDialog
 {
-private:
+	private:
 
-protected:
-    wxPanel* m_panel24;
+	protected:
+		wxButton* m_button56;
 
-    // Virtual event handlers, overide them in your derived class
-    virtual void ThermalOnActivate(wxActivateEvent& event) { event.Skip(); }
+		// Virtual event handlers, overide them in your derived class
+		virtual void ThermalOnActivate( wxActivateEvent& event ) { event.Skip(); }
+		virtual void m_button56OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 
-public:
-    wxTextCtrl* m_textCtrl41;
+	public:
+		wxTextCtrl* m_textCtrl41;
 
-    Debug(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(750, 750), long style = wxDEFAULT_DIALOG_STYLE);
-    ~Debug();
+		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 750,750 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~Debug();
 
 };
 

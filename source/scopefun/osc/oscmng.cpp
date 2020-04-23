@@ -806,6 +806,7 @@ int OsciloscopeManager::start()
        m_callback.Add(m_runScript);
        m_callback.Get(0)->Run();
     }
+    sfFrameDisplayCallback(getCtx(), m_callback.Ptr(), this);
 
     // apply settings
     ////////////////////////////////////////////////

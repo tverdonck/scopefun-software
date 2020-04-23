@@ -490,7 +490,7 @@ typedef struct
 
 typedef struct _SCallback {
    int (*onFrame)(SFrameData* data, int len, float* pos, float* zoom, void* user);
-   int (*onSample)(int sample, ishort* ch0, ishort* ch1, ushort* dig, float* pos, float* zoom, void* user);
+   int (*onSample)(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
    int (*onDisplay)(SDisplay* data, float* pos, float* zoom, void* user);
    int (*onConfigure)(SHardware* hw);
    int (*onInit)(SFContext* ctx);

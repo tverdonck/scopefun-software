@@ -1,11 +1,24 @@
+print_stdout = print
+
+print = function(...)
+   local arg = { ... }
+   for i,v in ipairs(arg) do
+      LuaPrint(v)
+   end
+end
+
 -- onFrame
 function onFrame(data,length,pos,zoom,user)
 	return 0
 end
 
 -- onSample
-function onSample(sample,ch0,ch1,dig,pos,zoom,user)
-	return 0
+function onSample(sample,ch0,ch1,fun,dig,pos,zoom,user)
+	if sample%10000 == 0 then 
+		ch0  = 500
+		ch1  = 400
+	end
+    return sample,ch0,ch1,fun,dig,pos,zoom,user
 end
 
 -- onDisplay

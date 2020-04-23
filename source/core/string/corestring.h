@@ -49,6 +49,7 @@ public:
     int            pos(const String& substr, int start = 0) const;
     int            posReverse(const String& substr, int end = 0) const;
     void           insert(int pos, const String& str);
+    void           add(const String& str);
     void           remove(int pos, int count);
 public:
     void toUpperCase();
@@ -67,7 +68,8 @@ public:
     const char& operator[](int idx) const;
     char&       operator[](int idx);
 public:
-    String& operator = (const String& str);
+    void    operator += (const String& str);
+    String& operator  = (const String& str);
     int     operator == (const String& str) const;
     int     operator != (const String& str) const;
     int     operator < (const String& str) const;

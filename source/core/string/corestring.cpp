@@ -119,6 +119,12 @@ int String::posReverse(const String& substr, int end) const
     }
     return -1;
 }
+
+void String::add(const String& str)
+{
+   insert(getLength(), str);
+}
+
 void String::insert(int pos, const String& str)
 {
     if(pos < 0 || pos + str.getLength() > MAX_STRING - 1)
@@ -255,6 +261,11 @@ const char& String::operator[](int idx) const
 char& String::operator[](int idx)
 {
     return index(idx);
+}
+
+void String::operator += (const String& str)
+{
+   return add(str);
 }
 String& String::operator = (const String& str)
 {

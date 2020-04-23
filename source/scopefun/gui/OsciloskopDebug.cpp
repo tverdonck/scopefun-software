@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2020 David KoÅ¡enina
+//    Copyright (C) 2016 - 2020 David Košenina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -20,19 +20,43 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopDebug.h"
 
-OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
-    :
-    Debug(parent)
+OsciloskopDebug::OsciloskopDebug( wxWindow* parent )
+:
+Debug( parent )
 {
+    m_script = 0;
     m_Redirect = new wxStreamToTextRedirector(m_textCtrl41);
     wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     m_textCtrl41->SetFont(font);
+    SetSize(500, 500);
+   // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
+   // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
+   // SetScrollHelper(m_scrollHelp);
+    wxColour black((unsigned long)0);
+    wxColour white(0xffffffff);
+    m_textCtrl41->SetBackgroundColour(black);
+    m_textCtrl41->SetForegroundColour(white);
+    SetBackgroundColour(black);
+    SetForegroundColour(white);
 }
 
-void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
+void OsciloskopDebug::ThermalOnActivate( wxActivateEvent& event )
 {
     // TODO: Implement ThermalOnActivate
 }
+
+void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
+{
+   if(m_script)
+      m_script->Reload();
+   event.Skip();
+}
+
+void OsciloskopDebug::SetText(std::string str)
+{
+    m_textCtrl41->SetValue(str.c_str());
+}
+
 void OsciloskopDebug::Clear()
 {
     #if defined(PLATFORM_MINGW)
@@ -42,11 +66,16 @@ void OsciloskopDebug::Clear()
     #endif
     m_textCtrl41->Clear();
 }
+
+OsciloskopDebug::~OsciloskopDebug()
+{
+  // delete m_scrollHelp;
+   delete m_Redirect;
+   if(m_script)
+      m_script->Stop();
+}
+
 void OsciloskopDebug::AppendText(const char* str)
 {
     std::cout << str;
-}
-void OsciloskopDebug::SetText(std::string str)
-{
-    m_textCtrl41->SetValue(str.c_str());
 }

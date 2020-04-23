@@ -59,6 +59,7 @@ static const wxCmdLineEntryDesc g_cmdLineDesc[] =
 
 class OscApp : public wxApp
 {
+   String m_luaScript;
 public:
     void OnInitCmdLine(wxCmdLineParser& parser)
     {
@@ -73,7 +74,7 @@ public:
 
        bool luaS = parser.Found(wxT("s"));
        if (luaS)
-          pOsciloscope->m_runScript = parser.GetParam(0).data().AsChar();
+          m_luaScript = parser.GetParam(0).data().AsChar();
 
        // todo: 
        // bool runTests = parser.Found(wxT("t"));
@@ -100,8 +101,11 @@ public:
             pFormat->setCurrentWorkingExe(wxStandardPaths::Get().GetExecutablePath().char_str().data());
             void setup();
             setup();
+            // script
+            pOsciloscope->m_runScript = m_luaScript;
             pManager->start();
             #endif
+
             // used by wxConfig
             SetAppName("Oscilloscope");
             // load localization
