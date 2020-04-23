@@ -30,11 +30,13 @@ Debug( parent )
     wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     m_textCtrl41->SetFont(font);
     SetSize(500, 500);
+    SetTitle("Script");
+    SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX);
    // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
    // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
    // SetScrollHelper(m_scrollHelp);
-    wxColour black((unsigned long)0);
-    wxColour white(0xffffffff);
+    wxColour black((unsigned long)RGB(64, 64, 64));
+    wxColour white( RGB(255, 255, 255) );
     m_textCtrl41->SetBackgroundColour(black);
     m_textCtrl41->SetForegroundColour(white);
     SetBackgroundColour(black);

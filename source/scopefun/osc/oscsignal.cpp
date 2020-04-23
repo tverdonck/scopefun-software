@@ -2020,6 +2020,7 @@ OsciloscopeScript::OsciloscopeScript(int index)
 {
    m_arrayIdx = index;
    m_spinLock = 0;
+   m_drawLock = 0;
    m_userData = 0;
    m_luaState = 0;
    SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
@@ -2068,6 +2069,12 @@ int OsciloscopeScript::OnInit(SFContext* ctx)
 
 int OsciloscopeScript::LuaPrint(const char* str)
 {
+   SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER);
+   return 0;
+}
+
+int OsciloscopeScript::CppPrint(const char* str)
+{
    SDL_AtomicLock(&m_spinLock);
       SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER);
    SDL_AtomicUnlock(&m_spinLock);
@@ -2105,8 +2112,8 @@ int OsciloscopeScript::Run()
    SDL_AtomicUnlock(&m_spinLock);
    if(ret != LUA_OK)
    {
-      LuaPrint(error);
-      LuaPrint("\n");
+      CppPrint(error);
+      CppPrint("\n");
    }
    return ret;
 }

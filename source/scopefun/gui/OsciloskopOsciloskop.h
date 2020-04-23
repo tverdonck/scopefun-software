@@ -241,6 +241,7 @@ public:
 public:
     /** Constructor */
     OsciloskopOsciloskop(wxWindow* parent);
+    ~OsciloskopOsciloskop();
     //// end generated class members
 
 public:

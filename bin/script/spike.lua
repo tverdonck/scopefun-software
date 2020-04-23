@@ -18,6 +18,7 @@ function onSample(sample,ch0,ch1,fun,dig,pos,zoom,user)
 	if sample%spike == 0 then 
 		ch0  = 500
 		ch1  = 400
+		print(string.format('%d\n',sample) )
 	end
     return sample,ch0,ch1,fun,dig,pos,zoom,user
 end

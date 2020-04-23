@@ -329,6 +329,11 @@ OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent
     timer = 0.0;
 }
 
+OsciloskopOsciloskop::~OsciloskopOsciloskop()
+{
+   m_dynamicEvents->clear();
+}
+
 
 void OsciloskopOsciloskop::OnTimer(wxTimerEvent& event)
 {

@@ -30931,7 +30931,7 @@
             <property name="name">Debug</property>
             <property name="pos"></property>
             <property name="size">750,750</property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Debug</property>
             <property name="tooltip"></property>
