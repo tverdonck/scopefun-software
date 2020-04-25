@@ -20,6 +20,11 @@ function onSample(sample,ch0,ch1,fun,dig,pos,zoom,user)
 		ch1  = 400
 		print(string.format('%d\n',sample) )
 	end
+	if sample == 0 | sample == 10000 then 
+		ch0  = 500
+		ch1  = 400
+		print(string.format('%d\n',sample) )
+	end
     return sample,ch0,ch1,fun,dig,pos,zoom,user
 end
 

@@ -649,31 +649,38 @@ uint captureVoltFromValue(float value)
 ////////////////////////////////////////////////////////////////////////////////
 void ToolText::Time(char* buffer, int size, double value)
 {
-    double absvalue = fabsf(value);
-    if(absvalue >= 1.0)
-    {
-        pFormat->formatString(buffer, size, "%.3f s", value);
-    }
-    else if(absvalue >= DOUBLE_MILI)
-    {
-        pFormat->formatString(buffer, size, "%.3f ms", value * DOUBLE_KILO);
-    }
-    else if(absvalue >= DOUBLE_MICRO)
-    {
-        pFormat->formatString(buffer, size, "%.3f us", value * DOUBLE_MEGA);
-    }
-    else if(absvalue >= DOUBLE_NANO)
-    {
-        pFormat->formatString(buffer, size, "%.3f ns", value * DOUBLE_GIGA);
-    }
-    else if(absvalue >= DOUBLE_PIKO)
-    {
-        pFormat->formatString(buffer, size, "%.3f ps", value * DOUBLE_TERA);
-    }
-    else
-    {
-        pFormat->formatString(buffer, size, " 0.0 s");
-    }
+    // unit
+    double secs = value;
+    double mili = value / DOUBLE_MILI;
+    double micr = value / DOUBLE_MICRO;
+    double nano = value / DOUBLE_NANO;
+    double piko = value / DOUBLE_PIKO;
+
+    // format
+    if(SDL_fabs(secs)>=1.0)      pFormat->formatString(buffer, size, "%.3f s",  secs);
+    else if(SDL_fabs(mili)>=1.0) pFormat->formatString(buffer, size, "%.3f ms", mili);
+    else if(SDL_fabs(micr)>=1.0) pFormat->formatString(buffer, size, "%.3f us", micr);
+    else if(SDL_fabs(nano)>=1.0) pFormat->formatString(buffer, size, "%.3f ns", nano);
+    else if(SDL_fabs(piko)>=1.0) pFormat->formatString(buffer, size, "%.3f ps", piko);
+    else pFormat->formatString(buffer, size, "0.0");
+}
+
+void ToolText::Unit(char* buffer, int size, double value, double unit)
+{
+   // unit
+   double secs = value;
+   double mili = value / DOUBLE_MILI;
+   double micr = value / DOUBLE_MICRO;
+   double nano = value / DOUBLE_NANO;
+   double piko = value / DOUBLE_PIKO;
+
+   // format
+   if (SDL_fabs(secs) >= 1.0)      pFormat->formatString(buffer, size, "%.1f s", secs);
+   else if (SDL_fabs(mili) >= 1.0) pFormat->formatString(buffer, size, "%.1f ms", mili);
+   else if (SDL_fabs(micr) >= 1.0) pFormat->formatString(buffer, size, "%.1f us", micr);
+   else if (SDL_fabs(nano) >= 1.0) pFormat->formatString(buffer, size, "%.1f ns", nano);
+   else if (SDL_fabs(piko) >= 1.0) pFormat->formatString(buffer, size, "%.1f ps", piko);
+   else pFormat->formatString(buffer, size, "0.0");
 }
 
 void ToolText::Hertz(char* buffer, int size, float value)

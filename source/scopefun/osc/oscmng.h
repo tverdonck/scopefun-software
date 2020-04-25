@@ -1096,8 +1096,8 @@ public:
     OsciloscopeCamera cameraOsc;
     OsciloscopeCamera cameraFFT;
     float             analogWindowSize;
-    float             signalPosition;
-    float             signalZoom;
+    double            signalPosition;
+    double            signalZoom;
 public:
     OsciloscopeGrid grid;
 public:

@@ -1242,11 +1242,49 @@ int OsciloscopeManager::update(float dt)
                 // cameraFFT.zoom = zoom;
                 // cameraOsc.zoom = zoom;
 
-                 double numSamples = sfGetNumSamples(getHw());
-                        numSamples = max<double>(1, numSamples);
-                 double    zoomMin = 10 / numSamples;
+                double numSamples = sfGetNumSamples(getHw());
+                numSamples = max<double>(1, numSamples);
+
+                 // zoom: min / max
+                double zoomMin = (double)signalPosition - 0.5*(double)signalZoom; // [min..0..max]
+                double zoomMax = (double)signalPosition + 0.5*(double)signalZoom; // [min..0..max]
+                double dRange = (zoomMax - zoomMin) / signalZoom;
+                zoomMin += dRange * 0.5;
+                zoomMin /= dRange; // [0..1]
+                zoomMax += dRange * 0.5;
+                zoomMax /= dRange; // [0..1]
+
+                // sample: min / max
+                ilarge zoomSampleMin = zoomMin * numSamples; // [0..n]
+                ilarge zoomSampleMax = zoomMax * numSamples; // [0..n]
+                ilarge zoomSampleCnt = clamp<ilarge>(zoomSampleMax - zoomSampleMin + 1, 0, numSamples); // [0..n]
+
+                // unit
+                ilarge unitRange     = zoomSampleMax - zoomSampleMin + 1;
+                ilarge unitGrid      = max<ilarge>(1,unitRange / 10);
+                double         value = (double)(zoomSampleMin / unitGrid + 10)*window.horizontal.Capture;
+                double    moduloTime = SDL_fmodf(value, window.horizontal.Capture);
+
+                //double displayTime = window.horizontal.Capture*(double)zoomSampleCnt;
+                //       gridTime    = window.horizontal.Capture*(double)zoomSampleCnt / 10.0;
+                //double moduloTime  = SDL_fmodf(displayTime, gridTime );
+
+                double moduloZoom = (double)(moduloTime/window.horizontal.Capture)*(double)(zoomSampleCnt); // [0..n]
+
+                //double moduloZoom  = moduloTime / (double)zoomSampleCnt;
+                if (mWheel>0) signalZoom /= 2;
+                else       signalZoom *= 2;
+
+               /*  double    zoomMin = 10 / (numSamples-1);
                  double  zoomSpeed = (1.0 / SCOPEFUN_DISPLAY);
-                 signalZoom       -= mWheel* zoomSpeed;
+                 signalZoom       -= mWheel* zoomSpeed;*/
+
+                 // gridTime
+               /*  double gridDiv   = window.horizontal.Capture*(double)window.horizontal.FrameSize/10;
+                         gridTime = signalZoom*gridDiv;
+                 double gridDelta = SDL_fmodf(gridTime, window.horizontal.Capture);
+                      signalZoom -= gridDelta;*/
+                           zoomMin = 10.0 / double(window.horizontal.FrameSize);
                  signalZoom        = clamp<float>( signalZoom, zoomMin, 1.0 );
                  cameraFFT.zoom = signalZoom;
                  cameraOsc.zoom = signalZoom;
@@ -1327,7 +1365,9 @@ int OsciloscopeManager::update(float dt)
                         Vector4 Move = Vector4(-fRelX, 0, 0, 1);
                         Vector4 MoveFFT = Move * CamMoveSpeed * Vector4(cameraFFT.zoom * moveFactor);
                         Vector4 MoveOsc = Move * CamMoveSpeed * Vector4(cameraOsc.zoom);
-                        signalPosition -= fRelX;
+                        signalPosition -= fRelX*signalZoom;
+                        // double     grid = window.horizontal.Capture/signalZoom;
+                       // signalPosition  = SDL_floor(signalPosition/grid)*grid;
                     }
                 }
             }
