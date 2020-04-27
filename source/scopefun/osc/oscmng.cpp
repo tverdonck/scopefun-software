@@ -1172,22 +1172,23 @@ int OsciloscopeManager::update(float dt)
                SDL_AtomicSet(&clearRenderTarget, 1);
 
                double capureZoom   = window.horizontal.Capture*signalZoom;
+               const int zoomCount = 64;
                double bucket[3]    = { 2, 4, 8 };
-               double multiply[42] = { 0.0 };
-               for (int i = 0; i < 42; i++)
+               double multiply[zoomCount] = { 0.0 };
+               for (int i = 0; i < zoomCount; i++)
                {
-                  multiply[i] = bucket[i%3]*DOUBLE_PIKO*SDL_pow(10,i/3);
+                  multiply[i] = bucket[i%3]*DOUBLE_FEMTO*SDL_pow(10,i/3);
                }
-               for (int i = 0; i < 42; i++)
+               for (int i = 0; i < zoomCount; i++)
                {
-                  double precision = DOUBLE_PIKO*SDL_pow(10, i / 3);
+                  double precision = DOUBLE_FEMTO * SDL_pow(10, i / 3);;
                   if ( capureZoom + precision > multiply[i] && capureZoom - precision < multiply[i] )
                   {
-                     if (mWheel > 0) signalZoom = multiply[clamp<int>(i-1,0,16)] / window.horizontal.Capture;
-                     else            signalZoom = multiply[clamp<int>(i+1,0,16)] / window.horizontal.Capture;
+                     if (mWheel > 0) signalZoom = multiply[clamp<int>(i-1,0, zoomCount)] / window.horizontal.Capture;
+                     else            signalZoom = multiply[clamp<int>(i+1,0, zoomCount)] / window.horizontal.Capture;
                   }
                }
-               double    zoomMin = 10.0 / double(window.horizontal.FrameSize);
+               double    zoomMin = 2*DOUBLE_FEMTO / window.horizontal.Capture;
                signalZoom        = clamp<float>( signalZoom, zoomMin, 1.0 );
                cameraFFT.zoom = signalZoom;
                cameraOsc.zoom = signalZoom;
@@ -3696,6 +3697,13 @@ int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeTh
      
       // display
       sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame,pos,zoom);
+
+      // hardware
+      SFrameHeader header = { 0 };
+      sfGetHeader(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], &header);
+      sfGetHeaderHardware(getCtx(), (SFrameHeader*)&header, &threadData.m_hw);
+
+      // history
       threadData.m_historyCount = 0;
       if ( threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D) )
          threadData.m_historyCount = historyCount;
@@ -3722,6 +3730,8 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
     fft.init();
     renderer.init(pOsciloscope->settings.getSettings()->historyFrameDisplay);
     renderer.clear();
+
+    sfSetNumSamples( (SHardware*)&((SFrameHeader*)pCaptureBuffer->m_dataPtr)->hardware, SCOPEFUN_DISPLAY);
 
     ularge playFrameIdx = 0;
     uint   delayCapture = 1;
@@ -3763,7 +3773,6 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
              
            pCaptureData->m_render = captureRender;
            pCaptureData->m_window = pOsciloscope->renderWindow;
-
         SDL_AtomicUnlock(&pOsciloscope->renderLock);
 
         // capture mode

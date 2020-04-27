@@ -285,7 +285,7 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         double resampleMax = resamplePos + 0.5*(double)sz;
 
         // sample: min / max 
-        double dNumSamples = (threadData.m_frame.capture);
+        double dNumSamples   = sfGetNumSamples(&threadData.m_hw);
         ilarge zoomSampleMin = resampleMin * dNumSamples; // [0..n]
         ilarge zoomSampleMax = resampleMax * dNumSamples; // [0..n]
         ilarge zoomSampleCnt = clamp<ilarge>(zoomSampleMax - zoomSampleMin + 1, 0, dNumSamples); // [0..n]
@@ -293,7 +293,7 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         // grid x position
         double timeDisplay = double(wndMain.horizontal.Capture) * double(wndMain.horizontal.FrameSize); //10000.0;
         double gridTime    = sz * double(timeDisplay) / 10.0;
-        double unitGrid    = gridTime / (wndMain.horizontal.Capture);
+        double unitGrid    = SDL_ceil(gridTime / (wndMain.horizontal.Capture));
         ilarge iGrid       = unitGrid;
         double moduloF     = SDL_fmodf(zoomSampleMin, iGrid) / ((double)zoomSampleCnt);
         double           x = -0.5 + moduloF;
@@ -604,13 +604,13 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     ////////////////////////////////////////////////////////////////////////////////
     pFont->setSize(threadid, 0.35f);
     int    renderCount = xCount;
-    ilarge iNumSamples = threadData.m_frame.capture;
    
+    ilarge iNumSamples = sfGetNumSamples(&threadData.m_hw);
     double preTriggerZero = (wndMain.trigger.Percent / 100.0)*wndMain.horizontal.Capture;
     for (int i = 0; i < renderCount; i++)
     {
        iNumSamples = iNumSamples > 0 ? iNumSamples : 1;
-
+       
        // resample
        double resamplePos = sx + 0.5;
        double resampleMin = resamplePos - 0.5*(double)sz;
@@ -632,7 +632,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
 
        // value
        double          unitGrid = gridTime / wndMain.horizontal.Capture;
-       ilarge             iGrid = unitGrid;
+       ilarge             iGrid = SDL_ceil(unitGrid);
        double        iDivisions = (double)zoomSampleMin / unitGrid;
        double             value = (double)iDivisions*gridTime + (double)(i)*gridTime;
 

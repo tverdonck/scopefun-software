@@ -63,6 +63,7 @@
     #define DOUBLE_MICRO 1E-6
     #define DOUBLE_NANO  1E-9
     #define DOUBLE_PIKO  1E-12
+    #define DOUBLE_FEMTO 1E-15
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////
