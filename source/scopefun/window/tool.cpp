@@ -675,11 +675,11 @@ void ToolText::Unit(char* buffer, int size, double value, double unit)
    double piko = value / DOUBLE_PIKO;
 
    // format
-   if (SDL_fabs(secs) >= 1.0)      pFormat->formatString(buffer, size, "%.1f s", secs);
-   else if (SDL_fabs(mili) >= 1.0) pFormat->formatString(buffer, size, "%.1f ms", mili);
-   else if (SDL_fabs(micr) >= 1.0) pFormat->formatString(buffer, size, "%.1f us", micr);
-   else if (SDL_fabs(nano) >= 1.0) pFormat->formatString(buffer, size, "%.1f ns", nano);
-   else if (SDL_fabs(piko) >= 1.0) pFormat->formatString(buffer, size, "%.1f ps", piko);
+   if (SDL_fabs(secs) >= 1.0)      pFormat->formatString(buffer, size, "%.3f", secs);
+   else if (SDL_fabs(mili) >= 1.0) pFormat->formatString(buffer, size, "%.3f", mili);
+   else if (SDL_fabs(micr) >= 1.0) pFormat->formatString(buffer, size, "%.3f", micr);
+   else if (SDL_fabs(nano) >= 1.0) pFormat->formatString(buffer, size, "%.3f", nano);
+   else if (SDL_fabs(piko) >= 1.0) pFormat->formatString(buffer, size, "%.3f", piko);
    else pFormat->formatString(buffer, size, "0.0");
 }
 

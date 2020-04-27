@@ -998,20 +998,16 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
 
    // numSamples
    numSamples = numSamples > 0 ? numSamples : 1;
-
-   // zoom: min / max
-   double zoomMin         = (double)displayPos - 0.5*(double)displayZoom; // [min..0..max]
-   double zoomMax         = (double)displayPos + 0.5*(double)displayZoom; // [min..0..max]
-   double dRange          = (zoomMax - zoomMin)/displayZoom;
-   zoomMin += dRange * 0.5;
-   zoomMin /= dRange; // [0..1]
-   zoomMax += dRange * 0.5;
-   zoomMax /= dRange; // [0..1]
+   
+   // resample
+   double resamplePos = displayPos  + 0.5;
+   double resampleMin = resamplePos - 0.5*(double)displayZoom; 
+   double resampleMax = resamplePos + 0.5*(double)displayZoom;
    
    // sample: min / max 
    double dNumSamples     = (numSamples-1);
-   ilarge zoomSampleMin   = zoomMin*dNumSamples; // [0..n]
-   ilarge zoomSampleMax   = zoomMax*dNumSamples; // [0..n]
+   ilarge zoomSampleMin   = resampleMin*dNumSamples; // [0..n]
+   ilarge zoomSampleMax   = resampleMax*dNumSamples; // [0..n]
    ilarge zoomSampleCnt   = ilClamp(zoomSampleMax-zoomSampleMin+1,0,numSamples); // [0..n]
 
    // samples
