@@ -48,7 +48,11 @@ private:
     wxStreamToTextRedirector* m_Redirect;
     OsciloscopeScript*        m_script;
 public:
-   void m_button56OnButtonClick(wxCommandEvent& event);
+   virtual void m_button561OnButtonClick(wxCommandEvent& event);
+   virtual void m_button56OnButtonClick(wxCommandEvent& event);
+   virtual void m_button562OnButtonClick(wxCommandEvent& event);
+   virtual void m_button5621OnButtonClick(wxCommandEvent& event);
+
    void OnDestroy(wxActivateEvent& event);
 public:
     void Clear();

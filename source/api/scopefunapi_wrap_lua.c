@@ -2705,38 +2705,34 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p__EFunctionType swig_types[34]
 #define SWIGTYPE_p__ESimulateType swig_types[35]
 #define SWIGTYPE_p__SCallback swig_types[36]
-#define SWIGTYPE_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int swig_types[37]
-#define SWIGTYPE_p_f_p_SDisplay_p_float_p_float_p_void__int swig_types[38]
-#define SWIGTYPE_p_f_p_SFContext__int swig_types[39]
-#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[40]
-#define SWIGTYPE_p_f_p_SHardware__int swig_types[41]
-#define SWIGTYPE_p_float swig_types[42]
-#define SWIGTYPE_p_int swig_types[43]
-#define SWIGTYPE_p_long_long swig_types[44]
-#define SWIGTYPE_p_short swig_types[45]
-#define SWIGTYPE_p_unsigned_char swig_types[46]
-#define SWIGTYPE_p_unsigned_int swig_types[47]
-#define SWIGTYPE_p_unsigned_long_long swig_types[48]
-#define SWIGTYPE_p_unsigned_short swig_types[49]
-#define SWIGTYPE_p_void swig_types[50]
-static swig_type_info *swig_types[52];
-static swig_module_info swig_module = {swig_types, 51, 0, 0, 0, 0};
+#define SWIGTYPE_p__SFloat swig_types[37]
+#define SWIGTYPE_p__SInt swig_types[38]
+#define SWIGTYPE_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int swig_types[39]
+#define SWIGTYPE_p_f_p_SDisplay_p_float_p_float_p_void__int swig_types[40]
+#define SWIGTYPE_p_f_p_SFContext__int swig_types[41]
+#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[42]
+#define SWIGTYPE_p_f_p_SHardware__int swig_types[43]
+#define SWIGTYPE_p_float swig_types[44]
+#define SWIGTYPE_p_int swig_types[45]
+#define SWIGTYPE_p_long_long swig_types[46]
+#define SWIGTYPE_p_short swig_types[47]
+#define SWIGTYPE_p_unsigned_char swig_types[48]
+#define SWIGTYPE_p_unsigned_int swig_types[49]
+#define SWIGTYPE_p_unsigned_long_long swig_types[50]
+#define SWIGTYPE_p_unsigned_short swig_types[51]
+#define SWIGTYPE_p_void swig_types[52]
+static swig_type_info *swig_types[54];
+static swig_module_info swig_module = {swig_types, 53, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_name      "scopefunapi"
-#define SWIG_init      luaopen_scopefunapi
-#define SWIG_init_user luaopen_scopefunapi_user
+#define SWIG_name      "ScopeFun"
+#define SWIG_init      luaopen_ScopeFun
+#define SWIG_init_user luaopen_ScopeFun_user
 
-#define SWIG_LUACODE   luaopen_scopefunapi_luacode
-
-
-#define SCOPEFUN_API_EXPORT
-#include "scopefunapi.h"
-   
-
+#define SWIG_LUACODE   luaopen_ScopeFun_luacode
 
 #ifdef __cplusplus	/* generic alloc/dealloc fns*/
 #define SWIG_ALLOC_ARRAY(TYPE,LEN) 	new TYPE[LEN]
@@ -2894,6 +2890,57 @@ SWIGINTERN void SWIG_write_ptr_array(lua_State* L,void **array,int size,swig_typ
 	}
 }
 
+SWIGINTERN int SArrayMagic___len(SArrayMagic const *self){ return 4; }
+SWIGINTERN byte SArrayMagic___getitem(SArrayMagic *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayMagic___setitem(SArrayMagic *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayETS___len(SArrayETS const *self){ return 1; }
+SWIGINTERN byte SArrayETS___getitem(SArrayETS *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayETS___setitem(SArrayETS *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayPaddingBefore___len(SArrayPaddingBefore const *self){ return 251; }
+SWIGINTERN byte SArrayPaddingBefore___getitem(SArrayPaddingBefore *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayPaddingBefore___setitem(SArrayPaddingBefore *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayHardware___len(SArrayHardware const *self){ return 128; }
+SWIGINTERN byte SArrayHardware___getitem(SArrayHardware *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayHardware___setitem(SArrayHardware *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayPaddingAfter___len(SArrayPaddingAfter const *self){ return 639; }
+SWIGINTERN byte SArrayPaddingAfter___getitem(SArrayPaddingAfter *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayPaddingAfter___setitem(SArrayPaddingAfter *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayCrc___len(SArrayCrc const *self){ return 1; }
+SWIGINTERN byte SArrayCrc___getitem(SArrayCrc *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayCrc___setitem(SArrayCrc *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayFrameData___len(SArrayFrameData const *self){ return (512*1024*1024); }
+SWIGINTERN byte SArrayFrameData___getitem(SArrayFrameData *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayFrameData___setitem(SArrayFrameData *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayEEPROM___len(SArrayEEPROM const *self){ return (256*1024); }
+SWIGINTERN byte SArrayEEPROM___getitem(SArrayEEPROM *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayEEPROM___setitem(SArrayEEPROM *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayFx3___len(SArrayFx3 const *self){ return 16384; }
+SWIGINTERN byte SArrayFx3___getitem(SArrayFx3 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayFx3___setitem(SArrayFx3 *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayFpga___len(SArrayFpga const *self){ return (4*1024*1024); }
+SWIGINTERN byte SArrayFpga___getitem(SArrayFpga *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayFpga___setitem(SArrayFpga *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayGeneratorAnalog0___len(SArrayGeneratorAnalog0 const *self){ return 32768; }
+SWIGINTERN ishort SArrayGeneratorAnalog0___getitem(SArrayGeneratorAnalog0 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayGeneratorAnalog0___setitem(SArrayGeneratorAnalog0 *self,int i,ishort v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayGeneratorAnalog1___len(SArrayGeneratorAnalog1 const *self){ return 32768; }
+SWIGINTERN ishort SArrayGeneratorAnalog1___getitem(SArrayGeneratorAnalog1 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayGeneratorAnalog1___setitem(SArrayGeneratorAnalog1 *self,int i,ishort v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayGeneratorDigital___len(SArrayGeneratorDigital const *self){ return 32768; }
+SWIGINTERN ushort SArrayGeneratorDigital___getitem(SArrayGeneratorDigital *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayGeneratorDigital___setitem(SArrayGeneratorDigital *self,int i,ushort v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayDisplayAnalog0___len(SArrayDisplayAnalog0 const *self){ return 10000; }
+SWIGINTERN float SArrayDisplayAnalog0___getitem(SArrayDisplayAnalog0 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayDisplayAnalog0___setitem(SArrayDisplayAnalog0 *self,int i,float v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayDisplayAnalog1___len(SArrayDisplayAnalog1 const *self){ return 10000; }
+SWIGINTERN float SArrayDisplayAnalog1___getitem(SArrayDisplayAnalog1 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayDisplayAnalog1___setitem(SArrayDisplayAnalog1 *self,int i,float v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayDisplayAnalogF___len(SArrayDisplayAnalogF const *self){ return 10000; }
+SWIGINTERN float SArrayDisplayAnalogF___getitem(SArrayDisplayAnalogF *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayDisplayAnalogF___setitem(SArrayDisplayAnalogF *self,int i,float v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayDisplayDigital___len(SArrayDisplayDigital const *self){ return 10000; }
+SWIGINTERN ushort SArrayDisplayDigital___getitem(SArrayDisplayDigital *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayDisplayDigital___setitem(SArrayDisplayDigital *self,int i,ushort v){                                         				self->bytes[i] = v;                    			}
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -6084,6 +6131,87 @@ fail:
 }
 
 
+static int _wrap_SArrayMagic___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayMagic *arg1 = (SArrayMagic *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayMagic::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayMagic::__len",1,"SArrayMagic const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayMagic,0))){
+    SWIG_fail_ptr("SArrayMagic___len",1,SWIGTYPE_p_SArrayMagic);
+  }
+  
+  result = (int)SArrayMagic___len((SArrayMagic const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayMagic___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayMagic *arg1 = (SArrayMagic *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayMagic::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayMagic::__getitem",1,"SArrayMagic *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayMagic::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayMagic,0))){
+    SWIG_fail_ptr("SArrayMagic___getitem",1,SWIGTYPE_p_SArrayMagic);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayMagic___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayMagic___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayMagic *arg1 = (SArrayMagic *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayMagic::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayMagic::__setitem",1,"SArrayMagic *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayMagic::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayMagic::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayMagic,0))){
+    SWIG_fail_ptr("SArrayMagic___setitem",1,SWIGTYPE_p_SArrayMagic);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayMagic___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayMagic(lua_State* L) {
   int SWIG_arg = 0;
   SArrayMagic *result = 0 ;
@@ -6118,9 +6246,15 @@ static swig_lua_attribute swig_SArrayMagic_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayMagic_methods[]= {
+    { "__len", _wrap_SArrayMagic___len},
+    { "__getitem", _wrap_SArrayMagic___getitem},
+    { "__setitem", _wrap_SArrayMagic___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayMagic_meta[] = {
+    { "__len", _wrap_SArrayMagic___len},
+    { "__getitem", _wrap_SArrayMagic___getitem},
+    { "__setitem", _wrap_SArrayMagic___setitem},
     {0,0}
 };
 
@@ -6207,6 +6341,87 @@ fail:
 }
 
 
+static int _wrap_SArrayETS___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayETS *arg1 = (SArrayETS *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayETS::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayETS::__len",1,"SArrayETS const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayETS,0))){
+    SWIG_fail_ptr("SArrayETS___len",1,SWIGTYPE_p_SArrayETS);
+  }
+  
+  result = (int)SArrayETS___len((SArrayETS const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayETS___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayETS *arg1 = (SArrayETS *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayETS::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayETS::__getitem",1,"SArrayETS *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayETS::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayETS,0))){
+    SWIG_fail_ptr("SArrayETS___getitem",1,SWIGTYPE_p_SArrayETS);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayETS___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayETS___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayETS *arg1 = (SArrayETS *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayETS::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayETS::__setitem",1,"SArrayETS *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayETS::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayETS::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayETS,0))){
+    SWIG_fail_ptr("SArrayETS___setitem",1,SWIGTYPE_p_SArrayETS);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayETS___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayETS(lua_State* L) {
   int SWIG_arg = 0;
   SArrayETS *result = 0 ;
@@ -6241,9 +6456,15 @@ static swig_lua_attribute swig_SArrayETS_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayETS_methods[]= {
+    { "__len", _wrap_SArrayETS___len},
+    { "__getitem", _wrap_SArrayETS___getitem},
+    { "__setitem", _wrap_SArrayETS___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayETS_meta[] = {
+    { "__len", _wrap_SArrayETS___len},
+    { "__getitem", _wrap_SArrayETS___getitem},
+    { "__setitem", _wrap_SArrayETS___setitem},
     {0,0}
 };
 
@@ -6330,6 +6551,87 @@ fail:
 }
 
 
+static int _wrap_SArrayPaddingBefore___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingBefore *arg1 = (SArrayPaddingBefore *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayPaddingBefore::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingBefore::__len",1,"SArrayPaddingBefore const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingBefore,0))){
+    SWIG_fail_ptr("SArrayPaddingBefore___len",1,SWIGTYPE_p_SArrayPaddingBefore);
+  }
+  
+  result = (int)SArrayPaddingBefore___len((SArrayPaddingBefore const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayPaddingBefore___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingBefore *arg1 = (SArrayPaddingBefore *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayPaddingBefore::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingBefore::__getitem",1,"SArrayPaddingBefore *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayPaddingBefore::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingBefore,0))){
+    SWIG_fail_ptr("SArrayPaddingBefore___getitem",1,SWIGTYPE_p_SArrayPaddingBefore);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayPaddingBefore___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayPaddingBefore___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingBefore *arg1 = (SArrayPaddingBefore *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayPaddingBefore::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingBefore::__setitem",1,"SArrayPaddingBefore *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayPaddingBefore::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayPaddingBefore::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingBefore,0))){
+    SWIG_fail_ptr("SArrayPaddingBefore___setitem",1,SWIGTYPE_p_SArrayPaddingBefore);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayPaddingBefore___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayPaddingBefore(lua_State* L) {
   int SWIG_arg = 0;
   SArrayPaddingBefore *result = 0 ;
@@ -6364,9 +6666,15 @@ static swig_lua_attribute swig_SArrayPaddingBefore_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayPaddingBefore_methods[]= {
+    { "__len", _wrap_SArrayPaddingBefore___len},
+    { "__getitem", _wrap_SArrayPaddingBefore___getitem},
+    { "__setitem", _wrap_SArrayPaddingBefore___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayPaddingBefore_meta[] = {
+    { "__len", _wrap_SArrayPaddingBefore___len},
+    { "__getitem", _wrap_SArrayPaddingBefore___getitem},
+    { "__setitem", _wrap_SArrayPaddingBefore___setitem},
     {0,0}
 };
 
@@ -6453,6 +6761,87 @@ fail:
 }
 
 
+static int _wrap_SArrayHardware___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayHardware *arg1 = (SArrayHardware *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayHardware::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayHardware::__len",1,"SArrayHardware const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayHardware,0))){
+    SWIG_fail_ptr("SArrayHardware___len",1,SWIGTYPE_p_SArrayHardware);
+  }
+  
+  result = (int)SArrayHardware___len((SArrayHardware const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayHardware___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayHardware *arg1 = (SArrayHardware *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayHardware::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayHardware::__getitem",1,"SArrayHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayHardware::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayHardware,0))){
+    SWIG_fail_ptr("SArrayHardware___getitem",1,SWIGTYPE_p_SArrayHardware);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayHardware___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayHardware___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayHardware *arg1 = (SArrayHardware *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayHardware::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayHardware::__setitem",1,"SArrayHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayHardware::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayHardware::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayHardware,0))){
+    SWIG_fail_ptr("SArrayHardware___setitem",1,SWIGTYPE_p_SArrayHardware);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayHardware___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayHardware(lua_State* L) {
   int SWIG_arg = 0;
   SArrayHardware *result = 0 ;
@@ -6487,9 +6876,15 @@ static swig_lua_attribute swig_SArrayHardware_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayHardware_methods[]= {
+    { "__len", _wrap_SArrayHardware___len},
+    { "__getitem", _wrap_SArrayHardware___getitem},
+    { "__setitem", _wrap_SArrayHardware___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayHardware_meta[] = {
+    { "__len", _wrap_SArrayHardware___len},
+    { "__getitem", _wrap_SArrayHardware___getitem},
+    { "__setitem", _wrap_SArrayHardware___setitem},
     {0,0}
 };
 
@@ -6576,6 +6971,87 @@ fail:
 }
 
 
+static int _wrap_SArrayPaddingAfter___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingAfter *arg1 = (SArrayPaddingAfter *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayPaddingAfter::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingAfter::__len",1,"SArrayPaddingAfter const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingAfter,0))){
+    SWIG_fail_ptr("SArrayPaddingAfter___len",1,SWIGTYPE_p_SArrayPaddingAfter);
+  }
+  
+  result = (int)SArrayPaddingAfter___len((SArrayPaddingAfter const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayPaddingAfter___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingAfter *arg1 = (SArrayPaddingAfter *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayPaddingAfter::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingAfter::__getitem",1,"SArrayPaddingAfter *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayPaddingAfter::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingAfter,0))){
+    SWIG_fail_ptr("SArrayPaddingAfter___getitem",1,SWIGTYPE_p_SArrayPaddingAfter);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayPaddingAfter___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayPaddingAfter___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayPaddingAfter *arg1 = (SArrayPaddingAfter *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayPaddingAfter::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayPaddingAfter::__setitem",1,"SArrayPaddingAfter *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayPaddingAfter::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayPaddingAfter::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayPaddingAfter,0))){
+    SWIG_fail_ptr("SArrayPaddingAfter___setitem",1,SWIGTYPE_p_SArrayPaddingAfter);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayPaddingAfter___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayPaddingAfter(lua_State* L) {
   int SWIG_arg = 0;
   SArrayPaddingAfter *result = 0 ;
@@ -6610,9 +7086,15 @@ static swig_lua_attribute swig_SArrayPaddingAfter_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayPaddingAfter_methods[]= {
+    { "__len", _wrap_SArrayPaddingAfter___len},
+    { "__getitem", _wrap_SArrayPaddingAfter___getitem},
+    { "__setitem", _wrap_SArrayPaddingAfter___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayPaddingAfter_meta[] = {
+    { "__len", _wrap_SArrayPaddingAfter___len},
+    { "__getitem", _wrap_SArrayPaddingAfter___getitem},
+    { "__setitem", _wrap_SArrayPaddingAfter___setitem},
     {0,0}
 };
 
@@ -6660,9 +7142,7 @@ static int _wrap_SArrayCrc_bytes_set(lua_State* L) {
   }
   
   {
-    size_t ii;
-    byte *b = (byte *) arg1->bytes;
-    for (ii = 0; ii < (size_t)1; ii++) b[ii] = *((byte *) arg2 + ii);
+    memcpy(arg1->bytes, arg2, 1);                                                                                             
   }
   
   return SWIG_arg;
@@ -6689,6 +7169,87 @@ static int _wrap_SArrayCrc_bytes_get(lua_State* L) {
   
   result = (byte *)(byte *) ((arg1)->bytes);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_char,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayCrc___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayCrc *arg1 = (SArrayCrc *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayCrc::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayCrc::__len",1,"SArrayCrc const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayCrc,0))){
+    SWIG_fail_ptr("SArrayCrc___len",1,SWIGTYPE_p_SArrayCrc);
+  }
+  
+  result = (int)SArrayCrc___len((SArrayCrc const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayCrc___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayCrc *arg1 = (SArrayCrc *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayCrc::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayCrc::__getitem",1,"SArrayCrc *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayCrc::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayCrc,0))){
+    SWIG_fail_ptr("SArrayCrc___getitem",1,SWIGTYPE_p_SArrayCrc);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayCrc___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayCrc___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayCrc *arg1 = (SArrayCrc *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayCrc::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayCrc::__setitem",1,"SArrayCrc *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayCrc::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayCrc::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayCrc,0))){
+    SWIG_fail_ptr("SArrayCrc___setitem",1,SWIGTYPE_p_SArrayCrc);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayCrc___setitem(arg1,arg2,arg3);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -6733,9 +7294,15 @@ static swig_lua_attribute swig_SArrayCrc_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayCrc_methods[]= {
+    { "__len", _wrap_SArrayCrc___len},
+    { "__getitem", _wrap_SArrayCrc___getitem},
+    { "__setitem", _wrap_SArrayCrc___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayCrc_meta[] = {
+    { "__len", _wrap_SArrayCrc___len},
+    { "__getitem", _wrap_SArrayCrc___getitem},
+    { "__setitem", _wrap_SArrayCrc___setitem},
     {0,0}
 };
 
@@ -7216,6 +7783,87 @@ fail:
 }
 
 
+static int _wrap_SArrayFrameData___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFrameData *arg1 = (SArrayFrameData *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayFrameData::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFrameData::__len",1,"SArrayFrameData const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFrameData,0))){
+    SWIG_fail_ptr("SArrayFrameData___len",1,SWIGTYPE_p_SArrayFrameData);
+  }
+  
+  result = (int)SArrayFrameData___len((SArrayFrameData const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFrameData___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFrameData *arg1 = (SArrayFrameData *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayFrameData::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFrameData::__getitem",1,"SArrayFrameData *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFrameData::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFrameData,0))){
+    SWIG_fail_ptr("SArrayFrameData___getitem",1,SWIGTYPE_p_SArrayFrameData);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayFrameData___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFrameData___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFrameData *arg1 = (SArrayFrameData *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayFrameData::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFrameData::__setitem",1,"SArrayFrameData *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFrameData::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayFrameData::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFrameData,0))){
+    SWIG_fail_ptr("SArrayFrameData___setitem",1,SWIGTYPE_p_SArrayFrameData);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayFrameData___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayFrameData(lua_State* L) {
   int SWIG_arg = 0;
   SArrayFrameData *result = 0 ;
@@ -7250,9 +7898,15 @@ static swig_lua_attribute swig_SArrayFrameData_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayFrameData_methods[]= {
+    { "__len", _wrap_SArrayFrameData___len},
+    { "__getitem", _wrap_SArrayFrameData___getitem},
+    { "__setitem", _wrap_SArrayFrameData___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayFrameData_meta[] = {
+    { "__len", _wrap_SArrayFrameData___len},
+    { "__getitem", _wrap_SArrayFrameData___getitem},
+    { "__setitem", _wrap_SArrayFrameData___setitem},
     {0,0}
 };
 
@@ -7458,6 +8112,87 @@ fail:
 }
 
 
+static int _wrap_SArrayEEPROM___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayEEPROM *arg1 = (SArrayEEPROM *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayEEPROM::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayEEPROM::__len",1,"SArrayEEPROM const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayEEPROM,0))){
+    SWIG_fail_ptr("SArrayEEPROM___len",1,SWIGTYPE_p_SArrayEEPROM);
+  }
+  
+  result = (int)SArrayEEPROM___len((SArrayEEPROM const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayEEPROM___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayEEPROM *arg1 = (SArrayEEPROM *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayEEPROM::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayEEPROM::__getitem",1,"SArrayEEPROM *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayEEPROM::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayEEPROM,0))){
+    SWIG_fail_ptr("SArrayEEPROM___getitem",1,SWIGTYPE_p_SArrayEEPROM);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayEEPROM___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayEEPROM___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayEEPROM *arg1 = (SArrayEEPROM *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayEEPROM::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayEEPROM::__setitem",1,"SArrayEEPROM *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayEEPROM::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayEEPROM::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayEEPROM,0))){
+    SWIG_fail_ptr("SArrayEEPROM___setitem",1,SWIGTYPE_p_SArrayEEPROM);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayEEPROM___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayEEPROM(lua_State* L) {
   int SWIG_arg = 0;
   SArrayEEPROM *result = 0 ;
@@ -7492,9 +8227,15 @@ static swig_lua_attribute swig_SArrayEEPROM_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayEEPROM_methods[]= {
+    { "__len", _wrap_SArrayEEPROM___len},
+    { "__getitem", _wrap_SArrayEEPROM___getitem},
+    { "__setitem", _wrap_SArrayEEPROM___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayEEPROM_meta[] = {
+    { "__len", _wrap_SArrayEEPROM___len},
+    { "__getitem", _wrap_SArrayEEPROM___getitem},
+    { "__setitem", _wrap_SArrayEEPROM___setitem},
     {0,0}
 };
 
@@ -7979,6 +8720,87 @@ fail:
 }
 
 
+static int _wrap_SArrayFx3___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFx3 *arg1 = (SArrayFx3 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayFx3::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFx3::__len",1,"SArrayFx3 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFx3,0))){
+    SWIG_fail_ptr("SArrayFx3___len",1,SWIGTYPE_p_SArrayFx3);
+  }
+  
+  result = (int)SArrayFx3___len((SArrayFx3 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFx3___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFx3 *arg1 = (SArrayFx3 *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayFx3::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFx3::__getitem",1,"SArrayFx3 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFx3::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFx3,0))){
+    SWIG_fail_ptr("SArrayFx3___getitem",1,SWIGTYPE_p_SArrayFx3);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayFx3___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFx3___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFx3 *arg1 = (SArrayFx3 *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayFx3::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFx3::__setitem",1,"SArrayFx3 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFx3::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayFx3::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFx3,0))){
+    SWIG_fail_ptr("SArrayFx3___setitem",1,SWIGTYPE_p_SArrayFx3);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayFx3___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayFx3(lua_State* L) {
   int SWIG_arg = 0;
   SArrayFx3 *result = 0 ;
@@ -8013,9 +8835,15 @@ static swig_lua_attribute swig_SArrayFx3_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayFx3_methods[]= {
+    { "__len", _wrap_SArrayFx3___len},
+    { "__getitem", _wrap_SArrayFx3___getitem},
+    { "__setitem", _wrap_SArrayFx3___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayFx3_meta[] = {
+    { "__len", _wrap_SArrayFx3___len},
+    { "__getitem", _wrap_SArrayFx3___getitem},
+    { "__setitem", _wrap_SArrayFx3___setitem},
     {0,0}
 };
 
@@ -8273,6 +9101,87 @@ fail:
 }
 
 
+static int _wrap_SArrayFpga___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFpga *arg1 = (SArrayFpga *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayFpga::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFpga::__len",1,"SArrayFpga const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFpga,0))){
+    SWIG_fail_ptr("SArrayFpga___len",1,SWIGTYPE_p_SArrayFpga);
+  }
+  
+  result = (int)SArrayFpga___len((SArrayFpga const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFpga___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFpga *arg1 = (SArrayFpga *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayFpga::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFpga::__getitem",1,"SArrayFpga *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFpga::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFpga,0))){
+    SWIG_fail_ptr("SArrayFpga___getitem",1,SWIGTYPE_p_SArrayFpga);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayFpga___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayFpga___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayFpga *arg1 = (SArrayFpga *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayFpga::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayFpga::__setitem",1,"SArrayFpga *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayFpga::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayFpga::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayFpga,0))){
+    SWIG_fail_ptr("SArrayFpga___setitem",1,SWIGTYPE_p_SArrayFpga);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayFpga___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayFpga(lua_State* L) {
   int SWIG_arg = 0;
   SArrayFpga *result = 0 ;
@@ -8307,9 +9216,15 @@ static swig_lua_attribute swig_SArrayFpga_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayFpga_methods[]= {
+    { "__len", _wrap_SArrayFpga___len},
+    { "__getitem", _wrap_SArrayFpga___getitem},
+    { "__setitem", _wrap_SArrayFpga___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayFpga_meta[] = {
+    { "__len", _wrap_SArrayFpga___len},
+    { "__getitem", _wrap_SArrayFpga___getitem},
+    { "__setitem", _wrap_SArrayFpga___setitem},
     {0,0}
 };
 
@@ -8567,6 +9482,86 @@ fail:
 }
 
 
+static int _wrap_SArrayGeneratorAnalog0___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog0 *arg1 = (SArrayGeneratorAnalog0 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog0::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog0::__len",1,"SArrayGeneratorAnalog0 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog0,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog0___len",1,SWIGTYPE_p_SArrayGeneratorAnalog0);
+  }
+  
+  result = (int)SArrayGeneratorAnalog0___len((SArrayGeneratorAnalog0 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorAnalog0___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog0 *arg1 = (SArrayGeneratorAnalog0 *) 0 ;
+  int arg2 ;
+  ishort result;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog0::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog0::__getitem",1,"SArrayGeneratorAnalog0 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorAnalog0::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog0,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog0___getitem",1,SWIGTYPE_p_SArrayGeneratorAnalog0);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (ishort)SArrayGeneratorAnalog0___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorAnalog0___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog0 *arg1 = (SArrayGeneratorAnalog0 *) 0 ;
+  int arg2 ;
+  ishort arg3 ;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog0::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog0::__setitem",1,"SArrayGeneratorAnalog0 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorAnalog0::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayGeneratorAnalog0::__setitem",3,"ishort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog0,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog0___setitem",1,SWIGTYPE_p_SArrayGeneratorAnalog0);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (ishort)lua_tonumber(L, 3);
+  SArrayGeneratorAnalog0___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayGeneratorAnalog0(lua_State* L) {
   int SWIG_arg = 0;
   SArrayGeneratorAnalog0 *result = 0 ;
@@ -8601,9 +9596,15 @@ static swig_lua_attribute swig_SArrayGeneratorAnalog0_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayGeneratorAnalog0_methods[]= {
+    { "__len", _wrap_SArrayGeneratorAnalog0___len},
+    { "__getitem", _wrap_SArrayGeneratorAnalog0___getitem},
+    { "__setitem", _wrap_SArrayGeneratorAnalog0___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayGeneratorAnalog0_meta[] = {
+    { "__len", _wrap_SArrayGeneratorAnalog0___len},
+    { "__getitem", _wrap_SArrayGeneratorAnalog0___getitem},
+    { "__setitem", _wrap_SArrayGeneratorAnalog0___setitem},
     {0,0}
 };
 
@@ -8651,9 +9652,7 @@ static int _wrap_SArrayGeneratorAnalog1_bytes_set(lua_State* L) {
   }
   
   {
-    size_t ii;
-    ishort *b = (ishort *) arg1->bytes;
-    for (ii = 0; ii < (size_t)32768; ii++) b[ii] = *((ishort *) arg2 + ii);
+    memcpy(arg1->bytes, arg2, 32768);                                                                                             
   }
   
   return SWIG_arg;
@@ -8680,6 +9679,86 @@ static int _wrap_SArrayGeneratorAnalog1_bytes_get(lua_State* L) {
   
   result = (ishort *)(ishort *) ((arg1)->bytes);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_short,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorAnalog1___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog1 *arg1 = (SArrayGeneratorAnalog1 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog1::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog1::__len",1,"SArrayGeneratorAnalog1 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog1,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog1___len",1,SWIGTYPE_p_SArrayGeneratorAnalog1);
+  }
+  
+  result = (int)SArrayGeneratorAnalog1___len((SArrayGeneratorAnalog1 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorAnalog1___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog1 *arg1 = (SArrayGeneratorAnalog1 *) 0 ;
+  int arg2 ;
+  ishort result;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog1::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog1::__getitem",1,"SArrayGeneratorAnalog1 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorAnalog1::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog1,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog1___getitem",1,SWIGTYPE_p_SArrayGeneratorAnalog1);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (ishort)SArrayGeneratorAnalog1___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorAnalog1___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorAnalog1 *arg1 = (SArrayGeneratorAnalog1 *) 0 ;
+  int arg2 ;
+  ishort arg3 ;
+  
+  SWIG_check_num_args("SArrayGeneratorAnalog1::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorAnalog1::__setitem",1,"SArrayGeneratorAnalog1 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorAnalog1::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayGeneratorAnalog1::__setitem",3,"ishort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorAnalog1,0))){
+    SWIG_fail_ptr("SArrayGeneratorAnalog1___setitem",1,SWIGTYPE_p_SArrayGeneratorAnalog1);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (ishort)lua_tonumber(L, 3);
+  SArrayGeneratorAnalog1___setitem(arg1,arg2,arg3);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -8724,9 +9803,15 @@ static swig_lua_attribute swig_SArrayGeneratorAnalog1_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayGeneratorAnalog1_methods[]= {
+    { "__len", _wrap_SArrayGeneratorAnalog1___len},
+    { "__getitem", _wrap_SArrayGeneratorAnalog1___getitem},
+    { "__setitem", _wrap_SArrayGeneratorAnalog1___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayGeneratorAnalog1_meta[] = {
+    { "__len", _wrap_SArrayGeneratorAnalog1___len},
+    { "__getitem", _wrap_SArrayGeneratorAnalog1___getitem},
+    { "__setitem", _wrap_SArrayGeneratorAnalog1___setitem},
     {0,0}
 };
 
@@ -8813,6 +9898,87 @@ fail:
 }
 
 
+static int _wrap_SArrayGeneratorDigital___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorDigital *arg1 = (SArrayGeneratorDigital *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayGeneratorDigital::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorDigital::__len",1,"SArrayGeneratorDigital const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorDigital,0))){
+    SWIG_fail_ptr("SArrayGeneratorDigital___len",1,SWIGTYPE_p_SArrayGeneratorDigital);
+  }
+  
+  result = (int)SArrayGeneratorDigital___len((SArrayGeneratorDigital const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorDigital___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorDigital *arg1 = (SArrayGeneratorDigital *) 0 ;
+  int arg2 ;
+  ushort result;
+  
+  SWIG_check_num_args("SArrayGeneratorDigital::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorDigital::__getitem",1,"SArrayGeneratorDigital *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorDigital::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorDigital,0))){
+    SWIG_fail_ptr("SArrayGeneratorDigital___getitem",1,SWIGTYPE_p_SArrayGeneratorDigital);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (ushort)SArrayGeneratorDigital___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayGeneratorDigital___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayGeneratorDigital *arg1 = (SArrayGeneratorDigital *) 0 ;
+  int arg2 ;
+  ushort arg3 ;
+  
+  SWIG_check_num_args("SArrayGeneratorDigital::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayGeneratorDigital::__setitem",1,"SArrayGeneratorDigital *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayGeneratorDigital::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayGeneratorDigital::__setitem",3,"ushort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayGeneratorDigital,0))){
+    SWIG_fail_ptr("SArrayGeneratorDigital___setitem",1,SWIGTYPE_p_SArrayGeneratorDigital);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (ushort)lua_tonumber(L, 3);
+  SArrayGeneratorDigital___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayGeneratorDigital(lua_State* L) {
   int SWIG_arg = 0;
   SArrayGeneratorDigital *result = 0 ;
@@ -8847,9 +10013,15 @@ static swig_lua_attribute swig_SArrayGeneratorDigital_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayGeneratorDigital_methods[]= {
+    { "__len", _wrap_SArrayGeneratorDigital___len},
+    { "__getitem", _wrap_SArrayGeneratorDigital___getitem},
+    { "__setitem", _wrap_SArrayGeneratorDigital___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayGeneratorDigital_meta[] = {
+    { "__len", _wrap_SArrayGeneratorDigital___len},
+    { "__getitem", _wrap_SArrayGeneratorDigital___getitem},
+    { "__setitem", _wrap_SArrayGeneratorDigital___setitem},
     {0,0}
 };
 
@@ -10635,6 +11807,86 @@ fail:
 }
 
 
+static int _wrap_SArrayDisplayAnalog0___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog0 *arg1 = (SArrayDisplayAnalog0 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog0::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog0::__len",1,"SArrayDisplayAnalog0 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog0,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog0___len",1,SWIGTYPE_p_SArrayDisplayAnalog0);
+  }
+  
+  result = (int)SArrayDisplayAnalog0___len((SArrayDisplayAnalog0 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalog0___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog0 *arg1 = (SArrayDisplayAnalog0 *) 0 ;
+  int arg2 ;
+  float result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog0::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog0::__getitem",1,"SArrayDisplayAnalog0 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalog0::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog0,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog0___getitem",1,SWIGTYPE_p_SArrayDisplayAnalog0);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (float)SArrayDisplayAnalog0___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalog0___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog0 *arg1 = (SArrayDisplayAnalog0 *) 0 ;
+  int arg2 ;
+  float arg3 ;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog0::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog0::__setitem",1,"SArrayDisplayAnalog0 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalog0::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayDisplayAnalog0::__setitem",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog0,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog0___setitem",1,SWIGTYPE_p_SArrayDisplayAnalog0);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (float)lua_tonumber(L, 3);
+  SArrayDisplayAnalog0___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayDisplayAnalog0(lua_State* L) {
   int SWIG_arg = 0;
   SArrayDisplayAnalog0 *result = 0 ;
@@ -10669,9 +11921,15 @@ static swig_lua_attribute swig_SArrayDisplayAnalog0_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalog0_methods[]= {
+    { "__len", _wrap_SArrayDisplayAnalog0___len},
+    { "__getitem", _wrap_SArrayDisplayAnalog0___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalog0___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalog0_meta[] = {
+    { "__len", _wrap_SArrayDisplayAnalog0___len},
+    { "__getitem", _wrap_SArrayDisplayAnalog0___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalog0___setitem},
     {0,0}
 };
 
@@ -10719,9 +11977,7 @@ static int _wrap_SArrayDisplayAnalog1_bytes_set(lua_State* L) {
   }
   
   {
-    size_t ii;
-    float *b = (float *) arg1->bytes;
-    for (ii = 0; ii < (size_t)10000; ii++) b[ii] = *((float *) arg2 + ii);
+    memcpy(arg1->bytes, arg2, 10000);                                                                                             
   }
   
   return SWIG_arg;
@@ -10748,6 +12004,86 @@ static int _wrap_SArrayDisplayAnalog1_bytes_get(lua_State* L) {
   
   result = (float *)(float *) ((arg1)->bytes);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_float,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalog1___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog1 *arg1 = (SArrayDisplayAnalog1 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog1::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog1::__len",1,"SArrayDisplayAnalog1 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog1,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog1___len",1,SWIGTYPE_p_SArrayDisplayAnalog1);
+  }
+  
+  result = (int)SArrayDisplayAnalog1___len((SArrayDisplayAnalog1 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalog1___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog1 *arg1 = (SArrayDisplayAnalog1 *) 0 ;
+  int arg2 ;
+  float result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog1::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog1::__getitem",1,"SArrayDisplayAnalog1 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalog1::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog1,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog1___getitem",1,SWIGTYPE_p_SArrayDisplayAnalog1);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (float)SArrayDisplayAnalog1___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalog1___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalog1 *arg1 = (SArrayDisplayAnalog1 *) 0 ;
+  int arg2 ;
+  float arg3 ;
+  
+  SWIG_check_num_args("SArrayDisplayAnalog1::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalog1::__setitem",1,"SArrayDisplayAnalog1 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalog1::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayDisplayAnalog1::__setitem",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalog1,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalog1___setitem",1,SWIGTYPE_p_SArrayDisplayAnalog1);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (float)lua_tonumber(L, 3);
+  SArrayDisplayAnalog1___setitem(arg1,arg2,arg3);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -10792,9 +12128,15 @@ static swig_lua_attribute swig_SArrayDisplayAnalog1_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalog1_methods[]= {
+    { "__len", _wrap_SArrayDisplayAnalog1___len},
+    { "__getitem", _wrap_SArrayDisplayAnalog1___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalog1___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalog1_meta[] = {
+    { "__len", _wrap_SArrayDisplayAnalog1___len},
+    { "__getitem", _wrap_SArrayDisplayAnalog1___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalog1___setitem},
     {0,0}
 };
 
@@ -10842,9 +12184,7 @@ static int _wrap_SArrayDisplayAnalogF_bytes_set(lua_State* L) {
   }
   
   {
-    size_t ii;
-    float *b = (float *) arg1->bytes;
-    for (ii = 0; ii < (size_t)10000; ii++) b[ii] = *((float *) arg2 + ii);
+    memcpy(arg1->bytes, arg2, 10000);                                                                                             
   }
   
   return SWIG_arg;
@@ -10871,6 +12211,86 @@ static int _wrap_SArrayDisplayAnalogF_bytes_get(lua_State* L) {
   
   result = (float *)(float *) ((arg1)->bytes);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_float,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalogF___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalogF *arg1 = (SArrayDisplayAnalogF *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalogF::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalogF::__len",1,"SArrayDisplayAnalogF const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalogF,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalogF___len",1,SWIGTYPE_p_SArrayDisplayAnalogF);
+  }
+  
+  result = (int)SArrayDisplayAnalogF___len((SArrayDisplayAnalogF const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalogF___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalogF *arg1 = (SArrayDisplayAnalogF *) 0 ;
+  int arg2 ;
+  float result;
+  
+  SWIG_check_num_args("SArrayDisplayAnalogF::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalogF::__getitem",1,"SArrayDisplayAnalogF *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalogF::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalogF,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalogF___getitem",1,SWIGTYPE_p_SArrayDisplayAnalogF);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (float)SArrayDisplayAnalogF___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayAnalogF___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayAnalogF *arg1 = (SArrayDisplayAnalogF *) 0 ;
+  int arg2 ;
+  float arg3 ;
+  
+  SWIG_check_num_args("SArrayDisplayAnalogF::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayAnalogF::__setitem",1,"SArrayDisplayAnalogF *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayAnalogF::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayDisplayAnalogF::__setitem",3,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayAnalogF,0))){
+    SWIG_fail_ptr("SArrayDisplayAnalogF___setitem",1,SWIGTYPE_p_SArrayDisplayAnalogF);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  arg3 = (float)lua_tonumber(L, 3);
+  SArrayDisplayAnalogF___setitem(arg1,arg2,arg3);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -10915,9 +12335,15 @@ static swig_lua_attribute swig_SArrayDisplayAnalogF_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalogF_methods[]= {
+    { "__len", _wrap_SArrayDisplayAnalogF___len},
+    { "__getitem", _wrap_SArrayDisplayAnalogF___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalogF___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayDisplayAnalogF_meta[] = {
+    { "__len", _wrap_SArrayDisplayAnalogF___len},
+    { "__getitem", _wrap_SArrayDisplayAnalogF___getitem},
+    { "__setitem", _wrap_SArrayDisplayAnalogF___setitem},
     {0,0}
 };
 
@@ -11004,6 +12430,87 @@ fail:
 }
 
 
+static int _wrap_SArrayDisplayDigital___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayDigital *arg1 = (SArrayDisplayDigital *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayDisplayDigital::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayDigital::__len",1,"SArrayDisplayDigital const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayDigital,0))){
+    SWIG_fail_ptr("SArrayDisplayDigital___len",1,SWIGTYPE_p_SArrayDisplayDigital);
+  }
+  
+  result = (int)SArrayDisplayDigital___len((SArrayDisplayDigital const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayDigital___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayDigital *arg1 = (SArrayDisplayDigital *) 0 ;
+  int arg2 ;
+  ushort result;
+  
+  SWIG_check_num_args("SArrayDisplayDigital::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayDigital::__getitem",1,"SArrayDisplayDigital *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayDigital::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayDigital,0))){
+    SWIG_fail_ptr("SArrayDisplayDigital___getitem",1,SWIGTYPE_p_SArrayDisplayDigital);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (ushort)SArrayDisplayDigital___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayDisplayDigital___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayDisplayDigital *arg1 = (SArrayDisplayDigital *) 0 ;
+  int arg2 ;
+  ushort arg3 ;
+  
+  SWIG_check_num_args("SArrayDisplayDigital::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayDisplayDigital::__setitem",1,"SArrayDisplayDigital *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayDisplayDigital::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayDisplayDigital::__setitem",3,"ushort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayDisplayDigital,0))){
+    SWIG_fail_ptr("SArrayDisplayDigital___setitem",1,SWIGTYPE_p_SArrayDisplayDigital);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (ushort)lua_tonumber(L, 3);
+  SArrayDisplayDigital___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_new_SArrayDisplayDigital(lua_State* L) {
   int SWIG_arg = 0;
   SArrayDisplayDigital *result = 0 ;
@@ -11038,9 +12545,15 @@ static swig_lua_attribute swig_SArrayDisplayDigital_attributes[] = {
     {0,0,0}
 };
 static swig_lua_method swig_SArrayDisplayDigital_methods[]= {
+    { "__len", _wrap_SArrayDisplayDigital___len},
+    { "__getitem", _wrap_SArrayDisplayDigital___getitem},
+    { "__setitem", _wrap_SArrayDisplayDigital___setitem},
     {0,0}
 };
 static swig_lua_method swig_SArrayDisplayDigital_meta[] = {
+    { "__len", _wrap_SArrayDisplayDigital___len},
+    { "__getitem", _wrap_SArrayDisplayDigital___getitem},
+    { "__setitem", _wrap_SArrayDisplayDigital___setitem},
     {0,0}
 };
 
@@ -11967,11 +13480,11 @@ static int _wrap_SCtxFrame_data_set(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_SFrameData,SWIG_POINTER_DISOWN))){
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_SFrameData,0))){
     SWIG_fail_ptr("SCtxFrame_data_set",2,SWIGTYPE_p_SFrameData);
   }
   
-  if (arg1) (arg1)->data = arg2;
+  if (arg1) (arg1)->data = *arg2;
   
   return SWIG_arg;
   
@@ -11995,7 +13508,7 @@ static int _wrap_SCtxFrame_data_get(lua_State* L) {
     SWIG_fail_ptr("SCtxFrame_data_get",1,SWIGTYPE_p_SCtxFrame);
   }
   
-  result = (SFrameData *) ((arg1)->data);
+  result = (SFrameData *)& ((arg1)->data);
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_SFrameData,0); SWIG_arg++; 
   return SWIG_arg;
   
@@ -13557,6 +15070,270 @@ static swig_lua_class *swig_SCallback_bases[] = {0};
 static const char *swig_SCallback_base_names[] = {0};
 static swig_lua_class _wrap_class_SCallback = { "SCallback", "SCallback", &SWIGTYPE_p__SCallback,_proxy__wrap_new_SCallback, swig_delete_SCallback, swig_SCallback_methods, swig_SCallback_attributes, &swig_SCallback_Sf_SwigStatic, swig_SCallback_meta, swig_SCallback_bases, swig_SCallback_base_names };
 
+static int _wrap_SInt_value_set(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SInt *arg1 = (struct _SInt *) 0 ;
+  int arg2 ;
+  
+  SWIG_check_num_args("_SInt::value",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SInt::value",1,"struct _SInt *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("_SInt::value",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("SInt_value_set",1,SWIGTYPE_p__SInt);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  if (arg1) (arg1)->value = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SInt_value_get(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SInt *arg1 = (struct _SInt *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("_SInt::value",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SInt::value",1,"struct _SInt *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("SInt_value_get",1,SWIGTYPE_p__SInt);
+  }
+  
+  result = (int) ((arg1)->value);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_SInt(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SInt *result = 0 ;
+  
+  SWIG_check_num_args("_SInt::_SInt",0,0)
+  result = (struct _SInt *)calloc(1, sizeof(struct _SInt));
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p__SInt,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_SInt(void *obj) {
+struct _SInt *arg1 = (struct _SInt *) obj;
+free((char *) arg1);
+}
+static int _proxy__wrap_new_SInt(lua_State *L) {
+    assert(lua_istable(L,1));
+    lua_pushcfunction(L,_wrap_new_SInt);
+    assert(!lua_isnil(L,-1));
+    lua_replace(L,1); /* replace our table with real constructor */
+    lua_call(L,lua_gettop(L)-1,1);
+    return 1;
+}
+static swig_lua_attribute swig_SInt_attributes[] = {
+    { "value", _wrap_SInt_value_get, _wrap_SInt_value_set },
+    {0,0,0}
+};
+static swig_lua_method swig_SInt_methods[]= {
+    {0,0}
+};
+static swig_lua_method swig_SInt_meta[] = {
+    {0,0}
+};
+
+static swig_lua_attribute swig_SInt_Sf_SwigStatic_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_const_info swig_SInt_Sf_SwigStatic_constants[]= {
+    {0,0,0,0,0,0}
+};
+static swig_lua_method swig_SInt_Sf_SwigStatic_methods[]= {
+    {0,0}
+};
+static swig_lua_class* swig_SInt_Sf_SwigStatic_classes[]= {
+    0
+};
+
+static swig_lua_namespace swig_SInt_Sf_SwigStatic = {
+    "SInt",
+    swig_SInt_Sf_SwigStatic_methods,
+    swig_SInt_Sf_SwigStatic_attributes,
+    swig_SInt_Sf_SwigStatic_constants,
+    swig_SInt_Sf_SwigStatic_classes,
+    0
+};
+static swig_lua_class *swig_SInt_bases[] = {0};
+static const char *swig_SInt_base_names[] = {0};
+static swig_lua_class _wrap_class_SInt = { "SInt", "SInt", &SWIGTYPE_p__SInt,_proxy__wrap_new_SInt, swig_delete_SInt, swig_SInt_methods, swig_SInt_attributes, &swig_SInt_Sf_SwigStatic, swig_SInt_meta, swig_SInt_bases, swig_SInt_base_names };
+
+static int _wrap_SFloat_value_set(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SFloat *arg1 = (struct _SFloat *) 0 ;
+  float arg2 ;
+  
+  SWIG_check_num_args("_SFloat::value",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SFloat::value",1,"struct _SFloat *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("_SFloat::value",2,"float");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SFloat,0))){
+    SWIG_fail_ptr("SFloat_value_set",1,SWIGTYPE_p__SFloat);
+  }
+  
+  arg2 = (float)lua_tonumber(L, 2);
+  if (arg1) (arg1)->value = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SFloat_value_get(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SFloat *arg1 = (struct _SFloat *) 0 ;
+  float result;
+  
+  SWIG_check_num_args("_SFloat::value",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SFloat::value",1,"struct _SFloat *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SFloat,0))){
+    SWIG_fail_ptr("SFloat_value_get",1,SWIGTYPE_p__SFloat);
+  }
+  
+  result = (float) ((arg1)->value);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_SFloat(lua_State* L) {
+  int SWIG_arg = 0;
+  struct _SFloat *result = 0 ;
+  
+  SWIG_check_num_args("_SFloat::_SFloat",0,0)
+  result = (struct _SFloat *)calloc(1, sizeof(struct _SFloat));
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p__SFloat,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_SFloat(void *obj) {
+struct _SFloat *arg1 = (struct _SFloat *) obj;
+free((char *) arg1);
+}
+static int _proxy__wrap_new_SFloat(lua_State *L) {
+    assert(lua_istable(L,1));
+    lua_pushcfunction(L,_wrap_new_SFloat);
+    assert(!lua_isnil(L,-1));
+    lua_replace(L,1); /* replace our table with real constructor */
+    lua_call(L,lua_gettop(L)-1,1);
+    return 1;
+}
+static swig_lua_attribute swig_SFloat_attributes[] = {
+    { "value", _wrap_SFloat_value_get, _wrap_SFloat_value_set },
+    {0,0,0}
+};
+static swig_lua_method swig_SFloat_methods[]= {
+    {0,0}
+};
+static swig_lua_method swig_SFloat_meta[] = {
+    {0,0}
+};
+
+static swig_lua_attribute swig_SFloat_Sf_SwigStatic_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_const_info swig_SFloat_Sf_SwigStatic_constants[]= {
+    {0,0,0,0,0,0}
+};
+static swig_lua_method swig_SFloat_Sf_SwigStatic_methods[]= {
+    {0,0}
+};
+static swig_lua_class* swig_SFloat_Sf_SwigStatic_classes[]= {
+    0
+};
+
+static swig_lua_namespace swig_SFloat_Sf_SwigStatic = {
+    "SFloat",
+    swig_SFloat_Sf_SwigStatic_methods,
+    swig_SFloat_Sf_SwigStatic_attributes,
+    swig_SFloat_Sf_SwigStatic_constants,
+    swig_SFloat_Sf_SwigStatic_classes,
+    0
+};
+static swig_lua_class *swig_SFloat_bases[] = {0};
+static const char *swig_SFloat_base_names[] = {0};
+static swig_lua_class _wrap_class_SFloat = { "SFloat", "SFloat", &SWIGTYPE_p__SFloat,_proxy__wrap_new_SFloat, swig_delete_SFloat, swig_SFloat_methods, swig_SFloat_attributes, &swig_SFloat_Sf_SwigStatic, swig_SFloat_meta, swig_SFloat_bases, swig_SFloat_base_names };
+
+static int _wrap_sfCreateSFloat(lua_State* L) {
+  int SWIG_arg = 0;
+  SFloat *result = 0 ;
+  
+  SWIG_check_num_args("sfCreateSFloat",0,0)
+  result = (SFloat *)sfCreateSFloat();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p__SFloat,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfCreateSInt(lua_State* L) {
+  int SWIG_arg = 0;
+  SInt *result = 0 ;
+  
+  SWIG_check_num_args("sfCreateSInt",0,0)
+  result = (SInt *)sfCreateSInt();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p__SInt,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_sfCreateSFContext(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *result = 0 ;
@@ -13712,21 +15489,57 @@ fail:
 
 static int _wrap_sfCreateSFrameData(lua_State* L) {
   int SWIG_arg = 0;
-  SFContext *arg1 = (SFContext *) 0 ;
-  int arg2 ;
   SFrameData *result = 0 ;
   
-  SWIG_check_num_args("sfCreateSFrameData",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfCreateSFrameData",1,"SFContext *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("sfCreateSFrameData",2,"int");
+  SWIG_check_num_args("sfCreateSFrameData",0,0)
+  result = (SFrameData *)sfCreateSFrameData();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_SFrameData,0); SWIG_arg++; 
+  return SWIG_arg;
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
-    SWIG_fail_ptr("sfCreateSFrameData",1,SWIGTYPE_p_SFContext);
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfDeleteSFloat(lua_State* L) {
+  int SWIG_arg = 0;
+  SFloat *arg1 = (SFloat *) 0 ;
+  
+  SWIG_check_num_args("sfDeleteSFloat",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfDeleteSFloat",1,"SFloat *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SFloat,0))){
+    SWIG_fail_ptr("sfDeleteSFloat",1,SWIGTYPE_p__SFloat);
   }
   
-  arg2 = (int)lua_tonumber(L, 2);
-  result = (SFrameData *)sfCreateSFrameData(arg1,arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_SFrameData,0); SWIG_arg++; 
+  sfDeleteSFloat(arg1);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfDeleteSInt(lua_State* L) {
+  int SWIG_arg = 0;
+  SInt *arg1 = (SInt *) 0 ;
+  
+  SWIG_check_num_args("sfDeleteSInt",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfDeleteSInt",1,"SInt *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfDeleteSInt",1,SWIGTYPE_p__SInt);
+  }
+  
+  sfDeleteSInt(arg1);
+  
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -13806,29 +15619,6 @@ fail:
 }
 
 
-static int _wrap_sfDeleteSFrameData(lua_State* L) {
-  int SWIG_arg = 0;
-  SFrameData *arg1 = (SFrameData *) 0 ;
-  
-  SWIG_check_num_args("sfDeleteSFrameData",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfDeleteSFrameData",1,"SFrameData *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFrameData,0))){
-    SWIG_fail_ptr("sfDeleteSFrameData",1,SWIGTYPE_p_SFrameData);
-  }
-  
-  sfDeleteSFrameData(arg1);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_sfDeleteSUsb(lua_State* L) {
   int SWIG_arg = 0;
   SUsb *arg1 = (SUsb *) 0 ;
@@ -13864,6 +15654,29 @@ static int _wrap_sfDeleteSHardware(lua_State* L) {
   }
   
   sfDeleteSHardware(arg1);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfDeleteSFrameData(lua_State* L) {
+  int SWIG_arg = 0;
+  SFrameData *arg1 = (SFrameData *) 0 ;
+  
+  SWIG_check_num_args("sfDeleteSFrameData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfDeleteSFrameData",1,"SFrameData *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFrameData,0))){
+    SWIG_fail_ptr("sfDeleteSFrameData",1,SWIGTYPE_p_SFrameData);
+  }
+  
+  sfDeleteSFrameData(arg1);
   
   return SWIG_arg;
   
@@ -14038,29 +15851,38 @@ fail:
 static int _wrap_sfApiVersion(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *arg1 = (SFContext *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int *arg3 = (int *) 0 ;
-  int *arg4 = (int *) 0 ;
-  int temp2 ;
-  int temp3 ;
-  int temp4 ;
+  SInt *arg2 = (SInt *) 0 ;
+  SInt *arg3 = (SInt *) 0 ;
+  SInt *arg4 = (SInt *) 0 ;
   int result;
   
-  arg2 = &temp2; 
-  arg3 = &temp3; 
-  arg4 = &temp4; 
-  SWIG_check_num_args("sfApiVersion",1,1)
+  SWIG_check_num_args("sfApiVersion",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfApiVersion",1,"SFContext *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfApiVersion",2,"SInt *");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("sfApiVersion",3,"SInt *");
+  if(!SWIG_isptrtype(L,4)) SWIG_fail_arg("sfApiVersion",4,"SInt *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfApiVersion",1,SWIGTYPE_p_SFContext);
   }
   
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfApiVersion",2,SWIGTYPE_p__SInt);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfApiVersion",3,SWIGTYPE_p__SInt);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfApiVersion",4,SWIGTYPE_p__SInt);
+  }
+  
   result = (int)sfApiVersion(arg1,arg2,arg3,arg4);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg3); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg4); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14203,21 +16025,24 @@ fail:
 static int _wrap_sfGetTimeOut(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *arg1 = (SFContext *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int temp2 ;
+  SInt *arg2 = (SInt *) 0 ;
   int result;
   
-  arg2 = &temp2; 
-  SWIG_check_num_args("sfGetTimeOut",1,1)
+  SWIG_check_num_args("sfGetTimeOut",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfGetTimeOut",1,"SFContext *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfGetTimeOut",2,"SInt *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfGetTimeOut",1,SWIGTYPE_p_SFContext);
   }
   
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfGetTimeOut",2,SWIGTYPE_p__SInt);
+  }
+  
   result = (int)sfGetTimeOut(arg1,arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14306,21 +16131,24 @@ fail:
 static int _wrap_sfHardwareIsOpened(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *arg1 = (SFContext *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int temp2 ;
+  SInt *arg2 = (SInt *) 0 ;
   int result;
   
-  arg2 = &temp2; 
-  SWIG_check_num_args("sfHardwareIsOpened",1,1)
+  SWIG_check_num_args("sfHardwareIsOpened",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfHardwareIsOpened",1,"SFContext *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfHardwareIsOpened",2,"SInt *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfHardwareIsOpened",1,SWIGTYPE_p_SFContext);
   }
   
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfHardwareIsOpened",2,SWIGTYPE_p__SInt);
+  }
+  
   result = (int)sfHardwareIsOpened(arg1,arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14368,16 +16196,15 @@ static int _wrap_sfHardwareCapture(lua_State* L) {
   SFrameData *arg2 = (SFrameData *) 0 ;
   int arg3 ;
   int arg4 ;
-  int *arg5 = (int *) 0 ;
-  int temp5 ;
+  SInt *arg5 = (SInt *) 0 ;
   int result;
   
-  arg5 = &temp5; 
-  SWIG_check_num_args("sfHardwareCapture",4,4)
+  SWIG_check_num_args("sfHardwareCapture",5,5)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfHardwareCapture",1,"SFContext *");
   if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfHardwareCapture",2,"SFrameData *");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("sfHardwareCapture",3,"int");
   if(!lua_isnumber(L,4)) SWIG_fail_arg("sfHardwareCapture",4,"int");
+  if(!SWIG_isptrtype(L,5)) SWIG_fail_arg("sfHardwareCapture",5,"SInt *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfHardwareCapture",1,SWIGTYPE_p_SFContext);
@@ -14390,9 +16217,13 @@ static int _wrap_sfHardwareCapture(lua_State* L) {
   
   arg3 = (int)lua_tonumber(L, 3);
   arg4 = (int)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfHardwareCapture",5,SWIGTYPE_p__SInt);
+  }
+  
   result = (int)sfHardwareCapture(arg1,arg2,arg3,arg4,arg5);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg5); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14658,25 +16489,31 @@ fail:
 static int _wrap_sfFrameCapture(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *arg1 = (SFContext *) 0 ;
-  int *arg2 = (int *) 0 ;
-  int *arg3 = (int *) 0 ;
-  int temp2 ;
-  int temp3 ;
+  SInt *arg2 = (SInt *) 0 ;
+  SInt *arg3 = (SInt *) 0 ;
   int result;
   
-  arg2 = &temp2; 
-  arg3 = &temp3; 
-  SWIG_check_num_args("sfFrameCapture",1,1)
+  SWIG_check_num_args("sfFrameCapture",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfFrameCapture",1,"SFContext *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfFrameCapture",2,"SInt *");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("sfFrameCapture",3,"SInt *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfFrameCapture",1,SWIGTYPE_p_SFContext);
   }
   
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfFrameCapture",2,SWIGTYPE_p__SInt);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfFrameCapture",3,SWIGTYPE_p__SInt);
+  }
+  
   result = (int)sfFrameCapture(arg1,arg2,arg3);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg3); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -14936,21 +16773,24 @@ fail:
 static int _wrap_sfGetHeaderTemperature(lua_State* L) {
   int SWIG_arg = 0;
   SFrameHeader *arg1 = (SFrameHeader *) 0 ;
-  float *arg2 = (float *) 0 ;
-  float temp2 ;
+  SFloat *arg2 = (SFloat *) 0 ;
   int result;
   
-  arg2 = &temp2; 
-  SWIG_check_num_args("sfGetHeaderTemperature",1,1)
+  SWIG_check_num_args("sfGetHeaderTemperature",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfGetHeaderTemperature",1,"SFrameHeader *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfGetHeaderTemperature",2,"SFloat *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFrameHeader,0))){
     SWIG_fail_ptr("sfGetHeaderTemperature",1,SWIGTYPE_p_SFrameHeader);
   }
   
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p__SFloat,0))){
+    SWIG_fail_ptr("sfGetHeaderTemperature",2,SWIGTYPE_p__SFloat);
+  }
+  
   result = (int)sfGetHeaderTemperature(arg1,arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -15078,19 +16918,17 @@ static int _wrap_sfSimulate(lua_State* L) {
   int SWIG_arg = 0;
   SFContext *arg1 = (SFContext *) 0 ;
   SHardware *arg2 = (SHardware *) 0 ;
-  int *arg3 = (int *) 0 ;
-  int *arg4 = (int *) 0 ;
-  double arg5 ;
-  int temp3 ;
-  int temp4 ;
+  SInt *arg3 = (SInt *) 0 ;
+  SInt *arg4 = (SInt *) 0 ;
+  float arg5 ;
   int result;
   
-  arg3 = &temp3; 
-  arg4 = &temp4; 
-  SWIG_check_num_args("sfSimulate",3,3)
+  SWIG_check_num_args("sfSimulate",5,5)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfSimulate",1,"SFContext *");
   if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfSimulate",2,"SHardware *");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("sfSimulate",3,"double");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("sfSimulate",3,"SInt *");
+  if(!SWIG_isptrtype(L,4)) SWIG_fail_arg("sfSimulate",4,"SInt *");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("sfSimulate",5,"float");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFContext,0))){
     SWIG_fail_ptr("sfSimulate",1,SWIGTYPE_p_SFContext);
@@ -15101,11 +16939,19 @@ static int _wrap_sfSimulate(lua_State* L) {
     SWIG_fail_ptr("sfSimulate",2,SWIGTYPE_p_SHardware);
   }
   
-  arg5 = (double)lua_tonumber(L, 3);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfSimulate",3,SWIGTYPE_p__SInt);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p__SInt,0))){
+    SWIG_fail_ptr("sfSimulate",4,SWIGTYPE_p__SInt);
+  }
+  
+  arg5 = (float)lua_tonumber(L, 5);
   result = (int)sfSimulate(arg1,arg2,arg3,arg4,arg5);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg3); SWIG_arg++;
-  lua_pushnumber(L, (lua_Number) *arg4); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -17626,6 +19472,8 @@ static swig_lua_const_info swig_SwigModule_constants[]= {
     {0,0,0,0,0,0}
 };
 static swig_lua_method swig_SwigModule_methods[]= {
+    { "sfCreateSFloat", _wrap_sfCreateSFloat},
+    { "sfCreateSInt", _wrap_sfCreateSInt},
     { "sfCreateSFContext", _wrap_sfCreateSFContext},
     { "sfCreateSDisplay", _wrap_sfCreateSDisplay},
     { "sfCreateSSimulate", _wrap_sfCreateSSimulate},
@@ -17636,12 +19484,14 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "sfCreateSGenerator", _wrap_sfCreateSGenerator},
     { "sfCreateSEeprom", _wrap_sfCreateSEeprom},
     { "sfCreateSFrameData", _wrap_sfCreateSFrameData},
+    { "sfDeleteSFloat", _wrap_sfDeleteSFloat},
+    { "sfDeleteSInt", _wrap_sfDeleteSInt},
     { "sfDeleteSFContext", _wrap_sfDeleteSFContext},
     { "sfDeleteSDisplay", _wrap_sfDeleteSDisplay},
     { "sfDeleteSSimulate", _wrap_sfDeleteSSimulate},
-    { "sfDeleteSFrameData", _wrap_sfDeleteSFrameData},
     { "sfDeleteSUsb", _wrap_sfDeleteSUsb},
     { "sfDeleteSHardware", _wrap_sfDeleteSHardware},
+    { "sfDeleteSFrameData", _wrap_sfDeleteSFrameData},
     { "sfDeleteSFx3", _wrap_sfDeleteSFx3},
     { "sfDeleteSFpga", _wrap_sfDeleteSFpga},
     { "sfDeleteSGenerator", _wrap_sfDeleteSGenerator},
@@ -17813,6 +19663,8 @@ static swig_lua_class* swig_SwigModule_classes[]= {
 &_wrap_class_SCtxApi,
 &_wrap_class_SFContext,
 &_wrap_class_SCallback,
+&_wrap_class_SInt,
+&_wrap_class_SFloat,
     0
 };
 static swig_lua_namespace* swig_SwigModule_namespaces[] = {
@@ -17820,7 +19672,7 @@ static swig_lua_namespace* swig_SwigModule_namespaces[] = {
 };
 
 static swig_lua_namespace swig_SwigModule = {
-    "scopefunapi",
+    "ScopeFun",
     swig_SwigModule_methods,
     swig_SwigModule_attributes,
     swig_SwigModule_constants,
@@ -17870,6 +19722,8 @@ static swig_type_info _swigt__p_SUsb = {"_p_SUsb", "SUsb *", 0, 0, (void*)&_wrap
 static swig_type_info _swigt__p__EFunctionType = {"_p__EFunctionType", "enum _EFunctionType *|EFunctionType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p__ESimulateType = {"_p__ESimulateType", "enum _ESimulateType *|ESimulateType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p__SCallback = {"_p__SCallback", "struct _SCallback *|_SCallback *|SCallback *", 0, 0, (void*)&_wrap_class_SCallback, 0};
+static swig_type_info _swigt__p__SFloat = {"_p__SFloat", "struct _SFloat *|SFloat *|_SFloat *", 0, 0, (void*)&_wrap_class_SFloat, 0};
+static swig_type_info _swigt__p__SInt = {"_p__SInt", "SInt *|struct _SInt *|_SInt *", 0, 0, (void*)&_wrap_class_SInt, 0};
 static swig_type_info _swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int = {"_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int", "int (*)(int,short *,short *,short *,unsigned short *,float *,float *,void *)|int (*)(int,ishort *,ishort *,ishort *,ushort *,float *,float *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SDisplay_p_float_p_float_p_void__int = {"_p_f_p_SDisplay_p_float_p_float_p_void__int", "int (*)(SDisplay *,float *,float *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SFContext__int = {"_p_f_p_SFContext__int", "int (*)(SFContext *)", 0, 0, (void*)0, 0};
@@ -17923,6 +19777,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p__EFunctionType,
   &_swigt__p__ESimulateType,
   &_swigt__p__SCallback,
+  &_swigt__p__SFloat,
+  &_swigt__p__SInt,
   &_swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int,
   &_swigt__p_f_p_SDisplay_p_float_p_float_p_void__int,
   &_swigt__p_f_p_SFContext__int,
@@ -17976,6 +19832,8 @@ static swig_cast_info _swigc__p_SUsb[] = {  {&_swigt__p_SUsb, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p__EFunctionType[] = {  {&_swigt__p__EFunctionType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p__ESimulateType[] = {  {&_swigt__p__ESimulateType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p__SCallback[] = {  {&_swigt__p__SCallback, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p__SFloat[] = {  {&_swigt__p__SFloat, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p__SInt[] = {  {&_swigt__p__SInt, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int[] = {  {&_swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SDisplay_p_float_p_float_p_void__int[] = {  {&_swigt__p_f_p_SDisplay_p_float_p_float_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SFContext__int[] = {  {&_swigt__p_f_p_SFContext__int, 0, 0, 0},{0, 0, 0, 0}};
@@ -18029,6 +19887,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p__EFunctionType,
   _swigc__p__ESimulateType,
   _swigc__p__SCallback,
+  _swigc__p__SFloat,
+  _swigc__p__SInt,
   _swigc__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int,
   _swigc__p_f_p_SDisplay_p_float_p_float_p_void__int,
   _swigc__p_f_p_SFContext__int,

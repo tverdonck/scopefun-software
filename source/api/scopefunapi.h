@@ -184,10 +184,32 @@ enum DigitalBit
 /*----------------------------------------
       ScopeFun API - Array
 ----------------------------------------*/
-#define SCOPEFUN_ARRAY(name,type,size)          \
-typedef struct {                            \
-   type bytes[size];                       \
-}name;
+#ifdef SWIG
+	 #define SCOPEFUN_ARRAY(name,type,size)           \
+    typedef struct {                                 \
+        type bytes[size];                            \
+        %extend {                                    \
+			int __len() const { return size; }        \
+			type __getitem(int i)                     \
+			{                                           \
+				return self->bytes[i];                \
+			}                                        \
+			void __setitem(int i,type v)           \
+			{                                        \
+				self->bytes[i] = v;                   \
+			}                                        \
+		}                                           \
+    }name; \
+    %typemap(memberin) type bytes[size]                                                                                  \
+    {                                                                                                                    \
+        memcpy($1, $input, size);                                                                                        \
+    }                                                                                                                    
+#else
+	#define SCOPEFUN_ARRAY(name,type,size)      \
+    typedef struct {                            \
+        type bytes[size];                       \
+    }name;
+#endif
 
 
 /*----------------------------------------
@@ -455,7 +477,7 @@ typedef struct
 typedef struct
 {
     uint              maxMemory;
-    SFrameData*       data;
+    SFrameData        data;
     uint              received;
     uint              frameSize;
 } SCtxFrame;
@@ -496,49 +518,22 @@ typedef struct _SCallback {
    int (*onInit)(SFContext* ctx);
 }SCallback;
 
+typedef struct _SInt
+{
+   int value;
+} SInt;
+
+typedef struct _SFloat
+{
+   float value;
+} SFloat;
+
 
 /*----------------------------------------
 
    ScopeFun API - Functions
 
 ----------------------------------------*/
-
-/*----------------------------------------
-   defines
-----------------------------------------*/
-#define SCOPEFUN_CREATE(name) extern name* sfCreate##name();
-#define SCOPEFUN_DELETE(name) extern void  sfDelete##name(name* INPUT);
-
-/*----------------------------------------
-   create
-----------------------------------------*/
-SCOPEFUN_CREATE(SFContext)
-SCOPEFUN_CREATE(SDisplay)
-SCOPEFUN_CREATE(SSimulate)
-SCOPEFUN_CREATE(SUsb)
-SCOPEFUN_CREATE(SHardware)
-SCOPEFUN_CREATE(SFx3)
-SCOPEFUN_CREATE(SFpga)
-SCOPEFUN_CREATE(SGenerator)
-SCOPEFUN_CREATE(SEeprom)
-
-extern SFrameData* sfCreateSFrameData(SFContext* ctx, int memory);
-
-/*----------------------------------------
-   delete
-----------------------------------------*/
-SCOPEFUN_DELETE(SFContext)
-SCOPEFUN_DELETE(SDisplay)
-SCOPEFUN_DELETE(SSimulate)
-SCOPEFUN_DELETE(SFrameData)
-SCOPEFUN_DELETE(SUsb)
-SCOPEFUN_DELETE(SHardware)
-SCOPEFUN_DELETE(SFrameData)
-SCOPEFUN_DELETE(SFx3)
-SCOPEFUN_DELETE(SFpga)
-SCOPEFUN_DELETE(SGenerator)
-SCOPEFUN_DELETE(SEeprom)
-
 #define SCOPEFUN_API extern
 
 #ifndef SWIG
@@ -548,18 +543,57 @@ SCOPEFUN_DELETE(SEeprom)
 #endif
 
     /*----------------------------------------
+       defines
+    ----------------------------------------*/
+    #define SCOPEFUN_CREATE(name) SCOPEFUN_API name* sfCreate##name();
+    #define SCOPEFUN_DELETE(name) SCOPEFUN_API void  sfDelete##name(name* INPUT);
+    
+    /*----------------------------------------
+       create
+    ----------------------------------------*/
+    SCOPEFUN_CREATE(SFloat)
+    SCOPEFUN_CREATE(SInt)
+    SCOPEFUN_CREATE(SFContext)
+    SCOPEFUN_CREATE(SDisplay)
+    SCOPEFUN_CREATE(SSimulate)
+    SCOPEFUN_CREATE(SUsb)
+    SCOPEFUN_CREATE(SHardware)
+    SCOPEFUN_CREATE(SFx3)
+    SCOPEFUN_CREATE(SFpga)
+    SCOPEFUN_CREATE(SGenerator)
+    SCOPEFUN_CREATE(SEeprom)
+    SCOPEFUN_CREATE(SFrameData)
+
+    /*----------------------------------------
+       delete
+    ----------------------------------------*/
+    SCOPEFUN_DELETE(SFloat)
+    SCOPEFUN_DELETE(SInt)
+    SCOPEFUN_DELETE(SFContext)
+    SCOPEFUN_DELETE(SDisplay)
+    SCOPEFUN_DELETE(SSimulate)
+    SCOPEFUN_DELETE(SUsb)
+    SCOPEFUN_DELETE(SHardware)
+    SCOPEFUN_DELETE(SFrameData)
+    SCOPEFUN_DELETE(SFx3)
+    SCOPEFUN_DELETE(SFpga)
+    SCOPEFUN_DELETE(SGenerator)
+    SCOPEFUN_DELETE(SEeprom)
+    SCOPEFUN_DELETE(SFrameData)
+
+    /*----------------------------------------
       Initialization
     ----------------------------------------*/
     SCOPEFUN_API int sfApiInit();
     SCOPEFUN_API int sfApiCreateContext(SFContext* INOUT, int INPUT);
     SCOPEFUN_API int sfApiDeleteContext(SFContext* INOUT);
-    SCOPEFUN_API int sfApiVersion(SFContext* INOUT, int* OUTPUT, int* OUTPUT, int* OUTPUT);
+    SCOPEFUN_API int sfApiVersion(SFContext* INOUT, SInt* INOUT, SInt* INOUT, SInt* INOUT);
     SCOPEFUN_API int sfSetThreadSafe(SFContext* INOUT, int INPUT);
     SCOPEFUN_API int sfIsThreadSafe(SFContext* INOUT);
     SCOPEFUN_API int sfSetActive(SFContext* INOUT,  int  INPUT);
     SCOPEFUN_API int sfIsActive(SFContext* INOUT);
     SCOPEFUN_API int sfSetTimeOut(SFContext* INOUT, int  INPUT);
-    SCOPEFUN_API int sfGetTimeOut(SFContext* INOUT, int* OUTPUT);
+    SCOPEFUN_API int sfGetTimeOut(SFContext* INOUT, SInt* INOUT);
     SCOPEFUN_API int sfApiExit();
 
     /*----------------------------------------
@@ -567,9 +601,9 @@ SCOPEFUN_DELETE(SEeprom)
     ----------------------------------------*/
     SCOPEFUN_API int sfHardwareOpen(SFContext* INOUT, SUsb* INOUT, int INPUT);
     SCOPEFUN_API int sfHardwareReset(SFContext* INOUT);
-    SCOPEFUN_API int sfHardwareIsOpened(SFContext* INOUT, int* OUTPUT);
+    SCOPEFUN_API int sfHardwareIsOpened(SFContext* INOUT, SInt* INOUT);
     SCOPEFUN_API int sfHardwareConfig(SFContext* INOUT, SHardware* INOUT);
-    SCOPEFUN_API int sfHardwareCapture(SFContext* INOUT, SFrameData* INOUT, int INPUT, int INPUT, int* OUTPUT);
+    SCOPEFUN_API int sfHardwareCapture(SFContext* INOUT, SFrameData* INOUT, int INPUT, int INPUT, SInt* INOUT);
     SCOPEFUN_API int sfHardwareUploadFx3(SFContext* INOUT, SFx3* INOUT);
     SCOPEFUN_API int sfHardwareUploadFpga(SFContext* INOUT, SFpga* INOUT);
     SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* INOUT, SGenerator* INOUT);
@@ -582,7 +616,7 @@ SCOPEFUN_DELETE(SEeprom)
     /*----------------------------------------
       Frame
     ----------------------------------------*/
-    SCOPEFUN_API int sfFrameCapture(SFContext* INOUT, int* OUTPUT, int* OUTPUT);
+    SCOPEFUN_API int sfFrameCapture(SFContext* INOUT, SInt* INOUT, SInt* INOUT);
     SCOPEFUN_API int sfFrameOutput(SFContext*  ctx, SFrameData* INOUT, int INPUT);
     SCOPEFUN_API int sfFrameDisplay(SFContext* INOUT, SFrameData* INOUT, int INPUT, SDisplay* INOUT,float INPUT,float INPUT);
     SCOPEFUN_API int sfFrameDisplayFunction(SFContext* INOUT, EFunctionType INPUT);
@@ -594,7 +628,7 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfGetHeader(SFContext* INOUT, SFrameData* INOUT, SFrameHeader* INOUT);
     SCOPEFUN_API int sfGetHeaderHardware(SFContext* INOUT, SFrameHeader* INOUT, SHardware* INOUT);
     SCOPEFUN_API int sfGetHeaderEts(SFrameHeader* INOUT, uint* OUTPUT);
-    SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* INOUT, float* OUTPUT);
+    SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* INOUT, SFloat* INOUT);
    
     /*----------------------------------------
        Simulate
@@ -603,7 +637,7 @@ SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_API int sfSetSimulateData(SFContext* INOUT, SSimulate* INOUT);
     SCOPEFUN_API int sfGetSimulateData(SFContext* INOUT, SSimulate* INOUT);
     SCOPEFUN_API int sfSetSimulateOnOff(SFContext* INOUT, int INOUT);
-    SCOPEFUN_API int sfSimulate(SFContext* INOUT, SHardware* INOUT, int* OUTPUT,int* OUTPUT,double INOUT);
+    SCOPEFUN_API int sfSimulate(SFContext* INOUT, SHardware* INOUT, SInt* INOUT, SInt* INOUT,float INOUT);
 
     /*----------------------------------------
        Set

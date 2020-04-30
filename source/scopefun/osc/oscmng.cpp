@@ -191,26 +191,26 @@ void ThreadApi::resultClearAll()
 
 void ThreadApi::update()
 {
-    // functions
-    int decr = 0;
-    Array<EThreadApiFunction, 22>  execute;
-    SDL_AtomicLock(&lock);
-       decr = -1 * func.getCount();
-       for(int i = 0; i < func.getCount(); i++)
-       {
-          execute.pushBack(func[i]);
-       }
-       func.clear();
-    SDL_AtomicUnlock(&lock);
-   
+   // functions
+   int decr = 0;
+   Array<EThreadApiFunction, 22>  execute;
+   SDL_AtomicLock(&lock);
+   decr = -1 * func.getCount();
+   for (int i = 0; i < func.getCount(); i++)
+   {
+      execute.pushBack(func[i]);
+   }
+   func.clear();
+   SDL_AtomicUnlock(&lock);
+
     // default
-    int iopened = 0;
+    SInt iopened = {0};
     int isimulate = 0;
     int iversion = SDL_AtomicGet(&version);
     isimulate  = sfIsSimulate(getCtx());
     sfHardwareIsOpened(getCtx(), &iopened);
     SDL_AtomicSet(&simulate, isimulate);
-    SDL_AtomicSet(&open, iopened);
+    SDL_AtomicSet(&open, iopened.value);
    
     while(true)
     {
@@ -231,13 +231,13 @@ void ThreadApi::update()
                 break;
             case afIsOpened:
                 iret = sfHardwareIsOpened(getCtx(), &iopened);
-                SDL_AtomicSet(&open, iopened);
+                SDL_AtomicSet(&open, iopened.value);
                 break;
             case afOpenUsb:
                 SDL_AtomicLock(&lock);
                 iret += sfHardwareOpen(getCtx(), &usbData, iversion);
                 iret += sfHardwareIsOpened(getCtx(), &iopened);
-                SDL_AtomicSet(&open, iopened);
+                SDL_AtomicSet(&open, iopened.value);
                 SDL_AtomicUnlock(&lock);
                 break;
             case afUploadFpga:
@@ -279,7 +279,7 @@ void ThreadApi::update()
                     SHardware hw = { 0 };
                     getConfig(&hw);
                     iret += sfHardwareConfig(getCtx(), &hw);
-                    SDL_AtomicSet(&fpga, iopened);
+                    SDL_AtomicSet(&fpga, iopened.value);
                 }
                 break;
             case afSetSimulateData:
@@ -3616,9 +3616,9 @@ int SDLCALL CaptureDataThreadFunction(void* data)
       else
       {
          // capture
-         int ret       = 0;
-         int received  = 0;
-         int frameSize = 0;
+         int ret = 0;
+         SInt received = {0};
+         SInt frameSize = { 0 };
          if (isSim>0)
          {
             ret = sfSimulate(getCtx(), getHw(), &received, &frameSize, time );
@@ -3627,28 +3627,28 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          {
             ret = sfFrameCapture(getCtx(), &received, &frameSize);
          }
-         if (received > SCOPEFUN_FRAME_HEADER)
+         if (received.value > SCOPEFUN_FRAME_HEADER)
          {
             ScopeFunCaptureBuffer& captureBuffer = pOsciloscope->m_captureBuffer;
             SDL_AtomicLock(&captureBuffer.m_lock);
 
                // setup frame count
-               uint frameCount = max<uint>(1, captureBuffer.m_dataMax / frameSize );
+               uint frameCount = max<uint>(1, captureBuffer.m_dataMax / frameSize.value );
                captureBuffer.m_frame.setCount(frameCount);
 
                // clear history, all frames must be of equal size 
                int i = 0;
                if( frameCount > i )
                {
-                  if (captureBuffer.m_frame[i].m_memLen != frameSize)
+                  if (captureBuffer.m_frame[i].m_memLen != frameSize.value)
                   {
                      SDL_memset(captureBuffer.m_dataPtr, 0, captureBuffer.m_dataMax);
                      SDL_memset(&captureBuffer.m_frame[0], 0, sizeof(ScopeFunFrame)*frameCount);
                      for (int j = 0; j < frameCount; j++)
                      {
                         captureBuffer.m_frame[j].m_length = 0;
-                        captureBuffer.m_frame[j].m_memPos = j*frameSize;
-                        captureBuffer.m_frame[j].m_memLen = frameSize;
+                        captureBuffer.m_frame[j].m_memPos = j*frameSize.value;
+                        captureBuffer.m_frame[j].m_memLen = frameSize.value;
                      }
                      SDL_AtomicSet(&captureBuffer.m_index, 0);
                   }
@@ -3659,7 +3659,7 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 
                // new frame
                ScopeFunFrame& newFrame = captureBuffer.m_frame[index];
-               newFrame.m_length = received;
+               newFrame.m_length = received.value;
 
                // ring
                index = (++index) % frameCount;
@@ -3696,7 +3696,7 @@ int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeTh
    SDL_AtomicUnlock(&captureBuffer.m_lock);
      
       // display
-      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame,pos,zoom);
+      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame, pos, zoom);
 
       // hardware
       SFrameHeader header = { 0 };
@@ -3768,8 +3768,8 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
 
            captureRender = pOsciloscope->renderData;
 
-           float  pos = pOsciloscope->signalPosition;
-           float zoom = pOsciloscope->signalZoom;
+           double pos = pOsciloscope->signalPosition;
+           double zoom = pOsciloscope->signalZoom;
              
            pCaptureData->m_render = captureRender;
            pCaptureData->m_window = pOsciloscope->renderWindow;

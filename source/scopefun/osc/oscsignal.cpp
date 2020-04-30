@@ -1875,10 +1875,9 @@ extern "C"
 
 int LuaOnPrint(lua_State *L)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
-   int n = lua_gettop(L);
-   const char* str = lua_tostring(L, 1);
+   const char* str = lua_tostring(L, -1);
    lua_getglobal(L, "ScriptPointer");
    OsciloscopeScript* pScript = (OsciloscopeScript*)lua_touserdata(L, -1);
    pScript->LuaPrint(str);
@@ -1887,140 +1886,160 @@ int LuaOnPrint(lua_State *L)
 }
 
 
+int LuaOnError(lua_State *L)
+{
+   if (!L) return 0;
+
+   const char* str = lua_tostring(L, -1);
+   lua_getglobal(L, "ScriptPointer");
+   OsciloscopeScript* pScript = (OsciloscopeScript*)lua_touserdata(L, -1);
+   pScript->LuaError(str);
+   return 0;
+}
+
+
 int LuaOnFrame(lua_State *L, SFrameData* data, int len, float* pos, float* zoom, void* user)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
    // push function
-   lua_getglobal(L, "onFrame");
+   if (lua_getglobal(L, "onFrame") == LUA_TFUNCTION)
+   {
+      // push parameters
+      SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SFrameData, 0);
+      lua_pushinteger(L, len);
 
-   // push parameters
-   SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SFrameData, 0);
-   lua_pushinteger(L, len);
-   SWIG_Lua_NewPointerObj(L, pos, SWIGTYPE_p_float, 0);
-   SWIG_Lua_NewPointerObj(L, zoom, SWIGTYPE_p_float, 0);
-   SWIG_Lua_NewPointerObj(L, user, SWIGTYPE_p_void, 0);
+      // execute
+      if (lua_pcall(L, 2, 2, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         SWIG_Lua_ConvertPtr(L, -2, (void**)&data, SWIGTYPE_p_SFrameData, 0);
+         lua_pop(L, 1);
 
-   // execute
-   lua_call(L, 5, 1);
-
-   // result
-   int result = (int)lua_tointeger(L, -1);
-
-   // cleanup
-   lua_pop(L, 1);
-
+         // cleanup
+         lua_pop(L, 1);
+      }
+   }
    return 0;
 }
 
 int LuaOnSample(lua_State *L, int sample, ishort* ch0, ishort* ch1, ishort* fun,ushort* dig, float* pos, float* zoom, void* user)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
    // push function
-   lua_getglobal(L, "onSample");
+   if (lua_getglobal(L, "onSample") == LUA_TFUNCTION)
+   {
+      // push parameters
+      lua_pushinteger(L, sample);
+      lua_pushinteger(L, *ch0);
+      lua_pushinteger(L, *ch1);
+      lua_pushinteger(L, *fun);
+      lua_pushinteger(L, *dig);
 
-   // push parameters
-   lua_pushinteger(L, sample);
-   lua_pushinteger(L, *ch0);
-   lua_pushinteger(L, *ch1);
-   lua_pushinteger(L, *fun);
-   lua_pushinteger(L, *dig);
-   lua_pushnumber(L,  *pos);
-   lua_pushnumber(L,  *zoom);
-   lua_pushinteger(L, (int)user);
-
-   // execute
-   lua_call(L, 8, 8);
-
-   sample  = lua_tointeger(L, -8);
-   *ch0    = lua_tointeger(L, -7);
-   *ch1    = lua_tointeger(L, -6);
-   *fun    = lua_tointeger(L, -5);
-   *dig    = lua_tointeger(L, -4);
-   *pos    = lua_tonumber(L, -3);
-   *zoom   = lua_tonumber(L, -2);
-   user    = (void*)lua_tointeger(L, -1);
-
-   // cleanup
-   lua_pop(L, 8);
-
+      // execute
+      if (lua_pcall(L, 5, 5, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         sample = lua_tointeger(L, -5);
+         *ch0 = lua_tointeger(L, -4);
+         *ch1 = lua_tointeger(L, -3);
+         *fun = lua_tointeger(L, -2);
+         *dig = lua_tointeger(L, -1);
+         lua_pop(L, 5);
+      }
+   }
    return 0;
 }
 
 int LuaOnDisplay(lua_State *L, SDisplay* data, float* pos, float* zoom, void* user)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
    // push function
-   lua_getglobal(L, "onDisplay");
+   if (lua_getglobal(L, "onDisplay") == LUA_TFUNCTION)
+   {
+      // push parameters
+      SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SDisplay, 0);
 
-   // push parameters
-   SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SDisplay, 0);
-   SWIG_Lua_NewPointerObj(L, pos, SWIGTYPE_p_float, 0);
-   SWIG_Lua_NewPointerObj(L, zoom, SWIGTYPE_p_float, 0);
-   SWIG_Lua_NewPointerObj(L, user, SWIGTYPE_p_void, 0);
-
-   // execute
-   lua_call(L, 4, 1);
-
-   // result
-   int result = (int)lua_tointeger(L, -1);
-
-   // cleanup
-   lua_pop(L, 1);
-
+      // execute
+      if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         SWIG_Lua_ConvertPtr(L, -1, (void**)&data, SWIGTYPE_p_SDisplay, 0);
+         lua_pop(L, 1);
+      }
+   }
    return 0;
 }
 
 int LuaOnConfigure(lua_State *L, SHardware* hw)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
    // push function
-   lua_getglobal(L, "onConfigure");
+   if (lua_getglobal(L, "onConfigure") == LUA_TFUNCTION)
+   {
+      // push parameters
+      SWIG_Lua_NewPointerObj(L, hw, SWIGTYPE_p_SHardware, 0);
 
-   // push parameters
-   SWIG_Lua_NewPointerObj(L, hw, SWIGTYPE_p_SHardware, 0);
-
-   // execute
-   lua_call(L, 1, 1);
-
-   // result
-   int result = (int)lua_tointeger(L, -1);
-
-   // cleanup
-   lua_pop(L, 1);
-
+      // execute
+      if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         SWIG_Lua_ConvertPtr(L, -1, (void**)&hw, SWIGTYPE_p_SHardware, 0);
+         lua_pop(L, 1);
+      }
+   }
    return 0;
 }
 
 int LuaOnInit(lua_State *L, SFContext* ctx)
 {
-   if (!L) return 1;
+   if (!L) return 0;
 
    // push function
-   lua_getglobal(L, "onInit");
+   if (lua_getglobal(L, "onInit") == LUA_TFUNCTION)
+   {
+      // push parameters
+      SWIG_Lua_NewPointerObj(L, ctx, SWIGTYPE_p_SFContext, 0);
 
-   // push parameters
-   SWIG_Lua_NewPointerObj(L, ctx, SWIGTYPE_p_SFContext, 0);
-
-   // execute
-   lua_call(L, 1, 1);
-
-   // result
-   int result = (int)lua_tointeger(L, -1);
-
-   // cleanup
-   lua_pop(L, 1);
-
-   return result;
+      // execute
+      if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         SWIG_Lua_ConvertPtr(L, -1, (void**)&ctx, SWIGTYPE_p_SFContext, 0);
+         lua_pop(L, 1);
+      }
+   }
+ 
+   return 0;
 }
 OsciloscopeScript::OsciloscopeScript(int index)
 {
    m_arrayIdx = index;
    m_spinLock = 0;
-   m_drawLock = 0;
+   SDL_AtomicSet(&m_locking,1);
    m_userData = 0;
    m_luaState = 0;
    SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
@@ -2053,23 +2072,35 @@ int OsciloscopeScript::OnDisplay(SDisplay* data, float* pos, float* zoom, void* 
 int OsciloscopeScript::OnConfigure(SHardware* hw)
 {
    int ret = 0;
-   SDL_AtomicLock(&m_spinLock);
-      ret = LuaOnConfigure(m_luaState, hw);
-   SDL_AtomicUnlock(&m_spinLock);
+   if( SDL_AtomicGet(&m_locking) == 1) 
+      SDL_AtomicLock(&m_spinLock);
+         ret = LuaOnConfigure(m_luaState, hw);
+   if (SDL_AtomicGet(&m_locking) == 1)  
+      SDL_AtomicUnlock(&m_spinLock);
    return ret;
 }
 int OsciloscopeScript::OnInit(SFContext* ctx)
 {
    int ret = 0;
-   SDL_AtomicLock(&m_spinLock);
-      ret = LuaOnInit(m_luaState, ctx);
-   SDL_AtomicUnlock(&m_spinLock);
+   SDL_AtomicSet(&m_locking,0);
+      ret = LuaOnInit(m_luaState,ctx);
+   SDL_AtomicSet(&m_locking,1);
    return ret;
 }
 
 int OsciloscopeScript::LuaPrint(const char* str)
 {
-   SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER);
+   if( str )
+      SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER);
+   return 0;
+}
+
+
+int OsciloscopeScript::LuaError(const char* str)
+{
+   LuaPrint(str);
+   lua_close(m_luaState);
+   m_luaState = 0;
    return 0;
 }
 
@@ -2092,29 +2123,40 @@ int OsciloscopeScript::Run()
    if (m_luaState) 
       return 1;
 
+   const char* redirect = "\r\n"
+      "print_stdout = print\r\n"
+      "\r\n"
+      "print = function(...)\r\n"
+      "  local arg = { ... }\r\n"
+      "  for i, v in ipairs(arg) do\r\n"
+      "    LuaPrint(v)\r\n"
+      "  end\r\n"
+      "end\r\n";
+
    SDL_AtomicLock(&m_spinLock);
       m_luaState = luaL_newstate();
       luaopen_base(m_luaState);
       luaL_openlibs(m_luaState);
-      luaopen_scopefunapi(m_luaState);
+      luaopen_ScopeFun(m_luaState);
       lua_pushlightuserdata(m_luaState, this);
       lua_setglobal(m_luaState, "ScriptPointer");
       lua_register(m_luaState, "LuaPrint", LuaOnPrint);
+      luaL_dostring(m_luaState, redirect);
       int ret = luaL_dofile(m_luaState, m_fileName.asChar());
       if (ret == LUA_OK)
-         ret = LuaOnInit(m_luaState, getCtx());
-      char* error = 0;
-      if(ret != LUA_OK)
+      { 
+         LuaPrint("script loaded: ");
+         LuaPrint(m_fileName.asChar());
+         LuaPrint("\n");
+
+         // OnInit
+         ret = OnInit(getCtx());
+      }
+      else
       {
-         ularge len = 0;
-         error = (char*)luaL_checklstring(m_luaState, -1, &len);
+         LuaOnError(m_luaState);
       }
    SDL_AtomicUnlock(&m_spinLock);
-   if(ret != LUA_OK)
-   {
-      CppPrint(error);
-      CppPrint("\n");
-   }
    return ret;
 }
 
@@ -2242,22 +2284,6 @@ SCallback* OsciloscopeCallback::Ptr()
 {
    return &m_callback;
 }
-
-
-/*
-int runLuaScript(const char* script)
-{
-   lua_State *L = luaL_newstate();
-   luaopen_base(L);
-   luaL_openlibs(L);
-   luaopen_scopefunapi(L);
-   luaL_dofile(L,script);
-   LuaOnInit(L,getCtx());
-   printf(" Done! \n");
-   lua_close(L);
-   return 0;
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //

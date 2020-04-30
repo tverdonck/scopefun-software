@@ -193,7 +193,7 @@ class OsciloscopeScript
 {
 private:
    SDL_SpinLock m_spinLock;
-   SDL_SpinLock m_drawLock;
+   SDL_atomic_t m_locking;
    String       m_fileName;
    lua_State*   m_luaState;
    char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
@@ -208,6 +208,7 @@ public:
    int OnConfigure(SHardware* hw);
    int OnInit(SFContext* ctx);
 public:
+   int LuaError(const char* str);
    int LuaPrint(const char* str);
    int CppPrint(const char* str);
 public:

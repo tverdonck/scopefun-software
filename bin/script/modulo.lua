@@ -5,17 +5,17 @@ end
 
 -- onSample
 function onSample(sample,ch0,ch1,fun,dig)
-	spike = 1000
-	if sample%spike == 0 then 
-		ch0  = 500
-		ch1  = 250
-		print(string.format('%d\n',sample) )
-	end
     return sample,ch0,ch1,fun,dig
 end
 
 -- onDisplay
 function onDisplay(data)
+	for i = 0,9999,1 do
+		data.analog0[i] = data.analog0[(i*2)%9999]
+	end
+	for i = 0,9999,1 do
+		data.analog1[i] = data.analog1[i%1999]
+	end
 	return data
 end
 

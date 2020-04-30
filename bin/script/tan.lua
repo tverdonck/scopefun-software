@@ -1,16 +1,15 @@
 -- onFrame
-function onFrame(data,length)
+function onFrame(frame,length)
+    sampleBytes = length-ScopeFun.SCOPEFUN_FRAME_HEADER;
+	start = ScopeFun.SCOPEFUN_FRAME_HEADER
+	for i=start,start+sampleBytes,1 do
+		frame.data[i] = math.abs( math.tan( i ) )
+	end
 	return data,length
 end
 
 -- onSample
 function onSample(sample,ch0,ch1,fun,dig)
-	spike = 1000
-	if sample%spike == 0 then 
-		ch0  = 500
-		ch1  = 250
-		print(string.format('%d\n',sample) )
-	end
     return sample,ch0,ch1,fun,dig
 end
 

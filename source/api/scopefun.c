@@ -245,9 +245,11 @@ int apiResult(int ret)
 ---------------------------------------------------------------------*/
 
 #define SCOPEFUN_CREATE_DELETE(name) \
-    name* sfCreate##name() { name* ptr = malloc(sizeof(name)); SDL_zerop(ptr); return ptr; } \
-    void  sfDelete##name(name* ptr) { free(ptr); }
+    name* sfCreate##name()           { name* ptr = malloc(sizeof(name)); SDL_zerop(ptr); return ptr; } \
+    void  sfDelete##name(name* ptr)  { free(ptr); }
 
+SCOPEFUN_CREATE_DELETE(SFloat)
+SCOPEFUN_CREATE_DELETE(SInt)
 SCOPEFUN_CREATE_DELETE(SFContext)
 SCOPEFUN_CREATE_DELETE(SDisplay)
 SCOPEFUN_CREATE_DELETE(SSimulate)
@@ -257,19 +259,8 @@ SCOPEFUN_CREATE_DELETE(SFx3)
 SCOPEFUN_CREATE_DELETE(SFpga)
 SCOPEFUN_CREATE_DELETE(SGenerator)
 SCOPEFUN_CREATE_DELETE(SEeprom)
-SFrameData* sfCreateSFrameData(SFContext* ctx, int memory)
-{
-    apiLock(ctx);
-    memory  = apiMin(memory, SCOPEFUN_FRAME_MEMORY);
-    SFrameData* ptr = (SFrameData*)malloc(memory);
-    SDL_memset(ptr, 0, memory);
-    apiUnlock(ctx);
-    return ptr;
-}
-void sfDeleteSFrameData(SFrameData* ptr)
-{
-    free(ptr);
-}
+SCOPEFUN_CREATE_DELETE(SFrameData)
+
 
 /*--------------------------------------------------------------------
    Initialization
@@ -286,8 +277,7 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
     apiLock(ctx);
     // frame
     ctx->frame.maxMemory = memory;
-    ctx->frame.data = cMalloc(ctx->frame.maxMemory);
-    cMemSet((char*)ctx->frame.data, 0, ctx->frame.maxMemory);
+    cMemSet((char*)ctx->frame.data.data.bytes, 0, ctx->frame.maxMemory);
     // usb
     ctx->usb = cMalloc(sizeof(struct UsbContext));
     struct UsbContext* pCtx = (UsbContext*)ctx->usb;
@@ -306,19 +296,17 @@ SCOPEFUN_API int sfApiCreateContext(SFContext* ctx, int memory)
 
 SCOPEFUN_API int sfApiDeleteContext(SFContext* ctx)
 {
-    // frame
-    cFree((char*)ctx->frame.data);
     // usb
     cFree((char*)ctx->usb);
     return SCOPEFUN_SUCCESS;
 }
 
-SCOPEFUN_API int sfApiVersion(SFContext* ctx, int* version, int* major, int* minor)
+SCOPEFUN_API int sfApiVersion(SFContext* ctx, SInt* version, SInt* major, SInt* minor)
 {
     apiLock(ctx);
-    *version = ctx->api.version;
-    *major   = ctx->api.major;
-    *minor   = ctx->api.minor;
+    version->value = ctx->api.version;
+    major->value   = ctx->api.major;
+    minor->value   = ctx->api.minor;
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
@@ -368,10 +356,10 @@ SCOPEFUN_API int sfSetTimeOut(SFContext* ctx, int timeout)
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
-SCOPEFUN_API int sfGetTimeOut(SFContext* ctx, int* timeout)
+SCOPEFUN_API int sfGetTimeOut(SFContext* ctx, SInt* timeout)
 {
     apiLock(ctx);
-    *timeout = ctx->api.timeout;
+    timeout->value = ctx->api.timeout;
     apiUnlock(ctx);
     return SCOPEFUN_SUCCESS;
 }
@@ -416,19 +404,19 @@ SCOPEFUN_API int sfHardwareReset(SFContext* ctx)
    return result;
 }
 
-SCOPEFUN_API int sfHardwareIsOpened(SFContext* ctx, int* open)
+SCOPEFUN_API int sfHardwareIsOpened(SFContext* ctx, SInt* open)
 {
    int result = SCOPEFUN_FAILURE;
    apiLock(ctx);
    if (ctx->api.active > 0)
    {
       struct UsbContext* pUsbCtx = (struct UsbContext*)ctx->usb;
-      *open = usbFxxIsConnected(pUsbCtx);
+      open->value = usbFxxIsConnected(pUsbCtx);
       result = SCOPEFUN_SUCCESS;
    }
    if (SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn) > 0)
    {
-      *open = 1;
+      open->value = 1;
       result = SCOPEFUN_SUCCESS;
    }
    apiUnlock(ctx);
@@ -452,7 +440,7 @@ SCOPEFUN_API int sfHardwareConfig(SFContext* ctx, SHardware* hw)
    apiUnlock(ctx);
    return result;
 }
-SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int offset, int* received)
+SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int offset, SInt* received)
 {
    /* if(sfIsSimulate(ctx))
     {
@@ -475,7 +463,7 @@ SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, 
        {
           struct UsbContext* pUsbCtx = (struct UsbContext*)ctx->usb;
           int swap = 0;
-          int ret = usbFxxTransferDataIn(pUsbCtx, 6, (byte*)&buffer->data.bytes[offset], size, swap, ctx->api.timeout, received);
+          int ret = usbFxxTransferDataIn(pUsbCtx, 6, (byte*)&buffer->data.bytes[offset], size, swap, ctx->api.timeout, (int*)received);
           result = apiResult(ret);
        }
     apiUnlock(ctx);
@@ -633,10 +621,10 @@ SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* data)
 
 int softwareGenerator(int frameVersion, int frameHeader, int frameData, int framePacket, SFContext* ctx, SHardware* hw,SSimulate* sim, double timer)
 {
-    SDL_memset(&ctx->frame.data->data.bytes[0], 0, apiMin(sizeof(SFrameData), frameHeader + frameData));
+    SDL_memset(&ctx->frame.data.data.bytes[0], 0, apiMin(sizeof(SFrameData), frameHeader + frameData));
     ctx->frame.received = 0;
     // header, channel0, channel1 and digital bits
-    byte* packet = &ctx->frame.data->data.bytes[0];
+    byte* packet = &ctx->frame.data.data.bytes[0];
     SFrameHeader* header = (SFrameHeader*)packet;
     uint  numSamples  = (uint)frameData / 4;
     float numSamplesF = (float)numSamples;
@@ -874,17 +862,17 @@ int softwareGenerator(int frameVersion, int frameHeader, int frameData, int fram
     return 0;
 }
 
-SCOPEFUN_API int sfSimulate(SFContext* ctx,SHardware* hw, int* received,int* frameSize, double time)
+SCOPEFUN_API int sfSimulate(SFContext* ctx,SHardware* hw, SInt* received, SInt* frameSize, float time)
 {
     apiLock(ctx);
     int simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn);
     if(simulate > 0)
     {
         int numSamples = sfGetNumSamples(hw);
-        *received  = SCOPEFUN_FRAME_HEADER + numSamples * 4;
-        *frameSize = SCOPEFUN_FRAME_HEADER + numSamples * 4;
-        ctx->frame.received  = *received;
-        ctx->frame.frameSize = *frameSize;
+        received->value  = SCOPEFUN_FRAME_HEADER + numSamples * 4;
+        frameSize->value = SCOPEFUN_FRAME_HEADER + numSamples * 4;
+        ctx->frame.received  = received->value;
+        ctx->frame.frameSize = frameSize->value;
         softwareGenerator(HARDWARE_VERSION, SCOPEFUN_FRAME_HEADER, numSamples *4, SCOPEFUN_FRAME_PACKET, ctx, hw, &ctx->simulateData, time);
     }
     apiUnlock(ctx);
@@ -894,7 +882,7 @@ SCOPEFUN_API int sfSimulate(SFContext* ctx,SHardware* hw, int* received,int* fra
 /*--------------------------------------------------------------------
    Frame
 ---------------------------------------------------------------------*/
-SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize)
+SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SInt* received, SInt* frameSize)
 {
    apiLock(ctx);
 
@@ -902,7 +890,7 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize)
    if (ctx->frame.received < SCOPEFUN_FRAME_HEADER )
    {
       int transfered = 0;
-      int  ret = sfHardwareCapture(ctx, ctx->frame.data, SCOPEFUN_FRAME_HEADER, ctx->frame.received, &transfered);
+      int  ret = sfHardwareCapture(ctx, &ctx->frame.data, SCOPEFUN_FRAME_HEADER, ctx->frame.received, (SInt*)&transfered);
       ctx->frame.received += transfered;
    }
 
@@ -910,20 +898,20 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize)
    if (ctx->frame.received >= SCOPEFUN_FRAME_HEADER)
    {
       SHardware hw = { 0 };
-      sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data->data.bytes[0], &hw);
+      sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
       ctx->frame.frameSize = sfGetFrameSize(&hw);
 
       int         transfered = 0;
       int frameLeftToReceive = (int)ctx->frame.frameSize - (int)ctx->frame.received;
       if (frameLeftToReceive > 0)
       {
-         int  ret = sfHardwareCapture(ctx, ctx->frame.data, frameLeftToReceive, ctx->frame.received, &transfered);
+         int  ret = sfHardwareCapture(ctx, &ctx->frame.data, frameLeftToReceive, ctx->frame.received, (SInt*)&transfered);
          ctx->frame.received += transfered;
       }
    }
 
-   *received  = ctx->frame.received;
-   *frameSize = ctx->frame.frameSize;
+   received->value  = ctx->frame.received;
+   frameSize->value = ctx->frame.frameSize;
 
    // new frame ?
    if (ctx->frame.received == ctx->frame.frameSize)
@@ -936,7 +924,7 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, int* received, int* frameSize)
 SCOPEFUN_API int sfFrameOutput(SFContext* ctx, SFrameData* buffer, int len)
 {
    apiLock(ctx);
-      SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data->data.bytes[0], iMin(ctx->frame.frameSize,len) );
+      SDL_memcpy(&buffer->data.bytes[0], &ctx->frame.data.data.bytes[0], iMin(ctx->frame.frameSize,len) );
    apiUnlock(ctx);
    return SCOPEFUN_SUCCESS;
 }
@@ -974,6 +962,7 @@ SCOPEFUN_API int cDisplayFunction(EFunctionType function, ushort channel0, ushor
 
 SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom)
 {
+
    // hardware
    SHardware hw = { 0 };
    sfGetHeaderHardware(ctx, (SFrameHeader*)&buffer->data.bytes[0], &hw);
@@ -1202,13 +1191,13 @@ SCOPEFUN_API int sfGetHeaderEts(SFrameHeader* header, uint* ets)
    return SCOPEFUN_SUCCESS;
 }
 
-SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* header, float* temperature)
+SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* header, SFloat* temperature)
 {
    byte* ptr = (byte*)&header->magic.bytes[0];
    unsigned short adc0 = (ptr)[6] << 8;
    unsigned short adc1 = (ptr)[7];
    unsigned short adc = adc1 | adc0;
-   *temperature = (((float)adc * 503.975) / 4096.0) - 273.15;
+   temperature->value = (((float)adc * 503.975) / 4096.0) - 273.15;
    return SCOPEFUN_SUCCESS;
 }
 

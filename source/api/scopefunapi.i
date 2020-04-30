@@ -1,12 +1,4 @@
-%module scopefunapi
-
-// include
-%{
-
-#define SCOPEFUN_API_EXPORT
-#include "scopefunapi.h"
-   
-%}
+%module ScopeFun
 
 // swig
 %include "cpointer.i"

@@ -29,9 +29,10 @@ Debug( parent )
     m_Redirect = new wxStreamToTextRedirector(m_textCtrl41);
     wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
     m_textCtrl41->SetFont(font);
+    //m_textCtrl41->GetScrollHelper()->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_NEVER, wxScrollbarVisibility::wxSHOW_SB_ALWAYS);
     SetSize(500, 500);
     SetTitle("Script");
-    SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE_BOX);
+   // SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE);
    // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
    // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
    // SetScrollHelper(m_scrollHelp);
@@ -62,12 +63,31 @@ void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
    Hide();
 }
 
-void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
+void OsciloskopDebug::m_button561OnButtonClick(wxCommandEvent& event)
 {
-   if(m_script)
+   if (m_script)
       m_script->Reload();
    event.Skip();
 }
+
+void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
+{
+   if (m_script)
+      m_script->Run();
+   event.Skip();
+}
+void OsciloskopDebug::m_button562OnButtonClick(wxCommandEvent& event)
+{
+   if (m_script)
+      m_script->Stop();
+   event.Skip();
+}
+void OsciloskopDebug::m_button5621OnButtonClick(wxCommandEvent& event)
+{
+   Close();
+   event.Skip();
+}
+
 
 void OsciloskopDebug::SetText(std::string str)
 {
