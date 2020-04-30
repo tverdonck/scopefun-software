@@ -130,11 +130,12 @@ set_target_properties( ScopeFun PROPERTIES OUTPUT_NAME "${SCOPEFUN_EXE_NAME}" )
 # link
 #--------------------------------------------------------------------------------
 if( SCOPEFUN_VISUALSTUDIO )
+    set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/${SCOPEFUN_BUILD_TYPE}/lua.lib )
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb-1.0.lib )
 else()
+    set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/liblua.a )
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
-set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/${SCOPEFUN_BUILD_TYPE}/lua.lib )
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
 list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext )
 if(SCOPEFUN_WINDOWS)

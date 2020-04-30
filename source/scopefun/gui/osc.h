@@ -68,6 +68,8 @@ class Osciloskop : public wxFrame
 		wxButton* m_buttonConnect;
 		wxButton* m_buttonDisconnect;
 		wxButton* m_buttonFirmwareUpload;
+		wxButton* m_buttonUndo;
+		wxButton* m_buttonRedo;
 		wxStaticText* m_staticText106;
 		wxChoice* m_choiceSpeed;
 		wxStaticText* m_staticText19;
@@ -323,6 +325,8 @@ class Osciloskop : public wxFrame
 		virtual void m_buttonConnectOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonDisconnectOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonFirmwareUploadOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonUndoOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonRedoOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceSpeedOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxTimeControlOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxTimeCaptureOnCombobox( wxCommandEvent& event ) { event.Skip(); }

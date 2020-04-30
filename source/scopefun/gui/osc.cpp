@@ -236,16 +236,28 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer1512 = new wxBoxSizer( wxHORIZONTAL );
 
 	m_checkBox26 = new wxCheckBox( this, wxID_ANY, _("USB Open"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	bSizer1512->Add( m_checkBox26, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_checkBox26, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonConnect = new wxButton( this, wxID_ANY, _("Open"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1512->Add( m_buttonConnect, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_buttonConnect, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonDisconnect = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1512->Add( m_buttonDisconnect, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_buttonDisconnect, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonFirmwareUpload = new wxButton( this, wxID_ANY, _("Upload Firmware"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1512->Add( m_buttonFirmwareUpload, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_buttonFirmwareUpload, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1512->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_buttonUndo = new wxButton( this, wxID_ANY, _("Undo"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer1512->Add( m_buttonUndo, 0, wxALL, 5 );
+
+	m_buttonRedo = new wxButton( this, wxID_ANY, _("Redo"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer1512->Add( m_buttonRedo, 0, wxALL, 5 );
+
+
+	bSizer1512->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_staticText106 = new wxStaticText( this, wxID_ANY, _("Speed:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText106->Wrap( -1 );
@@ -255,7 +267,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	int m_choiceSpeedNChoices = sizeof( m_choiceSpeedChoices ) / sizeof( wxString );
 	m_choiceSpeed = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceSpeedNChoices, m_choiceSpeedChoices, 0 );
 	m_choiceSpeed->SetSelection( 0 );
-	bSizer1512->Add( m_choiceSpeed, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_choiceSpeed, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticText19 = new wxStaticText( this, wxID_ANY, _("Control:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText19->Wrap( -1 );
@@ -265,7 +277,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	int m_comboBoxTimeControlNChoices = sizeof( m_comboBoxTimeControlChoices ) / sizeof( wxString );
 	m_comboBoxTimeControl = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTimeControlNChoices, m_comboBoxTimeControlChoices, 0 );
 	m_comboBoxTimeControl->SetSelection( 0 );
-	bSizer1512->Add( m_comboBoxTimeControl, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1512->Add( m_comboBoxTimeControl, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer1671->Add( bSizer1512, 1, wxEXPAND, 5 );
@@ -1682,6 +1694,8 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_buttonConnect->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonConnectOnButtonClick ), NULL, this );
 	m_buttonDisconnect->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonDisconnectOnButtonClick ), NULL, this );
 	m_buttonFirmwareUpload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonFirmwareUploadOnButtonClick ), NULL, this );
+	m_buttonUndo->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonUndoOnButtonClick ), NULL, this );
+	m_buttonRedo->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonRedoOnButtonClick ), NULL, this );
 	m_choiceSpeed->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceSpeedOnChoice ), NULL, this );
 	m_comboBoxTimeControl->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTimeControlOnCombobox ), NULL, this );
 	m_comboBoxTimeCapture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTimeCaptureOnCombobox ), NULL, this );
@@ -1902,6 +1916,8 @@ Osciloskop::~Osciloskop()
 	m_buttonConnect->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonConnectOnButtonClick ), NULL, this );
 	m_buttonDisconnect->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonDisconnectOnButtonClick ), NULL, this );
 	m_buttonFirmwareUpload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonFirmwareUploadOnButtonClick ), NULL, this );
+	m_buttonUndo->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonUndoOnButtonClick ), NULL, this );
+	m_buttonRedo->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonRedoOnButtonClick ), NULL, this );
 	m_choiceSpeed->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceSpeedOnChoice ), NULL, this );
 	m_comboBoxTimeControl->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTimeControlOnCombobox ), NULL, this );
 	m_comboBoxTimeCapture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTimeCaptureOnCombobox ), NULL, this );

@@ -235,6 +235,8 @@ protected:
     void m_buttonCaptureOnButtonClick(wxCommandEvent& event);
     void m_buttonSimulateOnButtonClick(wxCommandEvent& event);
     void m_buttonClearOnButtonClick(wxCommandEvent& event);
+    void m_buttonUndoOnButtonClick(wxCommandEvent& event);
+    void m_buttonRedoOnButtonClick(wxCommandEvent& event);
 public:
     void MenuLanguageSelection(wxCommandEvent& event);
     void MenuScriptSelection(wxCommandEvent& event);

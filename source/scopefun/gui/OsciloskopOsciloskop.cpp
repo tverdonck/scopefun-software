@@ -3844,3 +3844,14 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
         m_buttonClear->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
 }
+
+void OsciloskopOsciloskop::m_buttonUndoOnButtonClick(wxCommandEvent& event)
+{ 
+   pOsciloscope->transferUndo();
+   event.Skip(); 
+}
+void OsciloskopOsciloskop::m_buttonRedoOnButtonClick(wxCommandEvent& event)
+{
+   pOsciloscope->transferRedo();
+   event.Skip();
+}
