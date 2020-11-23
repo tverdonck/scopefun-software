@@ -2216,7 +2216,9 @@ bool OsciloscopeManager::onApplicationIdle()
         // lock
         uint renderId = 0;
         bool ret = false;
-        while(!ret && !SDL_AtomicGet(&oscExit) )
+        // we do not want to stall main loop
+        // on MAC main rendering must be done from the same thread that created the device
+        // while(!ret && !SDL_AtomicGet(&oscExit) )
         {
             ret = pOsciloscope->threadLoop.update.consumerLock(renderId, false);
             if(ret)
