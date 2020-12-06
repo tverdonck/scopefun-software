@@ -59,7 +59,8 @@ void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
       m_script->Stop();
       m_script->ClrPrint();
    }
-   ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false);
+   if( m_script )
+      ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false);
    Hide();
 }
 

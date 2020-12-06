@@ -31,6 +31,7 @@
 
 #include <wx/app.h>
 #include <wx/msgdlg.h>
+#include <wx/progdlg.h>
 #include <wx/clipbrd.h>
 #include <wx/config.h>
 #include <wx/app.h>
@@ -46,6 +47,7 @@ bool isFileWritable()
 }
 
 wxLocale* pLocalization = 0;
+
 
 int loadLanguageFromConfig()
 {
@@ -311,6 +313,8 @@ void _setYDisplay(float& volt, uint& unit, VoltageCapture selected)
     };
 }
 
+void SetupUI(WndMain& window);
+
 OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent), m_timer(this, TIMER_ID)
 {
     userinterfaceupdate = 1;
@@ -348,7 +352,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
        GetMenuBar()->Remove(6);
        wxMenu* menu = new wxMenu();
        GetMenuBar()->Insert(6,menu,"Script");
-
        
        String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
        scriptPath += "/Script/*.*";
@@ -426,6 +429,9 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         SetIcons(icoBundle);
         m_textCtrlFreqDividerOnTextEnter(version2);
         m_comboBoxTimeCaptureOnCombobox(version2);
+        wxCommandEvent evt;
+        m_textCtrlTimeFrameSize->SetValue(pFormat->integerToString(10000));
+        m_textCtrlTimeFrameSizeOnTextEnter(evt);
         bool writeOk = isFileWritable();
         if(!writeOk)
         {
@@ -766,36 +772,84 @@ void OsciloskopOsciloskop::OnSize(wxSizeEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem1OnMenuSelection
-    wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString,
-                                                _("*.osc"),
-                                                wxFD_OPEN, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    if(LoadDialog->ShowModal() == wxID_OK)  // If the user clicked "OK"
-    {
-        String file = LoadDialog->GetPath().ToAscii().data();
-        pOsciloscope->loadFromFile(file.asChar());
-    }
-    // Clean up after ourselves
-    LoadDialog->Destroy();
-    // delete LoadDialog;
+   // TODO: Implement m_menuItem2OnMenuSelection
+   wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString,
+      _("*.osc"),
+      wxFD_OPEN | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
+   // Creates a Save Dialog with 4 file types
+   int show = LoadDialog->ShowModal();
+   if (show == wxID_OK)  // If the user clicked "OK"
+   {
+      // file
+      String file = LoadDialog->GetPath().ToAscii().data();
+      LoadDialog->Destroy();
+
+      // show dialog
+      wxProgressDialog progressDlg(_("Loading File"), _("in progress..."), 100, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
+      progressDlg.ShowModal();
+
+      // run thread
+      pOsciloscope->loadFromFile(file.asChar());
+
+      // loop
+      int active = 1;
+      while (active)
+      {
+         int progress = pOsciloscope->m_captureBuffer.getProgress();
+         active = pOsciloscope->m_captureBuffer.isActive();
+         progressDlg.Update(progress);
+         if (progressDlg.WasCancelled())
+            pOsciloscope->m_captureBuffer.disable();
+      }
+
+      // destroy
+      progressDlg.Destroy();
+   }
+   else
+   {
+      LoadDialog->Destroy();
+   }
 }
 
 void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem2OnMenuSelection
-    wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), wxEmptyString, wxEmptyString,
-                                                _("*.osc"),
-                                                wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    if(SaveDialog->ShowModal() == wxID_OK)  // If the user clicked "OK"
-    {
-        String file = SaveDialog->GetPath().ToAscii().data();
-        pOsciloscope->saveToFile(file.asChar());
-    }
-    // Clean up after ourselves
-    // delete   SaveDialog;
-    SaveDialog->Destroy();
+   // TODO: Implement m_menuItem2OnMenuSelection
+   wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), wxEmptyString, wxEmptyString,
+      _("*.osc"),
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
+   // Creates a Save Dialog with 4 file types
+   int show = SaveDialog->ShowModal();
+   if (show == wxID_OK)  // If the user clicked "OK"
+   {
+      // file
+      String file = SaveDialog->GetPath().ToAscii().data();
+      SaveDialog->Destroy();
+
+      // show dialog
+      wxProgressDialog progressDlg(_("Saving File"), _("in progress..."), 100, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
+      progressDlg.ShowModal();
+
+      // run thread
+      pOsciloscope->saveToFile(file.asChar());
+
+      // loop
+      int active = 1;
+      while (active)
+      {
+         int progress = pOsciloscope->m_captureBuffer.getProgress();
+         active = pOsciloscope->m_captureBuffer.isActive();
+         progressDlg.Update(progress);
+         if (progressDlg.WasCancelled())
+            pOsciloscope->m_captureBuffer.disable();
+      }
+
+      // destroy
+      progressDlg.Destroy();
+   }
+   else
+   {
+      SaveDialog->Destroy();
+   }
 }
 
 void OsciloskopOsciloskop::m_menuItemConvertToTextOnMenuSelection(wxCommandEvent& event)
@@ -2898,7 +2952,7 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     // horizontal
     ////////////////////////////////////////////////////////////////////////////////////////
     // capture
-    m_comboBoxTimeCapture->SetSelection(captureTimeFromValue(window.horizontal.Capture));
+    m_comboBoxTimeCapture->SetSelection( captureTimeFromValue(window.horizontal.Capture) );
     // display
     uint  multiEnum = multiplyerFromValue(window.horizontal.Display);
     float multiFloat = multiplyerFromEnum(multiEnum);

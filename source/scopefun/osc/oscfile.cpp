@@ -60,10 +60,8 @@ int _saveToFile(void* param)
     OscFileThread* fileThread = (OscFileThread*)param;
     pOsciloscope->window.progress.uiActive = 1;
     pOsciloscope->window.progress.uiRange  = 100;
-    //pOsciloscope->captureBuffer->history->save(fileThread->file.asChar(), (uint&)pOsciloscope->window.progress.uiValue, (uint&)pOsciloscope->window.progress.uiActive);
-    pOsciloscope->window.progress.uiActive = 1;
-    pOsciloscope->window.progress.uiRange = 100;
-    pOsciloscope->window.progress.uiValue = 0;
+    pOsciloscope->window.progress.uiValue  = 0;
+    pOsciloscope->m_captureBuffer.save(fileThread->file.asChar());
     SDL_AtomicSet(&fileThread->atomic, 0);
     return 0;
 }
@@ -248,7 +246,7 @@ int _loadFromFile(void* param)
     OscFileThread* fileThread = (OscFileThread*)param;
     pOsciloscope->window.progress.uiActive = 1;
     pOsciloscope->window.progress.uiRange = 100;
-   // pOsciloscope->captureBuffer->history->load(fileThread->file.asChar(), (uint&)pOsciloscope->window.progress.uiValue, (uint&)pOsciloscope->window.progress.uiActive);
+    pOsciloscope->m_captureBuffer.load(fileThread->file.asChar());
     pOsciloscope->window.progress.uiActive = 1;
     pOsciloscope->window.progress.uiRange = 100;
     pOsciloscope->window.progress.uiValue = 0;

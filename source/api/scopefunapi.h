@@ -314,6 +314,12 @@ typedef struct
     SArrayCrc            crc;
 } SFrameHeader;
 
+
+/*----------------------------------------
+   SArrayString256
+----------------------------------------*/
+SCOPEFUN_ARRAY(SArrayString256, byte, 256);
+
 /*----------------------------------------
    SFrameData
 ----------------------------------------*/
@@ -563,6 +569,8 @@ typedef struct _SFloat
     SCOPEFUN_CREATE(SGenerator)
     SCOPEFUN_CREATE(SEeprom)
     SCOPEFUN_CREATE(SFrameData)
+    SCOPEFUN_CREATE(SFrameHeader)
+    SCOPEFUN_CREATE(SHardware)
 
     /*----------------------------------------
        delete
@@ -580,6 +588,8 @@ typedef struct _SFloat
     SCOPEFUN_DELETE(SGenerator)
     SCOPEFUN_DELETE(SEeprom)
     SCOPEFUN_DELETE(SFrameData)
+    SCOPEFUN_DELETE(SFrameHeader)
+    SCOPEFUN_DELETE(SHardware)
 
     /*----------------------------------------
       Initialization
@@ -622,6 +632,7 @@ typedef struct _SFloat
     SCOPEFUN_API int sfFrameDisplayFunction(SFContext* INOUT, EFunctionType INPUT);
     SCOPEFUN_API int sfFrameDisplayCallback(SFContext* INOUT, SCallback* INOUT,void* INPUT);
 
+
     /*----------------------------------------
       Header
     ----------------------------------------*/
@@ -629,6 +640,18 @@ typedef struct _SFloat
     SCOPEFUN_API int sfGetHeaderHardware(SFContext* INOUT, SFrameHeader* INOUT, SHardware* INOUT);
     SCOPEFUN_API int sfGetHeaderEts(SFrameHeader* INOUT, uint* OUTPUT);
     SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* INOUT, SFloat* INOUT);
+
+    /*----------------------------------------
+      hardware
+    ----------------------------------------*/
+    SCOPEFUN_API int sfHardwareWordCnt(int* INOUT);
+    SCOPEFUN_API int sfHardwareWordId(int INPUT, SArrayString256* INOUT);
+
+    /*----------------------------------------
+      Data
+    ----------------------------------------*/
+    SCOPEFUN_API int sfSetData(byte* INPUT,ishort  INPUT,ishort  INPUT,ushort  INPUT);
+    SCOPEFUN_API int sfGetData(uint  INPUT,ishort* INOUT,ishort* INOUT,ushort* INOUT);
    
     /*----------------------------------------
        Simulate

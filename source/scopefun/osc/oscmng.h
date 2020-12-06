@@ -151,7 +151,7 @@ public:
         packetSize = 0;
     }
 };
-
+/*
 class CaptureInterface
 {
 public:
@@ -340,6 +340,7 @@ public:
 public:
     void clear();
 };
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -912,31 +913,59 @@ public:
     int  captureFrameData(SFrameData* buffer, int toReceive, int* transfered, int type);
 };
 
-
-// ScopeFunFrame
-struct ScopeFunFrame {
-   ularge m_memPos;
-   ularge m_memLen;
-   ularge m_length;
-};
-
 // ScopeFunCaptureBuffer
 class ScopeFunCaptureBuffer {
 public:
    byte*                                     m_dataPtr;
    ularge                                    m_dataMax;
-   Array<ScopeFunFrame, SCOPEFUN_MAX_FRAMES> m_frame;
-   SDL_atomic_t                              m_index;
-   SDL_SpinLock                              m_lock;
+   SDL_atomic_t                              m_frameIndex;
+   SDL_atomic_t                              m_frameSize;
+   SDL_atomic_t                              m_frameCount;
+   SDL_atomic_t                              m_frameOffset;
+   SDL_atomic_t                              m_progress;
+   Array<SDL_atomic_t,SCOPEFUN_MAX_FRAMES>   m_lock;
+   SDL_atomic_t                              m_active;
 public:
    ScopeFunCaptureBuffer()
    {
       m_dataPtr = 0;
       m_dataMax = 0;
-      SDL_AtomicSet(&m_index, 0);
-      m_lock    = 0;
-      SDL_memset(&m_frame[0], 0, sizeof(ScopeFunFrame)*SCOPEFUN_MAX_FRAMES);
+      SDL_AtomicSet(&m_frameIndex, 0);
+      SDL_AtomicSet(&m_frameSize, 0);
+      SDL_AtomicSet(&m_frameCount, 1);
+      SDL_AtomicSet(&m_frameOffset, 0);
+      SDL_AtomicSet(&m_progress, 0);
+      SDL_AtomicSet(&m_active, 1);
+      m_lock.setCount(SCOPEFUN_MAX_FRAMES);
+      for (int i = 0; i < SCOPEFUN_MAX_FRAMES - 1; i++)
+         SDL_AtomicSet(&m_lock[i], 0);
    }
+public:
+   int lock(int id)
+   {
+      id = clamp<uint>(id, 0, SCOPEFUN_MAX_FRAMES-1);
+      if (SDL_AtomicCAS(&m_lock[id], 0, 1) == SDL_FALSE)
+      {
+         SDL_Delay(1);
+      }
+      return 0;
+   }
+   int unlock(int id)
+   {
+      id = clamp<uint>(id, 0, SCOPEFUN_MAX_FRAMES-1);
+      while (SDL_AtomicCAS(&m_lock[id], 1, 0) == SDL_FALSE)
+      {
+         SDL_Delay(1);
+      }
+      return 0;
+   }
+public:
+   int getProgress() { return SDL_AtomicGet(&m_progress); }
+   int isActive()    { return SDL_AtomicGet(&m_active);   }
+   int disable()     { return SDL_AtomicSet(&m_active,0); }
+public:
+   uint save(const char* path);
+   uint load(const char* path);
 };
 
 
@@ -1129,7 +1158,8 @@ public:
     void render() {};
     int  stop();
 public:
-    void onCallibrateFrameCaptured(OsciloscopeFrame& frame, int version);
+    void getAnalogCount(SDisplay& frame);
+    void onCallibrateFrameCaptured(SDisplay& frame, int version);
     void AutoCallibrate();
 public:
     void oscCameraSetup(int enable);

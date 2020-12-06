@@ -155,6 +155,18 @@ ishort leadBitShift(ushort value)
    if (isLeadBit)
    {
       return (value | 0xFE00);
+      // return (~(value&(~0x200))) + 1;
+   }
+   return value;
+}
+
+
+ishort leadBitCompl(ushort value)
+{
+   ishort isLeadBit = value & 0x200;
+   if (isLeadBit)
+   {
+      return (~(value&(~0x200))) + 1;
    }
    return value;
 }
@@ -218,6 +230,13 @@ void apiUnlock(SFContext* ctx)
     }
 }
 
+unsigned short endianByteSwap16(unsigned short value)
+{
+   unsigned short low  = (value & 0x00FF);
+   unsigned short high = (value & 0xFF00);
+   return (low << 8) | (high >> 8);
+}
+
 uint apiFrameSize(int version, char* headerPtr)
 {
    SFrameHeader* header = (SFrameHeader*)headerPtr;
@@ -260,6 +279,7 @@ SCOPEFUN_CREATE_DELETE(SFpga)
 SCOPEFUN_CREATE_DELETE(SGenerator)
 SCOPEFUN_CREATE_DELETE(SEeprom)
 SCOPEFUN_CREATE_DELETE(SFrameData)
+SCOPEFUN_CREATE_DELETE(SFrameHeader)
 
 
 /*--------------------------------------------------------------------
@@ -440,6 +460,7 @@ SCOPEFUN_API int sfHardwareConfig(SFContext* ctx, SHardware* hw)
    apiUnlock(ctx);
    return result;
 }
+
 SCOPEFUN_API int sfHardwareCapture(SFContext* ctx, SFrameData* buffer, int len, int offset, SInt* received)
 {
    /* if(sfIsSimulate(ctx))
@@ -962,21 +983,21 @@ SCOPEFUN_API int cDisplayFunction(EFunctionType function, ushort channel0, ushor
 
 SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDisplay* display,float displayPos,float displayZoom)
 {
-
    // hardware
    SHardware hw = { 0 };
    sfGetHeaderHardware(ctx, (SFrameHeader*)&buffer->data.bytes[0], &hw);
 
+   // samples
+   uint numSamples = sfGetNumSamples( &hw );
+   if (numSamples == 0) return 1;
+
    // init display
-   uint numSamples  = sfGetNumSamples( &hw );
    SDL_memset(display, 0, sizeof(SDisplay));
    display->samples = SCOPEFUN_DISPLAY;
-   display->capture = sfGetNumSamples(&hw);
+   display->capture = numSamples;
   
    // frame size
    uint frameSize = sfGetFrameSize(&hw);
-        frameSize = uMin(frameSize, len);
-        frameSize = uMin(frameSize, numSamples*4+SCOPEFUN_FRAME_HEADER);
 
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);
@@ -984,9 +1005,6 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    // attr
    ushort analogSwitch = sfGetAnalogSwitch(&hw);
    display->attr |= (analogSwitch & CHANNEL_ETS) ? daETS : 0;
-
-   // numSamples
-   numSamples = numSamples > 0 ? numSamples : 1;
    
    // resample
    double resamplePos = displayPos  + 0.5;
@@ -994,10 +1012,10 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    double resampleMax = resamplePos + 0.5*(double)displayZoom;
    
    // sample: min / max 
-   double dNumSamples     = (numSamples-1);
-   ilarge zoomSampleMin   = resampleMin*dNumSamples; // [0..n]
-   ilarge zoomSampleMax   = resampleMax*dNumSamples; // [0..n]
-   ilarge zoomSampleCnt   = ilClamp(zoomSampleMax-zoomSampleMin+1,0,numSamples); // [0..n]
+   double dNumSamples     = numSamples;
+   ilarge zoomSampleMin   = resampleMin*(dNumSamples-1); // [0..n]
+   ilarge zoomSampleMax   = resampleMax*(dNumSamples-1); // [0..n]
+   ilarge zoomSampleCnt   = ilClamp(zoomSampleMax-zoomSampleMin+1,0,numSamples-1); // [0..n]
 
    // samples
    EFunctionType function = dfMedium;
@@ -1142,8 +1160,8 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             double nEnd    = (double)(end-zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
 
             // index
-            ularge iStart = SDL_floor(nStart*(double)SCOPEFUN_DISPLAY);
-            ularge   iEnd = SDL_floor(nEnd*(double)SCOPEFUN_DISPLAY);
+            ularge iStart = SDL_floor(nStart*(double)(SCOPEFUN_DISPLAY-1));
+            ularge   iEnd = SDL_floor(nEnd*(double)(SCOPEFUN_DISPLAY-1));
 
             // Output:
             // Display full interval not only single sample.
@@ -1202,6 +1220,290 @@ SCOPEFUN_API int sfGetHeaderTemperature(SFrameHeader* header, SFloat* temperatur
 }
 
 /*--------------------------------------------------------------------------------
+  Hardware
+--------------------------------------------------------------------------------*/
+char* hardwareIds[] = {
+   "controlAddr",
+   "controlData",
+   "vgaina",
+   "vgainb",
+   "offseta",
+   "offsetb",
+   "analogswitch",
+   "triggerMode",
+   "triggerSource",
+   "triggerSlope",
+   "triggerLevel",
+   "triggerHis",
+   "triggerPercent",
+   "xRange",
+   "holdoffH",
+   "holdoffL",
+   "sampleSizeH",
+   "sampleSizeL",
+   "generatorType0",
+   "generatorVoltage0",
+   "generatorOffset0",
+   "generatorDeltaH0",
+   "generatorDeltaL0",
+   "generatorSqueareDuty0",
+   "generatorType1",
+   "generatorVoltage1",
+   "generatorOffset1",
+   "generatorDeltaH1",
+   "generatorDeltaL1",
+   "generatorSqueareDuty1",
+   "digitalPattern1a",
+   "digitalPattern1b",
+   "digitalMask1",
+   "digitalPattern2a",
+   "digitalPattern2b",
+   "digitalMask2",
+   "digitalPattern3a",
+   "digitalPattern3b",
+   "digitalMask3",
+   "digitalPattern4a",
+   "digitalPattern4b",
+   "digitalMask4",
+   "dt_delayMaxcnt1",
+   "dt_delayMaxcnt2",
+   "dt_delayMaxcnt3",
+   "dt_delayMaxcnt4",
+   "dt_control",
+   "digitalVoltage",
+   "digitalInputOutput",
+   "digitalOutputBit",
+   "digitalOutputMask",
+   "digitalClkDivideH",
+   "digitalClkDivideL",
+   "average",
+   "reserved2",
+   "reserved3",
+   "reserved4",
+   "reserved5",
+   "reserved6",
+};
+
+SCOPEFUN_API int sfHardwareWordCnt(int* cnt)
+{
+   *cnt = sizeof(hardwareIds)/sizeof(char*);
+   return SCOPEFUN_SUCCESS;
+}
+SCOPEFUN_API int sfHardwareWordId(int index, SArrayString256* string)
+{
+   index = iMax(index, 0);
+   index = iMin(index, sizeof(hardwareIds) );
+   SDL_memcpy( string->bytes, (void*)hardwareIds[index], SDL_strlen(hardwareIds[index]));
+   return SCOPEFUN_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------------
+  Data
+--------------------------------------------------------------------------------*/
+ushort twos_complement(ushort input_value, ushort num_bits)
+{
+   ushort mask = 1 << (num_bits - 1);
+   return -(input_value & mask) + (input_value & ~mask);
+}
+
+uint endianSwap123(uint value)
+{
+   uint v0 = (value & 0x000000FF);
+   uint v1 = (value & 0x0000FF00);
+   uint v2 = (value & 0x00FF0000);
+   uint v3 = (value & 0xFF000000);
+   return (v0 >> 24) | (v1 >> 4) | (v2 << 4) | (v3 << 24);
+}
+
+uint reverseBits(uint v)
+{
+   // Bit Twiddling Hacks
+   uint r = v;
+   int s = sizeof(v) * CHAR_BIT - 1;
+   for (v >>= 1; v; v >>= 1)
+   {
+      r <<= 1;
+      r |= v & 1;
+      s--;
+   }
+   r <<= s;
+   return r;
+}
+
+uint rotateBits(uint x,uint n)
+{
+   uint r = (x << n) | (x >> (-n & 31));
+   return r;
+}
+
+byte reverseByte(byte v)
+{
+   byte r = v & 1; // r will be reversed bits of v; first get LSB of v
+   int s = sizeof(v) * CHAR_BIT - 1; // extra shift needed at end
+
+   for (v >>= 1; v; v >>= 1)
+   {
+      r <<= 1;
+      r |= v & 1;
+      s--;
+   }
+   r <<= s; // shift when v's highest bits are zero
+   return r;
+}
+
+uint setBits(uint channel0, uint channel1, uint digital)
+{
+   // result
+   uint r = 0;
+
+   // input
+   uint ch0 = channel0 & 0x03ff;
+   uint ch1 = channel1 & 0x03ff;
+   uint dig = digital  & 0x0fff;
+
+   // ch 0
+   byte  b0 = (ch0 & 0x00ff);
+   byte  b1 = (ch0 & 0xff00) >> 8;
+   byte  lo =     (b0 & 0x03) << 6;
+   byte  me = (b0>>2) & 0x3F;
+   byte  hi = (b1 << 6) & 0xC0;
+   uint uLo = lo;
+        uLo <<= 8;
+   uint uMe = me;
+   uint uHi = hi;
+   r |= (uLo | uMe | uHi);
+
+   // ch 1
+   b0 = (ch1 & 0x00ff);
+   b1 = (ch1 & 0xff00) >> 8;
+   lo = (b0 & 0x0f) << 4;
+   me = (b0 >> 4) & 0x0F;
+   hi = (b1 << 4) & 0x30;
+   uLo = lo;
+   uLo <<= 16;
+     uMe = me;
+   uMe <<= 8;
+     uHi = hi;
+    uHi <<= 8;
+   r |= (uLo | uMe | uHi);
+
+   // digital
+   b0 = (dig & 0x00ff);
+   b1 = (dig & 0xff00) >> 8;
+   lo =  b0 & 0xff;
+   hi =  b1 & 0x0f;
+   uLo = lo;
+   uLo <<= 24;
+   uHi = hi;
+   uHi <<= 16;
+   r |= (uLo | uHi);
+
+   return r;
+   // ch 1
+   //b0 = (ch1 & 0x00ff);
+   //b1 = (ch1 & 0xff00) >> 8;
+   //r0 = b1;
+   //r1 = reverseByte(b0);
+   //r2 = reverseByte(b0 & 0x03);
+   //u0 = r0;
+   //u1 = r1;
+   //u2 = r2;
+   //r = u0 | u1 | (u2 >> 8);
+  
+  
+   // ch 1
+   //r |= (channel0 & rotateBits(1 , 0)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 1)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 2)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 3)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 4)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 5)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 6)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 7)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 8)) >> 2;
+   //r |= (channel0 & rotateBits(1 , 9)) >> 2;
+
+   //// ch 1
+   //r |= ((channel1 & rotateBits(1 , 0)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 1)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 2)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 3)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 4)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 5)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 6)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 7)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 8)) << 10);
+   //r |= ((channel1 & rotateBits(1 , 9)) << 10);
+   //
+   //return r;
+}
+
+SCOPEFUN_API int sfSetData(byte* ptr, ishort channel0, ishort channel1, ushort digital)
+{
+   //uint ch0 = channel0 & 0x03ff;
+   //uint ch1 = channel1 & 0x03ff;
+   //uint dig = digital  & 0x0fff;
+
+   //uint data = 0;
+
+   //// ch0
+   //byte loCh0 = (ch0 & 0xff)  << 6;
+   //byte miCh0 = (ch0 & 0xff)  >> 2;
+   //byte hiCh0 = (ch0 & 0x300) >> 8;
+   //     data |= (loCh0 >> 8);
+   //     data |= miCh0;
+   //     data |= hiCh0;
+
+   //// ch1
+   //uint b0Ch1 =  ch1 & 0xff;
+   //uint b1Ch1 = (ch1 & 0x300) >> 8;
+   //     b0Ch1 = (b0Ch1 >> 12);
+   //     b1Ch1 = (b1Ch1 >> 4);
+   //     data |= b0Ch1;
+   //     data |= b1Ch1;
+
+   // dig
+   //uint b0Dig =  dig & 0xff;
+   //uint b1Dig = (dig & 0xF00) >> 8;
+   //     data |= (b0Dig >> 24) | (b1Dig >> 16);
+
+   uint data = setBits(channel0, channel1, digital);
+   ishort iCh0 = 0;
+   ishort iCh1 = 0;
+   ushort iDig = 0;
+   sfGetData(data, &iCh0, &iCh1, &iDig);
+   *(uint*)ptr = data;
+   return SCOPEFUN_SUCCESS;
+}
+SCOPEFUN_API int sfGetData(uint data, ishort* channel0, ishort* channel1, ushort* digital)
+{
+   byte* dataStart = (byte*)&data;
+
+   ushort  ch0 = 0;
+   ushort  ch1 = 0;
+   ushort  dig = 0;
+
+   byte byte0 = *(dataStart + 0);
+   byte byte1 = *(dataStart + 1);
+   byte byte2 = *(dataStart + 2);
+   byte byte3 = *(dataStart + 3);
+   ch0 |= byte0;
+   ch0 = ch0 << 2;
+   ch0 |= ((byte1 >> 6) & 0x3F);
+   ch1 |= (byte1 & 0x3F);
+   ch1 = ch1 << 4;
+   ch1 |= ((byte2 >> 4) & 0xF);
+   dig |= (byte2 & 0xF);
+   dig = dig << 8;
+   dig |= byte3;
+
+   *channel0 = leadBitShift(ch0 & 0x000003FF);
+   *channel1 = leadBitShift(ch1 & 0x000003FF);
+   *digital  = dig;
+   return SCOPEFUN_SUCCESS;
+}
+
+/*--------------------------------------------------------------------------------
   Set
 --------------------------------------------------------------------------------*/
 
@@ -1214,6 +1516,7 @@ SCOPEFUN_API int sfSetDefault(SHardware* hw)
    hw->vgainb = 0xff25;
    hw->sampleSizeH = 0;
    hw->sampleSizeL = SCOPEFUN_DISPLAY;
+   sfSetXRange(hw, 1);
    sfSetGeneratorType0(hw, GENERATOR_SIN);
    sfSetGeneratorVoltage0(hw, 1);
    sfSetGeneratorFrequency0(hw, 50.f, 457142.81f);
@@ -1357,8 +1660,8 @@ SCOPEFUN_API int  sfSetTriggerSlope(SHardware* hw, int value)
 SCOPEFUN_API int  sfSetTriggerPre(SHardware* hw, float perc)
 {
    uint numSamples = (((uint)hw->sampleSizeH) << 16) | (uint)hw->sampleSizeL;
-   hw->triggerPercent = (perc / 100.f) * (float)numSamples - 1;
-   hw->triggerPercent = (hw->triggerPercent / 4);
+   hw->triggerPercent = (perc / 100.f) * (float)(numSamples - 1)/2048;
+   hw->triggerPercent = 4*(hw->triggerPercent / 4);
    return SCOPEFUN_SUCCESS;
 }
 

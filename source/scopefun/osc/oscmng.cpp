@@ -37,6 +37,7 @@
 MANAGER_REGISTER(Osciloscope);
 
 int SDLCALL RenderThreadFunction(void* data);
+void SetupUI(WndMain& window);
 
 ////////////////////////////////////////////////////////////////////////////////
 // variables
@@ -2296,7 +2297,7 @@ int OsciloscopeManager::onEvent(SDL_Event& event)
     return 0;
 }
 
-void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int version)
+void OsciloscopeManager::onCallibrateFrameCaptured(SDisplay& frame, int version)
 {
     if(callibrate.active)
     {
@@ -2372,11 +2373,12 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     {
                         int ch = callibrate.channel;
                         callibrate.offsetMeasured = 0;
-                        for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
+                        for(int sample = 0; sample < SCOPEFUN_DISPLAY; sample++)
                         {
-                            callibrate.offsetMeasured += frame.getAnalogDouble(ch, sample);
+                            if(ch==0) callibrate.offsetMeasured += frame.analog0.bytes[sample];
+                            if(ch==1) callibrate.offsetMeasured += frame.analog1.bytes[sample];
                         }
-                        callibrate.offsetMeasured /= double(frame.analog[ch].getCount());
+                        callibrate.offsetMeasured /= double(SCOPEFUN_DISPLAY);
                         callibrate.mode = acOffsetCalculate;
                         callibrate.debug << "acOffsetCapture:";
                         callibrate.debug << "  offsetMeasured: ";
@@ -2508,8 +2510,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         sfSetAnalogSwitchBit(&m_hw, CHANNEL_B_ACDC, 1);
                         sfSetYPositionA(&m_hw, window.channel01.YPosition + settings.getHardware()->callibratedOffsets[callibrate.type][0][callibrate.voltage]);
                         sfSetYPositionB(&m_hw, window.channel02.YPosition + settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
-                        sfSetYRangeScaleA(&m_hw, (uint)getAttr(callibrate.voltage), getGain(0,callibrate.voltage));
-                        sfSetYRangeScaleB(&m_hw, (uint)getAttr(callibrate.voltage), getGain(1,callibrate.voltage));
+                        sfSetYRangeScaleA(&m_hw, (uint)getAttr(callibrate.voltage), callibrate.gainSet);
+                        sfSetYRangeScaleB(&m_hw, (uint)getAttr(callibrate.voltage), callibrate.gainSet);
                         transferData();
                         callibrate.iteration    = 0;
                         callibrate.generatorMax = settings.getHardware()->referenceGeneratorMaxValue;
@@ -2543,11 +2545,12 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                     {
                         int ch = 0;
                         callibrate.generatorOffset = 0;
-                        for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
+                        for(int sample = 0; sample < SCOPEFUN_DISPLAY; sample++)
                         {
-                            callibrate.generatorOffset += frame.getAnalogShort(ch, sample);
+                           if(ch==0) callibrate.generatorOffset += frame.analog0.bytes[sample]*SCOPEFUN_MAX_VOLTAGE;
+                           if(ch==1) callibrate.generatorOffset += frame.analog1.bytes[sample]*SCOPEFUN_MAX_VOLTAGE;
                         }
-                        callibrate.generatorOffset /= double(frame.analog[ch].getCount());
+                        callibrate.generatorOffset /= double(SCOPEFUN_DISPLAY);
                         callibrate.mode = acGeneratorCalculate;
                         callibrate.debug << "acGeneratorCapture: \n";
                         callibrate.debug << "  generatorOffset: ";
@@ -2658,8 +2661,8 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         sfSetYPositionB(getHw(), settings.getHardware()->callibratedOffsets[callibrate.type][1][callibrate.voltage]);
                         sfSetGeneratorOffset0(getHw(), gainGenOffset + settings.getHardware()->callibratedOffsetsGenerator[callibrate.type][0]);
                         sfSetGeneratorOffset1(getHw(), gainGenOffset + settings.getHardware()->callibratedOffsetsGenerator[callibrate.type][1]);
-                        sfSetYRangeScaleA(getHw(), (uint)getAttr(callibrate.voltage), getGain(0,callibrate.gainSet));
-                        sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), getGain(1,callibrate.gainSet));
+                        sfSetYRangeScaleA(getHw(), (uint)getAttr(callibrate.voltage), getGain(0,callibrate.voltage));
+                        sfSetYRangeScaleB(getHw(), (uint)getAttr(callibrate.voltage), getGain(1,callibrate.voltage));
                         transferData();
                         callibrate.mode = acGainCapture;
                         callibrate.debug << "acGainSetup: ";
@@ -2675,11 +2678,12 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         int          ch = callibrate.channel;
                         double yGridMax = double(grid.yCount) / 2.0;
                         callibrate.gainVoltageUp = 0;
-                        for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
+                        for(int sample = 0; sample < SCOPEFUN_DISPLAY; sample++)
                         {
-                            callibrate.gainVoltageUp += frame.getAnalog(ch, sample);
+                           if(ch==0) callibrate.gainVoltageUp += frame.analog0.bytes[sample];
+                           if(ch==1) callibrate.gainVoltageUp += frame.analog1.bytes[sample];
                         }
-                        callibrate.gainVoltageUp /= double(frame.analog[ch].getCount());
+                        callibrate.gainVoltageUp /= double(SCOPEFUN_DISPLAY);
                         callibrate.gainVoltageUp *= yGridMax * double(captureVoltFromEnum(callibrate.voltage));
                         callibrate.mode = acGainCalculate;
                         callibrate.debug << "acGainCapture: ";
@@ -2865,13 +2869,21 @@ void OsciloscopeManager::onCallibrateFrameCaptured(OsciloscopeFrame& frame, int 
                         int          ch = callibrate.channel;
                         callibrate.stepMeasuredOffsetVoltage = 0;
                         callibrate.stepMeasuredOffsetValue   = 0;
-                        for(int sample = 0; sample < frame.analog[ch].getCount(); sample++)
+                        for (int sample = 0; sample < SCOPEFUN_DISPLAY; sample++)
                         {
-                            callibrate.stepMeasuredOffsetValue   += frame.getAnalogShort(ch, sample);
-                            callibrate.stepMeasuredOffsetVoltage += frame.getAnalog(ch, sample);
+                           if (ch == 0)
+                           {
+                              callibrate.stepMeasuredOffsetValue   += frame.analog0.bytes[sample]*SCOPEFUN_MAX_VOLTAGE;
+                              callibrate.stepMeasuredOffsetVoltage += frame.analog0.bytes[sample];
+                           }
+                           if (ch == 1)
+                           {
+                              callibrate.stepMeasuredOffsetValue   += frame.analog1.bytes[sample]*SCOPEFUN_MAX_VOLTAGE;
+                              callibrate.stepMeasuredOffsetVoltage += frame.analog1.bytes[sample];
+                           }
                         }
-                        callibrate.stepMeasuredOffsetValue   /= double(frame.analog[ch].getCount());
-                        callibrate.stepMeasuredOffsetVoltage /= double(frame.analog[ch].getCount());
+                        callibrate.stepMeasuredOffsetValue   /= double(SCOPEFUN_DISPLAY);
+                        callibrate.stepMeasuredOffsetVoltage /= double(SCOPEFUN_DISPLAY);
                         callibrate.mode = acStepCalculate;
                         callibrate.debug << "  stepMeasuredOffsetValue: ";
                         callibrate.debug << callibrate.stepMeasuredOffsetValue;
@@ -3239,8 +3251,6 @@ void OsciloscopeManager::transferRedo()
    transferUI();
 }
 
-void SetupUI(WndMain& window);
-
 void OsciloscopeManager::transferUI()
 {
    Flag16 flags;
@@ -3601,6 +3611,9 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 {
    pTimer->init(TIMER_HARDWARE);
    double time = 0.0;
+   ScopeFunCaptureBuffer& captureBuffer = pOsciloscope->m_captureBuffer;
+   SInt receivedBytes = { 0 };
+   SInt receivedFrameSize = { 0 };
    while(pOsciloscope->captureDataThreadActive)
    {
       // timer
@@ -3618,104 +3631,91 @@ int SDLCALL CaptureDataThreadFunction(void* data)
       else
       {
          // capture
-         int ret = 0;
-         SInt received = {0};
-         SInt frameSize = { 0 };
          if (isSim>0)
          {
-            ret = sfSimulate(getCtx(), getHw(), &received, &frameSize, time );
+            int ret = sfSimulate(getCtx(), getHw(), &receivedBytes, &receivedFrameSize, time );
          }
          else
          {
-            ret = sfFrameCapture(getCtx(), &received, &frameSize);
+            int ret = sfFrameCapture(getCtx(), &receivedBytes, &receivedFrameSize);
          }
-         if (received.value > SCOPEFUN_FRAME_HEADER)
+
+
          {
-            ScopeFunCaptureBuffer& captureBuffer = pOsciloscope->m_captureBuffer;
-            SDL_AtomicLock(&captureBuffer.m_lock);
+            // info
+            uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
+            uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
+            uint     frameSize  = SDL_AtomicGet(&captureBuffer.m_frameSize);
+            uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
 
-               // setup frame count
-               uint frameCount = max<uint>(1, captureBuffer.m_dataMax / frameSize.value );
-               captureBuffer.m_frame.setCount(frameCount);
+            // size
+            if (receivedFrameSize.value != frameSize && receivedFrameSize.value != 0)
+            {
+               frameSize   = receivedFrameSize.value;
+               frameCount  = max<uint>(1, captureBuffer.m_dataMax / receivedFrameSize.value);
+               frameIndex  = 0;
+               frameOffset = 0;
+               SDL_AtomicSet(&captureBuffer.m_frameSize,   frameSize   );
+               SDL_AtomicSet(&captureBuffer.m_frameCount,  frameCount  );
+               SDL_AtomicSet(&captureBuffer.m_frameIndex,  frameIndex  );
+               SDL_AtomicSet(&captureBuffer.m_frameOffset, frameOffset );
+            }
 
-               // clear history, all frames must be of equal size 
-               int i = 0;
-               if( frameCount > i )
-               {
-                  if (captureBuffer.m_frame[i].m_memLen != frameSize.value)
-                  {
-                     SDL_memset(captureBuffer.m_dataPtr, 0, captureBuffer.m_dataMax);
-                     SDL_memset(&captureBuffer.m_frame[0], 0, sizeof(ScopeFunFrame)*frameCount);
-                     for (int j = 0; j < frameCount; j++)
-                     {
-                        captureBuffer.m_frame[j].m_length = 0;
-                        captureBuffer.m_frame[j].m_memPos = j*frameSize.value;
-                        captureBuffer.m_frame[j].m_memLen = frameSize.value;
-                     }
-                     SDL_AtomicSet(&captureBuffer.m_index, 0);
-                  }
-               }
+            // output
+            captureBuffer.lock(frameIndex);
+               ularge framePos = frameIndex * frameSize + frameOffset;
+                       int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize);
+            captureBuffer.unlock(frameIndex);
 
-               // index
-               uint index = SDL_AtomicGet(&captureBuffer.m_index);
+            // offset
+            SDL_AtomicSet(&captureBuffer.m_frameOffset, receivedBytes.value);
 
-               // new frame
-               ScopeFunFrame& newFrame = captureBuffer.m_frame[index];
-               newFrame.m_length = received.value;
-
-               // ring
-               index = (++index) % frameCount;
-
-               SDL_AtomicUnlock(&captureBuffer.m_lock);
-       
-               // copy
-               int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[newFrame.m_memPos], newFrame.m_memLen);
-
-               // new index
-               SDL_AtomicSet(&captureBuffer.m_index, index);
+            // index++
+            if (receivedBytes.value == frameSize)
+            {
+               receivedBytes.value = receivedFrameSize.value = 0;
+               uint index = frameIndex;
+                    index = (index+1) % frameCount;
+               SDL_AtomicSet(&captureBuffer.m_frameIndex, index);
+               SDL_AtomicSet(&captureBuffer.m_frameOffset, 0);
+            }
          }
       }
    }
    return 0;
 }
 
-int DisplayFrame(uint index, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
+int DisplayFrame(uint frameIndex, uint frameCount, uint frameSize, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
 {
-   SDL_AtomicLock(&captureBuffer.m_lock);
+   // lock
+   captureBuffer.lock(frameIndex);
 
-      // frames
-                    index = index == 0 ? 0 : index % (uint)max<int>(1,captureBuffer.m_frame.getCount());
-      ScopeFunFrame frame = captureBuffer.m_frame[index];
-      ScopeFunFrame history[SCOPEFUN_MAX_HISTORY] = { 0 };
-      uint maxHistory   = clamp<int>((int)index-(int)SCOPEFUN_MAX_HISTORY,0, captureBuffer.m_frame.getCount()-1);
-      uint historyCount = index - maxHistory;
-      for (int i = 0; i < historyCount; i++)
-      {
-         uint historyIndex = maxHistory + i;
-         history[i] = captureBuffer.m_frame[historyIndex];
-      }
+   // framePos
+   ularge    index = clamp<uint>(frameIndex, 0, frameCount-1);
+   ularge framePos = index * frameSize;
 
-   SDL_AtomicUnlock(&captureBuffer.m_lock);
-     
-      // display
-      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], frame.m_length, &threadData.m_frame, pos, zoom);
+   // display
+   sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize, &threadData.m_frame, pos, zoom);
 
-      // hardware
-      SFrameHeader header = { 0 };
-      sfGetHeader(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[frame.m_memPos], &header);
-      sfGetHeaderHardware(getCtx(), (SFrameHeader*)&header, &threadData.m_hw);
+   // hardware
+   SFrameHeader header = { 0 };
+   sfGetHeader(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], &header);
+   sfGetHeaderHardware(getCtx(), (SFrameHeader*)&header, &threadData.m_hw);
 
-      // history
-      threadData.m_historyCount = 0;
-      if ( threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D) )
-         threadData.m_historyCount = historyCount;
-      for (int i = 0; i < threadData.m_historyCount; i++)
-      {
-         sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[history[i].m_memPos], history[i].m_length, &threadData.m_history[i],pos,zoom);
-      }
+   // history
+   threadData.m_historyCount = 0;
+   if ( threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D) )
+      threadData.m_historyCount = SCOPEFUN_MAX_HISTORY;
+   for (int i = 0; i < threadData.m_historyCount; i++)
+   {
+      uint historyIndex = (index - i) % frameCount;
+      ularge historyPos = historyIndex * frameSize;
 
-   // render
-   SendToRenderer(renderer, fft, threadData, delay);
+      sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[historyPos], frameSize, &threadData.m_history[i],pos,zoom);
+   }
+
+   // unlock
+   captureBuffer.unlock(frameIndex);
    return 0;
 }
 
@@ -3751,14 +3751,14 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
                    pOsciloscope->renderWindow.horizontal.uiActive = 1;
                    pOsciloscope->renderWindow.horizontal.uiValue  = playFrameIdx;
                    pOsciloscope->renderWindow.horizontal.Frame    = playFrameIdx;
-                   pOsciloscope->renderWindow.horizontal.uiRange  = pCaptureBuffer->m_frame.getCount();
+                   pOsciloscope->renderWindow.horizontal.uiRange  = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
                    break;
                case SIGNAL_MODE_SIMULATE:
                case SIGNAL_MODE_CAPTURE:
                    pOsciloscope->renderWindow.horizontal.uiActive = 1;
-                   pOsciloscope->renderWindow.horizontal.uiValue  = max<int>(0, pCaptureBuffer->m_frame.getCount() - 1);
-                   pOsciloscope->renderWindow.horizontal.Frame    = max<int>(0, pCaptureBuffer->m_frame.getCount() - 1);
-                   pOsciloscope->renderWindow.horizontal.uiRange  = pCaptureBuffer->m_frame.getCount();
+                   pOsciloscope->renderWindow.horizontal.uiValue  = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
+                   pOsciloscope->renderWindow.horizontal.Frame    = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
+                   pOsciloscope->renderWindow.horizontal.uiRange  = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
                    break;
                case SIGNAL_MODE_CLEAR:
                    pOsciloscope->renderWindow.horizontal.uiActive = 1;
@@ -3770,7 +3770,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
 
            captureRender = pOsciloscope->renderData;
 
-           double pos = pOsciloscope->signalPosition;
+           double pos  = pOsciloscope->signalPosition;
            double zoom = pOsciloscope->signalZoom;
              
            pCaptureData->m_render = captureRender;
@@ -3778,30 +3778,33 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
         SDL_AtomicUnlock(&pOsciloscope->renderLock);
 
         // capture mode
+        uint frameIndex = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
+        uint frameCount = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
+        uint frameSize  = SDL_AtomicGet(&pCaptureBuffer->m_frameSize);
         switch(mode)
         {
-            case SIGNAL_MODE_PLAY:
-                {
-                    playFrameIdx = (playFrameIdx++) % max(1,pCaptureBuffer->m_frame.getCount());
-                    DisplayFrame(playFrameIdx, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
-                    break;
-                }
-            case SIGNAL_MODE_SIMULATE:
-            case SIGNAL_MODE_CAPTURE:
-                {
-                    int index = SDL_AtomicGet(&pCaptureBuffer->m_index)-1;
-                    DisplayFrame( index, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
-                    break;
-                };
-            case SIGNAL_MODE_CLEAR:
-            case SIGNAL_MODE_PAUSE:
-                {
-                    DisplayFrame(pCaptureData->m_window.horizontal.Frame, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
-                    break;
-                };
-            default:
-                break;
+         case SIGNAL_MODE_PLAY:
+               playFrameIdx = (playFrameIdx+1) % frameCount;
+               frameIndex   = playFrameIdx;
+               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+               break;
+         case SIGNAL_MODE_SIMULATE:
+         case SIGNAL_MODE_CAPTURE:
+               frameIndex = clamp<uint>(frameIndex-1, 0, frameCount - 1);
+               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+               break;
+         case SIGNAL_MODE_CLEAR:
+         case SIGNAL_MODE_PAUSE:
+               frameIndex = pCaptureData->m_window.horizontal.Frame;
+               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pos, zoom);
+               break;
         };
+
+        // render
+        SendToRenderer(renderer, fft, *pCaptureData, delayCapture );
+
+        // on capture
+        pOsciloscope->onCallibrateFrameCaptured(pCaptureData->m_frame, 2);
     }
     return 0;
 }

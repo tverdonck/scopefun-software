@@ -2685,44 +2685,45 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p_SArrayMagic swig_types[14]
 #define SWIGTYPE_p_SArrayPaddingAfter swig_types[15]
 #define SWIGTYPE_p_SArrayPaddingBefore swig_types[16]
-#define SWIGTYPE_p_SAtomic swig_types[17]
-#define SWIGTYPE_p_SCtxApi swig_types[18]
-#define SWIGTYPE_p_SCtxDisplay swig_types[19]
-#define SWIGTYPE_p_SCtxFrame swig_types[20]
-#define SWIGTYPE_p_SCtxSimulate swig_types[21]
-#define SWIGTYPE_p_SDisplay swig_types[22]
-#define SWIGTYPE_p_SEeprom swig_types[23]
-#define SWIGTYPE_p_SFContext swig_types[24]
-#define SWIGTYPE_p_SFpga swig_types[25]
-#define SWIGTYPE_p_SFrameData swig_types[26]
-#define SWIGTYPE_p_SFrameHeader swig_types[27]
-#define SWIGTYPE_p_SFx3 swig_types[28]
-#define SWIGTYPE_p_SGUID swig_types[29]
-#define SWIGTYPE_p_SGenerator swig_types[30]
-#define SWIGTYPE_p_SHardware swig_types[31]
-#define SWIGTYPE_p_SSimulate swig_types[32]
-#define SWIGTYPE_p_SUsb swig_types[33]
-#define SWIGTYPE_p__EFunctionType swig_types[34]
-#define SWIGTYPE_p__ESimulateType swig_types[35]
-#define SWIGTYPE_p__SCallback swig_types[36]
-#define SWIGTYPE_p__SFloat swig_types[37]
-#define SWIGTYPE_p__SInt swig_types[38]
-#define SWIGTYPE_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int swig_types[39]
-#define SWIGTYPE_p_f_p_SDisplay_p_float_p_float_p_void__int swig_types[40]
-#define SWIGTYPE_p_f_p_SFContext__int swig_types[41]
-#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[42]
-#define SWIGTYPE_p_f_p_SHardware__int swig_types[43]
-#define SWIGTYPE_p_float swig_types[44]
-#define SWIGTYPE_p_int swig_types[45]
-#define SWIGTYPE_p_long_long swig_types[46]
-#define SWIGTYPE_p_short swig_types[47]
-#define SWIGTYPE_p_unsigned_char swig_types[48]
-#define SWIGTYPE_p_unsigned_int swig_types[49]
-#define SWIGTYPE_p_unsigned_long_long swig_types[50]
-#define SWIGTYPE_p_unsigned_short swig_types[51]
-#define SWIGTYPE_p_void swig_types[52]
-static swig_type_info *swig_types[54];
-static swig_module_info swig_module = {swig_types, 53, 0, 0, 0, 0};
+#define SWIGTYPE_p_SArrayString256 swig_types[17]
+#define SWIGTYPE_p_SAtomic swig_types[18]
+#define SWIGTYPE_p_SCtxApi swig_types[19]
+#define SWIGTYPE_p_SCtxDisplay swig_types[20]
+#define SWIGTYPE_p_SCtxFrame swig_types[21]
+#define SWIGTYPE_p_SCtxSimulate swig_types[22]
+#define SWIGTYPE_p_SDisplay swig_types[23]
+#define SWIGTYPE_p_SEeprom swig_types[24]
+#define SWIGTYPE_p_SFContext swig_types[25]
+#define SWIGTYPE_p_SFpga swig_types[26]
+#define SWIGTYPE_p_SFrameData swig_types[27]
+#define SWIGTYPE_p_SFrameHeader swig_types[28]
+#define SWIGTYPE_p_SFx3 swig_types[29]
+#define SWIGTYPE_p_SGUID swig_types[30]
+#define SWIGTYPE_p_SGenerator swig_types[31]
+#define SWIGTYPE_p_SHardware swig_types[32]
+#define SWIGTYPE_p_SSimulate swig_types[33]
+#define SWIGTYPE_p_SUsb swig_types[34]
+#define SWIGTYPE_p__EFunctionType swig_types[35]
+#define SWIGTYPE_p__ESimulateType swig_types[36]
+#define SWIGTYPE_p__SCallback swig_types[37]
+#define SWIGTYPE_p__SFloat swig_types[38]
+#define SWIGTYPE_p__SInt swig_types[39]
+#define SWIGTYPE_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int swig_types[40]
+#define SWIGTYPE_p_f_p_SDisplay_p_float_p_float_p_void__int swig_types[41]
+#define SWIGTYPE_p_f_p_SFContext__int swig_types[42]
+#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[43]
+#define SWIGTYPE_p_f_p_SHardware__int swig_types[44]
+#define SWIGTYPE_p_float swig_types[45]
+#define SWIGTYPE_p_int swig_types[46]
+#define SWIGTYPE_p_long_long swig_types[47]
+#define SWIGTYPE_p_short swig_types[48]
+#define SWIGTYPE_p_unsigned_char swig_types[49]
+#define SWIGTYPE_p_unsigned_int swig_types[50]
+#define SWIGTYPE_p_unsigned_long_long swig_types[51]
+#define SWIGTYPE_p_unsigned_short swig_types[52]
+#define SWIGTYPE_p_void swig_types[53]
+static swig_type_info *swig_types[55];
+static swig_module_info swig_module = {swig_types, 54, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2908,6 +2909,9 @@ SWIGINTERN void SArrayPaddingAfter___setitem(SArrayPaddingAfter *self,int i,byte
 SWIGINTERN int SArrayCrc___len(SArrayCrc const *self){ return 1; }
 SWIGINTERN byte SArrayCrc___getitem(SArrayCrc *self,int i){                                            				return self->bytes[i];                 			}
 SWIGINTERN void SArrayCrc___setitem(SArrayCrc *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
+SWIGINTERN int SArrayString256___len(SArrayString256 const *self){ return 256; }
+SWIGINTERN byte SArrayString256___getitem(SArrayString256 *self,int i){                                            				return self->bytes[i];                 			}
+SWIGINTERN void SArrayString256___setitem(SArrayString256 *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
 SWIGINTERN int SArrayFrameData___len(SArrayFrameData const *self){ return (512*1024*1024); }
 SWIGINTERN byte SArrayFrameData___getitem(SArrayFrameData *self,int i){                                            				return self->bytes[i];                 			}
 SWIGINTERN void SArrayFrameData___setitem(SArrayFrameData *self,int i,byte v){                                         				self->bytes[i] = v;                    			}
@@ -7724,6 +7728,216 @@ static swig_lua_namespace swig_SFrameHeader_Sf_SwigStatic = {
 static swig_lua_class *swig_SFrameHeader_bases[] = {0};
 static const char *swig_SFrameHeader_base_names[] = {0};
 static swig_lua_class _wrap_class_SFrameHeader = { "SFrameHeader", "SFrameHeader", &SWIGTYPE_p_SFrameHeader,_proxy__wrap_new_SFrameHeader, swig_delete_SFrameHeader, swig_SFrameHeader_methods, swig_SFrameHeader_attributes, &swig_SFrameHeader_Sf_SwigStatic, swig_SFrameHeader_meta, swig_SFrameHeader_bases, swig_SFrameHeader_base_names };
+
+static int _wrap_SArrayString256_bytes_set(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *arg1 = (SArrayString256 *) 0 ;
+  byte *arg2 ;
+  
+  SWIG_check_num_args("SArrayString256::bytes",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayString256::bytes",1,"SArrayString256 *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("SArrayString256::bytes",2,"byte [256]");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("SArrayString256_bytes_set",1,SWIGTYPE_p_SArrayString256);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_unsigned_char,0))){
+    SWIG_fail_ptr("SArrayString256_bytes_set",2,SWIGTYPE_p_unsigned_char);
+  }
+  
+  {
+    size_t ii;
+    byte *b = (byte *) arg1->bytes;
+    for (ii = 0; ii < (size_t)256; ii++) b[ii] = *((byte *) arg2 + ii);
+  }
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayString256_bytes_get(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *arg1 = (SArrayString256 *) 0 ;
+  byte *result = 0 ;
+  
+  SWIG_check_num_args("SArrayString256::bytes",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayString256::bytes",1,"SArrayString256 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("SArrayString256_bytes_get",1,SWIGTYPE_p_SArrayString256);
+  }
+  
+  result = (byte *)(byte *) ((arg1)->bytes);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_char,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayString256___len(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *arg1 = (SArrayString256 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("SArrayString256::__len",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayString256::__len",1,"SArrayString256 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("SArrayString256___len",1,SWIGTYPE_p_SArrayString256);
+  }
+  
+  result = (int)SArrayString256___len((SArrayString256 const *)arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayString256___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *arg1 = (SArrayString256 *) 0 ;
+  int arg2 ;
+  byte result;
+  
+  SWIG_check_num_args("SArrayString256::__getitem",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayString256::__getitem",1,"SArrayString256 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayString256::__getitem",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("SArrayString256___getitem",1,SWIGTYPE_p_SArrayString256);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  result = (byte)SArrayString256___getitem(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SArrayString256___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *arg1 = (SArrayString256 *) 0 ;
+  int arg2 ;
+  byte arg3 ;
+  
+  SWIG_check_num_args("SArrayString256::__setitem",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SArrayString256::__setitem",1,"SArrayString256 *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SArrayString256::__setitem",2,"int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("SArrayString256::__setitem",3,"byte");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("SArrayString256___setitem",1,SWIGTYPE_p_SArrayString256);
+  }
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (byte)lua_tonumber(L, 3);
+  SArrayString256___setitem(arg1,arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_SArrayString256(lua_State* L) {
+  int SWIG_arg = 0;
+  SArrayString256 *result = 0 ;
+  
+  SWIG_check_num_args("SArrayString256::SArrayString256",0,0)
+  result = (SArrayString256 *)calloc(1, sizeof(SArrayString256));
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_SArrayString256,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_SArrayString256(void *obj) {
+SArrayString256 *arg1 = (SArrayString256 *) obj;
+free((char *) arg1);
+}
+static int _proxy__wrap_new_SArrayString256(lua_State *L) {
+    assert(lua_istable(L,1));
+    lua_pushcfunction(L,_wrap_new_SArrayString256);
+    assert(!lua_isnil(L,-1));
+    lua_replace(L,1); /* replace our table with real constructor */
+    lua_call(L,lua_gettop(L)-1,1);
+    return 1;
+}
+static swig_lua_attribute swig_SArrayString256_attributes[] = {
+    { "bytes", _wrap_SArrayString256_bytes_get, _wrap_SArrayString256_bytes_set },
+    {0,0,0}
+};
+static swig_lua_method swig_SArrayString256_methods[]= {
+    { "__len", _wrap_SArrayString256___len},
+    { "__getitem", _wrap_SArrayString256___getitem},
+    { "__setitem", _wrap_SArrayString256___setitem},
+    {0,0}
+};
+static swig_lua_method swig_SArrayString256_meta[] = {
+    { "__len", _wrap_SArrayString256___len},
+    { "__getitem", _wrap_SArrayString256___getitem},
+    { "__setitem", _wrap_SArrayString256___setitem},
+    {0,0}
+};
+
+static swig_lua_attribute swig_SArrayString256_Sf_SwigStatic_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_const_info swig_SArrayString256_Sf_SwigStatic_constants[]= {
+    {0,0,0,0,0,0}
+};
+static swig_lua_method swig_SArrayString256_Sf_SwigStatic_methods[]= {
+    {0,0}
+};
+static swig_lua_class* swig_SArrayString256_Sf_SwigStatic_classes[]= {
+    0
+};
+
+static swig_lua_namespace swig_SArrayString256_Sf_SwigStatic = {
+    "SArrayString256",
+    swig_SArrayString256_Sf_SwigStatic_methods,
+    swig_SArrayString256_Sf_SwigStatic_attributes,
+    swig_SArrayString256_Sf_SwigStatic_constants,
+    swig_SArrayString256_Sf_SwigStatic_classes,
+    0
+};
+static swig_lua_class *swig_SArrayString256_bases[] = {0};
+static const char *swig_SArrayString256_base_names[] = {0};
+static swig_lua_class _wrap_class_SArrayString256 = { "SArrayString256", "SArrayString256", &SWIGTYPE_p_SArrayString256,_proxy__wrap_new_SArrayString256, swig_delete_SArrayString256, swig_SArrayString256_methods, swig_SArrayString256_attributes, &swig_SArrayString256_Sf_SwigStatic, swig_SArrayString256_meta, swig_SArrayString256_bases, swig_SArrayString256_base_names };
 
 static int _wrap_SArrayFrameData_bytes_set(lua_State* L) {
   int SWIG_arg = 0;
@@ -15504,6 +15718,23 @@ fail:
 }
 
 
+static int _wrap_sfCreateSFrameHeader(lua_State* L) {
+  int SWIG_arg = 0;
+  SFrameHeader *result = 0 ;
+  
+  SWIG_check_num_args("sfCreateSFrameHeader",0,0)
+  result = (SFrameHeader *)sfCreateSFrameHeader();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_SFrameHeader,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_sfDeleteSFloat(lua_State* L) {
   int SWIG_arg = 0;
   SFloat *arg1 = (SFloat *) 0 ;
@@ -15769,6 +16000,29 @@ static int _wrap_sfDeleteSEeprom(lua_State* L) {
   }
   
   sfDeleteSEeprom(arg1);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfDeleteSFrameHeader(lua_State* L) {
+  int SWIG_arg = 0;
+  SFrameHeader *arg1 = (SFrameHeader *) 0 ;
+  
+  SWIG_check_num_args("sfDeleteSFrameHeader",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("sfDeleteSFrameHeader",1,"SFrameHeader *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SFrameHeader,0))){
+    SWIG_fail_ptr("sfDeleteSFrameHeader",1,SWIGTYPE_p_SFrameHeader);
+  }
+  
+  sfDeleteSFrameHeader(arg1);
   
   return SWIG_arg;
   
@@ -16791,6 +17045,127 @@ static int _wrap_sfGetHeaderTemperature(lua_State* L) {
   
   result = (int)sfGetHeaderTemperature(arg1,arg2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfHardwareWordCnt(lua_State* L) {
+  int SWIG_arg = 0;
+  int *arg1 = (int *) 0 ;
+  int temp1 ;
+  int result;
+  
+  SWIG_check_num_args("sfHardwareWordCnt",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("sfHardwareWordCnt",1,"int *");
+  temp1 = (int)lua_tonumber(L,1);
+  arg1 = &temp1; 
+  result = (int)sfHardwareWordCnt(arg1);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  lua_pushnumber(L, (lua_Number) *arg1); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfHardwareWordId(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  SArrayString256 *arg2 = (SArrayString256 *) 0 ;
+  int result;
+  
+  SWIG_check_num_args("sfHardwareWordId",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("sfHardwareWordId",1,"int");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("sfHardwareWordId",2,"SArrayString256 *");
+  arg1 = (int)lua_tonumber(L, 1);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_SArrayString256,0))){
+    SWIG_fail_ptr("sfHardwareWordId",2,SWIGTYPE_p_SArrayString256);
+  }
+  
+  result = (int)sfHardwareWordId(arg1,arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfSetData(lua_State* L) {
+  int SWIG_arg = 0;
+  byte *arg1 = (byte *) 0 ;
+  ishort arg2 ;
+  ishort arg3 ;
+  ushort arg4 ;
+  byte temp1 ;
+  int result;
+  
+  SWIG_check_num_args("sfSetData",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("sfSetData",1,"byte *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("sfSetData",2,"ishort");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("sfSetData",3,"ishort");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("sfSetData",4,"ushort");
+  temp1 = (byte)lua_tonumber(L,1);
+  arg1 = &temp1; 
+  arg2 = (ishort)lua_tonumber(L, 2);
+  arg3 = (ishort)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (ushort)lua_tonumber(L, 4);
+  result = (int)sfSetData(arg1,arg2,arg3,arg4);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_sfGetData(lua_State* L) {
+  int SWIG_arg = 0;
+  uint arg1 ;
+  ishort *arg2 = (ishort *) 0 ;
+  ishort *arg3 = (ishort *) 0 ;
+  ushort *arg4 = (ushort *) 0 ;
+  ishort temp2 ;
+  ishort temp3 ;
+  ushort temp4 ;
+  int result;
+  
+  SWIG_check_num_args("sfGetData",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("sfGetData",1,"uint");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("sfGetData",2,"ishort *");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("sfGetData",3,"ishort *");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("sfGetData",4,"ushort *");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (uint)lua_tonumber(L, 1);
+  temp2 = (ishort)lua_tonumber(L,2);
+  arg2 = &temp2; 
+  temp3 = (ishort)lua_tonumber(L,3);
+  arg3 = &temp3; 
+  temp4 = (ushort)lua_tonumber(L,4);
+  arg4 = &temp4; 
+  result = (int)sfGetData(arg1,arg2,arg3,arg4);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  lua_pushnumber(L, (lua_Number) *arg2); SWIG_arg++;
+  lua_pushnumber(L, (lua_Number) *arg3); SWIG_arg++;
+  lua_pushnumber(L, (lua_Number) *arg4); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -19484,6 +19859,7 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "sfCreateSGenerator", _wrap_sfCreateSGenerator},
     { "sfCreateSEeprom", _wrap_sfCreateSEeprom},
     { "sfCreateSFrameData", _wrap_sfCreateSFrameData},
+    { "sfCreateSFrameHeader", _wrap_sfCreateSFrameHeader},
     { "sfDeleteSFloat", _wrap_sfDeleteSFloat},
     { "sfDeleteSInt", _wrap_sfDeleteSInt},
     { "sfDeleteSFContext", _wrap_sfDeleteSFContext},
@@ -19496,6 +19872,7 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "sfDeleteSFpga", _wrap_sfDeleteSFpga},
     { "sfDeleteSGenerator", _wrap_sfDeleteSGenerator},
     { "sfDeleteSEeprom", _wrap_sfDeleteSEeprom},
+    { "sfDeleteSFrameHeader", _wrap_sfDeleteSFrameHeader},
     { "sfApiInit", _wrap_sfApiInit},
     { "sfApiCreateContext", _wrap_sfApiCreateContext},
     { "sfApiDeleteContext", _wrap_sfApiDeleteContext},
@@ -19529,6 +19906,10 @@ static swig_lua_method swig_SwigModule_methods[]= {
     { "sfGetHeaderHardware", _wrap_sfGetHeaderHardware},
     { "sfGetHeaderEts", _wrap_sfGetHeaderEts},
     { "sfGetHeaderTemperature", _wrap_sfGetHeaderTemperature},
+    { "sfHardwareWordCnt", _wrap_sfHardwareWordCnt},
+    { "sfHardwareWordId", _wrap_sfHardwareWordId},
+    { "sfSetData", _wrap_sfSetData},
+    { "sfGetData", _wrap_sfGetData},
     { "sfIsSimulate", _wrap_sfIsSimulate},
     { "sfSetSimulateData", _wrap_sfSetSimulateData},
     { "sfGetSimulateData", _wrap_sfGetSimulateData},
@@ -19636,6 +20017,7 @@ static swig_lua_class* swig_SwigModule_classes[]= {
 &_wrap_class_SArrayPaddingAfter,
 &_wrap_class_SArrayCrc,
 &_wrap_class_SFrameHeader,
+&_wrap_class_SArrayString256,
 &_wrap_class_SArrayFrameData,
 &_wrap_class_SFrameData,
 &_wrap_class_SArrayEEPROM,
@@ -19702,6 +20084,7 @@ static swig_type_info _swigt__p_SArrayHardware = {"_p_SArrayHardware", "SArrayHa
 static swig_type_info _swigt__p_SArrayMagic = {"_p_SArrayMagic", "SArrayMagic *", 0, 0, (void*)&_wrap_class_SArrayMagic, 0};
 static swig_type_info _swigt__p_SArrayPaddingAfter = {"_p_SArrayPaddingAfter", "SArrayPaddingAfter *", 0, 0, (void*)&_wrap_class_SArrayPaddingAfter, 0};
 static swig_type_info _swigt__p_SArrayPaddingBefore = {"_p_SArrayPaddingBefore", "SArrayPaddingBefore *", 0, 0, (void*)&_wrap_class_SArrayPaddingBefore, 0};
+static swig_type_info _swigt__p_SArrayString256 = {"_p_SArrayString256", "SArrayString256 *", 0, 0, (void*)&_wrap_class_SArrayString256, 0};
 static swig_type_info _swigt__p_SAtomic = {"_p_SAtomic", "SAtomic *", 0, 0, (void*)&_wrap_class_SAtomic, 0};
 static swig_type_info _swigt__p_SCtxApi = {"_p_SCtxApi", "SCtxApi *", 0, 0, (void*)&_wrap_class_SCtxApi, 0};
 static swig_type_info _swigt__p_SCtxDisplay = {"_p_SCtxDisplay", "SCtxDisplay *", 0, 0, (void*)&_wrap_class_SCtxDisplay, 0};
@@ -19757,6 +20140,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_SArrayMagic,
   &_swigt__p_SArrayPaddingAfter,
   &_swigt__p_SArrayPaddingBefore,
+  &_swigt__p_SArrayString256,
   &_swigt__p_SAtomic,
   &_swigt__p_SCtxApi,
   &_swigt__p_SCtxDisplay,
@@ -19812,6 +20196,7 @@ static swig_cast_info _swigc__p_SArrayHardware[] = {  {&_swigt__p_SArrayHardware
 static swig_cast_info _swigc__p_SArrayMagic[] = {  {&_swigt__p_SArrayMagic, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SArrayPaddingAfter[] = {  {&_swigt__p_SArrayPaddingAfter, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SArrayPaddingBefore[] = {  {&_swigt__p_SArrayPaddingBefore, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SArrayString256[] = {  {&_swigt__p_SArrayString256, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SAtomic[] = {  {&_swigt__p_SAtomic, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SCtxApi[] = {  {&_swigt__p_SCtxApi, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SCtxDisplay[] = {  {&_swigt__p_SCtxDisplay, 0, 0, 0},{0, 0, 0, 0}};
@@ -19867,6 +20252,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_SArrayMagic,
   _swigc__p_SArrayPaddingAfter,
   _swigc__p_SArrayPaddingBefore,
+  _swigc__p_SArrayString256,
   _swigc__p_SAtomic,
   _swigc__p_SCtxApi,
   _swigc__p_SCtxDisplay,
