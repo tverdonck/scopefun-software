@@ -3538,14 +3538,6 @@ void OsciloscopeETS::onPause(OsciloscopeFrame& frame, WndMain& window)
 // CaptureThread
 //
 ////////////////////////////////////////////////////////////////////////////////
-//void SendToRenderer(OsciloscopeFrame& captureFrame,
-//   WndMain& window,
-//   OsciloscopeRenderData& render,
-//   OsciloscopeETS& ets,
-//   OsciloscopeThreadRenderer& renderer,
-//   OsciloscopeFFT& fft,
-//   OsciloscopeThreadData& captureData, uint delay)
-
 void SendToRenderer( OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,  OsciloscopeThreadData& captureData, uint delay)
 {
     pTimer->deltaTime(TIMER_CAPTURE);

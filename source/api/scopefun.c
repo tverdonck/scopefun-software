@@ -642,7 +642,8 @@ SCOPEFUN_API int sfGetSimulateData(SFContext* ctx, SSimulate* data)
 
 int softwareGenerator(int frameVersion, int frameHeader, int frameData, int framePacket, SFContext* ctx, SHardware* hw,SSimulate* sim, double timer)
 {
-    SDL_memset(&ctx->frame.data.data.bytes[0], 0, apiMin(sizeof(SFrameData), frameHeader + frameData));
+    int frameSize = sfGetFrameSize(hw);
+    SDL_memset(&ctx->frame.data.data.bytes[0], 0, apiMin(sizeof(SFrameData), frameSize) );
     ctx->frame.received = 0;
     // header, channel0, channel1 and digital bits
     byte* packet = &ctx->frame.data.data.bytes[0];
@@ -652,7 +653,7 @@ int softwareGenerator(int frameVersion, int frameHeader, int frameData, int fram
     // header
     SDL_memset(header, 0, frameHeader);
     // config
-    SDL_memcpy(header->hardware.bytes, hw, sizeof(SHardware));
+    SDL_memcpy(&header->hardware.bytes[0], hw, sizeof(SHardware));
     // magic
     header->magic.bytes[0] = 0xDD;
     header->magic.bytes[1] = 0xDD;
@@ -889,9 +890,9 @@ SCOPEFUN_API int sfSimulate(SFContext* ctx,SHardware* hw, SInt* received, SInt* 
     int simulate = SDL_AtomicGet((SDL_atomic_t*)&ctx->simulateOn);
     if(simulate > 0)
     {
-        int numSamples = sfGetNumSamples(hw);
-        received->value  = SCOPEFUN_FRAME_HEADER + numSamples * 4;
-        frameSize->value = SCOPEFUN_FRAME_HEADER + numSamples * 4;
+        int numSamples       = sfGetNumSamples(hw);
+        received->value      = sfGetFrameSize(hw);
+        frameSize->value     = sfGetFrameSize(hw);;
         ctx->frame.received  = received->value;
         ctx->frame.frameSize = frameSize->value;
         softwareGenerator(HARDWARE_VERSION, SCOPEFUN_FRAME_HEADER, numSamples *4, SCOPEFUN_FRAME_PACKET, ctx, hw, &ctx->simulateData, time);
