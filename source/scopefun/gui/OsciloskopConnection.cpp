@@ -82,7 +82,7 @@ void OsciloskopConnection::m_buttonDisconnectOnButtonClick(wxCommandEvent& event
     // disconnect first, becouse mode change has no affect then ...
     // automatic mode change
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
-    pOsciloscope->signalMode = (SignalMode)pOsciloscope->window.horizontal.Mode;
+    SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_PAUSE);
     wxApp* app = (wxApp*)wxApp::GetInstance();
     if(app)
     {

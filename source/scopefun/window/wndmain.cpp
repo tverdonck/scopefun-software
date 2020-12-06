@@ -141,9 +141,6 @@ void MWHorizontal::Default()
     FFTSize   = NUM_SAMPLES;
     ETS = 0;
     Full = 0;
-    uiActive = 0;
-    uiRange  = 8;
-    uiValue  = 0;
 }
 
 

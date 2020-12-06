@@ -496,43 +496,48 @@ int SDLCALL PopulateFunction(void* data)
 
 void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
 {
-   for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-   {
-      OsciloscopeScript* script = pOsciloscope->m_callback.Get(i);
-      script->GetPrint();
-      OsciloskopDebug* debug = (OsciloskopDebug*)script->GetUserData();
-      if (debug)
-      {
-         pDebug->AppendText(script->GetPrint());
-         script->ClrPrint();
-      }
-   }
+    ////////////////////////////////////////////////////////////////////////////////
+    // timer
+    ////////////////////////////////////////////////////////////////////////////////
+    pTimer->deltaTime(TIMER_USERINTERFACE);
+    timer += pTimer->getDelta(TIMER_USERINTERFACE);
 
-    userinterfaceupdate++;
-    if(userinterfaceupdate % 100 == 0)
+    ////////////////////////////////////////////////////////////////////////////////
+    // user interface
+    ////////////////////////////////////////////////////////////////////////////////
+    if(timer > 0.1 )
     {
+        timer = 0;
+
+        ////////////////////////////////////////////////////////////////////////////////
         // reset gui
-        if(pOsciloscope->callibrate.resetUI)
+        ////////////////////////////////////////////////////////////////////////////////
+        if( SDL_AtomicGet(&pOsciloscope->callibrate.resetUI) > 0 )
         {
-            // callibrate
-            pOsciloscope->setupControl(pOsciloscope->window);
-            // ui
+            // frame
             pOsciloscope->window.horizontal.Frame = 0;
-            pOsciloscope->signalMode = SIGNAL_MODE_PAUSE;
+            SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex,0);
+
+            // mode
             pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
+            SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_PAUSE);
+
+            // clear render target
             SDL_AtomicSet(&pOsciloscope->clearRenderTarget,1);
+
+            // user interface
             setupUI(pOsciloscope->window);
-            // progress bar
-            pOsciloscope->window.progress.uiActive = 1;
-            pOsciloscope->window.progress.uiRange  = 0;
-            pOsciloscope->window.progress.uiValue  = 0;
-            pOsciloscope->window.progress.uiPulse  = 0;
+
             // transfer
             pOsciloscope->transferData();
+         
             // exit
-            pOsciloscope->callibrate.resetUI = false;
+            SDL_AtomicSet(&pOsciloscope->callibrate.resetUI, 0);
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
         // message box
+        ////////////////////////////////////////////////////////////////////////////////
         if(pOsciloscope->callibrate.active)
         {
             switch(pOsciloscope->callibrate.messageBox)
@@ -584,9 +589,10 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     break;
             };
         }
-        pTimer->deltaTime(TIMER_USERINTERFACE);
-        timer += pTimer->getDelta(TIMER_USERINTERFACE);
+      
+        ////////////////////////////////////////////////////////////////////////////////
         // usb
+        ////////////////////////////////////////////////////////////////////////////////
         if(timer > 1.0)
         {
             timer = 0.0;
@@ -594,7 +600,10 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             int usb = pOsciloscope->thread.isOpen();
             m_checkBox26->SetValue(usb);
         }
-        // progress bar
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // trigger LED
+        ////////////////////////////////////////////////////////////////////////////////
         if(pOsciloscope->display.attr.getCount())
         {
             if(pOsciloscope->display.attr.getCount())
@@ -610,26 +619,23 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                 }
             }
         }
-        // pulse
-        if(pOsciloscope->window.progress.uiPulse)
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // frame index
+        ////////////////////////////////////////////////////////////////////////////////
+        SignalMode mode = (SignalMode)SDL_AtomicGet(&pOsciloscope->signalMode);
+        if (mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE || mode == SIGNAL_MODE_PLAY)
         {
-            m_gauge1->Pulse();
+           int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+           int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+           m_sliderTimeFrame->SetMax(frameCount);
+           m_sliderTimeFrame->SetValue(frameIndex);
+           m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex)));
         }
-        else if(pOsciloscope->window.progress.uiActive)
-        {
-            m_gauge1->SetRange(pOsciloscope->window.progress.uiRange);
-            m_gauge1->SetValue(pOsciloscope->window.progress.uiValue);
-            pOsciloscope->window.progress.uiActive = 0;
-        }
-        // slider
-        if(pOsciloscope->window.horizontal.uiActive)
-        {
-            m_sliderTimeFrame->SetMax(pOsciloscope->window.horizontal.uiRange);
-            m_sliderTimeFrame->SetValue(pOsciloscope->window.horizontal.uiValue);
-            m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(pOsciloscope->window.horizontal.uiValue)));
-            pOsciloscope->window.horizontal.uiActive = 0;
-        }
+       
+        ////////////////////////////////////////////////////////////////////////////////
         // measure
+        ////////////////////////////////////////////////////////////////////////////////
         pTimer->deltaTime(TIMER_MEASURE);
         if(pMeasure && pMeasure->IsShown() && pOsciloscope->scrollThread == false)
         {
@@ -668,10 +674,13 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                 pMeasure->setTextCtrlFreq(pMeasure->m_textCtrlFFT1, pMeasure->m_choiceFFT1, pOsciloscope->window.measure.data.pickFFT1.position.getXFreq());
             }
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
         // debug
+        ////////////////////////////////////////////////////////////////////////////////
         if(pDebug && pDebug->IsShown())
         {
-            if(pOsciloscope->signalMode != SIGNAL_MODE_PAUSE)
+            if( SDL_AtomicGet(&pOsciloscope->signalMode) != SIGNAL_MODE_PAUSE)
             {
                 pDebug->Clear();
                 int count = min(32, pOsciloscope->display.debug.getCount());
@@ -684,15 +693,23 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                 }
             }
         }
-        // sync user interface
-        if(SDL_AtomicGet(&pOsciloscope->syncUI) > 0)
-        {
-            // pOsciloscope->control.control2.client2Set(*(SHardware2*)&pOsciloscope->captureBuffer->syncHeader2.hardware.bytes[0]);
-            // pOsciloscope->control.setWindow(pOsciloscope->window);
-            // setupUI(pOsciloscope->window);
-            // SDL_AtomicSet(&pOsciloscope->syncUI, 0);
-        }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // update script text
+    ////////////////////////////////////////////////////////////////////////////////
+    for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
+    {
+       OsciloscopeScript* script = pOsciloscope->m_callback.Get(i);
+       script->GetPrint();
+       OsciloskopDebug* debug = (OsciloskopDebug*)script->GetUserData();
+       if (debug)
+       {
+          pDebug->AppendText(script->GetPrint());
+          script->ClrPrint();
+       }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     // process events
     ////////////////////////////////////////////////////////////////////////////////
@@ -704,11 +721,22 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         pManager->queueEvent(e);
     }
     pManager->fireEvents();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // update main loop
+    ////////////////////////////////////////////////////////////////////////////////
     pTimer->deltaTime(TIMER_MAIN_THREAD);
     pOsciloscope->dtUpdate = pTimer->getDelta(TIMER_MAIN_THREAD);
     pManager->update(pOsciloscope->dtUpdate);
+
+    ////////////////////////////////////////////////////////////////////////////////
     // render
+    ////////////////////////////////////////////////////////////////////////////////
     pOsciloscope->onApplicationIdle();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // continue loop
+    ////////////////////////////////////////////////////////////////////////////////
     event.Skip();
     event.RequestMore();
 }
@@ -1243,6 +1271,7 @@ void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
 {
     // TODO: Implement m_sliderTimeFrameOnScroll
     pOsciloscope->window.horizontal.Frame = m_sliderTimeFrame->GetValue();
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex, pOsciloscope->window.horizontal.Frame);
     m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Frame)));
     pOsciloscope->window.horizontal.Frame = pOsciloscope->window.horizontal.Frame;
     SDL_AtomicSet(&pOsciloscope->clearRenderTarget,1);
@@ -2398,7 +2427,7 @@ void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->thread.function(afCloseUsb);
-    pOsciloscope->signalMode             = SIGNAL_MODE_PAUSE;
+    SDL_AtomicSet(&pOsciloscope->signalMode,SIGNAL_MODE_PAUSE);
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
     // must sync close button usbClose and usbCapture thread
     // currrent fix is that we just wait a second which should be enought for the capture thread to exit capture state in most cases
@@ -2986,10 +3015,14 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     //  FrameSize
     const char* str = pFormat->integerToString((int)window.horizontal.FrameSize);
     m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(str));
+
     // Frame
-    m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Frame)));
-    m_sliderTimeFrame->SetValue(window.horizontal.Frame);
-    m_sliderTimeFrame->SetMax(window.horizontal.uiRange);
+    int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+    int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+    m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(frameIndex)));
+    m_sliderTimeFrame->SetValue(frameIndex);
+    m_sliderTimeFrame->SetMax(frameCount);
+
     // FFTSize
     m_textCtrlTimeFFTSize->SetValue(wxString::FromAscii(pFormat->integerToString(window.horizontal.FFTSize)));
     // ETS
@@ -3841,7 +3874,7 @@ void OsciloskopOsciloskop::SetButtonColors()
 void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PAUSE;
-    pOsciloscope->signalMode             = SIGNAL_MODE_PAUSE;
+    SDL_AtomicSet(&pOsciloscope->signalMode,SIGNAL_MODE_PAUSE);
     pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
@@ -3853,7 +3886,7 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_PLAY;
-    pOsciloscope->signalMode = SIGNAL_MODE_PLAY;
+    SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_PLAY);
     pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
@@ -3865,7 +3898,7 @@ void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CAPTURE;
-    pOsciloscope->signalMode = SIGNAL_MODE_CAPTURE;
+    SDL_AtomicSet(&pOsciloscope->signalMode,SIGNAL_MODE_CAPTURE);
     pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
@@ -3877,7 +3910,7 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_SIMULATE;
-    pOsciloscope->signalMode = SIGNAL_MODE_SIMULATE;
+    SDL_AtomicSet(&pOsciloscope->signalMode,SIGNAL_MODE_SIMULATE);
     pOsciloscope->simOnOff(1);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
@@ -3889,8 +3922,9 @@ void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CLEAR;
-    pOsciloscope->signalMode = SIGNAL_MODE_CLEAR;
+    SDL_AtomicSet(&pOsciloscope->signalMode , SIGNAL_MODE_CLEAR);
     pOsciloscope->simOnOff(0);
+    pOsciloscope->m_captureBuffer.clear();
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();

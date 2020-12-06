@@ -457,7 +457,7 @@ public:
     StringBuffer              debug;
 public:
     EAutoCallibrateMessageBox messageBox;
-    bool                      resetUI;
+    SDL_atomic_t              resetUI;
 public:
     int               active;
     int               generator;
@@ -505,7 +505,7 @@ public:
     void clear()
     {
         debug.clear();
-        resetUI = false;
+        SDL_AtomicSet(&resetUI,0);
         channel = 0;
         messageBox = acmbStart;
         active = 0;
@@ -531,6 +531,8 @@ public:
         stepMeasuredOffsetVoltage = 0;
         stepMeasuredOffsetValue = 0;
     }
+public:
+   void reset() { SDL_AtomicSet(&resetUI, 1); };
 };
 
 class OscThreadLoop
@@ -613,6 +615,8 @@ class OsciloscopeThreadData
 public:
     WndMain               m_window;
     OsciloscopeRenderData m_render;
+    double                m_pos;
+    double                m_zoom;
     SDisplay              m_history[SCOPEFUN_MAX_HISTORY];
     uint                  m_historyCount;
     SDisplay              m_frame;
@@ -937,7 +941,7 @@ public:
       SDL_AtomicSet(&m_progress, 0);
       SDL_AtomicSet(&m_active, 1);
       m_lock.setCount(SCOPEFUN_MAX_FRAMES);
-      for (int i = 0; i < SCOPEFUN_MAX_FRAMES - 1; i++)
+      for (int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
          SDL_AtomicSet(&m_lock[i], 0);
    }
 public:
@@ -966,6 +970,17 @@ public:
 public:
    uint save(const char* path);
    uint load(const char* path);
+public:
+   void clear() 
+   { 
+      SDL_AtomicSet(&m_frameIndex, 0);
+      SDL_AtomicSet(&m_frameSize,  0);
+      SDL_AtomicSet(&m_frameCount, 1);
+      SDL_AtomicSet(&m_frameOffset, 0);
+      SDL_AtomicSet(&m_progress, 0);
+      SDL_AtomicSet(&m_active, 1);
+      SDL_memset(m_dataPtr, 0, m_dataMax);
+   };
 };
 
 
@@ -1095,7 +1110,7 @@ public:
     float yMax;
 public:
     OsciloscopeFrame       display;
-    SignalMode             signalMode;
+    SDL_atomic_t           signalMode;
 public:
     SDL_SpinLock           usbTransfer;
     SDL_SpinLock           uploadFirmwareLock;
