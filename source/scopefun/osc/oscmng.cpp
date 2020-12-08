@@ -1189,8 +1189,7 @@ int OsciloscopeManager::update(float dt)
                      else            signalZoom = multiply[clamp<int>(i+1,0, zoomCount)] / window.horizontal.Capture;
                   }
                }
-               double    zoomMin = 2*DOUBLE_FEMTO / window.horizontal.Capture;
-               signalZoom        = clamp<float>( signalZoom, zoomMin, 1.0 );
+               signalZoom        = clamp<float>( signalZoom, DOUBLE_FEMTO, 1.0 );
                cameraFFT.zoom = signalZoom;
                cameraOsc.zoom = signalZoom;
             }
@@ -1251,6 +1250,7 @@ int OsciloscopeManager::update(float dt)
 
                     // min, max
                     signalPosition = (sliderPosition - 0.5);
+                    signalPosition = clamp<double>(signalPosition, -0.5 + DOUBLE_MICRO,  0.5 - DOUBLE_MICRO);
                 }
                 // up / down
                 else if(insideSliderArea)
@@ -1274,6 +1274,7 @@ int OsciloscopeManager::update(float dt)
 
                         double move = -fRelX * signalZoom;
                         signalPosition += move;
+                        signalPosition = clamp<double>(signalPosition, -0.5 + DOUBLE_MICRO, 0.5 - DOUBLE_MICRO);
                     }
                 }
             }
@@ -3638,8 +3639,11 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          // info
          uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
          uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
-         uint     frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
+         uint     frameSize  = SDL_AtomicGet(&captureBuffer.m_frameSize);
          uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
+
+         // lock
+         captureBuffer.lock(frameIndex);
 
          // size
          if (receivedFrameSize.value != frameSize && receivedFrameSize.value != 0)
@@ -3655,10 +3659,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          }
 
          // output
-         captureBuffer.lock(frameIndex);
          ularge framePos = frameIndex * frameSize + frameOffset;
          int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize);
-         captureBuffer.unlock(frameIndex);
 
          // offset
          SDL_AtomicSet(&captureBuffer.m_frameOffset, receivedBytes.value);
@@ -3672,6 +3674,9 @@ int SDLCALL CaptureDataThreadFunction(void* data)
             SDL_AtomicSet(&captureBuffer.m_frameIndex, index);
             SDL_AtomicSet(&captureBuffer.m_frameOffset, 0);
          }
+
+         // unlock
+         captureBuffer.unlock(frameIndex);
       }
    }
    SDL_MemoryBarrierRelease();
@@ -3713,6 +3718,7 @@ int DisplayFrame(uint frameIndex, uint frameCount, uint frameSize, ScopeFunCaptu
 
 int SDLCALL GenerateFrameThreadFunction(void* data)
 {
+    SDL_MemoryBarrierAcquire();
     pOsciloscope->setThreadPriority(THREAD_ID_RENDER);
     pTimer->init(TIMER_RENDER);
    
@@ -3753,8 +3759,10 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
                break;
          case SIGNAL_MODE_SIMULATE:
          case SIGNAL_MODE_CAPTURE:
-               frameIndex = clamp<uint>(frameIndex-1, 0, frameCount - 1);
-               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+               {
+                  uint displayIndex = clamp<uint>(frameIndex - 1, 0, frameCount - 1);
+                  DisplayFrame(displayIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+               }
                break;
          case SIGNAL_MODE_PAUSE:
                DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
@@ -3772,6 +3780,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
         // on capture
         pOsciloscope->onCallibrateFrameCaptured(pCaptureData->m_frame, 2);
     }
+    SDL_MemoryBarrierRelease();
     return 0;
 }
 

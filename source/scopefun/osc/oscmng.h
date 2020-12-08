@@ -979,6 +979,9 @@ public:
       SDL_AtomicSet(&m_frameOffset, 0);
       SDL_AtomicSet(&m_progress, 0);
       SDL_AtomicSet(&m_active, 1);
+      m_lock.setCount(SCOPEFUN_MAX_FRAMES);
+      for (int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
+         SDL_AtomicSet(&m_lock[i], 0);
       SDL_memset(m_dataPtr, 0, m_dataMax);
    };
 };
