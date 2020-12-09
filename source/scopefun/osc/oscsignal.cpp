@@ -29,7 +29,7 @@ uint ScopeFunCaptureBuffer::save(const char* path)
 
    // frame index
    int   frameIndex = SDL_AtomicGet(&m_frameIndex);
-   lock(frameIndex);
+   lockFrame(frameIndex);
 
    FORMAT_BUFFER();
 
@@ -131,7 +131,7 @@ uint ScopeFunCaptureBuffer::save(const char* path)
    SDL_RWclose(sfFile);
    SDL_AtomicSet(&m_active, 0);
 
-   lock(frameIndex);
+   lockFrame(frameIndex);
    return 0;
 }
 
@@ -139,7 +139,7 @@ uint ScopeFunCaptureBuffer::load(const char* path)
 {
    SDL_AtomicSet(&m_active, 1);
 
-   lock( SDL_AtomicGet(&m_frameIndex) );
+   lockFrame( SDL_AtomicGet(&m_frameIndex) );
 
    FORMAT_BUFFER();
 
@@ -266,7 +266,7 @@ uint ScopeFunCaptureBuffer::load(const char* path)
  
    SDL_AtomicSet(&m_frameSize, frameSize);
 
-   unlock( SDL_AtomicGet(&m_frameIndex) );
+   unlockFrame( SDL_AtomicGet(&m_frameIndex) );
    SDL_AtomicSet(&m_active, 0);
    return 0;
 }

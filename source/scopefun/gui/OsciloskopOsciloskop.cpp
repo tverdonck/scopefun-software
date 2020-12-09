@@ -1233,6 +1233,8 @@ void OsciloskopOsciloskop::m_sliderTimePositionOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& event)
 {
+    pOsciloscope->m_captureBuffer.lock();
+
     // TODO: Implement m_textCtrlTimeFrameSizeOnTextEnter
     int version = 0;
     int header  = 0;
@@ -1249,13 +1251,17 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
     }
     else
     {
+        pOsciloscope->m_captureBuffer.clearFrame();
         sfSetSampleSize(getHw(), frameSize);
         sfSetTriggerPre(getHw(), pOsciloscope->window.trigger.Percent);
         pOsciloscope->window.horizontal.FrameSize = sfGetSampleSize(getHw());
         data = pOsciloscope->window.horizontal.FrameSize * 4;
+        SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameSize, frameSize);
     }
     m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(sfGetSampleSize(getHw()))));
     pOsciloscope->transferData();
+
+    pOsciloscope->m_captureBuffer.unlock();
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter(wxCommandEvent& event)
@@ -3924,7 +3930,7 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CLEAR;
     SDL_AtomicSet(&pOsciloscope->signalMode , SIGNAL_MODE_CLEAR);
     pOsciloscope->simOnOff(0);
-    pOsciloscope->m_captureBuffer.clear();
+    pOsciloscope->m_captureBuffer.clearFrame();
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {
         SetButtonColors();

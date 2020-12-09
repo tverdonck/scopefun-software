@@ -3636,14 +3636,13 @@ int SDLCALL CaptureDataThreadFunction(void* data)
       // copy frame
       if (mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE)
       {
+         captureBuffer.lock();
+
          // info
          uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
          uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
          uint     frameSize  = SDL_AtomicGet(&captureBuffer.m_frameSize);
          uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
-
-         // lock
-         captureBuffer.lock(frameIndex);
 
          // size
          if (receivedFrameSize.value != frameSize && receivedFrameSize.value != 0)
@@ -3658,9 +3657,15 @@ int SDLCALL CaptureDataThreadFunction(void* data)
             SDL_AtomicSet(&captureBuffer.m_frameOffset, frameOffset);
          }
 
+         // lock
+         captureBuffer.lockFrame(frameIndex);
+
          // output
          ularge framePos = frameIndex * frameSize + frameOffset;
          int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize);
+
+         // unlock
+         captureBuffer.unlockFrame(frameIndex);
 
          // offset
          SDL_AtomicSet(&captureBuffer.m_frameOffset, receivedBytes.value);
@@ -3676,7 +3681,7 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          }
 
          // unlock
-         captureBuffer.unlock(frameIndex);
+         captureBuffer.unlock();
       }
    }
    SDL_MemoryBarrierRelease();
@@ -3685,8 +3690,11 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 
 int DisplayFrame(uint frameIndex, uint frameCount, uint frameSize, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,float delay,float pos,float zoom)
 {
+   // safety
+   frameIndex = frameIndex % frameCount;
+
    // lock
-   captureBuffer.lock(frameIndex);
+   captureBuffer.lockFrame(frameIndex);
 
    // framePos
    ularge framePos = frameIndex * frameSize;
@@ -3712,7 +3720,7 @@ int DisplayFrame(uint frameIndex, uint frameCount, uint frameSize, ScopeFunCaptu
    }
 
    // unlock
-   captureBuffer.unlock(frameIndex);
+   captureBuffer.unlockFrame(frameIndex);
    return 0;
 }
 
@@ -3750,22 +3758,25 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
         uint frameCount = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
         uint frameSize  = SDL_AtomicGet(&pCaptureBuffer->m_frameSize);
         SignalMode mode = (SignalMode)SDL_AtomicGet(&pOsciloscope->signalMode);
-        switch(mode)
+        switch (mode)
         {
-         case SIGNAL_MODE_PLAY:
-               frameIndex = (frameIndex+1)%frameCount;
-               SDL_AtomicSet(&pCaptureBuffer->m_frameIndex, frameIndex);
-               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+        case SIGNAL_MODE_PLAY:
+               {
+                 frameIndex = (frameIndex + 1) % frameCount;
+                 SDL_AtomicSet(&pCaptureBuffer->m_frameIndex, frameIndex);
+                 DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+               }
                break;
          case SIGNAL_MODE_SIMULATE:
          case SIGNAL_MODE_CAPTURE:
                {
-                  uint displayIndex = clamp<uint>(frameIndex - 1, 0, frameCount - 1);
-                  DisplayFrame(displayIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+                  DisplayFrame(frameIndex - 1, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
                }
                break;
          case SIGNAL_MODE_PAUSE:
-               DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+               {
+                  DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+               }
                break;
          case SIGNAL_MODE_CLEAR:
                for (int i = 0; i < SCOPEFUN_MAX_HISTORY; i++)

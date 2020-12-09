@@ -854,24 +854,25 @@ int softwareGenerator(int frameVersion, int frameHeader, int frameData, int fram
     }
     // digital
     srand((uint)SDL_GetPerformanceCounter());
+    int r = rand();
     for(uint i = 0; i < numSamples; i++)
     {
-        byte digital0 = rand() % 2;
-        byte digital1 = rand() % 2;
-        byte digital2 = rand() % 2;
-        byte digital3 = rand() % 2;
-        byte digital4 = rand() % 2;
-        byte digital5 = rand() % 2;
-        byte digital6 = rand() % 2;
-        byte digital7 = rand() % 2;
-        byte digital8 = rand() % 2;
-        byte digital9 = rand()  % 2;
-        byte digital10 = rand() % 2;
-        byte digital11 = rand() % 2;
-        byte digital12 = rand() % 2;
-        byte digital13 = rand() % 2;
-        byte digital14 = rand() % 2;
-        byte digital15 = rand() % 2;
+        byte digital0 = (r+0)%2;
+        byte digital1 = (r+1)%2;
+        byte digital2 = (r+2)%2;
+        byte digital3 = (r+3)%2;
+        byte digital4 = (r+4)%2;
+        byte digital5 = (r+5)%2;
+        byte digital6 = (r+6)%2;
+        byte digital7 = (r+7)%2;
+        byte digital8 = (r+8)%2;
+        byte digital9 = (r+9)%2;
+        byte digital10 = (r+10)%2;
+        byte digital11 = (r+11)%2;
+        byte digital12 = (r+12)%2;
+        byte digital13 = (r+13)%2;
+        byte digital14 = (r+14)%2;
+        byte digital15 = (r+15)%2;
         ushort bits = digital0 | (digital1 << 1) | (digital2 << 2) | (digital3 << 3) | (digital4 << 4) | (digital5 << 5) | (digital6 << 6) | (digital7 << 7);
         bits |= digital8 << 8 | (digital9 << 9) | (digital10 << 10) | (digital11 << 11) | (digital12 << 12) | (digital13 << 13) | (digital14 << 14) | (digital15 << 15);
         byte* byte0 = (byte*)(packet + frameHeader + i * 4 + 0);
@@ -991,6 +992,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
    // samples
    uint numSamples = sfGetNumSamples( &hw );
    if (numSamples == 0) return 1;
+   if (numSamples > SCOPEFUN_FRAME_DATA/4) return 1;
 
    // init display
    SDL_memset(display, 0, sizeof(SDisplay));
@@ -999,6 +1001,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
   
    // frame size
    uint frameSize = sfGetFrameSize(&hw);
+   if (frameSize > SCOPEFUN_FRAME_MEMORY) return 1;
 
    // ets
    sfGetHeaderEts((SFrameHeader*)&buffer->data.bytes[0], &display->ets);

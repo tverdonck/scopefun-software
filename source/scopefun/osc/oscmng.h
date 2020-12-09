@@ -21,7 +21,7 @@
 #ifndef __TOOL__OSCILOSCOPE__
 #define __TOOL__OSCILOSCOPE__
 
-#define SCOPEFUN_MAX_FRAMES   1000000
+#define SCOPEFUN_MAX_FRAMES   8
 #define SCOPEFUN_MAX_HISTORY  16
 #define SCOPEFUN_MAX_UNDO     256
 
@@ -927,37 +927,46 @@ public:
    SDL_atomic_t                              m_frameCount;
    SDL_atomic_t                              m_frameOffset;
    SDL_atomic_t                              m_progress;
-   Array<SDL_atomic_t,SCOPEFUN_MAX_FRAMES>   m_lock;
+   Array<SDL_atomic_t,SCOPEFUN_MAX_FRAMES>   m_frameLock;
+   SDL_SpinLock                              m_lock;
    SDL_atomic_t                              m_active;
 public:
    ScopeFunCaptureBuffer()
    {
       m_dataPtr = 0;
       m_dataMax = 0;
+      m_lock = 0;
       SDL_AtomicSet(&m_frameIndex, 0);
       SDL_AtomicSet(&m_frameSize, 0);
       SDL_AtomicSet(&m_frameCount, 1);
       SDL_AtomicSet(&m_frameOffset, 0);
       SDL_AtomicSet(&m_progress, 0);
       SDL_AtomicSet(&m_active, 1);
-      m_lock.setCount(SCOPEFUN_MAX_FRAMES);
+      m_frameLock.setCount(SCOPEFUN_MAX_FRAMES);
       for (int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
-         SDL_AtomicSet(&m_lock[i], 0);
+         SDL_AtomicSet(&m_frameLock[i], 0);
+      SDL_memset(m_dataPtr, 0, m_dataMax);
    }
 public:
-   int lock(int id)
+   void lock()
    {
-      id = clamp<uint>(id, 0, SCOPEFUN_MAX_FRAMES-1);
-      if (SDL_AtomicCAS(&m_lock[id], 0, 1) == SDL_FALSE)
+      SDL_AtomicLock(&m_lock);
+   }
+   void unlock()
+   {
+      SDL_AtomicUnlock(&m_lock);
+   }
+   int lockFrame(uint id)
+   {
+      while (SDL_AtomicCAS(&m_frameLock[id%SCOPEFUN_MAX_FRAMES], 0, 1) == SDL_FALSE)
       {
          SDL_Delay(1);
       }
       return 0;
    }
-   int unlock(int id)
+   int unlockFrame(uint id)
    {
-      id = clamp<uint>(id, 0, SCOPEFUN_MAX_FRAMES-1);
-      while (SDL_AtomicCAS(&m_lock[id], 1, 0) == SDL_FALSE)
+      while (SDL_AtomicCAS(&m_frameLock[id%SCOPEFUN_MAX_FRAMES], 1, 0) == SDL_FALSE)
       {
          SDL_Delay(1);
       }
@@ -971,7 +980,7 @@ public:
    uint save(const char* path);
    uint load(const char* path);
 public:
-   void clear() 
+   void clearFrame() 
    { 
       SDL_AtomicSet(&m_frameIndex, 0);
       SDL_AtomicSet(&m_frameSize,  0);
@@ -979,10 +988,6 @@ public:
       SDL_AtomicSet(&m_frameOffset, 0);
       SDL_AtomicSet(&m_progress, 0);
       SDL_AtomicSet(&m_active, 1);
-      m_lock.setCount(SCOPEFUN_MAX_FRAMES);
-      for (int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
-         SDL_AtomicSet(&m_lock[i], 0);
-      SDL_memset(m_dataPtr, 0, m_dataMax);
    };
 };
 
