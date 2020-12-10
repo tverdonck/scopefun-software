@@ -23,7 +23,7 @@
 
 #define SCOPEFUN_MAX_FRAMES   8
 #define SCOPEFUN_MAX_HISTORY  16
-#define SCOPEFUN_MAX_UNDO     256
+#define SCOPEFUN_MAX_UNDO     1024
 
 enum ETimer
 {
@@ -991,6 +991,11 @@ public:
    };
 };
 
+class UndoRedo {
+public:
+   SHardware m_hw;
+   WndMain   m_wnd;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1153,11 +1158,9 @@ public:
 public:
     OsciloscopeGrid grid;
 public:
-    Array<SHardware, SCOPEFUN_MAX_UNDO> m_hardware;
-    int                                 m_count;
-    int                                 m_iData;
-    int                                 m_iUndo;
-    SHardware                           m_hw;
+    Array<UndoRedo, SCOPEFUN_MAX_UNDO> m_hardwareUndo;
+    Array<UndoRedo, SCOPEFUN_MAX_UNDO> m_hardwareRedo;
+    SHardware                          m_hw;
 public:
     SDL_atomic_t clearRenderTarget;
     SDL_atomic_t clearThermal;
@@ -1220,8 +1223,10 @@ public:
    ushort getVolt(int channel, ushort gain);
 public:
    void transferData();
-   void transferUndo();
-   void transferRedo();
+   int  transferUndo();
+   int  transferRedo();
+   int  isUndoActive();
+   int  isRedoActive();
    void transferUI();
 };
 

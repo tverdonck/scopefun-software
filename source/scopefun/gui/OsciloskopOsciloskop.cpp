@@ -510,6 +510,12 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         timer = 0;
 
         ////////////////////////////////////////////////////////////////////////////////
+        // undo / redo
+        ////////////////////////////////////////////////////////////////////////////////
+        m_buttonRedo->Enable(pOsciloscope->isRedoActive());
+        m_buttonUndo->Enable(pOsciloscope->isUndoActive());
+
+        ////////////////////////////////////////////////////////////////////////////////
         // reset gui
         ////////////////////////////////////////////////////////////////////////////////
         if( SDL_AtomicGet(&pOsciloscope->callibrate.resetUI) > 0 )
@@ -2998,6 +3004,7 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_sliderTimePosition->SetValue(window.horizontal.Position);
     // mode
     wxCommandEvent evt;
+    evt.SetClientData((void*)0xcd);
     switch(window.horizontal.Mode)
     {
         case SIGNAL_MODE_PLAY:
@@ -3888,6 +3895,8 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
         m_buttonPause->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonPause->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    if( event.GetClientData() == 0 )
+      pOsciloscope->transferData();
 }
 void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
 {
@@ -3900,6 +3909,8 @@ void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
         m_buttonPlay->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonPlay->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    if (event.GetClientData() == 0)
+      pOsciloscope->transferData();
 }
 void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 {
@@ -3912,6 +3923,8 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
         m_buttonCapture->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonCapture->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    if (event.GetClientData() == 0)
+      pOsciloscope->transferData();
 }
 void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
 {
@@ -3924,6 +3937,8 @@ void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
         m_buttonSimulate->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonSimulate->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    if (event.GetClientData() == 0)
+       pOsciloscope->transferData();
 }
 void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 {
@@ -3937,6 +3952,8 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
         m_buttonClear->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonClear->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    if (event.GetClientData() == 0)
+      pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_buttonUndoOnButtonClick(wxCommandEvent& event)

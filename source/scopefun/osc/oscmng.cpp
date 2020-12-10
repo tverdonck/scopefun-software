@@ -734,10 +734,6 @@ int ThreadApi::hardwareControlFunction(SHardware* hw)
 ////////////////////////////////////////////////////////////////////////////////
 OsciloscopeManager::OsciloscopeManager()
 {
-    m_hardware.setCount(SCOPEFUN_MAX_UNDO);
-    m_count = 0;
-    m_iData = 0;
-    m_iUndo = 0;
     dtUpdate = 0.0;
     dtRender = 0.0;
     ctx = new OscContext();
@@ -3219,34 +3215,55 @@ void OsciloscopeManager::clearEts(int value)
 
 void OsciloscopeManager::transferData()
 {
+   UndoRedo undo;
+   undo.m_wnd = window;
+   undo.m_hw  = m_hw;
    thread.hardwareControlFunction(&m_hw);
-   m_hardware[m_iData] = m_hw;
-   m_iData++;
-   m_iData = m_iData % SCOPEFUN_MAX_UNDO;
-   m_iUndo = m_iData;
-   m_count++;
-   m_count = clamp<int>(m_count, 1, SCOPEFUN_MAX_UNDO);
+   if (m_hardwareUndo.getCount() >= SCOPEFUN_MAX_UNDO)
+      m_hardwareUndo.popFront();
+   m_hardwareUndo.pushBack(undo);
+   m_hardwareRedo.clear();
 }
 
-void OsciloscopeManager::transferUndo()
+int OsciloscopeManager::isUndoActive()
 {
-   if (m_count < SCOPEFUN_MAX_UNDO && m_iUndo == 0) return;
-   else if ( (m_iUndo-1) % SCOPEFUN_MAX_UNDO == m_iData) return;
-   m_iUndo--;
-   m_iUndo = m_iUndo % m_count;
-   m_hw = m_hardware[m_iUndo];
-   thread.hardwareControlFunction(&m_hw);
-   transferUI();
+   return m_hardwareUndo.getCount();
 }
-void OsciloscopeManager::transferRedo()
+
+int OsciloscopeManager::transferUndo()
 {
-   if (m_count < SCOPEFUN_MAX_UNDO && m_iUndo == m_count) return;
-   else if ((m_iUndo +1)%SCOPEFUN_MAX_UNDO == m_iData) return;
-   m_iUndo++;
-   m_iUndo = m_iUndo % m_count;
-   m_hw = m_hardware[m_iUndo];
+   if (!m_hardwareUndo.getCount())
+      return 1;
+   UndoRedo undo = m_hardwareUndo.last();
+   window = undo.m_wnd;
+   m_hw   = undo.m_hw;
    thread.hardwareControlFunction(&m_hw);
+   m_hardwareUndo.popBack();
+   if (m_hardwareRedo.getCount() >= SCOPEFUN_MAX_UNDO)
+      m_hardwareRedo.popFront();
+   m_hardwareRedo.pushBack(undo);
    transferUI();
+   return 0;
+}
+
+int OsciloscopeManager::isRedoActive()
+{
+   return m_hardwareRedo.getCount();
+}
+int OsciloscopeManager::transferRedo()
+{
+   if (!m_hardwareRedo.getCount())
+      return 1;
+   UndoRedo redo = m_hardwareRedo.last();
+   m_hw = redo.m_hw;
+   window = redo.m_wnd;
+   thread.hardwareControlFunction(&m_hw);
+   m_hardwareRedo.popBack();
+   if (m_hardwareUndo.getCount() >= SCOPEFUN_MAX_UNDO)
+      m_hardwareUndo.popFront();
+   m_hardwareUndo.pushBack(redo);
+   transferUI();
+   return 0;
 }
 
 void OsciloscopeManager::transferUI()
