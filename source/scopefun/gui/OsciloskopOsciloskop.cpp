@@ -2434,6 +2434,11 @@ void OsciloskopOsciloskop::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());
     pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
+    if( !pOsciloscope->thread.isFpga() )
+      pOsciloscope->thread.writeFpgaToArtix7(getHw(), pOsciloscope->settings.getHardware());
+    m_comboBoxCh0CaptureOnCombobox(event);
+    m_comboBoxCh1CaptureOnCombobox(event);
+    pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
@@ -3897,6 +3902,11 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
     }
     if( event.GetClientData() == 0 )
       pOsciloscope->transferData();
+    m_buttonPause->Disable();
+    m_buttonPlay->Enable();
+    m_buttonCapture->Enable();
+    m_buttonSimulate->Enable();
+    m_buttonClear->Enable();
 }
 void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
 {
@@ -3911,6 +3921,11 @@ void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
     }
     if (event.GetClientData() == 0)
       pOsciloscope->transferData();
+    m_buttonPause->Enable();
+    m_buttonPlay->Disable();
+    m_buttonCapture->Enable();
+    m_buttonSimulate->Enable();
+    m_buttonClear->Enable();
 }
 void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 {
@@ -3925,6 +3940,11 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
     }
     if (event.GetClientData() == 0)
       pOsciloscope->transferData();
+    m_buttonPause->Enable();
+    m_buttonPlay->Enable();
+    m_buttonCapture->Disable();
+    m_buttonSimulate->Enable();
+    m_buttonClear->Enable();
 }
 void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
 {
@@ -3939,6 +3959,11 @@ void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
     }
     if (event.GetClientData() == 0)
        pOsciloscope->transferData();
+    m_buttonPause->Enable();
+    m_buttonPlay->Enable();
+    m_buttonCapture->Enable();
+    m_buttonSimulate->Disable();
+    m_buttonClear->Enable();
 }
 void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 {
@@ -3954,6 +3979,11 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
     }
     if (event.GetClientData() == 0)
       pOsciloscope->transferData();
+    m_buttonPause->Enable();
+    m_buttonPlay->Enable();
+    m_buttonCapture->Enable();
+    m_buttonSimulate->Enable();
+    m_buttonClear->Disable();
 }
 
 void OsciloskopOsciloskop::m_buttonUndoOnButtonClick(wxCommandEvent& event)
