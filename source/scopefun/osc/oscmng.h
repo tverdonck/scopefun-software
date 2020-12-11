@@ -505,7 +505,7 @@ public:
     void clear()
     {
         debug.clear();
-        SDL_AtomicSet(&resetUI,0);
+        SDL_AtomicSet(&resetUI, 0);
         channel = 0;
         messageBox = acmbStart;
         active = 0;
@@ -532,7 +532,7 @@ public:
         stepMeasuredOffsetValue = 0;
     }
 public:
-   void reset() { SDL_AtomicSet(&resetUI, 1); };
+    void reset() { SDL_AtomicSet(&resetUI, 1); };
 };
 
 class OscThreadLoop
@@ -818,7 +818,7 @@ enum EThreadApiFunction
     afHardwareConfig,
     afSetSimulateData,
     afSetSimulateOnOff,
-    afUploadGenerator,   
+    afUploadGenerator,
     afLast,
 };
 
@@ -918,83 +918,85 @@ public:
 };
 
 // ScopeFunCaptureBuffer
-class ScopeFunCaptureBuffer {
+class ScopeFunCaptureBuffer
+{
 public:
-   byte*                                     m_dataPtr;
-   ularge                                    m_dataMax;
-   SDL_atomic_t                              m_frameIndex;
-   SDL_atomic_t                              m_frameSize;
-   SDL_atomic_t                              m_frameCount;
-   SDL_atomic_t                              m_frameOffset;
-   SDL_atomic_t                              m_progress;
-   Array<SDL_atomic_t,SCOPEFUN_MAX_FRAMES>   m_frameLock;
-   SDL_SpinLock                              m_lock;
-   SDL_atomic_t                              m_active;
+    byte*                                     m_dataPtr;
+    ularge                                    m_dataMax;
+    SDL_atomic_t                              m_frameIndex;
+    SDL_atomic_t                              m_frameSize;
+    SDL_atomic_t                              m_frameCount;
+    SDL_atomic_t                              m_frameOffset;
+    SDL_atomic_t                              m_progress;
+    Array<SDL_atomic_t, SCOPEFUN_MAX_FRAMES>   m_frameLock;
+    SDL_SpinLock                              m_lock;
+    SDL_atomic_t                              m_active;
 public:
-   ScopeFunCaptureBuffer()
-   {
-      m_dataPtr = 0;
-      m_dataMax = 0;
-      m_lock = 0;
-      SDL_AtomicSet(&m_frameIndex, 0);
-      SDL_AtomicSet(&m_frameSize, 0);
-      SDL_AtomicSet(&m_frameCount, 1);
-      SDL_AtomicSet(&m_frameOffset, 0);
-      SDL_AtomicSet(&m_progress, 0);
-      SDL_AtomicSet(&m_active, 1);
-      m_frameLock.setCount(SCOPEFUN_MAX_FRAMES);
-      for (int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
-         SDL_AtomicSet(&m_frameLock[i], 0);
-      SDL_memset(m_dataPtr, 0, m_dataMax);
-   }
+    ScopeFunCaptureBuffer()
+    {
+        m_dataPtr = 0;
+        m_dataMax = 0;
+        m_lock = 0;
+        SDL_AtomicSet(&m_frameIndex, 0);
+        SDL_AtomicSet(&m_frameSize, 0);
+        SDL_AtomicSet(&m_frameCount, 1);
+        SDL_AtomicSet(&m_frameOffset, 0);
+        SDL_AtomicSet(&m_progress, 0);
+        SDL_AtomicSet(&m_active, 1);
+        m_frameLock.setCount(SCOPEFUN_MAX_FRAMES);
+        for(int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
+        { SDL_AtomicSet(&m_frameLock[i], 0); }
+        SDL_memset(m_dataPtr, 0, m_dataMax);
+    }
 public:
-   void lock()
-   {
-      SDL_AtomicLock(&m_lock);
-   }
-   void unlock()
-   {
-      SDL_AtomicUnlock(&m_lock);
-   }
-   int lockFrame(uint id)
-   {
-      while (SDL_AtomicCAS(&m_frameLock[id%SCOPEFUN_MAX_FRAMES], 0, 1) == SDL_FALSE)
-      {
-         SDL_Delay(1);
-      }
-      return 0;
-   }
-   int unlockFrame(uint id)
-   {
-      while (SDL_AtomicCAS(&m_frameLock[id%SCOPEFUN_MAX_FRAMES], 1, 0) == SDL_FALSE)
-      {
-         SDL_Delay(1);
-      }
-      return 0;
-   }
+    void lock()
+    {
+        SDL_AtomicLock(&m_lock);
+    }
+    void unlock()
+    {
+        SDL_AtomicUnlock(&m_lock);
+    }
+    int lockFrame(uint id)
+    {
+        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_FRAMES], 0, 1) == SDL_FALSE)
+        {
+            SDL_Delay(1);
+        }
+        return 0;
+    }
+    int unlockFrame(uint id)
+    {
+        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_FRAMES], 1, 0) == SDL_FALSE)
+        {
+            SDL_Delay(1);
+        }
+        return 0;
+    }
 public:
-   int getProgress() { return SDL_AtomicGet(&m_progress); }
-   int isActive()    { return SDL_AtomicGet(&m_active);   }
-   int disable()     { return SDL_AtomicSet(&m_active,0); }
+    int getProgress() { return SDL_AtomicGet(&m_progress); }
+    int isActive()    { return SDL_AtomicGet(&m_active);   }
+    int disable()     { return SDL_AtomicSet(&m_active, 0); }
 public:
-   uint save(const char* path);
-   uint load(const char* path);
+    uint save(const char* path);
+    uint load(const char* path);
 public:
-   void clearFrame() 
-   { 
-      SDL_AtomicSet(&m_frameIndex, 0);
-      SDL_AtomicSet(&m_frameSize,  0);
-      SDL_AtomicSet(&m_frameCount, 1);
-      SDL_AtomicSet(&m_frameOffset, 0);
-      SDL_AtomicSet(&m_progress, 0);
-      SDL_AtomicSet(&m_active, 1);
-   };
+    void clearFrame()
+    {
+        SDL_AtomicSet(&m_frameIndex, 0);
+        SDL_AtomicSet(&m_frameSize,  0);
+        SDL_AtomicSet(&m_frameCount, 1);
+        SDL_AtomicSet(&m_frameOffset, 0);
+        SDL_AtomicSet(&m_progress, 0);
+        SDL_AtomicSet(&m_active, 1);
+    };
 };
 
-class UndoRedo {
+class UndoRedo
+{
 public:
-   SHardware m_hw;
-   WndMain   m_wnd;
+    SHardware m_hw;
+    WndMain   m_wnd;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1005,8 +1007,8 @@ public:
 class OsciloscopeManager : public Manager, public RenderCallback
 {
 public:
-   String              m_runScript;
-   OsciloscopeCallback m_callback;
+    String              m_runScript;
+    OsciloscopeCallback m_callback;
 public:
     uint     renderId;
 public:
@@ -1218,16 +1220,16 @@ public:
 public:
     void clearEts(int value);
 public:
-   ushort getAttr(uint volt);
-   ushort getGain(int channel, uint volt);
-   ushort getVolt(int channel, ushort gain);
+    ushort getAttr(uint volt);
+    ushort getGain(int channel, uint volt);
+    ushort getVolt(int channel, ushort gain);
 public:
-   void transferData();
-   int  transferUndo();
-   int  transferRedo();
-   int  isUndoActive();
-   int  isRedoActive();
-   void transferUI();
+    void transferData();
+    int  transferUndo();
+    int  transferRedo();
+    int  isUndoActive();
+    int  isRedoActive();
+    void transferUI();
 };
 
 SFContext* getCtx();

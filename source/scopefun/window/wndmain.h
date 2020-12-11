@@ -97,10 +97,10 @@ public:
     uint               FFTSize;
     uint               ETS;
     uint               Full;
-//public:
-//    SDL_atomic_t       uiActive;
-//    SDL_atomic_t       uiRange;
-//    SDL_atomic_t       uiValue;
+    //public:
+    //    SDL_atomic_t       uiActive;
+    //    SDL_atomic_t       uiRange;
+    //    SDL_atomic_t       uiValue;
 public:
     MWHorizontal();
 public:

@@ -270,64 +270,51 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         {
             cx = 0.f;
         }
-
         // grid
         int   renderCount = double(xCount);
-        double gridDelta  = 1.0/double(xCount);
-     
+        double gridDelta  = 1.0 / double(xCount);
         // screen
-        double start   = -0.5 + 0.5*sz;
-        double end     =  0.5 - 0.5*sz;
-        double pos     = (end - (-sx + 0.5) );
-        double       x = -0.5 + SDL_fmodf(-sx/sz, 0.1);
-
+        double start   = -0.5 + 0.5 * sz;
+        double end     =  0.5 - 0.5 * sz;
+        double pos     = (end - (-sx + 0.5));
+        double       x = -0.5 + SDL_fmodf(-sx / sz, 0.1);
         // resample
         double resamplePos = sx + 0.5;
-        double resampleMin = resamplePos - 0.5*(double)sz;
-        double resampleMax = resamplePos + 0.5*(double)sz;
+        double resampleMin = resamplePos - 0.5 * (double)sz;
+        double resampleMax = resamplePos + 0.5 * (double)sz;
         double resampleDelta = 1 / sz;
-
         ilarge iNumSamples = sfGetNumSamples(&threadData.m_hw);
-
-        // sample: min / max 
+        // sample: min / max
         double dNumSamples = (iNumSamples - 1);
         ilarge zoomSampleMin = resampleMin * dNumSamples; // [0..n]
         ilarge zoomSampleMax = resampleMax * dNumSamples; // [0..n]
         ilarge zoomSampleCnt = clamp<ilarge>(zoomSampleMax - zoomSampleMin, 0, iNumSamples); // [0..n]
-
         // sample time
         double          sampleTime = double(wndMain.horizontal.Capture);
-
         // frame time
         double          frameTime = sampleTime * double(wndMain.horizontal.FrameSize);
-
         // grid time
         double          gridTime = frameTime / 10.0;
-
         // grid zoom time
         double        gridZoomTime = gridTime * sz;
-
         // grid zoom samples
         double         gridZoomSamples = max<double>(1.0, gridZoomTime / sampleTime);
-
         // units
         double frameStart   = resampleMin;
         double frameEnd     = resampleMax;
-        double frameGrid    = 0.1*sz;
+        double frameGrid    = 0.1 * sz;
         double gridDivision = resampleMin / frameGrid;
-      //  double gridModulo   = SDL_fmodf(resampleMin*1000,frameGrid*1000);
-       // double gridValue    = ((double)gridUnit / (double)iNumSamples)*frameTime;
-        double gridModulo = SDL_fmodf(-sx/sz, 0.1);
-
+        //  double gridModulo   = SDL_fmodf(resampleMin*1000,frameGrid*1000);
+        // double gridValue    = ((double)gridUnit / (double)iNumSamples)*frameTime;
+        double gridModulo = SDL_fmodf(-sx / sz, 0.1);
         //////////////////////////////////////////////////////////////////////////////////
         // x fine grid lines
         //////////////////////////////////////////////////////////////////////////////////
         pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, int(renderCount));
         for(int i = 0; i <= renderCount; i++)
         {
-           // screen units
-           double        x   = -0.5 + gridModulo + i * 0.1;
-
+            // screen units
+            double        x   = -0.5 + gridModulo + i * 0.1;
             pCanvas3d->bLine(threadId,  Vector4(x, yMin, z, 1), Vector4(x, yMax, z, 1));
         }
         pCanvas3d->endBatch(threadId, render.cameraOsc.Final, render.colorGrid);
@@ -418,9 +405,9 @@ void OsciloscopeThreadRenderer::renderAnalogAxis(uint threadId, OsciloscopeThrea
     ////////////////////////////////////////////////////////////////////////////////
     // Axis
     ////////////////////////////////////////////////////////////////////////////////
-    if (!wndMain.display.oscAxis)
+    if(!wndMain.display.oscAxis)
     {
-       return;
+        return;
     }
     float    sx = render.signalPosition;
     ////////////////////////////////////////////////////////////////////////////////
@@ -627,70 +614,56 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     ////////////////////////////////////////////////////////////////////////////////
     pFont->setSize(threadid, 0.35f);
     int    renderCount = xCount;
-   
     ilarge iNumSamples = sfGetNumSamples(&threadData.m_hw);
-    double preTriggerZero = (wndMain.trigger.Percent / 100.0)*wndMain.horizontal.Capture;
-    for (int i = 0; i <= renderCount; i++)
+    double preTriggerZero = (wndMain.trigger.Percent / 100.0) * wndMain.horizontal.Capture;
+    for(int i = 0; i <= renderCount; i++)
     {
-       iNumSamples = iNumSamples > 0 ? iNumSamples : 1;
-
-       // resample
-       double resamplePos = sx + 0.5;
-       double resampleMin = resamplePos - 0.5*(double)sz;
-       double resampleMax = resamplePos + 0.5*(double)sz;
-
-       // sample: min / max 
-       double dNumSamples = (iNumSamples - 1);
-       ilarge zoomSampleMin = resampleMin * dNumSamples; // [0..n]
-       ilarge zoomSampleMax = resampleMax * dNumSamples; // [0..n]
-       ilarge zoomSampleCnt = clamp<ilarge>(zoomSampleMax - zoomSampleMin, 0, iNumSamples); // [0..n]
-
-       // sample time
-       double          sampleTime = double(wndMain.horizontal.Capture);
-
-       // frame time
-       double          frameTime = sampleTime * double(wndMain.horizontal.FrameSize);
-
-       // grid time
-       double          gridTime = frameTime / 10.0;
-
-       // grid zoom time
-       double        gridZoomTime = gridTime * sz;
-
-       // grid zoom samples
-       double         gridZoomSamples = max<double>(1.0,gridZoomTime / sampleTime);
-
-       // units
-       double min          = (0.5*sz) - sx;
-       ilarge zoomScreen   = (0.5 - min)/(0.1*sz);
-       ilarge screenGrid   = zoomScreen + i;
-       double gridValue    = screenGrid*gridZoomTime;
-   
-       // screen
-       double screenX = -0.5 + SDL_fmodf(-sx / sz, 0.1) + i * 0.1;
-
-       // results
-       double arrowX       = screenX;
-       double unitX        = gridValue - preTriggerZero;
-       ToolText::Unit(buffer, 1024, unitX, wndMain.horizontal.Capture*sz );
-    
-       // draw unit
-       pFont->writeText3d(threadid, render.cameraOsc.Final, screenX - sizeX, charYmin, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), buffer, render.colorTime, render.oscScaleX, render.oscScaleY);
-    
-       // draw arrow
-       pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
-          pCanvas3d->bLine(threadid, Vector4(arrowX, charYmin, 0, 1), Vector4(arrowX, yMin, 0, 1));
-          pCanvas3d->bLine(threadid, Vector4(arrowX + sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
-          pCanvas3d->bLine(threadid, Vector4(arrowX - sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
-       pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTime);
+        iNumSamples = iNumSamples > 0 ? iNumSamples : 1;
+        // resample
+        double resamplePos = sx + 0.5;
+        double resampleMin = resamplePos - 0.5 * (double)sz;
+        double resampleMax = resamplePos + 0.5 * (double)sz;
+        // sample: min / max
+        double dNumSamples = (iNumSamples - 1);
+        ilarge zoomSampleMin = resampleMin * dNumSamples; // [0..n]
+        ilarge zoomSampleMax = resampleMax * dNumSamples; // [0..n]
+        ilarge zoomSampleCnt = clamp<ilarge>(zoomSampleMax - zoomSampleMin, 0, iNumSamples); // [0..n]
+        // sample time
+        double          sampleTime = double(wndMain.horizontal.Capture);
+        // frame time
+        double          frameTime = sampleTime * double(wndMain.horizontal.FrameSize);
+        // grid time
+        double          gridTime = frameTime / 10.0;
+        // grid zoom time
+        double        gridZoomTime = gridTime * sz;
+        // grid zoom samples
+        double         gridZoomSamples = max<double>(1.0, gridZoomTime / sampleTime);
+        // units
+        double min          = (0.5 * sz) - sx;
+        ilarge zoomScreen   = (0.5 - min) / (0.1 * sz);
+        ilarge screenGrid   = zoomScreen + i;
+        double gridValue    = screenGrid * gridZoomTime;
+        // screen
+        double screenX = -0.5 + SDL_fmodf(-sx / sz, 0.1) + i * 0.1;
+        // results
+        double arrowX       = screenX;
+        double unitX        = gridValue - preTriggerZero;
+        ToolText::Unit(buffer, 1024, unitX, wndMain.horizontal.Capture * sz);
+        // draw unit
+        pFont->writeText3d(threadid, render.cameraOsc.Final, screenX - sizeX, charYmin, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), buffer, render.colorTime, render.oscScaleX, render.oscScaleY);
+        // draw arrow
+        pCanvas3d->beginBatch(threadid, CANVAS3D_BATCH_LINE, 3);
+        pCanvas3d->bLine(threadid, Vector4(arrowX, charYmin, 0, 1), Vector4(arrowX, yMin, 0, 1));
+        pCanvas3d->bLine(threadid, Vector4(arrowX + sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
+        pCanvas3d->bLine(threadid, Vector4(arrowX - sizeX / 4, yMin - sizeY / 4, 0, 1), Vector4(arrowX, yMin, 0, 1));
+        pCanvas3d->endBatch(threadid, render.cameraOsc.Final, render.colorTime);
     }
-
     ////////////////////////////////////////////////////////////////////////////////
     // pre-trigger
     ////////////////////////////////////////////////////////////////////////////////
     FORMAT("%s", "Trigger");
     float preTrigPos = (double(wndMain.trigger.Percent) / 100.0) / sz;
-    sx = -0.5 / sz + sx/sz;
+    sx = -0.5 / sz + sx / sz;
     pFont->setSize(threadid, 0.42f);
     pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + charHeight, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
     {
@@ -822,7 +795,6 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(uint pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<int>(pt, 0, icount - 1);
-        
         double   yPosCh0 = frame.analog0.bytes[idx];
         double   yPosCh1 = frame.analog1.bytes[idx];
         double   yPosChF = channelFunction(yPosCh0, yPosCh1, wndMain.function.Type, wndMain);
@@ -894,7 +866,6 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(uint pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<int>(pt, 0, icount - 1);
-        
         double   yPosCh0 = frame.analog0.bytes[idx];
         double   yPosCh1 = frame.analog1.bytes[idx];
         double   y0 = yPosCh0 * yfactor0 /*- ch0ZeroVolt*/;
@@ -1077,7 +1048,6 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     for(int pt = 0; pt < icount; pt++)
     {
         uint idx = clamp<uint>(pt, 0, icount - 1);
-        
         double   yPosCh0 = frame.analog0.bytes[idx];
         double   yPosCh1 = frame.analog1.bytes[idx];
         double   y0 = yPosCh0 * yfactor0 - ch0ZeroVolt;
@@ -1293,8 +1263,8 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
             else
             {
                 n = frame.samples;
-                if(ch==0) fft.aRe[j] = frame.analog0.bytes[j];
-                if(ch==1) fft.aRe[j] = frame.analog1.bytes[j];
+                if(ch == 0) { fft.aRe[j] = frame.analog0.bytes[j]; }
+                if(ch == 1) { fft.aRe[j] = frame.analog1.bytes[j]; }
                 fft.aIm[j]   = 0.0;
                 fft.aAmpl[j] = 0.0;
             }
@@ -1440,244 +1410,218 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
 
 void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadData& threadData, float z, uint channelId, uint shadow, SDisplay& frame, float captureTime, float captureVolt, uint color, bool invert)
 {
-   WndMain&               wndMain = threadData.m_window;
-   OsciloscopeRenderData&  render = threadData.m_render;
-
-   if (frame.samples == 0)
-      return;
-
-   if (frame.samples > SCOPEFUN_DISPLAY)
-      return;
-
-   // samples
-   uint  isamples = frame.samples;
-   if (!isamples)
-      return;
-
-   // sample zoom
-   double sampleZoom = render.signalZoom;
-  
-   // start / end / increment / xgridsize
-   uint  start = 0;
-   uint  end = isamples - 1;
-   uint  increment = wndMain.display.tessalation2d;
-   uint  count = 0;
-   uint  sampleCount = end - start + 1;
-   for (uint point = start + increment; point <= end; point += increment)
-   {
-      uint idx0 = clamp<uint>(point - increment, start, end);
-      uint idx1 = clamp<uint>(point, start, end);
-      count++;
-   }
- 
+    WndMain&               wndMain = threadData.m_window;
+    OsciloscopeRenderData&  render = threadData.m_render;
+    if(frame.samples == 0)
+    { return; }
+    if(frame.samples > SCOPEFUN_DISPLAY)
+    { return; }
+    // samples
+    uint  isamples = frame.samples;
+    if(!isamples)
+    { return; }
+    // sample zoom
+    double sampleZoom = render.signalZoom;
+    // start / end / increment / xgridsize
+    uint  start = 0;
+    uint  end = isamples - 1;
+    uint  increment = wndMain.display.tessalation2d;
+    uint  count = 0;
+    uint  sampleCount = end - start + 1;
+    for(uint point = start + increment; point <= end; point += increment)
+    {
+        uint idx0 = clamp<uint>(point - increment, start, end);
+        uint idx1 = clamp<uint>(point, start, end);
+        count++;
+    }
     // double frequency ?
     uint isDoubleFreq = captureTimeFromValue(wndMain.horizontal.Capture) == (uint)t2c2ns;
-
     // ets ?
     uint isETS        = (frame.attr & daETS);
-
     // ets
     float etsOffset = 0;
-    if (isETS)
+    if(isETS)
     {
-         float   etsDelta  = (1.f / float(isamples)) / float(render.maxEts);
-                 etsOffset = etsDelta * float(frame.ets);
+        float   etsDelta  = (1.f / float(isamples)) / float(render.maxEts);
+        etsOffset = etsDelta * float(frame.ets);
     }
-
     // x
     float      xfactor = 1.f;
-    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor)+etsOffset * xfactor;
-
+    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor) + etsOffset * xfactor;
     // y
     float     yGridMax = 0.5f;
     float      yfactor = yGridMax;
     double     yOffset = 0;
-    if (invert)
-       yfactor = -yfactor;
-
+    if(invert)
+    { yfactor = -yfactor; }
     // begin rendering
-    if (isETS)
+    if(isETS)
     {
-       pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_POINT, count);
+        pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_POINT, count);
     }
     else
     {
-       if (wndMain.display.signalType == 0)
-       {
-          pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, 2*count);
-       }
-       else
-       {
-          pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_STRIP, 2*count);
-       }
+        if(wndMain.display.signalType == 0)
+        {
+            pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, 2 * count);
+        }
+        else
+        {
+            pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_STRIP, 2 * count);
+        }
     }
-
     // draw samples
     if(isamples)
     {
         float displaySampleOffset = 1.0 / (sampleCount);
         float           offset2ns = ((2.0 * DOUBLE_NANO) * displaySampleOffset) / wndMain.horizontal.Capture;
-        if (isETS)
+        if(isETS)
         {
-           for (uint point = start; point <= end; point += increment)
-           {
-              uint idx = clamp<uint>(point, start, end);
-
-              float yStart = 0;
-              if (channelId == 0)
-                 yStart = frame.analog0.bytes[idx] * yfactor + float(yOffset);
-              if (channelId == 1)
-                 yStart = frame.analog1.bytes[idx] * yfactor + float(yOffset);
-
-              float x = (float(point) / float(end)) - 0.5f;
-              if (channelId == 0)
-                 x += offset2ns;
-              if (channelId == 1)
-                 x += offset2ns;
-              float xStart = x * xfactor + xposition;
-
-              Vector4 vpoint = Vector4(xStart, yStart, z, 1.f);
-              pCanvas3d->bPoint(threadId, vpoint);
-           }
+            for(uint point = start; point <= end; point += increment)
+            {
+                uint idx = clamp<uint>(point, start, end);
+                float yStart = 0;
+                if(channelId == 0)
+                { yStart = frame.analog0.bytes[idx] * yfactor + float(yOffset); }
+                if(channelId == 1)
+                { yStart = frame.analog1.bytes[idx] * yfactor + float(yOffset); }
+                float x = (float(point) / float(end)) - 0.5f;
+                if(channelId == 0)
+                { x += offset2ns; }
+                if(channelId == 1)
+                { x += offset2ns; }
+                float xStart = x * xfactor + xposition;
+                Vector4 vpoint = Vector4(xStart, yStart, z, 1.f);
+                pCanvas3d->bPoint(threadId, vpoint);
+            }
         }
-        else if (isDoubleFreq)
+        else if(isDoubleFreq)
         {
-           for (uint point = start + increment; point <= end; point += increment)
-           {
-              uint idx0 = clamp<uint>(point - increment, start, end);
-              uint idx1 = clamp<uint>(point, start, end);
-
-              float ystart0 = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
-              float yend0 = frame.analog0.bytes[idx1] * yfactor + float(yOffset);
-              float ystart1 = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
-              float yend1 = frame.analog1.bytes[idx1] * yfactor + float(yOffset);
-              float fstart0 = (float(point) / float(sampleCount)) - 0.5f;
-              float fstart1 = fstart0 + displaySampleOffset / 2;
-              float fend0 = fstart0 + displaySampleOffset;
-              float fend1 = fstart0 + displaySampleOffset + displaySampleOffset / 2;
-              float yArray[4] = { 0 };
-              yArray[0] = ystart0;
-              yArray[1] = ystart1;
-              yArray[2] = yend0;
-              yArray[3] = yend1;
-              float xArray[4] = { 0 };
-              xArray[0] = fstart0 * xfactor + xposition;
-              xArray[1] = fstart1 * xfactor + xposition;
-              xArray[2] = fend0 * xfactor + xposition;
-              xArray[3] = fend1 * xfactor + xposition;
-              Vector4 vArray[4] = { 0 };
-              vArray[0] = Vector4(xArray[0], yArray[0], z, 1.f);
-              vArray[1] = Vector4(xArray[1], yArray[1], z, 1.f);
-              vArray[2] = Vector4(xArray[2], yArray[2], z, 1.f);
-              vArray[3] = Vector4(xArray[3], yArray[3], z, 1.f);
-              pCanvas3d->bLine(threadId, vArray[0], vArray[1]);
-              pCanvas3d->bLine(threadId, vArray[1], vArray[2]);
-           }
+            for(uint point = start + increment; point <= end; point += increment)
+            {
+                uint idx0 = clamp<uint>(point - increment, start, end);
+                uint idx1 = clamp<uint>(point, start, end);
+                float ystart0 = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
+                float yend0 = frame.analog0.bytes[idx1] * yfactor + float(yOffset);
+                float ystart1 = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
+                float yend1 = frame.analog1.bytes[idx1] * yfactor + float(yOffset);
+                float fstart0 = (float(point) / float(sampleCount)) - 0.5f;
+                float fstart1 = fstart0 + displaySampleOffset / 2;
+                float fend0 = fstart0 + displaySampleOffset;
+                float fend1 = fstart0 + displaySampleOffset + displaySampleOffset / 2;
+                float yArray[4] = { 0 };
+                yArray[0] = ystart0;
+                yArray[1] = ystart1;
+                yArray[2] = yend0;
+                yArray[3] = yend1;
+                float xArray[4] = { 0 };
+                xArray[0] = fstart0 * xfactor + xposition;
+                xArray[1] = fstart1 * xfactor + xposition;
+                xArray[2] = fend0 * xfactor + xposition;
+                xArray[3] = fend1 * xfactor + xposition;
+                Vector4 vArray[4] = { 0 };
+                vArray[0] = Vector4(xArray[0], yArray[0], z, 1.f);
+                vArray[1] = Vector4(xArray[1], yArray[1], z, 1.f);
+                vArray[2] = Vector4(xArray[2], yArray[2], z, 1.f);
+                vArray[3] = Vector4(xArray[3], yArray[3], z, 1.f);
+                pCanvas3d->bLine(threadId, vArray[0], vArray[1]);
+                pCanvas3d->bLine(threadId, vArray[1], vArray[2]);
+            }
         }
         else
         {
             // horizontal
             double halfPoint = 1.0 / (double)sampleCount;
-                  halfPoint *= 0.5;
-            for (uint point = start; point <= end; point ++)
+            halfPoint *= 0.5;
+            for(uint point = start; point <= end; point ++)
             {
-               uint idx0 = clamp<uint>(point, start, end);
-                
-               float y = 0;
-               if (channelId == 0)
-                  y = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
-               if (channelId == 1)
-                  y = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
-              
-               float xstart = (float(point) / float(sampleCount)) - 0.5f - halfPoint + xposition;
-               float xend   = (float(point) / float(sampleCount)) - 0.5f + halfPoint + xposition;
-               
-               Vector4 vstart = Vector4(xstart, y, z, 1.f);
-               Vector4 vend   = Vector4(xend,   y, z, 1.f);
-               if (wndMain.display.signalType == 0)
-               {
-                  pCanvas3d->bLine(threadId, vstart, vend);
-                  continue;
-               }
-               else
-               {
-                  Vector4 vref0 = Vector4(0.f, 1.f, z, 1.f);
-                  Vector4 vref1 = Vector4(1.f, 0.f, z, 1.f);
-                  Vector4 vref;
-                  if (vecDot3d(vstart, vref0) == 0.000f)
-                  {
-                     vref = vref1;
-                  }
-                  else
-                  {
-                     vref = vref0;
-                  }
-                  Vector4 vdir = vend - vstart;
-                  Vector4 vcross = vecCross3d(vdir, vref);
-                  vcross = vecCross3d(vdir, vcross);
-                  vcross = vecNormalize3d(vcross);
-                  vcross = vcross * Vector4(wndMain.display.signalWidth);
-                  Vector4 v0 = vstart + vcross;
-                  Vector4 v1 = vstart - vcross;
-                  v0.w = v1.w = 1.f;
-                  pCanvas3d->bStrip(threadId, v0);
-                  pCanvas3d->bStrip(threadId, v1);
-               }
+                uint idx0 = clamp<uint>(point, start, end);
+                float y = 0;
+                if(channelId == 0)
+                { y = frame.analog0.bytes[idx0] * yfactor + float(yOffset); }
+                if(channelId == 1)
+                { y = frame.analog1.bytes[idx0] * yfactor + float(yOffset); }
+                float xstart = (float(point) / float(sampleCount)) - 0.5f - halfPoint + xposition;
+                float xend   = (float(point) / float(sampleCount)) - 0.5f + halfPoint + xposition;
+                Vector4 vstart = Vector4(xstart, y, z, 1.f);
+                Vector4 vend   = Vector4(xend,   y, z, 1.f);
+                if(wndMain.display.signalType == 0)
+                {
+                    pCanvas3d->bLine(threadId, vstart, vend);
+                    continue;
+                }
+                else
+                {
+                    Vector4 vref0 = Vector4(0.f, 1.f, z, 1.f);
+                    Vector4 vref1 = Vector4(1.f, 0.f, z, 1.f);
+                    Vector4 vref;
+                    if(vecDot3d(vstart, vref0) == 0.000f)
+                    {
+                        vref = vref1;
+                    }
+                    else
+                    {
+                        vref = vref0;
+                    }
+                    Vector4 vdir = vend - vstart;
+                    Vector4 vcross = vecCross3d(vdir, vref);
+                    vcross = vecCross3d(vdir, vcross);
+                    vcross = vecNormalize3d(vcross);
+                    vcross = vcross * Vector4(wndMain.display.signalWidth);
+                    Vector4 v0 = vstart + vcross;
+                    Vector4 v1 = vstart - vcross;
+                    v0.w = v1.w = 1.f;
+                    pCanvas3d->bStrip(threadId, v0);
+                    pCanvas3d->bStrip(threadId, v1);
+                }
             }
-
             // vertical
             float ystart = 0;
-            for (uint point = start; point <= end; point++)
+            for(uint point = start; point <= end; point++)
             {
-               uint idx0 = clamp<uint>(point, start, end);
-
-               float yend = 0;
-               if (channelId == 0)
-                  yend = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
-               if (channelId == 1)
-                  yend = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
-                    
-               float xstart = (float(point) / float(sampleCount)) - 0.5f + halfPoint + xposition;
-               float xend   = xstart;
-
-               Vector4 vstart = Vector4(xstart, ystart, z, 1.f);
-               Vector4 vend = Vector4(xend, yend, z, 1.f);
-
-               ystart = yend;
-
-               if (wndMain.display.signalType == 0)
-               { 
-                  pCanvas3d->bLine(threadId, vstart, vend);
-                  continue;
-               }
-               else
-               {
-                  Vector4 vref0 = Vector4(0.f, 1.f, z, 1.f);
-                  Vector4 vref1 = Vector4(1.f, 0.f, z, 1.f);
-                  Vector4 vref;
-                  if (vecDot3d(vstart, vref0) == 0.000f)
-                  {
-                     vref = vref1;
-                  }
-                  else
-                  {
-                     vref = vref0;
-                  }
-                  Vector4 vdir = vend - vstart;
-                  Vector4 vcross = vecCross3d(vdir, vref);
-                  vcross = vecCross3d(vdir, vcross);
-                  vcross = vecNormalize3d(vcross);
-                  vcross = vcross * Vector4(wndMain.display.signalWidth);
-                  Vector4 v0 = vstart + vcross;
-                  Vector4 v1 = vstart - vcross;
-                  v0.w = v1.w = 1.f;
-                  pCanvas3d->bStrip(threadId, v0);
-                  pCanvas3d->bStrip(threadId, v1);
-               }
+                uint idx0 = clamp<uint>(point, start, end);
+                float yend = 0;
+                if(channelId == 0)
+                { yend = frame.analog0.bytes[idx0] * yfactor + float(yOffset); }
+                if(channelId == 1)
+                { yend = frame.analog1.bytes[idx0] * yfactor + float(yOffset); }
+                float xstart = (float(point) / float(sampleCount)) - 0.5f + halfPoint + xposition;
+                float xend   = xstart;
+                Vector4 vstart = Vector4(xstart, ystart, z, 1.f);
+                Vector4 vend = Vector4(xend, yend, z, 1.f);
+                ystart = yend;
+                if(wndMain.display.signalType == 0)
+                {
+                    pCanvas3d->bLine(threadId, vstart, vend);
+                    continue;
+                }
+                else
+                {
+                    Vector4 vref0 = Vector4(0.f, 1.f, z, 1.f);
+                    Vector4 vref1 = Vector4(1.f, 0.f, z, 1.f);
+                    Vector4 vref;
+                    if(vecDot3d(vstart, vref0) == 0.000f)
+                    {
+                        vref = vref1;
+                    }
+                    else
+                    {
+                        vref = vref0;
+                    }
+                    Vector4 vdir = vend - vstart;
+                    Vector4 vcross = vecCross3d(vdir, vref);
+                    vcross = vecCross3d(vdir, vcross);
+                    vcross = vecNormalize3d(vcross);
+                    vcross = vcross * Vector4(wndMain.display.signalWidth);
+                    Vector4 v0 = vstart + vcross;
+                    Vector4 v1 = vstart - vcross;
+                    v0.w = v1.w = 1.f;
+                    pCanvas3d->bStrip(threadId, v0);
+                    pCanvas3d->bStrip(threadId, v1);
+                }
             }
         }
     }
-
     // end rendering
     if(shadow)
     {
@@ -1743,14 +1687,13 @@ void OsciloscopeThreadRenderer::renderAnalog3d(uint threadid, OsciloscopeThreadD
         for(uint point = start; point <= end; point += increment)
         {
             uint idx0 = clamp<uint>(point, 0, isamples);
-           
             // x
             float fstart  = (float(point) / NUM_SAMPLES) - 0.5f;
             float xstart  = fstart * xfactor + xposition;
             // y
             float ystart = 0;
-            if (channelId == 0) ystart = frame.analog0.bytes[idx0] * yfactor + float(yOffset);
-            if( channelId==1)   ystart = frame.analog1.bytes[idx0] * yfactor + float(yOffset);
+            if(channelId == 0) { ystart = frame.analog0.bytes[idx0] * yfactor + float(yOffset); }
+            if(channelId == 1)   { ystart = frame.analog1.bytes[idx0] * yfactor + float(yOffset); }
             if(channelId == 0)
             {
                 surfaceFrame0[frameIndex].point[i].pos = Vector4(xstart, ystart, z, 1.f);
@@ -1934,7 +1877,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-           
             float ystart  = 0;
             float yend    = 0;
             float ystart0 = frame.analog0.bytes[idx0] * yfactor0 + float(yOffset0);
@@ -1969,7 +1911,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
     {
         return;
     }
-  
     if(frame.samples > NUM_SAMPLES)
     {
         return;
@@ -2043,7 +1984,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-            
             float x0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset0);
             float y0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset1);
             float x1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset0);
@@ -2137,7 +2077,6 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
         {
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
-        
             // y
             float y0 = frame.analog0.bytes[idx0] * yfactor0 + float(yOffset0);
             float y1 = frame.analog1.bytes[idx0] * yfactor1 + float(yOffset1);
@@ -2470,8 +2409,7 @@ void OsciloscopeThreadRenderer::renderFFTUnits(uint threadid, OsciloscopeThreadD
     WndMain&           wndMain = threadData.m_window;
     OsciloscopeRenderData&  render = threadData.m_render;
     if(frame.samples > NUM_SAMPLES)
-        return;
-    
+    { return; }
     iint n = frame.samples;
     pFont->setSize(threadid, 0.25f);
     iint p = wndMain.horizontal.FFTSize;
@@ -2627,8 +2565,8 @@ void OsciloscopeThreadRenderer::renderFFT(uint threadId, OsciloscopeThreadData& 
         }
         else
         {
-            if( channelId==0) fft.aRe[i] = frame.analog0.bytes[i];
-            if (channelId==1) fft.aRe[i] = frame.analog1.bytes[i];
+            if(channelId == 0) { fft.aRe[i] = frame.analog0.bytes[i]; }
+            if(channelId == 1) { fft.aRe[i] = frame.analog1.bytes[i]; }
             fft.aIm[i] = 0.0;
             fft.aAmpl[i] = 0.0;
         }
@@ -2925,12 +2863,12 @@ void OsciloscopeThreadRenderer::renderSlider(uint threadId, OsciloscopeThreadDat
     slider.MinMax(xMinimum, xMaximum, render.width, render.height, posX, render.sliderSize, render.signalZoom);
     // slider
     pCanvas2d->beginBatch(threadId, CANVAS2D_BATCH_RECTANGLE, 1);
-    pCanvas2d->bRectangle(threadId, xMinimum+1, sliderRectY + 1, xMaximum, sliderRectY + sliderRectH - 1);
+    pCanvas2d->bRectangle(threadId, xMinimum + 1, sliderRectY + 1, xMaximum, sliderRectY + sliderRectH - 1);
     pCanvas2d->endBatch(threadId, render.sliderMode == 1 ? render.colorBorder : render.colorGrid);
     // border
     pCanvas2d->beginBatch(threadId, CANVAS2D_BATCH_LINE, 4);
     pCanvas2d->bLine(threadId, sliderRectX, sliderRectY, sliderRectX + sliderRectW, sliderRectY);
-    pCanvas2d->bLine(threadId, sliderRectX, sliderRectY + sliderRectH, sliderRectX + sliderRectW, sliderRectY + sliderRectH-1);
+    pCanvas2d->bLine(threadId, sliderRectX, sliderRectY + sliderRectH, sliderRectX + sliderRectW, sliderRectY + sliderRectH - 1);
     pCanvas2d->bLine(threadId, sliderRectX, sliderRectY, sliderRectX, sliderRectY + sliderRectH);
     pCanvas2d->bLine(threadId, sliderRectX + sliderRectW, sliderRectY, sliderRectX + sliderRectW, sliderRectY + sliderRectH);
     pCanvas2d->endBatch(threadId, render.colorBorder);

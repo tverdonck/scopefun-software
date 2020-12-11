@@ -21,9 +21,9 @@
 #include "OsciloskopDebug.h"
 #include "OsciloskopOsciloskop.h"
 
-OsciloskopDebug::OsciloskopDebug( wxWindow* parent )
-:
-Debug( parent )
+OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
+    :
+    Debug(parent)
 {
     m_script = 0;
     m_Redirect = new wxStreamToTextRedirector(m_textCtrl41);
@@ -32,12 +32,12 @@ Debug( parent )
     //m_textCtrl41->GetScrollHelper()->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_NEVER, wxScrollbarVisibility::wxSHOW_SB_ALWAYS);
     SetSize(500, 500);
     SetTitle("Script");
-   // SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE);
-   // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
-   // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
-   // SetScrollHelper(m_scrollHelp);
+    // SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE);
+    // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
+    // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
+    // SetScrollHelper(m_scrollHelp);
     wxColour black((unsigned long)RGB(64, 64, 64));
-    wxColour white( RGB(255, 255, 255) );
+    wxColour white(RGB(255, 255, 255));
     m_textCtrl41->SetBackgroundColour(black);
     m_textCtrl41->SetForegroundColour(white);
     SetBackgroundColour(black);
@@ -45,7 +45,7 @@ Debug( parent )
     Connect(wxEVT_CLOSE_WINDOW, wxActivateEventHandler(OsciloskopDebug::OnDestroy));
 }
 
-void OsciloskopDebug::ThermalOnActivate( wxActivateEvent& event )
+void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
 {
     // TODO: Implement ThermalOnActivate
 }
@@ -53,40 +53,40 @@ void OsciloskopDebug::ThermalOnActivate( wxActivateEvent& event )
 
 void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
 {
-   // TODO: Implement ThermalOnActivate
-   if (m_script)
-   {
-      m_script->Stop();
-      m_script->ClrPrint();
-   }
-   if( m_script )
-      ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false);
-   Hide();
+    // TODO: Implement ThermalOnActivate
+    if(m_script)
+    {
+        m_script->Stop();
+        m_script->ClrPrint();
+    }
+    if(m_script)
+    { ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false); }
+    Hide();
 }
 
 void OsciloskopDebug::m_button561OnButtonClick(wxCommandEvent& event)
 {
-   if (m_script)
-      m_script->Reload();
-   event.Skip();
+    if(m_script)
+    { m_script->Reload(); }
+    event.Skip();
 }
 
 void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
 {
-   if (m_script)
-      m_script->Run();
-   event.Skip();
+    if(m_script)
+    { m_script->Run(); }
+    event.Skip();
 }
 void OsciloskopDebug::m_button562OnButtonClick(wxCommandEvent& event)
 {
-   if (m_script)
-      m_script->Stop();
-   event.Skip();
+    if(m_script)
+    { m_script->Stop(); }
+    event.Skip();
 }
 void OsciloskopDebug::m_button5621OnButtonClick(wxCommandEvent& event)
 {
-   Close();
-   event.Skip();
+    Close();
+    event.Skip();
 }
 
 
@@ -107,8 +107,8 @@ void OsciloskopDebug::Clear()
 
 OsciloskopDebug::~OsciloskopDebug()
 {
-  // delete m_scrollHelp;
-   delete m_Redirect;
+    // delete m_scrollHelp;
+    delete m_Redirect;
 }
 
 void OsciloskopDebug::AppendText(const char* str)

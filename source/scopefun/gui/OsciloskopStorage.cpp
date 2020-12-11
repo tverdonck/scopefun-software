@@ -49,12 +49,10 @@ void OsciloskopStorage::m_choiceStorageOnChoice(wxCommandEvent& event)
 
 void OsciloskopStorage::m_textCtrlStorageOnTextEnter(wxCommandEvent& event)
 {
-   
 }
 
 void OsciloskopStorage::m_choicePacketSizeOnChoice(wxCommandEvent& event)
 {
-
 }
 
 void OsciloskopStorage::m_buttonOkOnButtonClick(wxCommandEvent& event)

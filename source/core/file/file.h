@@ -19,7 +19,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef __CORE__FILE__
-#define __CORE__FILE__
+    #define __CORE__FILE__
 
     int   fileLoadString(const char* fileName, char** string, ilarge* stringSize);
     int   fileSaveString(const char* fileName, const char* string);

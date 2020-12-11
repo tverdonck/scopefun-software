@@ -122,7 +122,7 @@ int String::posReverse(const String& substr, int end) const
 
 void String::add(const String& str)
 {
-   insert(getLength(), str);
+    insert(getLength(), str);
 }
 
 void String::insert(int pos, const String& str)
@@ -265,7 +265,7 @@ char& String::operator[](int idx)
 
 void String::operator += (const String& str)
 {
-   return add(str);
+    return add(str);
 }
 String& String::operator = (const String& str)
 {

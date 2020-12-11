@@ -635,7 +635,7 @@ void OscHardware::save()
     {
         CORE_MESSAGE("settings.json error before: [%.256s]\n", cJSON_GetErrorPtr());
     }
-    FORMAT_BUFFER(); 
+    FORMAT_BUFFER();
     FORMAT_PATH("data/startup/hardware2.json");
     fileSaveString(formatBuffer, jsonString);
     cJSON_Delete(jsonRoot);
@@ -1089,7 +1089,6 @@ void OscSettingsInterface::save()
 
 void OscSettingsInterface::setVersion(int version)
 {
-  
 }
 
 OscHardware* OscSettingsInterface::getHardware()

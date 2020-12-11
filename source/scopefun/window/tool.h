@@ -162,7 +162,7 @@ class ToolText
 {
 public:
     static void Time(char* buffer, int size, double value);
-    static void Unit(char* buffer, int size, double value,double unit);
+    static void Unit(char* buffer, int size, double value, double unit);
     static void Hertz(char* buffer, int size, float value);
     static void Decibels(char* buffer, int size, float value);
     static void Volt(char* buffer, int size, float value);

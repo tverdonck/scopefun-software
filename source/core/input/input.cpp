@@ -81,7 +81,6 @@ int InputManager::getMouseWheel()
 
 int InputManager::start()
 {
-   
     return 0;
 }
 
@@ -105,13 +104,12 @@ int InputManager::onEvent(SDL_Event& e)
         case SDL_MOUSEWHEEL:
             mouseWheel += (e.wheel.y * 100);
             break;
-
         case SDL_KEYUP:
-           keys[ clamp<int>(e.key.keysym.scancode,0,MAX_KEYS) ] = 0;
-           break;
+            keys[ clamp<int>(e.key.keysym.scancode, 0, MAX_KEYS) ] = 0;
+            break;
         case SDL_KEYDOWN:
-           keys[ clamp<int>(e.key.keysym.scancode,0,MAX_KEYS) ] = 1;
-           break;
+            keys[ clamp<int>(e.key.keysym.scancode, 0, MAX_KEYS) ] = 1;
+            break;
     };
     return 0;
 }

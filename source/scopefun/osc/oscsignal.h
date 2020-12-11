@@ -86,9 +86,9 @@ public:
 public:
     uint                       edgeSample;
     double                     edgeOffset;
-    Array<byte,NUM_SAMPLES>    attr;
-    Array<ishort,NUM_SAMPLES>  analog[2];
-    Array<ushort,NUM_SAMPLES>  digital;
+    Array<byte, NUM_SAMPLES>    attr;
+    Array<ishort, NUM_SAMPLES>  analog[2];
+    Array<ushort, NUM_SAMPLES>  digital;
     Array<byte, 2464>          debug;
 public:
     uint                       ets;
@@ -192,52 +192,52 @@ public:
 class OsciloscopeScript
 {
 private:
-   SDL_SpinLock m_spinLock;
-   SDL_atomic_t m_locking;
-   String       m_fileName;
-   lua_State*   m_luaState;
-   char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
-   void*        m_userData;
-   int          m_arrayIdx;
+    SDL_SpinLock m_spinLock;
+    SDL_atomic_t m_locking;
+    String       m_fileName;
+    lua_State*   m_luaState;
+    char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
+    void*        m_userData;
+    int          m_arrayIdx;
 public:
-   OsciloscopeScript(int index);
+    OsciloscopeScript(int index);
 public:
-   int OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
-   int OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
-   int OnDisplay(SDisplay* data, float* pos, float* zoom, void* user);
-   int OnConfigure(SHardware* hw);
-   int OnInit(SFContext* ctx);
+    int OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user);
+    int OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
+    int OnDisplay(SDisplay* data, float* pos, float* zoom, void* user);
+    int OnConfigure(SHardware* hw);
+    int OnInit(SFContext* ctx);
 public:
-   int LuaError(const char* str);
-   int LuaPrint(const char* str);
-   int CppPrint(const char* str);
+    int LuaError(const char* str);
+    int LuaPrint(const char* str);
+    int CppPrint(const char* str);
 public:
-   int    Load(String fileName);
-   int    Reload();
-   int    Run();
-   int    Stop();
+    int    Load(String fileName);
+    int    Reload();
+    int    Run();
+    int    Stop();
 public:
-   void    SetUserData(void* user);
-   void*   GetUserData();
-   int     GetArrayIdx();
+    void    SetUserData(void* user);
+    void*   GetUserData();
+    int     GetArrayIdx();
 public:
-   const char* GetPrint();
-   void        ClrPrint();
+    const char* GetPrint();
+    void        ClrPrint();
 };
 
 class OsciloscopeCallback
 {
 private:
-   SCallback                                     m_callback;
-   Array<OsciloscopeScript*,SCOPEFUN_MAX_SCRIPT> m_script;
+    SCallback                                     m_callback;
+    Array<OsciloscopeScript*, SCOPEFUN_MAX_SCRIPT> m_script;
 public:
-   OsciloscopeCallback();
+    OsciloscopeCallback();
 public:
-   SCallback*          Ptr();
-   OsciloscopeScript*  Get(int i);
-   int                 Add(String fileName);
-   int                 Clear();
-   int                 Count();
+    SCallback*          Ptr();
+    OsciloscopeScript*  Get(int i);
+    int                 Add(String fileName);
+    int                 Clear();
+    int                 Count();
 };
 
 #endif

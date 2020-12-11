@@ -73,7 +73,6 @@ void OsciloskopConnection::m_checkBoxConnectedOnCheckBox(wxCommandEvent& event)
 
 void OsciloskopConnection::m_buttonConnectOnButtonClick(wxCommandEvent& event)
 {
-
 }
 
 void OsciloskopConnection::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)

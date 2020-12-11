@@ -202,7 +202,7 @@ void OsciloskopHardwareGenerator::m_buttonOn0OnButtonClick(wxCommandEvent& event
     sfSetGeneratorFrequency0(getHw(), pOsciloscope->window.hardwareGenerator.frequency0, pOsciloscope->settings.getHardware()->generatorFs);
     sfSetGeneratorSquareDuty0(getHw(), pOsciloscope->window.hardwareGenerator.squareDuty0);
     sfSetGeneratorSlope0(getHw(), pOsciloscope->window.hardwareGenerator.sawSlopePositive0);
-    sfSetGeneratorOffset0(getHw(), pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture, 0) );
+    sfSetGeneratorOffset0(getHw(), pOsciloscope->window.hardwareGenerator.offset0 + pOsciloscope->settings.getHardware()->getGeneratorOffset(pOsciloscope->window.horizontal.Capture, 0));
     sfSetGeneratorOn0(getHw(), 1);
     pOsciloscope->transferData();
     if(!pOsciloscope->settings.getColors()->windowDefault)
@@ -441,7 +441,7 @@ void OsciloskopHardwareGenerator::m_spinBtnCh1VoltOnSpinUp(wxSpinEvent& event)
     pOsciloscope->window.hardwareGenerator.voltage1 = min(pOsciloscope->window.hardwareGenerator.voltage1, 2048);
     m_textCtrlVoltage1->SetValue(pFormat->floatToString(double(pOsciloscope->window.hardwareGenerator.voltage1)*pOsciloscope->settings.getHardware()->referenceGeneratorVoltagePerStep));
     m_sliderVoltage1->SetValue(pOsciloscope->window.hardwareGenerator.voltage1);
-    sfSetGeneratorVoltage1(getHw(),pOsciloscope->window.hardwareGenerator.voltage1);
+    sfSetGeneratorVoltage1(getHw(), pOsciloscope->window.hardwareGenerator.voltage1);
     pOsciloscope->transferData();
 }
 
@@ -487,7 +487,7 @@ void OsciloskopHardwareGenerator::m_spinBtnGen1SqrDutyOnSpinUp(wxSpinEvent& even
 void OsciloskopHardwareGenerator::m_spinBtnGen1SqrDutyOnSpinDown(wxSpinEvent& event)
 {
     pOsciloscope->window.hardwareGenerator.squareDuty1--;
-    sfSetGeneratorSquareDuty1(getHw(),pOsciloscope->window.hardwareGenerator.squareDuty1);
+    sfSetGeneratorSquareDuty1(getHw(), pOsciloscope->window.hardwareGenerator.squareDuty1);
     pOsciloscope->transferData();
     m_sliderSquareDuty1->SetValue(pOsciloscope->window.hardwareGenerator.squareDuty1);
     m_textCtrlSquareDuty1->SetValue(pFormat->floatToString(pOsciloscope->window.hardwareGenerator.squareDuty1));
@@ -510,7 +510,6 @@ void OsciloskopHardwareGenerator::m_buttonDefaultOnButtonClick(wxCommandEvent& e
     pOsciloscope->window.hardwareGenerator.Default();
     wxInitDialogEvent e = { 0 };
     HardwareGeneratorOnInitDialog(e);
-
     wxCommandEvent ce = { 0 };
     m_buttonOn0OnButtonClick(ce);
     m_buttonOn1OnButtonClick(ce);
