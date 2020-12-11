@@ -20,9 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopMeasure.h"
 
-#include <wx/eventfilter.h>
-#include <wx/clipbrd.h>
-#include <wx/app.h>
 
 class MouseLost : public wxMouseCaptureLostEvent
 {

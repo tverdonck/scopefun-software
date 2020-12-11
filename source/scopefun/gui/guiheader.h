@@ -25,6 +25,7 @@
 class OsciloskopStorage;
 class OsciloskopConnection;
 class OsciloskopMeasure;
+class OsciloskopOscoloskop;
 class OsciloskopDebug;
 class OsciloskopInfo;
 class OsciloskopDisplay;
@@ -42,6 +43,16 @@ extern "C" {
 #include <wx/aui/auibook.h>
 #include <wx/dcbuffer.h>
 #include <wx/stdpaths.h>
+#include <wx/app.h>
+#include <wx/msgdlg.h>
+#include <wx/progdlg.h>
+#include <wx/clipbrd.h>
+#include <wx/config.h>
+#include <wx/clipbrd.h>
+#include <wx/eventfilter.h>
+#include <wx/app.h>
+
+#include <version/sfversion.h>
 
 #endif
 //////////////////////////////////////////////////////////////////////////////////////

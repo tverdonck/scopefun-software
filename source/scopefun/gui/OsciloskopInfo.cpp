@@ -20,10 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopInfo.h"
 
-#include <wx/config.h>
-#include <wx/app.h>
-
-#include <version/sfversion.h>
 
 OsciloskopInfo::OsciloskopInfo(wxWindow* parent)
     :

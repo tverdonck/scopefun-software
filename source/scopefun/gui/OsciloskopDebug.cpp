@@ -19,7 +19,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopDebug.h"
-#include "OsciloskopOsciloskop.h"
+
 
 OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     :

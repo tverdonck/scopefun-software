@@ -19,7 +19,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopConnection.h"
-#include "OsciloskopOsciloskop.h"
 
 OsciloskopConnection::OsciloskopConnection(wxWindow* parent)
     :
