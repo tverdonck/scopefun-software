@@ -1,4 +1,4 @@
-#include "OsciloskopOsciloskop.h"
+#include "fbOsciloskopOsciloskop.h"
 
 OsciloskopOsciloskop::OsciloskopOsciloskop( wxWindow* parent )
 :
@@ -965,5 +965,4 @@ void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit0OnCombobox
-
 }

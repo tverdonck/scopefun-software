@@ -1,5 +1,5 @@
-#ifndef __OsciloskopOsciloskop__
-#define __OsciloskopOsciloskop__
+#ifndef __fbOsciloskopOsciloskop__
+#define __fbOsciloskopOsciloskop__
 
 /**
 @file
@@ -212,6 +212,7 @@ class OsciloskopOsciloskop : public Osciloskop
 		OsciloskopOsciloskop( wxWindow* parent );
 	//// end generated class members
 
+
 };
 
-#endif // __OsciloskopOsciloskop__
+#endif // __fbOsciloskopOsciloskop__
