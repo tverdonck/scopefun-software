@@ -255,6 +255,7 @@ public:
     ~OsciloskopOsciloskop();
 public:
    void MenuScriptSelection(wxCommandEvent& event);
+   void OnInit();
 public:
     int  getCurrentSlot();
     void SaveOldSlotLoadNewSlot(int newSlot);

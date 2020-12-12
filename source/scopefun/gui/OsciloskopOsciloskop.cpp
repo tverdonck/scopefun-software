@@ -20,39 +20,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopOsciloskop.h"
 
-
-OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent) //, m_timer(this, TIMER_ID)
+OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) 
+: 
+Osciloskop(parent)
 {
-    userinterfaceupdate = 1;
-//    m_timer.Start(1); // 1 milisecond interval
-    pStorage = new OsciloskopStorage(this);
-    pConnection = new OsciloskopConnection(this);
-    pMeasure = new OsciloskopMeasure(this);
-    pDebug = new OsciloskopDebug(this);
-    pInfo = new OsciloskopInfo(this);
-    pDisplay = new OsciloskopDisplay(this);
-    pThermal = new OsciloskopThermal(this);
-    pSoftwareGenerator = new OsciloskopSoftwareGenerator(this);
-    pHardwareGenerator = new OsciloskopHardwareGenerator(this);
-    once = 1;
-    pulse = 0;
-    timer = 0.0;
+
 }
-
-OsciloskopOsciloskop::~OsciloskopOsciloskop()
-{
-     m_dynamicEvents->clear();
-}
-
-
-//void OsciloskopOsciloskop::OnTimer(wxTimerEvent& event)
-//{
-//    wxWakeUpIdle();
-//}
 
 void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 {
-    // TODO: Implement onActivate
     if(once)
     {
         GetMenuBar()->Remove(6);
@@ -158,7 +134,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 
 void OsciloskopOsciloskop::onActivateApp(wxActivateEvent& event)
 {
-    // TODO: Implement onActivateApp
 }
 
 void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
@@ -182,9 +157,6 @@ void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
     // exit
     Destroy();
 }
-
-// wxDialog  *dlg = 0;
-
 
 void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
 {
@@ -422,13 +394,12 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
 
 void OsciloskopOsciloskop::OnSetFocus(wxFocusEvent& event)
 {
-    // TODO: Implement OnSetFocus
+
 }
 
 
 void OsciloskopOsciloskop::OnSize(wxSizeEvent& event)
 {
-    // TODO: Implement OnSize
     this->SetSize(event.GetSize().GetX(), event.GetSize().GetY());
     this->Layout();
     this->Refresh();
@@ -436,7 +407,6 @@ void OsciloskopOsciloskop::OnSize(wxSizeEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem2OnMenuSelection
     wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString,
                                                 _("*.osc"),
                                                 wxFD_OPEN | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
@@ -473,7 +443,6 @@ void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem2OnMenuSelection
     wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), wxEmptyString, wxEmptyString,
                                                 _("*.osc"),
                                                 wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
@@ -526,7 +495,6 @@ void OsciloskopOsciloskop::m_menuItemConvertToTextOnMenuSelection(wxCommandEvent
 
 void OsciloskopOsciloskop::m_menuItem3OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem3OnMenuSelection
     Close(true);
 }
 
@@ -572,7 +540,6 @@ void OsciloskopOsciloskop::m_menuItem23OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem6OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem6OnMenuSelection
     pOsciloscope->window.fftDigital.lower(VIEW_SELECT_FFT_3D);
     pOsciloscope->window.fftDigital.lower(VIEW_SELECT_FFT_2D);
     pOsciloscope->window.fftDigital.raise(VIEW_SELECT_DIGITAL);
@@ -584,7 +551,6 @@ void OsciloskopOsciloskop::m_menuItem6OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem8OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem8OnMenuSelection
     if(!pDisplay)
     {
         pDisplay = new OsciloskopDisplay(this);
@@ -594,7 +560,6 @@ void OsciloskopOsciloskop::m_menuItem8OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem9OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem9OnMenuSelection
     if(!pThermal)
     {
         pThermal = new OsciloskopThermal(this);
@@ -605,7 +570,6 @@ void OsciloskopOsciloskop::m_menuItem9OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItemSoftwareOnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItemSoftwareOnMenuSelection
     if(!pSoftwareGenerator)
     {
         pSoftwareGenerator = new OsciloskopSoftwareGenerator(this);
@@ -615,7 +579,6 @@ void OsciloskopOsciloskop::m_menuItemSoftwareOnMenuSelection(wxCommandEvent& eve
 
 void OsciloskopOsciloskop::m_menuItem11OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem11OnMenuSelection
     if(!pHardwareGenerator)
     {
         pHardwareGenerator = new OsciloskopHardwareGenerator(this);
@@ -625,13 +588,11 @@ void OsciloskopOsciloskop::m_menuItem11OnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem12OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem12OnMenuSelection
     pOsciloscope->AutoCallibrate();
 }
 
 void OsciloskopOsciloskop::m_menuItem15OnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItem15OnMenuSelection
     if(!pMeasure)
     {
         pMeasure = new OsciloskopMeasure(this);
@@ -652,7 +613,6 @@ void OsciloskopOsciloskop::m_menuItemEnglishOnMenuSelection(wxCommandEvent& even
     saveLanguageToConfig(wxLANGUAGE_ENGLISH);
     recreateGUI();
 }
-
 
 void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
 {
@@ -677,31 +637,9 @@ void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
         ((OsciloskopDebug*)script->GetUserData())->Show();
     }
 }
-//
-//void OsciloskopOsciloskop::MenuLanguageSelection(wxCommandEvent& event)
-//{
-//    // #define RECREATE_GUI
-//    #if !defined(RECREATE_GUI)
-//    wxMessageDialog msgBox(this, wxT("Application needs to close. Continue?"), _T("Changing language"), wxCANCEL | wxOK | wxCENTRE);
-//    int ret = msgBox.ShowModal();
-//    if(ret == wxID_OK)
-//    #endif
-//    {
-//        wxLanguage langId = ((wxLanguageUserData*)(event.m_callbackUserData))->data;
-//        setLocalization(langId);
-//        saveLanguageToConfig(langId);
-//        #if defined(RECREATE_GUI)
-//        recreateGUI();
-//        #else
-//        wxCloseEvent evnt;
-//        onClose(evnt);
-//        #endif
-//    }
-//}
 
 void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItemDebugOnMenuSelection
     if(!pDebug)
     {
         pDebug = new OsciloskopDebug(this);
@@ -711,7 +649,6 @@ void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_menuItemInfoOnMenuSelection(wxCommandEvent& event)
 {
-    // TODO: Implement m_menuItemInfoOnMenuSelection
     if(!pInfo)
     {
         pInfo = new OsciloskopInfo(this);
@@ -765,7 +702,6 @@ void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event
         double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
         RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
     }
-    // TODO: Implement m_comboBoxTimeCaptureOnCombobox
     sfSetXRange(getHw(), m_comboBoxTimeCapture->GetSelection());
     pOsciloscope->transferData();
     //
@@ -783,7 +719,6 @@ void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxETSOnCheckBox
     pOsciloscope->window.horizontal.ETS = m_checkBoxETS->GetValue() ? 1 : 0;
     sfSetEts(getHw(), pOsciloscope->window.horizontal.ETS);
     pOsciloscope->transferData();
@@ -819,19 +754,16 @@ void OsciloskopOsciloskop::m_checkBoxAvg02OnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTimeDisplayOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTimeDisplayOnTextEnter
     pOsciloscope->window.horizontal.Display = pFormat->stringToFloat(m_textCtrlTimeDisplay->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxTimeDisplay->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeDisplayOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxTimeDisplayOnCombobox
     pOsciloscope->window.horizontal.Display = pFormat->stringToFloat(m_textCtrlTimeDisplay->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxTimeDisplay->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeControlOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxTimeControlOnCombobox
     pOsciloscope->window.horizontal.Control = m_comboBoxTimeControl->GetSelection();
     sfSetControl(getHw(), pOsciloscope->window.horizontal.Control);
     pOsciloscope->transferData();
@@ -843,7 +775,6 @@ void OsciloskopOsciloskop::m_comboBoxTimeControlOnCombobox(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_textCtrlTimePositionOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTimePositionOnTextEnter
     SDL_AtomicSet(&pOsciloscope->clearThermal, 1);
     pOsciloscope->window.horizontal.Position = pFormat->stringToFloat(m_textCtrlTimePosition->GetValue().ToAscii().data());
     m_sliderTimePosition->SetValue(pOsciloscope->window.horizontal.Position);
@@ -851,7 +782,6 @@ void OsciloskopOsciloskop::m_textCtrlTimePositionOnTextEnter(wxCommandEvent& eve
 
 void OsciloskopOsciloskop::m_sliderTimePositionOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTimePositionOnScroll
     SDL_AtomicSet(&pOsciloscope->clearThermal, 1);
     pOsciloscope->window.horizontal.Position = m_sliderTimePosition->GetValue();
     m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Position)));
@@ -860,7 +790,6 @@ void OsciloskopOsciloskop::m_sliderTimePositionOnScroll(wxScrollEvent& event)
 void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& event)
 {
     pOsciloscope->m_captureBuffer.lock();
-    // TODO: Implement m_textCtrlTimeFrameSizeOnTextEnter
     int version = 0;
     int header  = 0;
     int data    = 0;
@@ -890,7 +819,6 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& ev
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTimeFrameOnTextEnter
     pOsciloscope->window.horizontal.Frame = pFormat->stringToFloat(m_textCtrlTimeFrame->GetValue().ToAscii().data());
     m_sliderTimeFrame->SetValue(pOsciloscope->window.horizontal.Frame);
     SDL_AtomicSet(&pOsciloscope->clearRenderTarget, 1);
@@ -898,7 +826,6 @@ void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTimeFrameOnScroll
     pOsciloscope->window.horizontal.Frame = m_sliderTimeFrame->GetValue();
     SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex, pOsciloscope->window.horizontal.Frame);
     m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Frame)));
@@ -908,7 +835,6 @@ void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTimeFFTSizeOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTimeFFTSizeOnTextEnter
     iint fftsize = atoi(m_textCtrlTimeFFTSize->GetValue().ToAscii().data());
     fftsize = min(fftsize, NUM_FFT);
     pOsciloscope->window.horizontal.FFTSize = fftsize;
@@ -917,7 +843,6 @@ void OsciloskopOsciloskop::m_textCtrlTimeFFTSizeOnTextEnter(wxCommandEvent& even
 
 void OsciloskopOsciloskop::m_radioBoxTimeModeOnRadioBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_radioBoxTimeModeOnRadioBox
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -927,7 +852,6 @@ void OsciloskopOsciloskop::m_radioBoxTimeModeOnRadioBox(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxCh0CaptureOnCombobox
     if(captureTimeFromValue(pOsciloscope->window.horizontal.Capture) == t2c2ns)
     {
         // 500 Mhz help
@@ -978,7 +902,6 @@ void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlCh0ScaleOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlCh0ScaleOnTextEnter
     pOsciloscope->window.channel01.Scale = pFormat->stringToFloat(m_textCtrlCh0Scale->GetValue().ToAscii().data());
     uint capture0 = m_comboBoxCh0Capture->GetSelection();
     sfSetYRangeScaleA(getHw(), pOsciloscope->getAttr(capture0), pOsciloscope->getGain(0, capture0));
@@ -992,31 +915,26 @@ void OsciloskopOsciloskop::m_checkBoxFFT1OnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_checkBoxSignal1OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_radioBoxCh0OnOffOnRadioBox
     pOsciloscope->window.channel01.OscOnOff = m_checkBoxSignal1->IsChecked() ? 1 : 0;
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh0DisplayOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlCh0DisplayOnTextEnter
     pOsciloscope->window.channel01.Display = pFormat->stringToFloat(m_textCtrlCh0Display->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxCh0Display->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh0DisplayOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxCh0DisplayOnCombobox
     pOsciloscope->window.channel01.Display = pFormat->stringToFloat(m_textCtrlCh0Display->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxCh0Display->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh0InvertOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh0InvertOnCheckBox
     pOsciloscope->window.channel01.Invert = m_checkBoxCh0Invert->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh0GroundOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh0GroundOnCheckBox
     pOsciloscope->window.channel01.Ground = m_checkBoxCh0Ground->GetValue();
     sfSetAnalogSwitchBit(getHw(), CHANNEL_A_GROUND, m_checkBoxCh0Ground->GetValue());
     pOsciloscope->transferData();
@@ -1024,7 +942,6 @@ void OsciloskopOsciloskop::m_checkBoxCh0GroundOnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_choiceCh0ACDCOnChoice(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh0ACDCOnCheckBox
     pOsciloscope->window.channel01.AcDc = m_choiceCh0ACDC->GetSelection();
     sfSetAnalogSwitchBit(getHw(), CHANNEL_A_ACDC, m_choiceCh0ACDC->GetSelection());
     pOsciloscope->transferData();
@@ -1089,7 +1006,6 @@ void OsciloskopOsciloskop::m_sliderCh0PositionOnScroll(wxScrollEvent& event)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxCh1CaptureOnCombobox
     float captureOld = pOsciloscope->window.channel02.Capture;
     float time = pOsciloscope->window.horizontal.Capture;
     double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
@@ -1121,7 +1037,6 @@ void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlCh1ScaleOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlCh1ScaleOnTextEnter
     pOsciloscope->window.channel02.Scale = pFormat->stringToFloat(m_textCtrlCh1Scale->GetValue().ToAscii().data());
     uint capture1 = m_comboBoxCh1Capture->GetSelection();
     sfSetYRangeScaleB(getHw(), pOsciloscope->getAttr(capture1), pOsciloscope->getGain(1, capture1));
@@ -1135,31 +1050,26 @@ void OsciloskopOsciloskop::m_checkBoxFFT2OnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_checkBoxSignal2OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_radioBoxCh1OnOffOnRadioBox
     pOsciloscope->window.channel02.OscOnOff = m_checkBoxSignal2->IsChecked() ? 1 : 0;
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh1DisplayOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlCh1DisplayOnTextEnter
     pOsciloscope->window.channel02.Display = pFormat->stringToFloat(m_textCtrlCh1Display->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxCh1Display->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh1DisplayOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxCh1DisplayOnCombobox
     pOsciloscope->window.channel02.Display = pFormat->stringToFloat(m_textCtrlCh1Display->GetValue().ToAscii().data()) * multiplyerFromEnum(m_comboBoxCh1Display->GetSelection());
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh1InvertOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh1InvertOnCheckBox
     pOsciloscope->window.channel02.Invert = m_checkBoxCh1Invert->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh1GroundOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh1GroundOnCheckBox
     pOsciloscope->window.channel02.Ground = m_checkBoxCh1Ground->GetValue();
     sfSetAnalogSwitchBit(getHw(), CHANNEL_B_GROUND, m_checkBoxCh1Ground->GetValue());
     pOsciloscope->transferData();
@@ -1167,7 +1077,6 @@ void OsciloskopOsciloskop::m_checkBoxCh1GroundOnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_choiceCh1ACDCOnChoice(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBoxCh1ACDCOnCheckBox
     pOsciloscope->window.channel02.AcDc = m_choiceCh1ACDC->GetSelection();
     sfSetAnalogSwitchBit(getHw(), CHANNEL_B_ACDC, m_choiceCh1ACDC->GetSelection());
     pOsciloscope->transferData();
@@ -1207,7 +1116,6 @@ void OsciloskopOsciloskop::m_sliderCh1PositionOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_comboBoxFunctionTypeOnChoice(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxFunctionTypeOnChoice
     pOsciloscope->window.function.Type = m_comboBoxFunction->GetSelection();
 }
 
@@ -1223,7 +1131,6 @@ void OsciloskopOsciloskop::m_checkBoxFFTFOnCheckBox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_checkBoxSignalFOnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_radioBoxFunctionOffOnOnRadioBox
     pOsciloscope->window.function.OscOnOff = m_checkBoxSignalF->IsChecked() ? 1 : 0;
 }
 
@@ -1240,97 +1147,81 @@ void OsciloskopOsciloskop::m_textCtrlFuncCustomOnTextEnter(wxCommandEvent& event
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_checkBox1OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox1OnCheckBox
     pOsciloscope->window.digital.digital[0] = m_checkBox1->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox2OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox2OnCheckBox
     pOsciloscope->window.digital.digital[1] = m_checkBox2->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox3OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox3OnCheckBox
     pOsciloscope->window.digital.digital[2] = m_checkBox3->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox4OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox4OnCheckBox
     pOsciloscope->window.digital.digital[3] = m_checkBox4->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox5OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox5OnCheckBox
     pOsciloscope->window.digital.digital[4] = m_checkBox5->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox6OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox6OnCheckBox
     pOsciloscope->window.digital.digital[5] = m_checkBox6->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox7OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox7OnCheckBox
     pOsciloscope->window.digital.digital[6] = m_checkBox7->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox8OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox8OnCheckBox
     pOsciloscope->window.digital.digital[7] = m_checkBox8->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox9OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox9OnCheckBox
     pOsciloscope->window.digital.digital[8] = m_checkBox9->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox10OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox10OnCheckBox
     pOsciloscope->window.digital.digital[9] = m_checkBox10->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox11OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox11OnCheckBox
     pOsciloscope->window.digital.digital[10] = m_checkBox11->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox12OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox12OnCheckBox
     pOsciloscope->window.digital.digital[11] = m_checkBox12->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox13OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox13OnCheckBox
     pOsciloscope->window.digital.digital[12] = m_checkBox13->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox14OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox14OnCheckBox
     pOsciloscope->window.digital.digital[13] = m_checkBox14->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox15OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox15OnCheckBox
     pOsciloscope->window.digital.digital[14] = m_checkBox15->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox16OnCheckBox(wxCommandEvent& event)
 {
-    // TODO: Implement m_checkBox16OnCheckBox
     pOsciloscope->window.digital.digital[15] = m_checkBox16->GetValue();
 }
 
@@ -1341,7 +1232,6 @@ void OsciloskopOsciloskop::m_checkBox16OnCheckBox(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxTriggerSourceOnCombobox
     double oldTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     pOsciloscope->window.trigger.Source = m_comboBoxTriggerSource->GetSelection();
     sfSetTriggerSource(getHw(), m_comboBoxTriggerSource->GetSelection());
@@ -1352,7 +1242,6 @@ void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox(wxCommandEvent& eve
 
 void OsciloskopOsciloskop::m_comboBoxTriggerSlopeOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxTriggerSlopeOnCombobox
     pOsciloscope->window.trigger.Slope = m_comboBoxTriggerSlope->GetSelection();
     sfSetTriggerSlope(getHw(), m_comboBoxTriggerSlope->GetSelection());
     pOsciloscope->transferData();
@@ -1360,7 +1249,6 @@ void OsciloskopOsciloskop::m_comboBoxTriggerSlopeOnCombobox(wxCommandEvent& even
 
 void OsciloskopOsciloskop::m_comboBoxTriggerOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxTriggerOnCombobox
     pOsciloscope->window.trigger.Mode = m_comboBoxTrigger->GetSelection();
     sfSetTriggerMode(getHw(), m_comboBoxTrigger->GetSelection());
     if(m_comboBoxTrigger->GetSelection() == 3)
@@ -1382,7 +1270,6 @@ void OsciloskopOsciloskop::m_comboBoxTriggerOnCombobox(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTriggerLevelOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTriggerLevelOnTextEnter
     double  triggerLevel = pFormat->stringToDouble(m_textCtrlTriggerLevel->GetValue().ToAscii().data());
     int    numberOfSteps = int(triggerLevel / pOsciloscope->getTriggerVoltagePerStep());
     pOsciloscope->window.trigger.Level = numberOfSteps;
@@ -1393,7 +1280,6 @@ void OsciloskopOsciloskop::m_textCtrlTriggerLevelOnTextEnter(wxCommandEvent& eve
 
 void OsciloskopOsciloskop::m_sliderTriggerLevelOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTriggerLevelOnScroll
     pOsciloscope->window.trigger.Level = m_sliderTriggerLevel->GetValue();
     sfSetTriggerLevel(getHw(), m_sliderTriggerLevel->GetValue());
     pOsciloscope->transferData();
@@ -1403,7 +1289,6 @@ void OsciloskopOsciloskop::m_sliderTriggerLevelOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTriggerHisteresisOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTriggerHisteresisOnTextEnter
     double  hisLevel = pFormat->stringToDouble(m_textCtrlTriggerHisteresis->GetValue().ToAscii().data());
     int    numberOfSteps = int(hisLevel / pOsciloscope->getTriggerVoltagePerStep());
     pOsciloscope->window.trigger.His = numberOfSteps;
@@ -1415,7 +1300,6 @@ void OsciloskopOsciloskop::m_textCtrlTriggerHisteresisOnTextEnter(wxCommandEvent
 
 void OsciloskopOsciloskop::m_sliderTriggerHisteresisOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTriggerHisteresisOnScroll
     pOsciloscope->window.trigger.His = m_sliderTriggerHisteresis->GetValue();
     sfSetTriggerHis(getHw(), m_sliderTriggerHisteresis->GetValue());
     pOsciloscope->transferData();
@@ -1425,7 +1309,6 @@ void OsciloskopOsciloskop::m_sliderTriggerHisteresisOnScroll(wxScrollEvent& even
 
 void OsciloskopOsciloskop::m_textCtrlTriggerPreOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTriggerPreOnTextEnter
     double preTrigger = max(pFormat->stringToFloat(m_textCtrlTriggerPre->GetValue().ToAscii().data()), 0.f);
     preTrigger = min(preTrigger, 99.0);
     pOsciloscope->window.trigger.Percent = preTrigger;
@@ -1439,7 +1322,6 @@ void OsciloskopOsciloskop::m_textCtrlTriggerPreOnTextEnter(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_sliderTriggerPreOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTriggerPreOnScroll
     pOsciloscope->window.trigger.Percent = max<int>(m_sliderTriggerPre->GetValue(), 0);
     sfSetTriggerPre(getHw(), m_sliderTriggerPre->GetValue());
     pOsciloscope->transferData();
@@ -1450,7 +1332,6 @@ void OsciloskopOsciloskop::m_sliderTriggerPreOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTriggerHoldoffOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrlTriggerHoldoffOnTextEnter
     uint newHoldOff = max<int>(0, pFormat->stringToInteger(m_textCtrlTriggerHoldoff->GetValue().ToAscii().data()));
     sfSetHoldoff(getHw(), newHoldOff);
     newHoldOff = sfGetHoldoff(getHw());
@@ -1462,7 +1343,6 @@ void OsciloskopOsciloskop::m_textCtrlTriggerHoldoffOnTextEnter(wxCommandEvent& e
 
 void OsciloskopOsciloskop::m_sliderTriggerHoldoffOnScroll(wxScrollEvent& event)
 {
-    // TODO: Implement m_sliderTriggerHoldoffOnScroll
     uint newHoldOff = max(0, m_sliderTriggerHoldoff->GetValue());
     sfSetHoldoff(getHw(), newHoldOff);
     newHoldOff = sfGetHoldoff(getHw());
@@ -1479,7 +1359,6 @@ void OsciloskopOsciloskop::m_sliderTriggerHoldoffOnScroll(wxScrollEvent& event)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxDigitalStageOnCombobox
     int stage = m_comboBoxDigitalStage->GetSelection();
     pOsciloscope->window.trigger.stage = stage;
     ushort delay = pOsciloscope->window.trigger.delay[stage];
@@ -1568,7 +1447,6 @@ void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& even
 
 void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter(wxCommandEvent& event)
 {
-    // TODO: Implement m_textCtrDigitallDelayOnTextEnter
     int stage = pOsciloscope->window.trigger.stage;
     ushort delay = clamp((uint)pFormat->stringToInteger(m_textCtrDigitallDelay->GetValue().ToAscii().data()), 0U, 0xffffU);
     m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
@@ -1579,7 +1457,6 @@ void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter(wxCommandEvent& eve
 
 void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxDigitalStageStartOnCombobox
     pOsciloscope->window.trigger.stageStart = m_comboBoxDigitalStageStart->GetSelection();
     sfSetDigitalStart(getHw(), pOsciloscope->window.trigger.stageStart);
     pOsciloscope->transferData();
@@ -1587,7 +1464,6 @@ void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox(wxCommandEvent&
 
 void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxDigitalModeOnCombobox
     pOsciloscope->window.trigger.stageMode = m_comboBoxDigitalMode->GetSelection();
     sfSetDigitalMode(getHw(), pOsciloscope->window.trigger.stageMode);
     pOsciloscope->transferData();
@@ -1595,7 +1471,6 @@ void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox(wxCommandEvent& event
 
 void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxDigitalSerialChannelOnCombobox
     pOsciloscope->window.trigger.stageChannel = m_comboBoxDigitalSerialChannel->GetSelection();
     sfSetDigitalChannel(getHw(), pOsciloscope->window.trigger.stageChannel);
     pOsciloscope->transferData();
@@ -1615,49 +1490,41 @@ void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox(wxCommandEve
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit0OnCombobox
     setPattern(0, m_comboBoxBit0);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit1OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit1OnCombobox
     setPattern(1, m_comboBoxBit1);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit2OnCombobox
     setPattern(2, m_comboBoxBit2);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit3OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit3OnCombobox
     setPattern(3, m_comboBoxBit3);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit4OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit4OnCombobox
     setPattern(4, m_comboBoxBit4);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit5OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit5OnCombobox
     setPattern(5, m_comboBoxBit5);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit6OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit6OnCombobox
     setPattern(6, m_comboBoxBit6);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit7OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit7OnCombobox
     setPattern(7, m_comboBoxBit7);
 }
 
@@ -1668,49 +1535,41 @@ void OsciloskopOsciloskop::m_comboBoxBit7OnCombobox(wxCommandEvent& event)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void OsciloskopOsciloskop::m_comboBoxBit8OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit8OnCombobox
     setPattern(8, m_comboBoxBit8);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit9OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit9OnCombobox
     setPattern(9, m_comboBoxBit9);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit10OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit10OnCombobox
     setPattern(10, m_comboBoxBit10);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit11OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit11OnCombobox
     setPattern(11, m_comboBoxBit11);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit12OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit12OnCombobox
     setPattern(12, m_comboBoxBit12);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit13OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit13OnCombobox
     setPattern(13, m_comboBoxBit13);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit14OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit14OnCombobox
     setPattern(14, m_comboBoxBit14);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit15OnCombobox(wxCommandEvent& event)
 {
-    // TODO: Implement m_comboBoxBit15OnCombobox
     setPattern(15, m_comboBoxBit15);
 }
 
@@ -3549,4 +3408,28 @@ void OsciloskopOsciloskop::m_buttonRedoOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->transferRedo();
     event.Skip();
+}
+
+
+OsciloskopOsciloskop::~OsciloskopOsciloskop()
+{
+   m_dynamicEvents->clear();
+}
+
+void OsciloskopOsciloskop::OnInit()
+{
+   userinterfaceupdate = 1;
+   //    m_timer.Start(1); // 1 milisecond interval
+   pStorage = new OsciloskopStorage(this);
+   pConnection = new OsciloskopConnection(this);
+   pMeasure = new OsciloskopMeasure(this);
+   pDebug = new OsciloskopDebug(this);
+   pInfo = new OsciloskopInfo(this);
+   pDisplay = new OsciloskopDisplay(this);
+   pThermal = new OsciloskopThermal(this);
+   pSoftwareGenerator = new OsciloskopSoftwareGenerator(this);
+   pHardwareGenerator = new OsciloskopHardwareGenerator(this);
+   once = 1;
+   pulse = 0;
+   timer = 0.0;
 }

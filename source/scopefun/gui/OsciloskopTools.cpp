@@ -114,6 +114,7 @@ void recreateGUI(int initial)
    // create new top level frame
    OsciloskopOsciloskop* frame = new OsciloskopOsciloskop(0);
    pApp->SetTopWindow(frame);
+   frame->OnInit();
 
    // localization
    /*frame->m_menu6->GetMenuItems().empty();
