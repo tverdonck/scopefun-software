@@ -95,7 +95,7 @@ void recreateGUI(int initial)
    // destroy current top level window
    wxApp* pApp = (wxApp*)wxApp::GetInstance();
    wxWindow* topwindow = pApp->GetTopWindow();
-   if (topwindow)
+   /*if (topwindow)
    {
       wxArrayString list = wxTranslations::Get()->GetAvailableTranslations(_T("oscilloscope"));
       for (uint i = 0; i < (uint)list.Count(); i++)
@@ -110,12 +110,13 @@ void recreateGUI(int initial)
       }
       pApp->SetTopWindow(NULL);
       topwindow->Destroy();
-   }
+   }*/
    // create new top level frame
    OsciloskopOsciloskop* frame = new OsciloskopOsciloskop(0);
    pApp->SetTopWindow(frame);
+
    // localization
-   frame->m_menu6->GetMenuItems().empty();
+   /*frame->m_menu6->GetMenuItems().empty();
    wxArrayString list = wxTranslations::Get()->GetAvailableTranslations(_T("oscilloscope"));
    for (uint i = 0; i < (uint)list.Count(); i++)
    {
@@ -129,7 +130,8 @@ void recreateGUI(int initial)
       wxLanguageUserData* userData = new wxLanguageUserData();
       userData->data = (wxLanguage)info->Language;
       frame->Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OsciloskopOsciloskop::MenuLanguageSelection), (wxObject*)userData, frame);
-   }
+   }*/
+
    // set clinet size for proper border calculation
    int sx = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
    int sy = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);

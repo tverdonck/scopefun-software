@@ -249,13 +249,12 @@ protected:
     void m_buttonUndoOnButtonClick(wxCommandEvent& event);
     void m_buttonRedoOnButtonClick(wxCommandEvent& event);
 public:
-    void MenuLanguageSelection(wxCommandEvent& event);
-    void MenuScriptSelection(wxCommandEvent& event);
-public:
     /** Constructor */
     OsciloskopOsciloskop(wxWindow* parent);
     //// end generated class members
     ~OsciloskopOsciloskop();
+public:
+   void MenuScriptSelection(wxCommandEvent& event);
 public:
     int  getCurrentSlot();
     void SaveOldSlotLoadNewSlot(int newSlot);

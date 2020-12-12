@@ -677,27 +677,27 @@ void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
         ((OsciloskopDebug*)script->GetUserData())->Show();
     }
 }
-
-void OsciloskopOsciloskop::MenuLanguageSelection(wxCommandEvent& event)
-{
-    // #define RECREATE_GUI
-    #if !defined(RECREATE_GUI)
-    wxMessageDialog msgBox(this, wxT("Application needs to close. Continue?"), _T("Changing language"), wxCANCEL | wxOK | wxCENTRE);
-    int ret = msgBox.ShowModal();
-    if(ret == wxID_OK)
-    #endif
-    {
-        wxLanguage langId = ((wxLanguageUserData*)(event.m_callbackUserData))->data;
-        setLocalization(langId);
-        saveLanguageToConfig(langId);
-        #if defined(RECREATE_GUI)
-        recreateGUI();
-        #else
-        wxCloseEvent evnt;
-        onClose(evnt);
-        #endif
-    }
-}
+//
+//void OsciloskopOsciloskop::MenuLanguageSelection(wxCommandEvent& event)
+//{
+//    // #define RECREATE_GUI
+//    #if !defined(RECREATE_GUI)
+//    wxMessageDialog msgBox(this, wxT("Application needs to close. Continue?"), _T("Changing language"), wxCANCEL | wxOK | wxCENTRE);
+//    int ret = msgBox.ShowModal();
+//    if(ret == wxID_OK)
+//    #endif
+//    {
+//        wxLanguage langId = ((wxLanguageUserData*)(event.m_callbackUserData))->data;
+//        setLocalization(langId);
+//        saveLanguageToConfig(langId);
+//        #if defined(RECREATE_GUI)
+//        recreateGUI();
+//        #else
+//        wxCloseEvent evnt;
+//        onClose(evnt);
+//        #endif
+//    }
+//}
 
 void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection(wxCommandEvent& event)
 {

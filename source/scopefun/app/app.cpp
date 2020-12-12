@@ -41,6 +41,8 @@
     #include <windows.h>
 #endif
 
+#include "../gui/OsciloskopTools.h"
+
 extern void create();
 extern void setup();
 extern int  UpdateLicense();
@@ -104,15 +106,12 @@ public:
             #endif
             // used by wxConfig
             SetAppName("Oscilloscope");
+
             // load localization
-            int loadLanguageFromConfig();
             int language = loadLanguageFromConfig();
-            // set localization
-            void setLocalization(int id);
             setLocalization(language);
-            // save localization
-            void saveLanguageToConfig(int id);
             saveLanguageToConfig(language);
+
             // gui
             void recreateGUI(int initial = 0);
             recreateGUI(1);
