@@ -254,9 +254,8 @@ public:
 public:
     /** Constructor */
     OsciloskopOsciloskop(wxWindow* parent);
-    ~OsciloskopOsciloskop();
     //// end generated class members
-
+    ~OsciloskopOsciloskop();
 public:
     int  getCurrentSlot();
     void SaveOldSlotLoadNewSlot(int newSlot);
@@ -280,15 +279,15 @@ public:
     OsciloskopSoftwareGenerator* pSoftwareGenerator;
     OsciloskopHardwareGenerator* pHardwareGenerator;
 public:
-    wxTimer m_timer;
+  //  wxTimer m_timer;
     double timer;
     int once;
     int pulse;
     int userinterfaceupdate;
-public:
-    void OnTimer(wxTimerEvent& event);
-public:
-    wxDECLARE_EVENT_TABLE();
+//public:
+//    void OnTimer(wxTimerEvent& event);
+//public:
+//    wxDECLARE_EVENT_TABLE();
 };
 
 #endif // __OsciloskopOsciloskop__

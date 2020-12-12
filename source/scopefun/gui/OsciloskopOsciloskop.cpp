@@ -21,10 +21,10 @@
 #include "OsciloskopOsciloskop.h"
 
 
-OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent), m_timer(this, TIMER_ID)
+OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent) //, m_timer(this, TIMER_ID)
 {
     userinterfaceupdate = 1;
-    m_timer.Start(1); // 1 milisecond interval
+//    m_timer.Start(1); // 1 milisecond interval
     pStorage = new OsciloskopStorage(this);
     pConnection = new OsciloskopConnection(this);
     pMeasure = new OsciloskopMeasure(this);
@@ -41,14 +41,14 @@ OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) : Osciloskop(parent
 
 OsciloskopOsciloskop::~OsciloskopOsciloskop()
 {
-    m_dynamicEvents->clear();
+     m_dynamicEvents->clear();
 }
 
 
-void OsciloskopOsciloskop::OnTimer(wxTimerEvent& event)
-{
-    wxWakeUpIdle();
-}
+//void OsciloskopOsciloskop::OnTimer(wxTimerEvent& event)
+//{
+//    wxWakeUpIdle();
+//}
 
 void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 {

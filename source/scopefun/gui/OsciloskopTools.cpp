@@ -218,18 +218,18 @@ wxFileName GetOscLangFolder()
 }
 
 
-class sfRenderTimer : public wxTimer
-{
-public:
-   void Notify()
-   {
-      wxWakeUpIdle();
-   }
-};
-
-wxBEGIN_EVENT_TABLE(OsciloskopOsciloskop, wxFrame)
-EVT_TIMER(TIMER_ID, OsciloskopOsciloskop::OnTimer)
-wxEND_EVENT_TABLE()
+//class sfRenderTimer : public wxTimer
+//{
+//public:
+//   void Notify()
+//   {
+//      wxWakeUpIdle();
+//   }
+//};
+//
+//wxBEGIN_EVENT_TABLE(OsciloskopOsciloskop, wxFrame)
+//EVT_TIMER(TIMER_ID, OsciloskopOsciloskop::OnTimer)
+//wxEND_EVENT_TABLE()
 
 
 void _setYDisplay(float& volt, uint& unit, VoltageCapture selected)
