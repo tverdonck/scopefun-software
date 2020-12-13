@@ -136,9 +136,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_menuItemDebug = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("Debug") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItemDebug );
 
-	m_menuItemTests = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("RunTests") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu7->Append( m_menuItemTests );
-
 	wxMenuItem* m_menuItemInfo;
 	m_menuItemInfo = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("About") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItemInfo );
@@ -1649,7 +1646,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_menu5->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemResetEEPROMOnMenuSelection ), this, m_menuItemResetEEPROM->GetId());
 	m_menu8->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItem15OnMenuSelection ), this, m_menuItem15->GetId());
 	m_menu7->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemDebugOnMenuSelection ), this, m_menuItemDebug->GetId());
-	m_menu7->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemTestsOnMenuSelection ), this, m_menuItemTests->GetId());
 	m_menu7->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( Osciloskop::m_menuItemInfoOnMenuSelection ), this, m_menuItemInfo->GetId());
 	m_buttonConnect->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonConnectOnButtonClick ), NULL, this );
 	m_buttonDisconnect->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonDisconnectOnButtonClick ), NULL, this );

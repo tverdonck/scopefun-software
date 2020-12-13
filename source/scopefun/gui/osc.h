@@ -295,7 +295,6 @@ class Osciloskop : public wxFrame
 		virtual void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItem15OnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemDebugOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_menuItemTestsOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_menuItemInfoOnMenuSelection( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonConnectOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonDisconnectOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -434,7 +433,6 @@ class Osciloskop : public wxFrame
 
 	public:
 		wxMenuItem* m_menuItemDebug;
-		wxMenuItem* m_menuItemTests;
 
 		Osciloskop( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Oscilloscope"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 

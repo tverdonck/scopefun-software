@@ -44,7 +44,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event );
 		void m_menuItem15OnMenuSelection( wxCommandEvent& event );
 		void m_menuItemDebugOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemTestsOnMenuSelection( wxCommandEvent& event );
 		void m_menuItemInfoOnMenuSelection( wxCommandEvent& event );
 		void m_buttonConnectOnButtonClick( wxCommandEvent& event );
 		void m_buttonDisconnectOnButtonClick( wxCommandEvent& event );
@@ -118,21 +117,17 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_checkBox5OnCheckBox( wxCommandEvent& event );
 		void m_checkBox3OnCheckBox( wxCommandEvent& event );
 		void m_checkBox1OnCheckBox( wxCommandEvent& event );
-		void m_choiceBit15OnChoice( wxCommandEvent& event );
-		void m_choiceBit13OnChoice( wxCommandEvent& event );
 		void m_choiceBit11OnChoice( wxCommandEvent& event );
 		void m_choiceBit9OnChoice( wxCommandEvent& event );
-		void m_choiceBit14OnChoice( wxCommandEvent& event );
-		void m_choiceBit12OnChoice( wxCommandEvent& event );
+		void m_choiceBit7OnChoice( wxCommandEvent& event );
 		void m_choiceBit10OnChoice( wxCommandEvent& event );
 		void m_choiceBit8OnChoice( wxCommandEvent& event );
+		void m_choiceBit6OnChoice( wxCommandEvent& event );
 		void m_choiceDS815OnChoice( wxCommandEvent& event );
 		void m_choiceInputOutputOnChoice( wxCommandEvent& event );
-		void m_choiceBit7OnChoice( wxCommandEvent& event );
 		void m_choiceBit5OnChoice( wxCommandEvent& event );
 		void m_choiceBit3OnChoice( wxCommandEvent& event );
 		void m_choiceBit1OnChoice( wxCommandEvent& event );
-		void m_choiceBit6OnChoice( wxCommandEvent& event );
 		void m_choiceBit4OnChoice( wxCommandEvent& event );
 		void m_choiceBit2OnChoice( wxCommandEvent& event );
 		void m_choiceBit0OnChoice( wxCommandEvent& event );
@@ -187,6 +182,7 @@ class OsciloskopOsciloskop : public Osciloskop
 		/** Constructor */
 		OsciloskopOsciloskop( wxWindow* parent );
 	//// end generated class members
+
 
 
 

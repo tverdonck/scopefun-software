@@ -24,6 +24,7 @@ OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent)
 : 
 Osciloskop(parent)
 {
+
 }
 
 void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
@@ -79,7 +80,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         if(pOsciloscope->settings.getSettings()->windowDebug == 0)
         {
             m_menu7->Remove(m_menuItemDebug);
-            m_menu7->Remove(m_menuItemTests);
         }
         once = 0;
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -831,11 +831,6 @@ void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection(wxCommandEvent& event)
         pDebug = new OsciloskopDebug(this);
     }
     pDebug->Show();
-}
-
-void OsciloskopOsciloskop::m_menuItemTestsOnMenuSelection(wxCommandEvent& event)
-{
-// TODO: Implement m_menuItemTestsOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemInfoOnMenuSelection(wxCommandEvent& event)
@@ -1812,7 +1807,6 @@ void OsciloskopOsciloskop::m_choiceBit0OnChoice(wxCommandEvent& event)
     sfSetDigitalOutputBit(getHw(), 0, m_choiceBit0->GetSelection());
     pOsciloscope->transferData();
 }
-
 
 void OsciloskopOsciloskop::m_choiceDS70OnChoice(wxCommandEvent& event)
 {

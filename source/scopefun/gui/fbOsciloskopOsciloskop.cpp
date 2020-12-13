@@ -152,11 +152,6 @@ void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection( wxCommandEvent& event
     // TODO: Implement m_menuItemDebugOnMenuSelection
 }
 
-void OsciloskopOsciloskop::m_menuItemTestsOnMenuSelection( wxCommandEvent& event )
-{
-    // TODO: Implement m_menuItemTestsOnMenuSelection
-}
-
 void OsciloskopOsciloskop::m_menuItemInfoOnMenuSelection( wxCommandEvent& event )
 {
     // TODO: Implement m_menuItemInfoOnMenuSelection

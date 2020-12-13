@@ -465,20 +465,6 @@
                         <property name="help"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">RunTests</property>
-                        <property name="name">m_menuItemTests</property>
-                        <property name="permission">public</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">m_menuItemTestsOnMenuSelection</event>
-                    </object>
-                    <object class="wxMenuItem" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">About</property>
                         <property name="name">m_menuItemInfo</property>
                         <property name="permission">none</property>
