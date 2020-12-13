@@ -170,20 +170,16 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event );
 		void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event );
 		void m_choiceBit158OnChoice( wxCommandEvent& event );
-		void m_comboBoxBit15OnCombobox( wxCommandEvent& event );
-		void m_comboBoxBit13OnCombobox( wxCommandEvent& event );
+		void m_choiceBit70OnChoice( wxCommandEvent& event );
 		void m_comboBoxBit11OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit9OnCombobox( wxCommandEvent& event );
-		void m_comboBoxBit14OnCombobox( wxCommandEvent& event );
-		void m_comboBoxBit12OnCombobox( wxCommandEvent& event );
+		void m_comboBoxBit6OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit10OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit8OnCombobox( wxCommandEvent& event );
-		void m_choiceBit70OnChoice( wxCommandEvent& event );
 		void m_comboBoxBit7OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit5OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit3OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit1OnCombobox( wxCommandEvent& event );
-		void m_comboBoxBit6OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit4OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit2OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit0OnCombobox( wxCommandEvent& event );
@@ -191,6 +187,7 @@ class OsciloskopOsciloskop : public Osciloskop
 		/** Constructor */
 		OsciloskopOsciloskop( wxWindow* parent );
 	//// end generated class members
+
 
 
 

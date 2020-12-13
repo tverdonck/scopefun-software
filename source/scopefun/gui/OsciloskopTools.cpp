@@ -400,10 +400,6 @@ void OsciloskopOsciloskop::SetDigital13To16(bool enable)
     m_choiceBit13->Enable(enable);
     m_choiceBit14->Enable(enable);
     m_choiceBit15->Enable(enable);
-    m_comboBoxBit12->Enable(enable);
-    m_comboBoxBit13->Enable(enable);
-    m_comboBoxBit14->Enable(enable);
-    m_comboBoxBit15->Enable(enable);
 }
 
 void OsciloskopOsciloskop::SaveOldSlotLoadNewSlot(int newSlot)
@@ -689,10 +685,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_comboBoxBit9->SetSelection(window.trigger.pattern[istage][9]);
     m_comboBoxBit10->SetSelection(window.trigger.pattern[istage][10]);
     m_comboBoxBit11->SetSelection(window.trigger.pattern[istage][11]);
-    m_comboBoxBit12->SetSelection(window.trigger.pattern[istage][12]);
-    m_comboBoxBit13->SetSelection(window.trigger.pattern[istage][13]);
-    m_comboBoxBit14->SetSelection(window.trigger.pattern[istage][14]);
-    m_comboBoxBit15->SetSelection(window.trigger.pattern[istage][15]);
     // mask[4]
     if(!window.trigger.mask[istage][0])
     {
@@ -741,22 +733,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     if(!window.trigger.mask[istage][11])
     {
         m_comboBoxBit11->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][12])
-    {
-        m_comboBoxBit12->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][13])
-    {
-        m_comboBoxBit13->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][14])
-    {
-        m_comboBoxBit14->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][15])
-    {
-        m_comboBoxBit15->SetSelection(4);
     }
 }
 

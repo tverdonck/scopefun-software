@@ -2211,10 +2211,6 @@ void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& even
     m_comboBoxBit9->SetSelection(pOsciloscope->window.trigger.pattern[stage][9]);
     m_comboBoxBit10->SetSelection(pOsciloscope->window.trigger.pattern[stage][10]);
     m_comboBoxBit11->SetSelection(pOsciloscope->window.trigger.pattern[stage][11]);
-    m_comboBoxBit12->SetSelection(pOsciloscope->window.trigger.pattern[stage][12]);
-    m_comboBoxBit13->SetSelection(pOsciloscope->window.trigger.pattern[stage][13]);
-    m_comboBoxBit14->SetSelection(pOsciloscope->window.trigger.pattern[stage][14]);
-    m_comboBoxBit15->SetSelection(pOsciloscope->window.trigger.pattern[stage][15]);
     if(!pOsciloscope->window.trigger.mask[stage][0])
     {
         m_comboBoxBit0->SetSelection(4);
@@ -2263,22 +2259,6 @@ void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& even
     {
         m_comboBoxBit11->SetSelection(4);
     }
-    if(!pOsciloscope->window.trigger.mask[stage][12])
-    {
-        m_comboBoxBit12->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][13])
-    {
-        m_comboBoxBit13->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][14])
-    {
-        m_comboBoxBit14->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][15])
-    {
-        m_comboBoxBit15->SetSelection(4);
-    }
 }
 
 void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter(wxCommandEvent& event)
@@ -2319,55 +2299,77 @@ void OsciloskopOsciloskop::m_choiceBit158OnChoice(wxCommandEvent& event)
         case 0:
             break;
         case 1:
-            m_comboBoxBit15->SetSelection(0);
-            m_comboBoxBit14->SetSelection(0);
-            m_comboBoxBit13->SetSelection(0);
-            m_comboBoxBit12->SetSelection(0);
             m_comboBoxBit11->SetSelection(0);
             m_comboBoxBit10->SetSelection(0);
             m_comboBoxBit9->SetSelection(0);
             m_comboBoxBit8->SetSelection(0);
+            m_comboBoxBit7->SetSelection(0);
+            m_comboBoxBit6->SetSelection(0);
             break;
         case 2:
-            m_comboBoxBit15->SetSelection(1);
-            m_comboBoxBit14->SetSelection(1);
-            m_comboBoxBit13->SetSelection(1);
-            m_comboBoxBit12->SetSelection(1);
             m_comboBoxBit11->SetSelection(1);
             m_comboBoxBit10->SetSelection(1);
             m_comboBoxBit9->SetSelection(1);
             m_comboBoxBit8->SetSelection(1);
+            m_comboBoxBit7->SetSelection(1);
+            m_comboBoxBit6->SetSelection(1);
             break;
         case 3:
-            m_comboBoxBit15->SetSelection(4);
-            m_comboBoxBit14->SetSelection(4);
-            m_comboBoxBit13->SetSelection(4);
-            m_comboBoxBit12->SetSelection(4);
             m_comboBoxBit11->SetSelection(4);
             m_comboBoxBit10->SetSelection(4);
             m_comboBoxBit9->SetSelection(4);
             m_comboBoxBit8->SetSelection(4);
+            m_comboBoxBit6->SetSelection(4);
+            m_comboBoxBit7->SetSelection(4);
             break;
     };
-    setPatternNoTr(15, m_comboBoxBit15);
-    setPatternNoTr(14, m_comboBoxBit14);
-    setPatternNoTr(13, m_comboBoxBit13);
-    setPatternNoTr(12, m_comboBoxBit12);
     setPatternNoTr(11, m_comboBoxBit11);
     setPatternNoTr(10, m_comboBoxBit10);
     setPatternNoTr(9, m_comboBoxBit9);
     setPatternNoTr(8, m_comboBoxBit8);
+    setPatternNoTr(6, m_comboBoxBit6);
+    setPatternNoTr(7, m_comboBoxBit7);
     pOsciloscope->transferData();
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit15OnCombobox(wxCommandEvent& event)
+void OsciloskopOsciloskop::m_choiceBit70OnChoice(wxCommandEvent& event)
 {
-    setPattern(15, m_comboBoxBit15);
-}
-
-void OsciloskopOsciloskop::m_comboBoxBit13OnCombobox(wxCommandEvent& event)
-{
-    setPattern(13, m_comboBoxBit13);
+    switch(m_choiceBit70->GetSelection())
+    {
+        case 0:
+            break;
+        case 1:
+            m_comboBoxBit5->SetSelection(0);
+            m_comboBoxBit4->SetSelection(0);
+            m_comboBoxBit3->SetSelection(0);
+            m_comboBoxBit2->SetSelection(0);
+            m_comboBoxBit1->SetSelection(0);
+            m_comboBoxBit0->SetSelection(0);
+            break;
+        case 2:       
+            m_comboBoxBit5->SetSelection(1);
+            m_comboBoxBit4->SetSelection(1);
+            m_comboBoxBit3->SetSelection(1);
+            m_comboBoxBit2->SetSelection(1);
+            m_comboBoxBit1->SetSelection(1);
+            m_comboBoxBit0->SetSelection(1);
+            break;
+        case 3:   
+            m_comboBoxBit5->SetSelection(4);
+            m_comboBoxBit4->SetSelection(4);
+            m_comboBoxBit3->SetSelection(4);
+            m_comboBoxBit2->SetSelection(4);
+            m_comboBoxBit1->SetSelection(4);
+            m_comboBoxBit0->SetSelection(4);
+            break;
+    };  
+    setPatternNoTr(5, m_comboBoxBit5);
+    setPatternNoTr(4, m_comboBoxBit4);
+    setPatternNoTr(3, m_comboBoxBit3);
+    setPatternNoTr(2, m_comboBoxBit2);
+    setPatternNoTr(1, m_comboBoxBit1);
+    setPatternNoTr(0, m_comboBoxBit0);
+    pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit11OnCombobox(wxCommandEvent& event)
@@ -2380,14 +2382,9 @@ void OsciloskopOsciloskop::m_comboBoxBit9OnCombobox(wxCommandEvent& event)
     setPattern(9, m_comboBoxBit9);
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit14OnCombobox(wxCommandEvent& event)
+void OsciloskopOsciloskop::m_comboBoxBit6OnCombobox(wxCommandEvent& event)
 {
-    setPattern(14, m_comboBoxBit14);
-}
-
-void OsciloskopOsciloskop::m_comboBoxBit12OnCombobox(wxCommandEvent& event)
-{
-    setPattern(12, m_comboBoxBit12);
+    setPattern(6, m_comboBoxBit6);
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit10OnCombobox(wxCommandEvent& event)
@@ -2398,54 +2395,6 @@ void OsciloskopOsciloskop::m_comboBoxBit10OnCombobox(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_comboBoxBit8OnCombobox(wxCommandEvent& event)
 {
     setPattern(8, m_comboBoxBit8);
-}
-
-void OsciloskopOsciloskop::m_choiceBit70OnChoice(wxCommandEvent& event)
-{
-    switch(m_choiceBit70->GetSelection())
-    {
-        case 0:
-            break;
-        case 1:
-            m_comboBoxBit7->SetSelection(0);
-            m_comboBoxBit6->SetSelection(0);
-            m_comboBoxBit5->SetSelection(0);
-            m_comboBoxBit4->SetSelection(0);
-            m_comboBoxBit3->SetSelection(0);
-            m_comboBoxBit2->SetSelection(0);
-            m_comboBoxBit1->SetSelection(0);
-            m_comboBoxBit0->SetSelection(0);
-            break;
-        case 2:
-            m_comboBoxBit7->SetSelection(1);
-            m_comboBoxBit6->SetSelection(1);
-            m_comboBoxBit5->SetSelection(1);
-            m_comboBoxBit4->SetSelection(1);
-            m_comboBoxBit3->SetSelection(1);
-            m_comboBoxBit2->SetSelection(1);
-            m_comboBoxBit1->SetSelection(1);
-            m_comboBoxBit0->SetSelection(1);
-            break;
-        case 3:
-            m_comboBoxBit7->SetSelection(4);
-            m_comboBoxBit6->SetSelection(4);
-            m_comboBoxBit5->SetSelection(4);
-            m_comboBoxBit4->SetSelection(4);
-            m_comboBoxBit3->SetSelection(4);
-            m_comboBoxBit2->SetSelection(4);
-            m_comboBoxBit1->SetSelection(4);
-            m_comboBoxBit0->SetSelection(4);
-            break;
-    };
-    setPatternNoTr(7, m_comboBoxBit7);
-    setPatternNoTr(6, m_comboBoxBit6);
-    setPatternNoTr(5, m_comboBoxBit5);
-    setPatternNoTr(4, m_comboBoxBit4);
-    setPatternNoTr(3, m_comboBoxBit3);
-    setPatternNoTr(2, m_comboBoxBit2);
-    setPatternNoTr(1, m_comboBoxBit1);
-    setPatternNoTr(0, m_comboBoxBit0);
-    pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit7OnCombobox(wxCommandEvent& event)
@@ -2468,10 +2417,6 @@ void OsciloskopOsciloskop::m_comboBoxBit1OnCombobox(wxCommandEvent& event)
     setPattern(1, m_comboBoxBit1);
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit6OnCombobox(wxCommandEvent& event)
-{
-    setPattern(6, m_comboBoxBit6);
-}
 
 void OsciloskopOsciloskop::m_comboBoxBit4OnCombobox(wxCommandEvent& event)
 {

@@ -723,7 +723,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel9->SetSizer( bSizer113 );
 	m_panel9->Layout();
 	bSizer113->Fit( m_panel9 );
-	m_notebook4->AddPage( m_panel9, _("Digital Channel"), true );
+	m_notebook4->AddPage( m_panel9, _("Digital Channel"), false );
 	m_panel91 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer164;
 	bSizer164 = new wxBoxSizer( wxHORIZONTAL );
@@ -1072,7 +1072,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel91->SetSizer( bSizer164 );
 	m_panel91->Layout();
 	bSizer164->Fit( m_panel91 );
-	m_notebook4->AddPage( m_panel91, _("Digital Pattern"), false );
+	m_notebook4->AddPage( m_panel91, _("Digital Pattern"), true );
 	m_panel25 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer152;
 	bSizer152 = new wxBoxSizer( wxVERTICAL );
@@ -1274,7 +1274,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel3->SetSizer( bSizer28 );
 	m_panel3->Layout();
 	bSizer28->Fit( m_panel3 );
-	m_notebook3->AddPage( m_panel3, _("Analog"), true );
+	m_notebook3->AddPage( m_panel3, _("Analog"), false );
 	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer78;
 	bSizer78 = new wxBoxSizer( wxVERTICAL );
@@ -1332,155 +1332,257 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer78->Add( bSizer80, 1, wxEXPAND, 5 );
 
+	wxBoxSizer* bSizer1672;
+	bSizer1672 = new wxBoxSizer( wxHORIZONTAL );
+
+
+	bSizer1672->Add( 0, 0, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxString m_choiceBit158Choices[] = { _("Custom"), _("All Zero"), _("All One"), _("All Any") };
+	int m_choiceBit158NChoices = sizeof( m_choiceBit158Choices ) / sizeof( wxString );
+	m_choiceBit158 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit158NChoices, m_choiceBit158Choices, 0 );
+	m_choiceBit158->SetSelection( 0 );
+	bSizer1672->Add( m_choiceBit158, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1672->Add( 0, 0, 2, wxEXPAND, 5 );
+
+	wxString m_choiceBit70Choices[] = { _("Custom"), _("All Zero"), _("All One"), _("All Any") };
+	int m_choiceBit70NChoices = sizeof( m_choiceBit70Choices ) / sizeof( wxString );
+	m_choiceBit70 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit70NChoices, m_choiceBit70Choices, 0 );
+	m_choiceBit70->SetSelection( 0 );
+	bSizer1672->Add( m_choiceBit70, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1672->Add( 0, 0, 1, wxEXPAND, 5 );
+
+
+	bSizer78->Add( bSizer1672, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+
 	wxBoxSizer* bSizer79;
 	bSizer79 = new wxBoxSizer( wxHORIZONTAL );
 
 	wxBoxSizer* bSizer811;
 	bSizer811 = new wxBoxSizer( wxHORIZONTAL );
 
-	wxBoxSizer* bSizer1502;
-	bSizer1502 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer145;
-	bSizer145 = new wxBoxSizer( wxVERTICAL );
-
-	wxString m_choiceBit158Choices[] = { _("Custom"), _("All Zero"), _("All One"), _("All Any") };
-	int m_choiceBit158NChoices = sizeof( m_choiceBit158Choices ) / sizeof( wxString );
-	m_choiceBit158 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit158NChoices, m_choiceBit158Choices, 0 );
-	m_choiceBit158->SetSelection( 0 );
-	bSizer145->Add( m_choiceBit158, 0, wxALL, 5 );
-
-
-	bSizer1502->Add( bSizer145, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
 	wxGridSizer* gSizer8;
-	gSizer8 = new wxGridSizer( 2, 4, 0, 0 );
+	gSizer8 = new wxGridSizer( 2, 3, 0, 0 );
 
-	wxString m_comboBoxBit15Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit15NChoices = sizeof( m_comboBoxBit15Choices ) / sizeof( wxString );
-	m_comboBoxBit15 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit15NChoices, m_comboBoxBit15Choices, 0 );
-	m_comboBoxBit15->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit15, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	wxBoxSizer* bSizer1602;
+	bSizer1602 = new wxBoxSizer( wxHORIZONTAL );
 
-	wxString m_comboBoxBit13Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit13NChoices = sizeof( m_comboBoxBit13Choices ) / sizeof( wxString );
-	m_comboBoxBit13 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit13NChoices, m_comboBoxBit13Choices, 0 );
-	m_comboBoxBit13->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit13, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_staticTextBit11 = new wxStaticText( m_panel13, wxID_ANY, _("11"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit11->Wrap( -1 );
+	bSizer1602->Add( m_staticTextBit11, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxString m_comboBoxBit11Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit11NChoices = sizeof( m_comboBoxBit11Choices ) / sizeof( wxString );
 	m_comboBoxBit11 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit11NChoices, m_comboBoxBit11Choices, 0 );
 	m_comboBoxBit11->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit11, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1602->Add( m_comboBoxBit11, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer8->Add( bSizer1602, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxBoxSizer* bSizer1591;
+	bSizer1591 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit9 = new wxStaticText( m_panel13, wxID_ANY, _("9"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit9->Wrap( -1 );
+	bSizer1591->Add( m_staticTextBit9, 0, wxALL, 5 );
 
 	wxString m_comboBoxBit9Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit9NChoices = sizeof( m_comboBoxBit9Choices ) / sizeof( wxString );
 	m_comboBoxBit9 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit9NChoices, m_comboBoxBit9Choices, 0 );
 	m_comboBoxBit9->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit9, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit14Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit14NChoices = sizeof( m_comboBoxBit14Choices ) / sizeof( wxString );
-	m_comboBoxBit14 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit14NChoices, m_comboBoxBit14Choices, 0 );
-	m_comboBoxBit14->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit14, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit12Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit12NChoices = sizeof( m_comboBoxBit12Choices ) / sizeof( wxString );
-	m_comboBoxBit12 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit12NChoices, m_comboBoxBit12Choices, 0 );
-	m_comboBoxBit12->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit12, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit10Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit10NChoices = sizeof( m_comboBoxBit10Choices ) / sizeof( wxString );
-	m_comboBoxBit10 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit10NChoices, m_comboBoxBit10Choices, 0 );
-	m_comboBoxBit10->SetSelection( 0 );
-	gSizer8->Add( m_comboBoxBit10, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit8Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit8NChoices = sizeof( m_comboBoxBit8Choices ) / sizeof( wxString );
-	m_comboBoxBit8 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit8NChoices, m_comboBoxBit8Choices, 0 );
-	m_comboBoxBit8->SetSelection( 1 );
-	gSizer8->Add( m_comboBoxBit8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1591->Add( m_comboBoxBit9, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer1502->Add( gSizer8, 1, wxEXPAND, 5 );
+	gSizer8->Add( bSizer1591, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
+	wxBoxSizer* bSizer1551;
+	bSizer1551 = new wxBoxSizer( wxHORIZONTAL );
 
-	bSizer811->Add( bSizer1502, 1, wxEXPAND, 5 );
-
-	wxBoxSizer* bSizer1513;
-	bSizer1513 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer1451;
-	bSizer1451 = new wxBoxSizer( wxVERTICAL );
-
-	wxString m_choiceBit70Choices[] = { _("Custom"), _("All Zero"), _("All One"), _("All Any") };
-	int m_choiceBit70NChoices = sizeof( m_choiceBit70Choices ) / sizeof( wxString );
-	m_choiceBit70 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit70NChoices, m_choiceBit70Choices, 0 );
-	m_choiceBit70->SetSelection( 0 );
-	bSizer1451->Add( m_choiceBit70, 0, wxALL, 5 );
-
-
-	bSizer1513->Add( bSizer1451, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxGridSizer* gSizer9;
-	gSizer9 = new wxGridSizer( 2, 4, 0, 0 );
-
-	wxString m_comboBoxBit7Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit7NChoices = sizeof( m_comboBoxBit7Choices ) / sizeof( wxString );
-	m_comboBoxBit7 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit7NChoices, m_comboBoxBit7Choices, 0 );
-	m_comboBoxBit7->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit5Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit5NChoices = sizeof( m_comboBoxBit5Choices ) / sizeof( wxString );
-	m_comboBoxBit5 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit5NChoices, m_comboBoxBit5Choices, 0 );
-	m_comboBoxBit5->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit5, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit3Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit3NChoices = sizeof( m_comboBoxBit3Choices ) / sizeof( wxString );
-	m_comboBoxBit3 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit3NChoices, m_comboBoxBit3Choices, 0 );
-	m_comboBoxBit3->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit3, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	wxString m_comboBoxBit1Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
-	int m_comboBoxBit1NChoices = sizeof( m_comboBoxBit1Choices ) / sizeof( wxString );
-	m_comboBoxBit1 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit1NChoices, m_comboBoxBit1Choices, 0 );
-	m_comboBoxBit1->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_staticTextBit6 = new wxStaticText( m_panel13, wxID_ANY, _("6"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit6->Wrap( -1 );
+	bSizer1551->Add( m_staticTextBit6, 0, wxALL, 5 );
 
 	wxString m_comboBoxBit6Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit6NChoices = sizeof( m_comboBoxBit6Choices ) / sizeof( wxString );
 	m_comboBoxBit6 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit6NChoices, m_comboBoxBit6Choices, 0 );
 	m_comboBoxBit6->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit6, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1551->Add( m_comboBoxBit6, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer8->Add( bSizer1551, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer1582;
+	bSizer1582 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit10 = new wxStaticText( m_panel13, wxID_ANY, _("10"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit10->Wrap( -1 );
+	bSizer1582->Add( m_staticTextBit10, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit10Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit10NChoices = sizeof( m_comboBoxBit10Choices ) / sizeof( wxString );
+	m_comboBoxBit10 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit10NChoices, m_comboBoxBit10Choices, 0 );
+	m_comboBoxBit10->SetSelection( 0 );
+	bSizer1582->Add( m_comboBoxBit10, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer8->Add( bSizer1582, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer1571;
+	bSizer1571 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit8 = new wxStaticText( m_panel13, wxID_ANY, _("8"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit8->Wrap( -1 );
+	bSizer1571->Add( m_staticTextBit8, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit8Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit8NChoices = sizeof( m_comboBoxBit8Choices ) / sizeof( wxString );
+	m_comboBoxBit8 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit8NChoices, m_comboBoxBit8Choices, 0 );
+	m_comboBoxBit8->SetSelection( 1 );
+	bSizer1571->Add( m_comboBoxBit8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer8->Add( bSizer1571, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxBoxSizer* bSizer1561;
+	bSizer1561 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit7 = new wxStaticText( m_panel13, wxID_ANY, _("7"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit7->Wrap( -1 );
+	bSizer1561->Add( m_staticTextBit7, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit7Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit7NChoices = sizeof( m_comboBoxBit7Choices ) / sizeof( wxString );
+	m_comboBoxBit7 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit7NChoices, m_comboBoxBit7Choices, 0 );
+	m_comboBoxBit7->SetSelection( 0 );
+	bSizer1561->Add( m_comboBoxBit7, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer8->Add( bSizer1561, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer811->Add( gSizer8, 8, wxEXPAND, 5 );
+
+	wxGridSizer* gSizer6;
+	gSizer6 = new wxGridSizer( 2, 1, 0, 0 );
+
+	m_staticText123 = new wxStaticText( m_panel13, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText123->Wrap( -1 );
+	gSizer6->Add( m_staticText123, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_staticText124 = new wxStaticText( m_panel13, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText124->Wrap( -1 );
+	gSizer6->Add( m_staticText124, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer811->Add( gSizer6, 1, wxEXPAND, 5 );
+
+	wxGridSizer* gSizer9;
+	gSizer9 = new wxGridSizer( 2, 3, 0, 0 );
+
+	wxBoxSizer* bSizer1611;
+	bSizer1611 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit5 = new wxStaticText( m_panel13, wxID_ANY, _("5"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit5->Wrap( -1 );
+	bSizer1611->Add( m_staticTextBit5, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit5Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit5NChoices = sizeof( m_comboBoxBit5Choices ) / sizeof( wxString );
+	m_comboBoxBit5 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit5NChoices, m_comboBoxBit5Choices, 0 );
+	m_comboBoxBit5->SetSelection( 0 );
+	bSizer1611->Add( m_comboBoxBit5, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer9->Add( bSizer1611, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer16111;
+	bSizer16111 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit3 = new wxStaticText( m_panel13, wxID_ANY, _("3"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit3->Wrap( -1 );
+	bSizer16111->Add( m_staticTextBit3, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit3Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit3NChoices = sizeof( m_comboBoxBit3Choices ) / sizeof( wxString );
+	m_comboBoxBit3 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit3NChoices, m_comboBoxBit3Choices, 0 );
+	m_comboBoxBit3->SetSelection( 0 );
+	bSizer16111->Add( m_comboBoxBit3, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer9->Add( bSizer16111, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxBoxSizer* bSizer16112;
+	bSizer16112 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit1 = new wxStaticText( m_panel13, wxID_ANY, _("1"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit1->Wrap( -1 );
+	bSizer16112->Add( m_staticTextBit1, 0, wxALL, 5 );
+
+	wxString m_comboBoxBit1Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
+	int m_comboBoxBit1NChoices = sizeof( m_comboBoxBit1Choices ) / sizeof( wxString );
+	m_comboBoxBit1 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit1NChoices, m_comboBoxBit1Choices, 0 );
+	m_comboBoxBit1->SetSelection( 0 );
+	bSizer16112->Add( m_comboBoxBit1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer9->Add( bSizer16112, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer16113;
+	bSizer16113 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit4 = new wxStaticText( m_panel13, wxID_ANY, _("4"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit4->Wrap( -1 );
+	bSizer16113->Add( m_staticTextBit4, 0, wxALL, 5 );
 
 	wxString m_comboBoxBit4Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit4NChoices = sizeof( m_comboBoxBit4Choices ) / sizeof( wxString );
 	m_comboBoxBit4 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit4NChoices, m_comboBoxBit4Choices, 0 );
 	m_comboBoxBit4->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit4, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer16113->Add( m_comboBoxBit4, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer9->Add( bSizer16113, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer16114;
+	bSizer16114 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit2 = new wxStaticText( m_panel13, wxID_ANY, _("2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit2->SetLabelMarkup( _("2") );
+	m_staticTextBit2->Wrap( -1 );
+	bSizer16114->Add( m_staticTextBit2, 0, wxALL, 5 );
 
 	wxString m_comboBoxBit2Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit2NChoices = sizeof( m_comboBoxBit2Choices ) / sizeof( wxString );
 	m_comboBoxBit2 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit2NChoices, m_comboBoxBit2Choices, 0 );
 	m_comboBoxBit2->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer16114->Add( m_comboBoxBit2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	gSizer9->Add( bSizer16114, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxBoxSizer* bSizer16115;
+	bSizer16115 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextBit0 = new wxStaticText( m_panel13, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBit0->Wrap( -1 );
+	bSizer16115->Add( m_staticTextBit0, 0, wxALL, 5 );
 
 	wxString m_comboBoxBit0Choices[] = { _("0"), _("1"), _("rising"), _("falling"), _("X") };
 	int m_comboBoxBit0NChoices = sizeof( m_comboBoxBit0Choices ) / sizeof( wxString );
 	m_comboBoxBit0 = new wxChoice( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxBit0NChoices, m_comboBoxBit0Choices, 0 );
 	m_comboBoxBit0->SetSelection( 0 );
-	gSizer9->Add( m_comboBoxBit0, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer16115->Add( m_comboBoxBit0, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer1513->Add( gSizer9, 1, wxEXPAND, 5 );
+	gSizer9->Add( bSizer16115, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
-	bSizer811->Add( bSizer1513, 1, wxEXPAND, 5 );
+	bSizer811->Add( gSizer9, 8, wxEXPAND, 5 );
 
 
 	bSizer79->Add( bSizer811, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1492,7 +1594,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel13->SetSizer( bSizer78 );
 	m_panel13->Layout();
 	bSizer78->Fit( m_panel13 );
-	m_notebook3->AddPage( m_panel13, _("Digital"), false );
+	m_notebook3->AddPage( m_panel13, _("Digital"), true );
 
 	bSizer156->Add( m_notebook3, 8, wxEXPAND | wxALL, 5 );
 
@@ -1729,20 +1831,16 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_comboBoxDigitalMode->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalModeOnCombobox ), NULL, this );
 	m_comboBoxDigitalSerialChannel->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalSerialChannelOnCombobox ), NULL, this );
 	m_choiceBit158->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit158OnChoice ), NULL, this );
-	m_comboBoxBit15->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit15OnCombobox ), NULL, this );
-	m_comboBoxBit13->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit13OnCombobox ), NULL, this );
+	m_choiceBit70->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit70OnChoice ), NULL, this );
 	m_comboBoxBit11->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit11OnCombobox ), NULL, this );
 	m_comboBoxBit9->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit9OnCombobox ), NULL, this );
-	m_comboBoxBit14->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit14OnCombobox ), NULL, this );
-	m_comboBoxBit12->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit12OnCombobox ), NULL, this );
+	m_comboBoxBit6->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit6OnCombobox ), NULL, this );
 	m_comboBoxBit10->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit10OnCombobox ), NULL, this );
 	m_comboBoxBit8->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit8OnCombobox ), NULL, this );
-	m_choiceBit70->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit70OnChoice ), NULL, this );
 	m_comboBoxBit7->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit7OnCombobox ), NULL, this );
 	m_comboBoxBit5->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit5OnCombobox ), NULL, this );
 	m_comboBoxBit3->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit3OnCombobox ), NULL, this );
 	m_comboBoxBit1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit1OnCombobox ), NULL, this );
-	m_comboBoxBit6->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit6OnCombobox ), NULL, this );
 	m_comboBoxBit4->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit4OnCombobox ), NULL, this );
 	m_comboBoxBit2->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit2OnCombobox ), NULL, this );
 	m_comboBoxBit0->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit0OnCombobox ), NULL, this );
@@ -1945,20 +2043,16 @@ Osciloskop::~Osciloskop()
 	m_comboBoxDigitalMode->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalModeOnCombobox ), NULL, this );
 	m_comboBoxDigitalSerialChannel->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalSerialChannelOnCombobox ), NULL, this );
 	m_choiceBit158->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit158OnChoice ), NULL, this );
-	m_comboBoxBit15->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit15OnCombobox ), NULL, this );
-	m_comboBoxBit13->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit13OnCombobox ), NULL, this );
+	m_choiceBit70->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit70OnChoice ), NULL, this );
 	m_comboBoxBit11->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit11OnCombobox ), NULL, this );
 	m_comboBoxBit9->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit9OnCombobox ), NULL, this );
-	m_comboBoxBit14->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit14OnCombobox ), NULL, this );
-	m_comboBoxBit12->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit12OnCombobox ), NULL, this );
+	m_comboBoxBit6->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit6OnCombobox ), NULL, this );
 	m_comboBoxBit10->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit10OnCombobox ), NULL, this );
 	m_comboBoxBit8->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit8OnCombobox ), NULL, this );
-	m_choiceBit70->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit70OnChoice ), NULL, this );
 	m_comboBoxBit7->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit7OnCombobox ), NULL, this );
 	m_comboBoxBit5->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit5OnCombobox ), NULL, this );
 	m_comboBoxBit3->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit3OnCombobox ), NULL, this );
 	m_comboBoxBit1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit1OnCombobox ), NULL, this );
-	m_comboBoxBit6->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit6OnCombobox ), NULL, this );
 	m_comboBoxBit4->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit4OnCombobox ), NULL, this );
 	m_comboBoxBit2->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit2OnCombobox ), NULL, this );
 	m_comboBoxBit0->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxBit0OnCombobox ), NULL, this );

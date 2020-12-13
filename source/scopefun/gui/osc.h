@@ -242,22 +242,32 @@ class Osciloskop : public wxFrame
 		wxStaticText* m_staticText68;
 		wxChoice* m_comboBoxDigitalSerialChannel;
 		wxChoice* m_choiceBit158;
-		wxChoice* m_comboBoxBit15;
-		wxChoice* m_comboBoxBit13;
-		wxChoice* m_comboBoxBit11;
-		wxChoice* m_comboBoxBit9;
-		wxChoice* m_comboBoxBit14;
-		wxChoice* m_comboBoxBit12;
-		wxChoice* m_comboBoxBit10;
-		wxChoice* m_comboBoxBit8;
 		wxChoice* m_choiceBit70;
-		wxChoice* m_comboBoxBit7;
-		wxChoice* m_comboBoxBit5;
-		wxChoice* m_comboBoxBit3;
-		wxChoice* m_comboBoxBit1;
+		wxStaticText* m_staticTextBit11;
+		wxChoice* m_comboBoxBit11;
+		wxStaticText* m_staticTextBit9;
+		wxChoice* m_comboBoxBit9;
+		wxStaticText* m_staticTextBit6;
 		wxChoice* m_comboBoxBit6;
+		wxStaticText* m_staticTextBit10;
+		wxChoice* m_comboBoxBit10;
+		wxStaticText* m_staticTextBit8;
+		wxChoice* m_comboBoxBit8;
+		wxStaticText* m_staticTextBit7;
+		wxChoice* m_comboBoxBit7;
+		wxStaticText* m_staticText123;
+		wxStaticText* m_staticText124;
+		wxStaticText* m_staticTextBit5;
+		wxChoice* m_comboBoxBit5;
+		wxStaticText* m_staticTextBit3;
+		wxChoice* m_comboBoxBit3;
+		wxStaticText* m_staticTextBit1;
+		wxChoice* m_comboBoxBit1;
+		wxStaticText* m_staticTextBit4;
 		wxChoice* m_comboBoxBit4;
+		wxStaticText* m_staticTextBit2;
 		wxChoice* m_comboBoxBit2;
+		wxStaticText* m_staticTextBit0;
 		wxChoice* m_comboBoxBit0;
 
 		// Virtual event handlers, overide them in your derived class
@@ -416,20 +426,16 @@ class Osciloskop : public wxFrame
 		virtual void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit158OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxBit15OnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxBit13OnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceBit70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit11OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit9OnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxBit14OnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxBit12OnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxBit6OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit10OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit8OnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit7OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit5OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit3OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit1OnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxBit6OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit4OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit2OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit0OnCombobox( wxCommandEvent& event ) { event.Skip(); }

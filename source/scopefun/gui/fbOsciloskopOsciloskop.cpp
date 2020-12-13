@@ -782,14 +782,9 @@ void OsciloskopOsciloskop::m_choiceBit158OnChoice( wxCommandEvent& event )
 // TODO: Implement m_choiceBit158OnChoice
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit15OnCombobox( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_choiceBit70OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxBit15OnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxBit13OnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxBit13OnCombobox
+// TODO: Implement m_choiceBit70OnChoice
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit11OnCombobox( wxCommandEvent& event )
@@ -802,14 +797,9 @@ void OsciloskopOsciloskop::m_comboBoxBit9OnCombobox( wxCommandEvent& event )
 // TODO: Implement m_comboBoxBit9OnCombobox
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit14OnCombobox( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_comboBoxBit6OnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxBit14OnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxBit12OnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxBit12OnCombobox
+// TODO: Implement m_comboBoxBit6OnCombobox
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit10OnCombobox( wxCommandEvent& event )
@@ -820,11 +810,6 @@ void OsciloskopOsciloskop::m_comboBoxBit10OnCombobox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_comboBoxBit8OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit8OnCombobox
-}
-
-void OsciloskopOsciloskop::m_choiceBit70OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit70OnChoice
 }
 
 void OsciloskopOsciloskop::m_comboBoxBit7OnCombobox( wxCommandEvent& event )
@@ -847,11 +832,6 @@ void OsciloskopOsciloskop::m_comboBoxBit1OnCombobox( wxCommandEvent& event )
 // TODO: Implement m_comboBoxBit1OnCombobox
 }
 
-void OsciloskopOsciloskop::m_comboBoxBit6OnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxBit6OnCombobox
-}
-
 void OsciloskopOsciloskop::m_comboBoxBit4OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit4OnCombobox
@@ -865,10 +845,4 @@ void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit0OnCombobox
-}
-
-
-void OsciloskopOsciloskop::m_checkBox15OnCheckBox( wxCommandEvent& event )
-{
-// TODO: Implement m_checkBox15OnCheckBox
 }
