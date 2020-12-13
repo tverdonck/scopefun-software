@@ -9,582 +9,502 @@ Osciloskop( parent )
 
 void OsciloskopOsciloskop::onActivate( wxActivateEvent& event )
 {
-// TODO: Implement onActivate
+    // TODO: Implement onActivate
 }
 
 void OsciloskopOsciloskop::onActivateApp( wxActivateEvent& event )
 {
-// TODO: Implement onActivateApp
+    // TODO: Implement onActivateApp
 }
 
 void OsciloskopOsciloskop::onClose( wxCloseEvent& event )
 {
-// TODO: Implement onClose
+    // TODO: Implement onClose
 }
 
 void OsciloskopOsciloskop::OnIdle( wxIdleEvent& event )
 {
-// TODO: Implement OnIdle
+    // TODO: Implement OnIdle
 }
 
 void OsciloskopOsciloskop::OnSetFocus( wxFocusEvent& event )
 {
-// TODO: Implement OnSetFocus
+    // TODO: Implement OnSetFocus
 }
 
 void OsciloskopOsciloskop::OnSize( wxSizeEvent& event )
 {
-// TODO: Implement OnSize
+    // TODO: Implement OnSize
 }
 
 void OsciloskopOsciloskop::m_menuItem1OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem1OnMenuSelection
+    // TODO: Implement m_menuItem1OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem2OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem2OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemConvertToTextOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemConvertToTextOnMenuSelection
+    // TODO: Implement m_menuItem2OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem3OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem3OnMenuSelection
+    // TODO: Implement m_menuItem3OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem20OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem20OnMenuSelection
+    // TODO: Implement m_menuItem20OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem21OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem21OnMenuSelection
+    // TODO: Implement m_menuItem21OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem22OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem22OnMenuSelection
+    // TODO: Implement m_menuItem22OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem23OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem23OnMenuSelection
+    // TODO: Implement m_menuItem23OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem6OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem6OnMenuSelection
+    // TODO: Implement m_menuItem6OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem8OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem8OnMenuSelection
+    // TODO: Implement m_menuItem8OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem9OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem9OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemStorageOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemStorageOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemConnectionOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemConnectionOnMenuSelection
+    // TODO: Implement m_menuItem9OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemSoftwareOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemSoftwareOnMenuSelection
+    // TODO: Implement m_menuItemSoftwareOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem11OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem11OnMenuSelection
+    // TODO: Implement m_menuItem11OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemReadEEPROMOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemReadEEPROMOnMenuSelection
+    // TODO: Implement m_menuItemReadEEPROMOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemWriteEEPROMOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemWriteEEPROMOnMenuSelection
+    // TODO: Implement m_menuItemWriteEEPROMOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem12OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem12OnMenuSelection
+    // TODO: Implement m_menuItem12OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemWriteCallibrateOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemWriteCallibrateOnMenuSelection
+    // TODO: Implement m_menuItemWriteCallibrateOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemReadCallibrateOnMenuSelection
+    // TODO: Implement m_menuItemReadCallibrateOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemWriteCertificateOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemWriteCertificateOnMenuSelection
+    // TODO: Implement m_menuItemWriteCertificateOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemReadCertificateOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemReadCertificateOnMenuSelection
+    // TODO: Implement m_menuItemReadCertificateOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemLockCertificateOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemLockCertificateOnMenuSelection
+    // TODO: Implement m_menuItemLockCertificateOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemResetEEPROMOnMenuSelection
+    // TODO: Implement m_menuItemResetEEPROMOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItem15OnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItem15OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot1OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemSlot1OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot2OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemSlot2OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot3OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemSlot3OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot4OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemSlot4OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemLoadOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemLoadOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemSaveFileOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemSaveFileOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemResetToDefaultOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemResetToDefaultOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemClipboardCurrentOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemClipboardCurrentOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemClipboardAllOnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemClipboardAllOnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemVersion1OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemVersion1OnMenuSelection
-}
-
-void OsciloskopOsciloskop::m_menuItemVersion2OnMenuSelection( wxCommandEvent& event )
-{
-// TODO: Implement m_menuItemVersion2OnMenuSelection
+    // TODO: Implement m_menuItem15OnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemDebugOnMenuSelection
+    // TODO: Implement m_menuItemDebugOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemTestsOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemTestsOnMenuSelection
+    // TODO: Implement m_menuItemTestsOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_menuItemInfoOnMenuSelection( wxCommandEvent& event )
 {
-// TODO: Implement m_menuItemInfoOnMenuSelection
+    // TODO: Implement m_menuItemInfoOnMenuSelection
 }
 
 void OsciloskopOsciloskop::m_buttonConnectOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonConnectOnButtonClick
+    // TODO: Implement m_buttonConnectOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonDisconnectOnButtonClick
-}
-
-void OsciloskopOsciloskop::m_buttonFirmwareUploadOnButtonClick( wxCommandEvent& event )
-{
-// TODO: Implement m_buttonFirmwareUploadOnButtonClick
+    // TODO: Implement m_buttonDisconnectOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonUndoOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonUndoOnButtonClick
+    // TODO: Implement m_buttonUndoOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonRedoOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonRedoOnButtonClick
-}
-
-void OsciloskopOsciloskop::m_choiceSpeedOnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceSpeedOnChoice
+    // TODO: Implement m_buttonRedoOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeControlOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxTimeControlOnCombobox
+    // TODO: Implement m_comboBoxTimeControlOnCombobox
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeCaptureOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxTimeCaptureOnCombobox
+    // TODO: Implement m_comboBoxTimeCaptureOnCombobox
 }
 
 void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxETSOnCheckBox
+    // TODO: Implement m_checkBoxETSOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeDisplayOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlTimeDisplayOnTextEnter
+    // TODO: Implement m_textCtrlTimeDisplayOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeDisplayOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxTimeDisplayOnCombobox
+    // TODO: Implement m_comboBoxTimeDisplayOnCombobox
 }
 
 void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxFullOnCheckBox
+    // TODO: Implement m_checkBoxFullOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimePositionOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlTimePositionOnTextEnter
+    // TODO: Implement m_textCtrlTimePositionOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_spinBtnXPosOnSpinDown( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnXPosOnSpinDown
+    // TODO: Implement m_spinBtnXPosOnSpinDown
 }
 
 void OsciloskopOsciloskop::m_spinBtnXPosOnSpinUp( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnXPosOnSpinUp
+    // TODO: Implement m_spinBtnXPosOnSpinUp
 }
 
 void OsciloskopOsciloskop::m_sliderTimePositionOnScroll( wxScrollEvent& event )
 {
-// TODO: Implement m_sliderTimePositionOnScroll
+    // TODO: Implement m_sliderTimePositionOnScroll
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlTimeFrameOnTextEnter
+    // TODO: Implement m_textCtrlTimeFrameOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_spinBtnFrameHistoryOnSpinDown( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnFrameHistoryOnSpinDown
+    // TODO: Implement m_spinBtnFrameHistoryOnSpinDown
 }
 
 void OsciloskopOsciloskop::m_spinBtnFrameHistoryOnSpinUp( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnFrameHistoryOnSpinUp
+    // TODO: Implement m_spinBtnFrameHistoryOnSpinUp
 }
 
 void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll( wxScrollEvent& event )
 {
-// TODO: Implement m_sliderTimeFrameOnScroll
+    // TODO: Implement m_sliderTimeFrameOnScroll
 }
 
 void OsciloskopOsciloskop::m_buttonPlayOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonPlayOnButtonClick
+    // TODO: Implement m_buttonPlayOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonPauseOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonPauseOnButtonClick
+    // TODO: Implement m_buttonPauseOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonCaptureOnButtonClick
+    // TODO: Implement m_buttonCaptureOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonSimulateOnButtonClick
+    // TODO: Implement m_buttonSimulateOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_buttonClearOnButtonClick( wxCommandEvent& event )
 {
-// TODO: Implement m_buttonClearOnButtonClick
+    // TODO: Implement m_buttonClearOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlTimeFrameSizeOnTextEnter
+    // TODO: Implement m_textCtrlTimeFrameSizeOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_textCtrlTimeFFTSizeOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlTimeFFTSizeOnTextEnter
+    // TODO: Implement m_textCtrlTimeFFTSizeOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh0CaptureOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxCh0CaptureOnCombobox
+    // TODO: Implement m_comboBoxCh0CaptureOnCombobox
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh0ScaleOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh0ScaleOnTextEnter
+    // TODO: Implement m_textCtrlCh0ScaleOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh0InvertOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxCh0InvertOnCheckBox
+    // TODO: Implement m_checkBoxCh0InvertOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh0GroundOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxCh0GroundOnCheckBox
+    // TODO: Implement m_checkBoxCh0GroundOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_choiceCh0ACDCOnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceCh0ACDCOnChoice
+    // TODO: Implement m_choiceCh0ACDCOnChoice
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh0DisplayOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh0DisplayOnTextEnter
+    // TODO: Implement m_textCtrlCh0DisplayOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh0DisplayOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxCh0DisplayOnCombobox
+    // TODO: Implement m_comboBoxCh0DisplayOnCombobox
 }
 
 void OsciloskopOsciloskop::m_checkBoxSignal1OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxSignal1OnCheckBox
+    // TODO: Implement m_checkBoxSignal1OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxFFT1OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxFFT1OnCheckBox
+    // TODO: Implement m_checkBoxFFT1OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxAvg01OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxAvg01OnCheckBox
+    // TODO: Implement m_checkBoxAvg01OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh0PositionOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh0PositionOnTextEnter
+    // TODO: Implement m_textCtrlCh0PositionOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinDown( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnCh0YPosOnSpinDown
+    // TODO: Implement m_spinBtnCh0YPosOnSpinDown
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh0YPosOnSpinUp( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnCh0YPosOnSpinUp
+    // TODO: Implement m_spinBtnCh0YPosOnSpinUp
 }
 
 void OsciloskopOsciloskop::m_sliderCh0PositionOnScroll( wxScrollEvent& event )
 {
-// TODO: Implement m_sliderCh0PositionOnScroll
+    // TODO: Implement m_sliderCh0PositionOnScroll
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh1CaptureOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxCh1CaptureOnCombobox
+    // TODO: Implement m_comboBoxCh1CaptureOnCombobox
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh1ScaleOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh1ScaleOnTextEnter
+    // TODO: Implement m_textCtrlCh1ScaleOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh1InvertOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxCh1InvertOnCheckBox
+    // TODO: Implement m_checkBoxCh1InvertOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxCh1GroundOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxCh1GroundOnCheckBox
+    // TODO: Implement m_checkBoxCh1GroundOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_choiceCh1ACDCOnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceCh1ACDCOnChoice
+    // TODO: Implement m_choiceCh1ACDCOnChoice
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh1DisplayOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh1DisplayOnTextEnter
+    // TODO: Implement m_textCtrlCh1DisplayOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_comboBoxCh1DisplayOnCombobox( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxCh1DisplayOnCombobox
+    // TODO: Implement m_comboBoxCh1DisplayOnCombobox
 }
 
 void OsciloskopOsciloskop::m_checkBoxSignal2OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxSignal2OnCheckBox
+    // TODO: Implement m_checkBoxSignal2OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxFFT2OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxFFT2OnCheckBox
+    // TODO: Implement m_checkBoxFFT2OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxAvg02OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxAvg02OnCheckBox
+    // TODO: Implement m_checkBoxAvg02OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_textCtrlCh1PositionOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlCh1PositionOnTextEnter
+    // TODO: Implement m_textCtrlCh1PositionOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh1YPosOnSpinDown( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnCh1YPosOnSpinDown
+    // TODO: Implement m_spinBtnCh1YPosOnSpinDown
 }
 
 void OsciloskopOsciloskop::m_spinBtnCh1YPosOnSpinUp( wxSpinEvent& event )
 {
-// TODO: Implement m_spinBtnCh1YPosOnSpinUp
+    // TODO: Implement m_spinBtnCh1YPosOnSpinUp
 }
 
 void OsciloskopOsciloskop::m_sliderCh1PositionOnScroll( wxScrollEvent& event )
 {
-// TODO: Implement m_sliderCh1PositionOnScroll
+    // TODO: Implement m_sliderCh1PositionOnScroll
 }
 
 void OsciloskopOsciloskop::m_comboBoxFunctionTypeOnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_comboBoxFunctionTypeOnChoice
+    // TODO: Implement m_comboBoxFunctionTypeOnChoice
 }
 
 void OsciloskopOsciloskop::m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event )
 {
-// TODO: Implement m_textCtrlFuncCustomOnTextEnter
+    // TODO: Implement m_textCtrlFuncCustomOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_checkBoxXYVoltageGraphOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxXYVoltageGraphOnCheckBox
+    // TODO: Implement m_checkBoxXYVoltageGraphOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxSignalFOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxSignalFOnCheckBox
+    // TODO: Implement m_checkBoxSignalFOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBoxFFTFOnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBoxFFTFOnCheckBox
+    // TODO: Implement m_checkBoxFFTFOnCheckBox
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceDOnOff815OnChoice
+    // TODO: Implement m_choiceDOnOff815OnChoice
 }
 
 void OsciloskopOsciloskop::m_checkBox16OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox16OnCheckBox
+    // TODO: Implement m_checkBox16OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox14OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox14OnCheckBox
+    // TODO: Implement m_checkBox14OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox12OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox12OnCheckBox
+    // TODO: Implement m_checkBox12OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox10OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox10OnCheckBox
+    // TODO: Implement m_checkBox10OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox15OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox15OnCheckBox
+    // TODO: Implement m_checkBox15OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox13OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox13OnCheckBox
+    // TODO: Implement m_checkBox13OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox11OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox11OnCheckBox
+    // TODO: Implement m_checkBox11OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox9OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox9OnCheckBox
+    // TODO: Implement m_checkBox9OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceDOnOff70OnChoice
+    // TODO: Implement m_choiceDOnOff70OnChoice
 }
 
 void OsciloskopOsciloskop::m_checkBox8OnCheckBox( wxCommandEvent& event )
 {
-// TODO: Implement m_checkBox8OnCheckBox
+    // TODO: Implement m_checkBox8OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox6OnCheckBox( wxCommandEvent& event )

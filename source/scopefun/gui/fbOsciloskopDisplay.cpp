@@ -1,178 +1,177 @@
 #include "fbOsciloskopDisplay.h"
 
-OsciloskopDisplay::OsciloskopDisplay( wxWindow* parent )
-:
-Display( parent )
+OsciloskopDisplay::OsciloskopDisplay(wxWindow* parent)
+    :
+    Display(parent)
 {
-
 }
 
-void OsciloskopDisplay::DisplayOnInitDialog( wxInitDialogEvent& event )
+void OsciloskopDisplay::DisplayOnInitDialog(wxInitDialogEvent& event)
 {
-// TODO: Implement DisplayOnInitDialog
+    // TODO: Implement DisplayOnInitDialog
 }
 
-void OsciloskopDisplay::m_checkBoxUnitsOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxUnitsOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxUnitsOnCheckBox
+    // TODO: Implement m_checkBoxUnitsOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxAxisOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxAxisOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxAxisOnCheckBox
+    // TODO: Implement m_checkBoxAxisOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxGridOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxGridOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxGridOnCheckBox
+    // TODO: Implement m_checkBoxGridOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxFFTUnitOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxFFTUnitOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxFFTUnitOnCheckBox
+    // TODO: Implement m_checkBoxFFTUnitOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxFFTAxisOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxFFTAxisOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxFFTAxisOnCheckBox
+    // TODO: Implement m_checkBoxFFTAxisOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxFFTGridOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxFFTGridOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxFFTGridOnCheckBox
+    // TODO: Implement m_checkBoxFFTGridOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxDigitalUnitOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxDigitalUnitOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxDigitalUnitOnCheckBox
+    // TODO: Implement m_checkBoxDigitalUnitOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxDigitalAxisOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxDigitalAxisOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxDigitalAxisOnCheckBox
+    // TODO: Implement m_checkBoxDigitalAxisOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBoxDigitalGridOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBoxDigitalGridOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxDigitalGridOnCheckBox
+    // TODO: Implement m_checkBoxDigitalGridOnCheckBox
 }
 
-void OsciloskopDisplay::m_choiceSignalOnChoice( wxCommandEvent& event )
+void OsciloskopDisplay::m_choiceSignalOnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceSignalOnChoice
+    // TODO: Implement m_choiceSignalOnChoice
 }
 
-void OsciloskopDisplay::m_textCtrlSignalOnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrlSignalOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlSignalOnTextEnter
+    // TODO: Implement m_textCtrlSignalOnTextEnter
 }
 
-void OsciloskopDisplay::m_sliderSignalOnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_sliderSignalOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderSignalOnScroll
+    // TODO: Implement m_sliderSignalOnScroll
 }
 
-void OsciloskopDisplay::m_choiceFFTOnChoice( wxCommandEvent& event )
+void OsciloskopDisplay::m_choiceFFTOnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceFFTOnChoice
+    // TODO: Implement m_choiceFFTOnChoice
 }
 
-void OsciloskopDisplay::m_textCtrlFFTOnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrlFFTOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlFFTOnTextEnter
+    // TODO: Implement m_textCtrlFFTOnTextEnter
 }
 
-void OsciloskopDisplay::m_sliderFFTOnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_sliderFFTOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderFFTOnScroll
+    // TODO: Implement m_sliderFFTOnScroll
 }
 
-void OsciloskopDisplay::m_choiceFFTYOnChoice( wxCommandEvent& event )
+void OsciloskopDisplay::m_choiceFFTYOnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceFFTYOnChoice
+    // TODO: Implement m_choiceFFTYOnChoice
 }
 
-void OsciloskopDisplay::m_choiceFFTXOnChoice( wxCommandEvent& event )
+void OsciloskopDisplay::m_choiceFFTXOnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceFFTXOnChoice
+    // TODO: Implement m_choiceFFTXOnChoice
 }
 
-void OsciloskopDisplay::m_checkBox3dSolidOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBox3dSolidOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBox3dSolidOnCheckBox
+    // TODO: Implement m_checkBox3dSolidOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBox3dLightOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBox3dLightOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBox3dLightOnCheckBox
+    // TODO: Implement m_checkBox3dLightOnCheckBox
 }
 
-void OsciloskopDisplay::m_checkBox3dDepthTestOnCheckBox( wxCommandEvent& event )
+void OsciloskopDisplay::m_checkBox3dDepthTestOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBox3dDepthTestOnCheckBox
+    // TODO: Implement m_checkBox3dDepthTestOnCheckBox
 }
 
-void OsciloskopDisplay::m_textCtrl3dAlphaCh0OnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrl3dAlphaCh0OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrl3dAlphaCh0OnTextEnter
+    // TODO: Implement m_textCtrl3dAlphaCh0OnTextEnter
 }
 
-void OsciloskopDisplay::m_slider3dAlphaCh0OnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_slider3dAlphaCh0OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_slider3dAlphaCh0OnScroll
+    // TODO: Implement m_slider3dAlphaCh0OnScroll
 }
 
-void OsciloskopDisplay::m_textCtrl3dAlphaCh1OnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrl3dAlphaCh1OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrl3dAlphaCh1OnTextEnter
+    // TODO: Implement m_textCtrl3dAlphaCh1OnTextEnter
 }
 
-void OsciloskopDisplay::m_slider3dAlphaCh1OnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_slider3dAlphaCh1OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_slider3dAlphaCh1OnScroll
+    // TODO: Implement m_slider3dAlphaCh1OnScroll
 }
 
-void OsciloskopDisplay::m_textCtrl3dAlphaFunOnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrl3dAlphaFunOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrl3dAlphaFunOnTextEnter
+    // TODO: Implement m_textCtrl3dAlphaFunOnTextEnter
 }
 
-void OsciloskopDisplay::m_slider3dAlphaFunOnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_slider3dAlphaFunOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_slider3dAlphaFunOnScroll
+    // TODO: Implement m_slider3dAlphaFunOnScroll
 }
 
-void OsciloskopDisplay::m_textCtrl3dTessalationOnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrl3dTessalationOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrl3dTessalationOnTextEnter
+    // TODO: Implement m_textCtrl3dTessalationOnTextEnter
 }
 
-void OsciloskopDisplay::m_slider3dTessalationOnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_slider3dTessalationOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_slider3dTessalationOnScroll
+    // TODO: Implement m_slider3dTessalationOnScroll
 }
 
-void OsciloskopDisplay::m_textCtrl2dTessalationOnTextEnter( wxCommandEvent& event )
+void OsciloskopDisplay::m_textCtrl2dTessalationOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrl2dTessalationOnTextEnter
+    // TODO: Implement m_textCtrl2dTessalationOnTextEnter
 }
 
-void OsciloskopDisplay::m_slider2dTessalationOnScroll( wxScrollEvent& event )
+void OsciloskopDisplay::m_slider2dTessalationOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_slider2dTessalationOnScroll
+    // TODO: Implement m_slider2dTessalationOnScroll
 }
 
-void OsciloskopDisplay::m_buttonOkOnButtonClick( wxCommandEvent& event )
+void OsciloskopDisplay::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonOkOnButtonClick
+    // TODO: Implement m_buttonOkOnButtonClick
 }
 
-void OsciloskopDisplay::m_buttonDefaultOnButtonClick( wxCommandEvent& event )
+void OsciloskopDisplay::m_buttonDefaultOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonDefaultOnButtonClick
+    // TODO: Implement m_buttonDefaultOnButtonClick
 }
 
-void OsciloskopDisplay::m_buttonCancelOnButtonClick( wxCommandEvent& event )
+void OsciloskopDisplay::m_buttonCancelOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonCancelOnButtonClick
+    // TODO: Implement m_buttonCancelOnButtonClick
 }

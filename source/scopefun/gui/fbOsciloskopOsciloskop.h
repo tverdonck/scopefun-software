@@ -23,7 +23,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void OnSize( wxSizeEvent& event );
 		void m_menuItem1OnMenuSelection( wxCommandEvent& event );
 		void m_menuItem2OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemConvertToTextOnMenuSelection( wxCommandEvent& event );
 		void m_menuItem3OnMenuSelection( wxCommandEvent& event );
 		void m_menuItem20OnMenuSelection( wxCommandEvent& event );
 		void m_menuItem21OnMenuSelection( wxCommandEvent& event );
@@ -32,8 +31,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_menuItem6OnMenuSelection( wxCommandEvent& event );
 		void m_menuItem8OnMenuSelection( wxCommandEvent& event );
 		void m_menuItem9OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemStorageOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemConnectionOnMenuSelection( wxCommandEvent& event );
 		void m_menuItemSoftwareOnMenuSelection( wxCommandEvent& event );
 		void m_menuItem11OnMenuSelection( wxCommandEvent& event );
 		void m_menuItemReadEEPROMOnMenuSelection( wxCommandEvent& event );
@@ -46,26 +43,13 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_menuItemLockCertificateOnMenuSelection( wxCommandEvent& event );
 		void m_menuItemResetEEPROMOnMenuSelection( wxCommandEvent& event );
 		void m_menuItem15OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemSlot1OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemSlot2OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemSlot3OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemSlot4OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemLoadOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemSaveFileOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemResetToDefaultOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemClipboardCurrentOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemClipboardAllOnMenuSelection( wxCommandEvent& event );
-		void m_menuItemVersion1OnMenuSelection( wxCommandEvent& event );
-		void m_menuItemVersion2OnMenuSelection( wxCommandEvent& event );
 		void m_menuItemDebugOnMenuSelection( wxCommandEvent& event );
 		void m_menuItemTestsOnMenuSelection( wxCommandEvent& event );
 		void m_menuItemInfoOnMenuSelection( wxCommandEvent& event );
 		void m_buttonConnectOnButtonClick( wxCommandEvent& event );
 		void m_buttonDisconnectOnButtonClick( wxCommandEvent& event );
-		void m_buttonFirmwareUploadOnButtonClick( wxCommandEvent& event );
 		void m_buttonUndoOnButtonClick( wxCommandEvent& event );
 		void m_buttonRedoOnButtonClick( wxCommandEvent& event );
-		void m_choiceSpeedOnChoice( wxCommandEvent& event );
 		void m_comboBoxTimeControlOnCombobox( wxCommandEvent& event );
 		void m_comboBoxTimeCaptureOnCombobox( wxCommandEvent& event );
 		void m_checkBoxETSOnCheckBox( wxCommandEvent& event );
@@ -211,6 +195,8 @@ class OsciloskopOsciloskop : public Osciloskop
 		/** Constructor */
 		OsciloskopOsciloskop( wxWindow* parent );
 	//// end generated class members
+
+
 
 
 };

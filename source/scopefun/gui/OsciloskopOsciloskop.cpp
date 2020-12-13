@@ -30,7 +30,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 {
     if(once)
     {
-        GetMenuBar()->Remove(6);
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
         String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
@@ -54,8 +53,17 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         // version
         ////////////////////////////////////////////////////////////////////////////////////////
         wxCommandEvent version2;
-        m_menuItemVersion2OnMenuSelection(version2);
+        SetDigital13To16(false);
+        sfSetDefault(getHw());
+        m_comboBoxTimeCapture->Clear();
+        for (int i = 0; i < t2cLast; i++)
+        {
+           m_comboBoxTimeCapture->Append(captureTimeToStr(i));
+        }
+        m_comboBoxTimeCapture->SetSelection(sfGetXRange(getHw()));
+        ////////////////////////////////////////////////////////////////////////////////////////
         // colors
+        ////////////////////////////////////////////////////////////////////////////////////////
         setColors(this);
         setColors(pStorage);
         setColors(pConnection);
@@ -478,22 +486,6 @@ void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
     }
 }
 
-void OsciloskopOsciloskop::m_menuItemConvertToTextOnMenuSelection(wxCommandEvent& event)
-{
-    wxFileDialog* LoadDialog = new wxFileDialog(this, _("Convert To Text File _?"), wxEmptyString, wxEmptyString,
-                                                _("*.osc"),
-                                                wxFD_OPEN, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    if(LoadDialog->ShowModal() == wxID_OK)  // If the user clicked "OK"
-    {
-        String file = LoadDialog->GetPath().ToAscii().data();
-        pOsciloscope->convertToText(file.asChar());
-    }
-    // Clean up after ourselves
-    LoadDialog->Destroy();
-    // delete LoadDialog;
-}
-
 void OsciloskopOsciloskop::m_menuItem3OnMenuSelection(wxCommandEvent& event)
 {
     Close(true);
@@ -566,24 +558,6 @@ void OsciloskopOsciloskop::m_menuItem9OnMenuSelection(wxCommandEvent& event)
         pThermal = new OsciloskopThermal(this);
     }
     pThermal->Show();
-}
-
-void OsciloskopOsciloskop::m_menuItemStorageOnMenuSelection(wxCommandEvent& event)
-{
-    if(!pStorage)
-    {
-        pStorage = new OsciloskopStorage(this);
-    }
-    pStorage->Show();
-}
-
-void OsciloskopOsciloskop::m_menuItemConnectionOnMenuSelection(wxCommandEvent& event)
-{
-    if(!pConnection)
-    {
-        pConnection = new OsciloskopConnection(this);
-    }
-    pConnection->Show();
 }
 
 void OsciloskopOsciloskop::m_menuItemSoftwareOnMenuSelection(wxCommandEvent& event)
@@ -850,284 +824,6 @@ void OsciloskopOsciloskop::m_menuItem15OnMenuSelection(wxCommandEvent& event)
     pMeasure->Show();
 }
 
-void OsciloskopOsciloskop::m_menuItemSlot1OnMenuSelection(wxCommandEvent& event)
-{
-    SaveOldSlotLoadNewSlot(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(0)->Check(1);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(1)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(2)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(3)->Check(0);
-    loadWindow(0);
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot2OnMenuSelection(wxCommandEvent& event)
-{
-    SaveOldSlotLoadNewSlot(1);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(0)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(1)->Check(1);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(2)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(3)->Check(0);
-    loadWindow(1);
-}
-void OsciloskopOsciloskop::m_menuItemSlot3OnMenuSelection(wxCommandEvent& event)
-{
-    SaveOldSlotLoadNewSlot(2);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(0)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(1)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(2)->Check(1);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(3)->Check(0);
-    loadWindow(2);
-}
-
-void OsciloskopOsciloskop::m_menuItemSlot4OnMenuSelection(wxCommandEvent& event)
-{
-    SaveOldSlotLoadNewSlot(3);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(0)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(1)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(2)->Check(0);
-    GetMenuBar()->GetMenu(6)->FindItemByPosition(3)->Check(1);
-    loadWindow(3);
-}
-
-
-void OsciloskopOsciloskop::m_menuItemLoadOnMenuSelection(wxCommandEvent& event)
-{
-    wxFileName fn = wxStandardPaths::Get().GetExecutablePath();
-    wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), fn.GetPath().append(_("/data/state")), wxEmptyString, _("*.slot"), wxFD_OPEN, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    if(LoadDialog->ShowModal() == wxID_OK)  // If the user clicked "OK"
-    {
-        String file = LoadDialog->GetPath().ToAscii().data();
-        LoadSlot(getCurrentSlot(), file.asChar());
-        wxString empty;
-        wxString temp = file.asChar();
-        temp.Replace(fn.GetPath(), empty);
-        pOsciloscope->windowName[getCurrentSlot()] = temp.ToAscii().data();
-    }
-    // Clean up after ourselves
-    LoadDialog->Destroy();
-    // update window
-    loadWindow(getCurrentSlot());
-}
-
-void OsciloskopOsciloskop::m_menuItemSaveFileOnMenuSelection(wxCommandEvent& event)
-{
-    wxFileName fn = wxStandardPaths::Get().GetExecutablePath();
-    wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), fn.GetPath().Append(_("/data/state")), wxEmptyString, _("*.slot"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    if(SaveDialog->ShowModal() == wxID_OK)  // If the user clicked "OK"
-    {
-        String file = SaveDialog->GetPath().ToAscii().data();
-        SaveSlot(getCurrentSlot(), file.asChar());
-    }
-    // Clean up after ourselves
-    SaveDialog->Destroy();
-}
-
-void OsciloskopOsciloskop::m_menuItemResetToDefaultOnMenuSelection(wxCommandEvent& event)
-{
-    pOsciloscope->windowState[getCurrentSlot()].Default();
-    loadWindow(getCurrentSlot());
-}
-
-void OsciloskopOsciloskop::m_menuItemClipboardCurrentOnMenuSelection(wxCommandEvent& event)
-{
-    if(wxTheClipboard->Open())
-    {
-        SDL_AtomicLock(&pOsciloscope->displayLock);
-        FORMAT_BUFFER();
-        wxString text;
-        text.Append("ScopeFun Oscilloscope Current Frame Data\n");
-        char buffer[FORMAT_BUFFER_SIZE] = { 0 };
-        pOsciloscope->display.getTime(buffer, FORMAT_BUFFER_SIZE);
-        FORMAT("Date-Time-Offset: %s \n", buffer);
-        text.append(formatBuffer);
-        for(int c = 0; c < 2; c++)
-        {
-            FORMAT("Channel %d \n", c + 1);
-            text.Append(formatBuffer);
-            FORMAT("    Time/Div: %f ms \n", pOsciloscope->window.horizontal.Capture * 1000.f);
-            text.append(formatBuffer);
-            if(c == 0)
-                FORMAT("    Volt/Div: %f V \n", pOsciloscope->window.channel01.Capture)
-                else
-                {
-                    FORMAT("    Volt/Div: %f V \n", pOsciloscope->window.channel02.Capture);
-                }
-            text.append(formatBuffer);
-            FORMAT("    Values[%d,%d] : |", -int(MAXOSCVALUE), int(MAXOSCVALUE));
-            text.append(formatBuffer);
-            for(int i = 0; i < pOsciloscope->display.analog[c].getCount(); i++)
-            {
-                ishort analog = pOsciloscope->display.getAnalogShort(c, i);
-                wxVariant temp(analog);
-                wxString  output = temp.GetString();
-                while(output.length() < 8)
-                {
-                    size_t len = output.length();
-                    if(len % 2)
-                    {
-                        output.Prepend(" ");
-                    }
-                    else
-                    {
-                        output.Append(" ");
-                    }
-                }
-                text.Append(output);
-                text.Append(_T("|"));
-            }
-            text.Append(_T("\n"));
-        }
-        text.append("Digital Channels     : |");
-        for(int i = 0; i < pOsciloscope->display.digital.getCount(); i++)
-        {
-            ushort digital = pOsciloscope->display.getDigitalChannels(i);
-            FORMAT("0x%x", digital);
-            wxString  output(formatBuffer);
-            while(output.length() < 8)
-            {
-                size_t len = output.length();
-                if(len % 2)
-                {
-                    output.Prepend(" ");
-                }
-                else
-                {
-                    output.Append(" ");
-                }
-            }
-            text.Append(output);
-            text.Append(_T("|"));
-        }
-        wxTheClipboard->SetData(new wxTextDataObject(text));
-        wxTheClipboard->Close();
-        SDL_AtomicUnlock(&pOsciloscope->displayLock);
-    }
-}
-
-void OsciloskopOsciloskop::m_menuItemClipboardAllOnMenuSelection(wxCommandEvent& event)
-{
-    /*if(wxTheClipboard->Open())
-    {
-        SDL_AtomicLock(&pOsciloscope->displayLock);
-        FORMAT_BUFFER();
-        wxString text;
-        text.Append("ScopeFun Oscilloscope Current Frame Data\n");
-        int f = 0;
-        OsciloscopeFrame frame;
-        uint frameCount = pOsciloscope->settings.getSettings()->historyFrameClipboard;
-        pOsciloscope->captureBuffer->history->lock();
-        uint captureCount = pOsciloscope->captureBuffer->captureFrameCount();
-        for(uint i = 0; i < frameCount; i++)
-        {
-            CaptureFrame cf;
-            pOsciloscope->captureBuffer->captureFrame(cf, captureCount - frameCount - 1 + i);
-            pOsciloscope->captureBuffer->historyRead(cf, cf.version, cf.header, cf.data, cf.packet);
-            pOsciloscope->captureBuffer->display(frame, cf.version, cf.header, cf.data, cf.packet);
-            FORMAT("Frame : %d \n", f);
-            text.append(formatBuffer);
-            f++;
-            char buffer[FORMAT_BUFFER_SIZE] = { 0 };
-            frame.getTime(buffer, FORMAT_BUFFER_SIZE);
-            FORMAT("   Date-Time-Offset: %s \n", buffer);
-            text.append(formatBuffer);
-            for(int c = 0; c < 2; c++)
-            {
-                FORMAT("   Channel %d \n", c + 1);
-                text.Append(formatBuffer);
-                FORMAT("       Time/Div: %f ms \n", pOsciloscope->window.horizontal.Capture * 1000.f);
-                text.append(formatBuffer);
-                if(c == 0)
-                    FORMAT("       Volt/Div: %f V \n", pOsciloscope->window.channel01.Capture)
-                    else
-                    {
-                        FORMAT("       Volt/Div: %f V \n", pOsciloscope->window.channel02.Capture);
-                    }
-                text.append(formatBuffer);
-                FORMAT("       Values[%d,%d] : |", -int(MAXOSCVALUE), int(MAXOSCVALUE));
-                text.append(formatBuffer);
-                for(int i = 0; i < frame.analog[c].getCount(); i++)
-                {
-                    ishort analog = frame.getAnalogShort(c, i);
-                    wxVariant temp(analog);
-                    wxString  output = temp.GetString();
-                    while(output.length() < 8)
-                    {
-                        size_t len = output.length();
-                        if(len % 2)
-                        {
-                            output.Prepend(" ");
-                        }
-                        else
-                        {
-                            output.Append(" ");
-                        }
-                    }
-                    text.Append(output);
-                    text.Append(_T("|"));
-                }
-                text.Append(_T("\n"));
-            }
-            text.append("   Digital Channels     : |");
-            for(int i = 0; i < frame.digital.getCount(); i++)
-            {
-                ushort digital = frame.getDigitalChannels(i);
-                FORMAT("0x%x", digital);
-                wxString  output(formatBuffer);
-                while(output.length() < 8)
-                {
-                    size_t len = output.length();
-                    if(len % 2)
-                    {
-                        output.Prepend(" ");
-                    }
-                    else
-                    {
-                        output.Append(" ");
-                    }
-                }
-                text.Append(output);
-                text.Append(_T("|"));
-            }
-            text.Append(_T("\n"));
-        }
-        wxTheClipboard->SetData(new wxTextDataObject(text));
-        wxTheClipboard->Close();
-        pOsciloscope->captureBuffer->history->unlock();
-        SDL_AtomicUnlock(&pOsciloscope->displayLock);
-    }*/
-}
-
-void OsciloskopOsciloskop::m_menuItemVersion1OnMenuSelection(wxCommandEvent& event)
-{
-    SetDigital13To16(true);
-    GetMenuBar()->GetMenu(8)->FindItemByPosition(0)->Check(1);
-    GetMenuBar()->GetMenu(8)->FindItemByPosition(1)->Check(0);
-    sfSetDefault(getHw());
-    m_comboBoxTimeCapture->Clear();
-    for(int i = 0; i < tcLast; i++)
-    {
-        m_comboBoxTimeCapture->Append(captureTimeToStr(i));
-    }
-    m_comboBoxTimeCapture->SetSelection(sfGetXRange(getHw()));
-}
-
-void OsciloskopOsciloskop::m_menuItemVersion2OnMenuSelection(wxCommandEvent& event)
-{
-    SetDigital13To16(false);
-    GetMenuBar()->GetMenu(8)->FindItemByPosition(0)->Check(0);
-    GetMenuBar()->GetMenu(8)->FindItemByPosition(1)->Check(1);
-    sfSetDefault(getHw());
-    m_comboBoxTimeCapture->Clear();
-    for(int i = 0; i < t2cLast; i++)
-    {
-        m_comboBoxTimeCapture->Append(captureTimeToStr(i));
-    }
-    m_comboBoxTimeCapture->SetSelection(sfGetXRange(getHw()));
-    //   setupControl(pOsciloscope->window);
-}
-
 void OsciloskopOsciloskop::m_menuItemDebugOnMenuSelection(wxCommandEvent& event)
 {
     if(!pDebug)
@@ -1174,13 +870,6 @@ void OsciloskopOsciloskop::m_buttonDisconnectOnButtonClick(wxCommandEvent& event
     m_buttonPauseOnButtonClick(event);
 }
 
-void OsciloskopOsciloskop::m_buttonFirmwareUploadOnButtonClick(wxCommandEvent& event)
-{
-    pOsciloscope->thread.writeFpgaToArtix7(getHw(), pOsciloscope->settings.getHardware());
-    m_comboBoxCh0CaptureOnCombobox(event);
-    m_comboBoxCh1CaptureOnCombobox(event);
-}
-
 void OsciloskopOsciloskop::m_buttonUndoOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->transferUndo();
@@ -1191,11 +880,6 @@ void OsciloskopOsciloskop::m_buttonRedoOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->transferRedo();
     event.Skip();
-}
-
-void OsciloskopOsciloskop::m_choiceSpeedOnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.speed = (UsbSpeed)m_choiceSpeed->GetSelection();
 }
 
 void OsciloskopOsciloskop::m_comboBoxTimeControlOnCombobox(wxCommandEvent& event)

@@ -20,16 +20,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "OsciloskopThermal.h"
 
-OsciloskopThermal::OsciloskopThermal( wxWindow* parent )
-:
-Thermal( parent )
+OsciloskopThermal::OsciloskopThermal(wxWindow* parent)
+    :
+    Thermal(parent)
 {
-
 }
 
-void OsciloskopThermal::ThermalOnActivate( wxActivateEvent& event )
+void OsciloskopThermal::ThermalOnActivate(wxActivateEvent& event)
 {
-// TODO: Implement ThermalOnActivate
+    // TODO: Implement ThermalOnActivate
     m_textCtrlHeating->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.thermal.heating)));
     m_textCtrlCooling->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.thermal.cooling)));
     m_sliderHeat->SetValue((pOsciloscope->window.thermal.heating / MAX_HEAT) * 100);
@@ -37,9 +36,9 @@ void OsciloskopThermal::ThermalOnActivate( wxActivateEvent& event )
     m_checkBoxEnabled->SetValue(pOsciloscope->window.thermal.enabled);
 }
 
-void OsciloskopThermal::m_textCtrlHeatingOnTextEnter( wxCommandEvent& event )
+void OsciloskopThermal::m_textCtrlHeatingOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlHeatingOnTextEnter
+    // TODO: Implement m_textCtrlHeatingOnTextEnter
     pOsciloscope->window.thermal.heating = pFormat->stringToFloat(m_textCtrlHeating->GetValue().ToAscii().data());
     m_sliderHeat->SetValue((pOsciloscope->window.thermal.heating / MAX_HEAT) * 100);
 }
@@ -100,22 +99,22 @@ void OsciloskopThermal::m_spinBtnCoolingOnSpinDown(wxSpinEvent& event)
     m_sliderCoolOnScroll(e);
 }
 
-void OsciloskopThermal::m_buttonOkOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonOkOnButtonClick
+    // TODO: Implement m_buttonOkOnButtonClick
     Hide();
 }
 
-void OsciloskopThermal::m_buttonDefaultOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonDefaultOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonDefaultOnButtonClick
+    // TODO: Implement m_buttonDefaultOnButtonClick
     pOsciloscope->window.thermal.Default();
     wxActivateEvent e;
     ThermalOnActivate(e);
 }
 
-void OsciloskopThermal::m_buttonCancelOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonCancelOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonCancelOnButtonClick
+    // TODO: Implement m_buttonCancelOnButtonClick
     Hide();
 }

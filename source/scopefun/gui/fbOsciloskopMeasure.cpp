@@ -1,238 +1,237 @@
 #include "fbOsciloskopMeasure.h"
 
-OsciloskopMeasure::OsciloskopMeasure( wxWindow* parent )
-:
-Measure( parent )
+OsciloskopMeasure::OsciloskopMeasure(wxWindow* parent)
+    :
+    Measure(parent)
 {
-
 }
 
-void OsciloskopMeasure::DisplayOnInitDialog( wxInitDialogEvent& event )
+void OsciloskopMeasure::DisplayOnInitDialog(wxInitDialogEvent& event)
 {
-// TODO: Implement DisplayOnInitDialog
+    // TODO: Implement DisplayOnInitDialog
 }
 
-void OsciloskopMeasure::m_checkBoxAutoClearOnCheckBox( wxCommandEvent& event )
+void OsciloskopMeasure::m_checkBoxAutoClearOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxAutoClearOnCheckBox
+    // TODO: Implement m_checkBoxAutoClearOnCheckBox
 }
 
-void OsciloskopMeasure::m_checkBoxAutoClearTriggerOnCheckBox( wxCommandEvent& event )
+void OsciloskopMeasure::m_checkBoxAutoClearTriggerOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxAutoClearTriggerOnCheckBox
+    // TODO: Implement m_checkBoxAutoClearTriggerOnCheckBox
 }
 
-void OsciloskopMeasure::m_buttonHistoryClearOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonHistoryClearOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonHistoryClearOnButtonClick
+    // TODO: Implement m_buttonHistoryClearOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonClearXOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonClearXOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonClearXOnButtonClick
+    // TODO: Implement m_buttonClearXOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonClearYOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonClearYOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonClearYOnButtonClick
+    // TODO: Implement m_buttonClearYOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonClearFFTOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonClearFFTOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonClearFFTOnButtonClick
+    // TODO: Implement m_buttonClearFFTOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonCopyOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonCopyOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonCopyOnButtonClick
+    // TODO: Implement m_buttonCopyOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonPickX0OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickX0OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickX0OnButtonClick
+    // TODO: Implement m_buttonPickX0OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlX0OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlX0OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlX0OnTextEnter
+    // TODO: Implement m_textCtrlX0OnTextEnter
 }
 
-void OsciloskopMeasure::m_spinBtnX0OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnX0OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnX0OnSpinDown
+    // TODO: Implement m_spinBtnX0OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnX0OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnX0OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnX0OnSpinUp
+    // TODO: Implement m_spinBtnX0OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderX0OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderX0OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderX0OnScroll
+    // TODO: Implement m_sliderX0OnScroll
 }
 
-void OsciloskopMeasure::m_buttonPickX1OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickX1OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickX1OnButtonClick
+    // TODO: Implement m_buttonPickX1OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlX1OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlX1OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlX1OnTextEnter
+    // TODO: Implement m_textCtrlX1OnTextEnter
 }
 
-void OsciloskopMeasure::m_spinBtnX1OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnX1OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnX1OnSpinDown
+    // TODO: Implement m_spinBtnX1OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnX1OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnX1OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnX1OnSpinUp
+    // TODO: Implement m_spinBtnX1OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderX1OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderX1OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderX1OnScroll
+    // TODO: Implement m_sliderX1OnScroll
 }
 
-void OsciloskopMeasure::m_buttonPickY0OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickY0OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickY0OnButtonClick
+    // TODO: Implement m_buttonPickY0OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlY0OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlY0OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlY0OnTextEnter
+    // TODO: Implement m_textCtrlY0OnTextEnter
 }
 
-void OsciloskopMeasure::m_choiceY0OnChoice( wxCommandEvent& event )
+void OsciloskopMeasure::m_choiceY0OnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceY0OnChoice
+    // TODO: Implement m_choiceY0OnChoice
 }
 
-void OsciloskopMeasure::m_spinBtnY0OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnY0OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnY0OnSpinDown
+    // TODO: Implement m_spinBtnY0OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnY0OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnY0OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnY0OnSpinUp
+    // TODO: Implement m_spinBtnY0OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderY0OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderY0OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderY0OnScroll
+    // TODO: Implement m_sliderY0OnScroll
 }
 
-void OsciloskopMeasure::m_buttonPickY1OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickY1OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickY1OnButtonClick
+    // TODO: Implement m_buttonPickY1OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlY1OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlY1OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlY1OnTextEnter
+    // TODO: Implement m_textCtrlY1OnTextEnter
 }
 
-void OsciloskopMeasure::m_choiceY1OnChoice( wxCommandEvent& event )
+void OsciloskopMeasure::m_choiceY1OnChoice(wxCommandEvent& event)
 {
-// TODO: Implement m_choiceY1OnChoice
+    // TODO: Implement m_choiceY1OnChoice
 }
 
-void OsciloskopMeasure::m_spinBtnY1OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnY1OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnY1OnSpinDown
+    // TODO: Implement m_spinBtnY1OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnY1OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnY1OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnY1OnSpinUp
+    // TODO: Implement m_spinBtnY1OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderY1OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderY1OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderY1OnScroll
+    // TODO: Implement m_sliderY1OnScroll
 }
 
-void OsciloskopMeasure::m_buttonPickFFT0OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickFFT0OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickFFT0OnButtonClick
+    // TODO: Implement m_buttonPickFFT0OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlFFT0OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlFFT0OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlFFT0OnTextEnter
+    // TODO: Implement m_textCtrlFFT0OnTextEnter
 }
 
-void OsciloskopMeasure::m_spinBtnFFT0OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnFFT0OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnFFT0OnSpinDown
+    // TODO: Implement m_spinBtnFFT0OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnFFT0OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnFFT0OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnFFT0OnSpinUp
+    // TODO: Implement m_spinBtnFFT0OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderFFT0OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderFFT0OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderFFT0OnScroll
+    // TODO: Implement m_sliderFFT0OnScroll
 }
 
-void OsciloskopMeasure::m_buttonPickFFT1OnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonPickFFT1OnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonPickFFT1OnButtonClick
+    // TODO: Implement m_buttonPickFFT1OnButtonClick
 }
 
-void OsciloskopMeasure::m_textCtrlFFT1OnTextEnter( wxCommandEvent& event )
+void OsciloskopMeasure::m_textCtrlFFT1OnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlFFT1OnTextEnter
+    // TODO: Implement m_textCtrlFFT1OnTextEnter
 }
 
-void OsciloskopMeasure::m_spinBtnFFT1OnSpinDown( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnFFT1OnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnFFT1OnSpinDown
+    // TODO: Implement m_spinBtnFFT1OnSpinDown
 }
 
-void OsciloskopMeasure::m_spinBtnFFT1OnSpinUp( wxSpinEvent& event )
+void OsciloskopMeasure::m_spinBtnFFT1OnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnFFT1OnSpinUp
+    // TODO: Implement m_spinBtnFFT1OnSpinUp
 }
 
-void OsciloskopMeasure::m_sliderFFT1OnScroll( wxScrollEvent& event )
+void OsciloskopMeasure::m_sliderFFT1OnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderFFT1OnScroll
+    // TODO: Implement m_sliderFFT1OnScroll
 }
 
-void OsciloskopMeasure::m_SelectionChanged1( wxDataViewEvent& event )
+void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
 {
-// TODO: Implement m_SelectionChanged1
+    // TODO: Implement m_SelectionChanged1
 }
 
-void OsciloskopMeasure::m_OnLeftDown( wxMouseEvent& event )
+void OsciloskopMeasure::m_OnLeftDown(wxMouseEvent& event)
 {
-// TODO: Implement m_OnLeftDown
+    // TODO: Implement m_OnLeftDown
 }
 
-void OsciloskopMeasure::m_dataViewListCtrl1OnMouseEvents( wxMouseEvent& event )
+void OsciloskopMeasure::m_dataViewListCtrl1OnMouseEvents(wxMouseEvent& event)
 {
-// TODO: Implement m_dataViewListCtrl1OnMouseEvents
+    // TODO: Implement m_dataViewListCtrl1OnMouseEvents
 }
 
-void OsciloskopMeasure::m_buttonOkOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonOkOnButtonClick
+    // TODO: Implement m_buttonOkOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonDefaultOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonDefaultOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonDefaultOnButtonClick
+    // TODO: Implement m_buttonDefaultOnButtonClick
 }
 
-void OsciloskopMeasure::m_buttonCancelOnButtonClick( wxCommandEvent& event )
+void OsciloskopMeasure::m_buttonCancelOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonCancelOnButtonClick
+    // TODO: Implement m_buttonCancelOnButtonClick
 }

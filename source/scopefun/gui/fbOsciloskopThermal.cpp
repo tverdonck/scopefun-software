@@ -1,73 +1,72 @@
 #include "fbOsciloskopThermal.h"
 
-OsciloskopThermal::OsciloskopThermal( wxWindow* parent )
-:
-Thermal( parent )
+OsciloskopThermal::OsciloskopThermal(wxWindow* parent)
+    :
+    Thermal(parent)
 {
-
 }
 
-void OsciloskopThermal::ThermalOnActivate( wxActivateEvent& event )
+void OsciloskopThermal::ThermalOnActivate(wxActivateEvent& event)
 {
-// TODO: Implement ThermalOnActivate
+    // TODO: Implement ThermalOnActivate
 }
 
-void OsciloskopThermal::m_textCtrlHeatingOnTextEnter( wxCommandEvent& event )
+void OsciloskopThermal::m_textCtrlHeatingOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlHeatingOnTextEnter
+    // TODO: Implement m_textCtrlHeatingOnTextEnter
 }
 
-void OsciloskopThermal::m_spinBtnHeatingOnSpinDown( wxSpinEvent& event )
+void OsciloskopThermal::m_spinBtnHeatingOnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnHeatingOnSpinDown
+    // TODO: Implement m_spinBtnHeatingOnSpinDown
 }
 
-void OsciloskopThermal::m_spinBtnHeatingOnSpinUp( wxSpinEvent& event )
+void OsciloskopThermal::m_spinBtnHeatingOnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnHeatingOnSpinUp
+    // TODO: Implement m_spinBtnHeatingOnSpinUp
 }
 
-void OsciloskopThermal::m_sliderHeatOnScroll( wxScrollEvent& event )
+void OsciloskopThermal::m_sliderHeatOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderHeatOnScroll
+    // TODO: Implement m_sliderHeatOnScroll
 }
 
-void OsciloskopThermal::m_textCtrlCoolingOnTextEnter( wxCommandEvent& event )
+void OsciloskopThermal::m_textCtrlCoolingOnTextEnter(wxCommandEvent& event)
 {
-// TODO: Implement m_textCtrlCoolingOnTextEnter
+    // TODO: Implement m_textCtrlCoolingOnTextEnter
 }
 
-void OsciloskopThermal::m_spinBtnCoolingOnSpinDown( wxSpinEvent& event )
+void OsciloskopThermal::m_spinBtnCoolingOnSpinDown(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnCoolingOnSpinDown
+    // TODO: Implement m_spinBtnCoolingOnSpinDown
 }
 
-void OsciloskopThermal::m_spinBtnCoolingOnSpinUp( wxSpinEvent& event )
+void OsciloskopThermal::m_spinBtnCoolingOnSpinUp(wxSpinEvent& event)
 {
-// TODO: Implement m_spinBtnCoolingOnSpinUp
+    // TODO: Implement m_spinBtnCoolingOnSpinUp
 }
 
-void OsciloskopThermal::m_sliderCoolOnScroll( wxScrollEvent& event )
+void OsciloskopThermal::m_sliderCoolOnScroll(wxScrollEvent& event)
 {
-// TODO: Implement m_sliderCoolOnScroll
+    // TODO: Implement m_sliderCoolOnScroll
 }
 
-void OsciloskopThermal::m_checkBoxEnabledOnCheckBox( wxCommandEvent& event )
+void OsciloskopThermal::m_checkBoxEnabledOnCheckBox(wxCommandEvent& event)
 {
-// TODO: Implement m_checkBoxEnabledOnCheckBox
+    // TODO: Implement m_checkBoxEnabledOnCheckBox
 }
 
-void OsciloskopThermal::m_buttonOkOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonOkOnButtonClick
+    // TODO: Implement m_buttonOkOnButtonClick
 }
 
-void OsciloskopThermal::m_buttonDefaultOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonDefaultOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonDefaultOnButtonClick
+    // TODO: Implement m_buttonDefaultOnButtonClick
 }
 
-void OsciloskopThermal::m_buttonCancelOnButtonClick( wxCommandEvent& event )
+void OsciloskopThermal::m_buttonCancelOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonCancelOnButtonClick
+    // TODO: Implement m_buttonCancelOnButtonClick
 }

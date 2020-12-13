@@ -106,12 +106,10 @@ public:
             #endif
             // used by wxConfig
             SetAppName("Oscilloscope");
-
             // load localization
             int language = loadLanguageFromConfig();
             setLocalization(language);
             saveLanguageToConfig(language);
-
             // gui
             void recreateGUI(int initial = 0);
             recreateGUI(1);

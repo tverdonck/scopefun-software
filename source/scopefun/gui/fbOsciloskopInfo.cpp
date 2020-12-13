@@ -1,28 +1,27 @@
 #include "fbOsciloskopInfo.h"
 
-OsciloskopInfo::OsciloskopInfo( wxWindow* parent )
-:
-Info( parent )
+OsciloskopInfo::OsciloskopInfo(wxWindow* parent)
+    :
+    Info(parent)
 {
-
 }
 
-void OsciloskopInfo::ThermalOnActivate( wxActivateEvent& event )
+void OsciloskopInfo::ThermalOnActivate(wxActivateEvent& event)
 {
-// TODO: Implement ThermalOnActivate
+    // TODO: Implement ThermalOnActivate
 }
 
-void OsciloskopInfo::InfoOnClose( wxCloseEvent& event )
+void OsciloskopInfo::InfoOnClose(wxCloseEvent& event)
 {
-// TODO: Implement InfoOnClose
+    // TODO: Implement InfoOnClose
 }
 
-void OsciloskopInfo::m_textCtrlGlewOnTextURL( wxTextUrlEvent& event )
+void OsciloskopInfo::m_textCtrlGlewOnTextURL(wxTextUrlEvent& event)
 {
-// TODO: Implement m_textCtrlGlewOnTextURL
+    // TODO: Implement m_textCtrlGlewOnTextURL
 }
 
-void OsciloskopInfo::m_buttonOkOnButtonClick( wxCommandEvent& event )
+void OsciloskopInfo::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
-// TODO: Implement m_buttonOkOnButtonClick
+    // TODO: Implement m_buttonOkOnButtonClick
 }
