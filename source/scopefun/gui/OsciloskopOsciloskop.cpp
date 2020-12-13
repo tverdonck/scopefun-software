@@ -1552,74 +1552,29 @@ void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice(wxCommandEvent& event)
         case 0:
             break;
         case 1:
+            m_checkBox7->SetValue(false);
+            m_checkBox8->SetValue(false);
             m_checkBox9->SetValue(false);
             m_checkBox10->SetValue(false);
             m_checkBox11->SetValue(false);
             m_checkBox12->SetValue(false);
-            m_checkBox13->SetValue(false);
-            m_checkBox14->SetValue(false);
-            m_checkBox15->SetValue(false);
-            m_checkBox16->SetValue(false);
+          
             break;
         case 2:
+            m_checkBox7->SetValue(true);
+            m_checkBox8->SetValue(true);
             m_checkBox9->SetValue(true);
             m_checkBox10->SetValue(true);
             m_checkBox11->SetValue(true);
             m_checkBox12->SetValue(true);
-            m_checkBox13->SetValue(true);
-            m_checkBox14->SetValue(true);
-            m_checkBox15->SetValue(true);
-            m_checkBox16->SetValue(true);
             break;
     };
+    pOsciloscope->window.digital.digital[7] = m_checkBox7->GetValue();
+    pOsciloscope->window.digital.digital[8] = m_checkBox8->GetValue();
     pOsciloscope->window.digital.digital[8]  = m_checkBox9->GetValue();
     pOsciloscope->window.digital.digital[9]  = m_checkBox10->GetValue();
     pOsciloscope->window.digital.digital[10] = m_checkBox11->GetValue();
     pOsciloscope->window.digital.digital[11] = m_checkBox12->GetValue();
-    pOsciloscope->window.digital.digital[12] = m_checkBox13->GetValue();
-    pOsciloscope->window.digital.digital[13] = m_checkBox14->GetValue();
-    pOsciloscope->window.digital.digital[14] = m_checkBox15->GetValue();
-    pOsciloscope->window.digital.digital[15] = m_checkBox16->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox16OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[15] = m_checkBox16->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox14OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[13] = m_checkBox14->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox12OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[11] = m_checkBox12->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox10OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[9] = m_checkBox10->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox15OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[14] = m_checkBox15->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox13OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[12] = m_checkBox13->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox11OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[10] = m_checkBox11->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox9OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[8] = m_checkBox9->GetValue();
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice(wxCommandEvent& event)
@@ -1636,8 +1591,6 @@ void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice(wxCommandEvent& event)
             m_checkBox4->SetValue(false);
             m_checkBox5->SetValue(false);
             m_checkBox6->SetValue(false);
-            m_checkBox7->SetValue(false);
-            m_checkBox8->SetValue(false);
             break;
         case 2:
             m_checkBox1->SetValue(true);
@@ -1646,8 +1599,6 @@ void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice(wxCommandEvent& event)
             m_checkBox4->SetValue(true);
             m_checkBox5->SetValue(true);
             m_checkBox6->SetValue(true);
-            m_checkBox7->SetValue(true);
-            m_checkBox8->SetValue(true);
             break;
     };
     pOsciloscope->window.digital.digital[0] = m_checkBox1->GetValue();
@@ -1656,13 +1607,36 @@ void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice(wxCommandEvent& event)
     pOsciloscope->window.digital.digital[3] = m_checkBox4->GetValue();
     pOsciloscope->window.digital.digital[4] = m_checkBox5->GetValue();
     pOsciloscope->window.digital.digital[5] = m_checkBox6->GetValue();
-    pOsciloscope->window.digital.digital[6] = m_checkBox7->GetValue();
-    pOsciloscope->window.digital.digital[7] = m_checkBox8->GetValue();
+}
+
+void OsciloskopOsciloskop::m_checkBox12OnCheckBox(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.digital[11] = m_checkBox12->GetValue();
+}
+
+void OsciloskopOsciloskop::m_checkBox10OnCheckBox(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.digital[9] = m_checkBox10->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox8OnCheckBox(wxCommandEvent& event)
 {
     pOsciloscope->window.digital.digital[7] = m_checkBox8->GetValue();
+}
+
+void OsciloskopOsciloskop::m_checkBox11OnCheckBox(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.digital[10] = m_checkBox11->GetValue();
+}
+
+void OsciloskopOsciloskop::m_checkBox9OnCheckBox(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.digital[8] = m_checkBox9->GetValue();
+}
+
+void OsciloskopOsciloskop::m_checkBox7OnCheckBox(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.digital[6] = m_checkBox7->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox6OnCheckBox(wxCommandEvent& event)
@@ -1678,11 +1652,6 @@ void OsciloskopOsciloskop::m_checkBox4OnCheckBox(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_checkBox2OnCheckBox(wxCommandEvent& event)
 {
     pOsciloscope->window.digital.digital[1] = m_checkBox2->GetValue();
-}
-
-void OsciloskopOsciloskop::m_checkBox7OnCheckBox(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.digital[6] = m_checkBox7->GetValue();
 }
 
 void OsciloskopOsciloskop::m_checkBox5OnCheckBox(wxCommandEvent& event)

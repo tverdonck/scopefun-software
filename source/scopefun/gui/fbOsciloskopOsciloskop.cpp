@@ -457,19 +457,14 @@ void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice( wxCommandEvent& event )
     // TODO: Implement m_choiceDOnOff815OnChoice
 }
 
-void OsciloskopOsciloskop::m_checkBox16OnCheckBox( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice( wxCommandEvent& event )
 {
-    // TODO: Implement m_checkBox16OnCheckBox
-}
-
-void OsciloskopOsciloskop::m_checkBox14OnCheckBox( wxCommandEvent& event )
-{
-    // TODO: Implement m_checkBox14OnCheckBox
+    // TODO: Implement m_choiceDOnOff70OnChoice
 }
 
 void OsciloskopOsciloskop::m_checkBox12OnCheckBox( wxCommandEvent& event )
 {
-    // TODO: Implement m_checkBox12OnCheckBox
+// TODO: Implement m_checkBox12OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox10OnCheckBox( wxCommandEvent& event )
@@ -477,34 +472,24 @@ void OsciloskopOsciloskop::m_checkBox10OnCheckBox( wxCommandEvent& event )
     // TODO: Implement m_checkBox10OnCheckBox
 }
 
-void OsciloskopOsciloskop::m_checkBox15OnCheckBox( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_checkBox8OnCheckBox( wxCommandEvent& event )
 {
-    // TODO: Implement m_checkBox15OnCheckBox
-}
-
-void OsciloskopOsciloskop::m_checkBox13OnCheckBox( wxCommandEvent& event )
-{
-    // TODO: Implement m_checkBox13OnCheckBox
+    // TODO: Implement m_checkBox8OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox11OnCheckBox( wxCommandEvent& event )
 {
-    // TODO: Implement m_checkBox11OnCheckBox
+// TODO: Implement m_checkBox11OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox9OnCheckBox( wxCommandEvent& event )
 {
-    // TODO: Implement m_checkBox9OnCheckBox
+// TODO: Implement m_checkBox9OnCheckBox
 }
 
-void OsciloskopOsciloskop::m_choiceDOnOff70OnChoice( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_checkBox7OnCheckBox( wxCommandEvent& event )
 {
-    // TODO: Implement m_choiceDOnOff70OnChoice
-}
-
-void OsciloskopOsciloskop::m_checkBox8OnCheckBox( wxCommandEvent& event )
-{
-    // TODO: Implement m_checkBox8OnCheckBox
+// TODO: Implement m_checkBox7OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox6OnCheckBox( wxCommandEvent& event )
@@ -520,11 +505,6 @@ void OsciloskopOsciloskop::m_checkBox4OnCheckBox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_checkBox2OnCheckBox( wxCommandEvent& event )
 {
 // TODO: Implement m_checkBox2OnCheckBox
-}
-
-void OsciloskopOsciloskop::m_checkBox7OnCheckBox( wxCommandEvent& event )
-{
-// TODO: Implement m_checkBox7OnCheckBox
 }
 
 void OsciloskopOsciloskop::m_checkBox5OnCheckBox( wxCommandEvent& event )
@@ -885,4 +865,10 @@ void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit0OnCombobox
+}
+
+
+void OsciloskopOsciloskop::m_checkBox15OnCheckBox( wxCommandEvent& event )
+{
+// TODO: Implement m_checkBox15OnCheckBox
 }

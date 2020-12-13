@@ -396,10 +396,6 @@ OsciloskopOsciloskop::~OsciloskopOsciloskop()
 
 void OsciloskopOsciloskop::SetDigital13To16(bool enable)
 {
-    m_checkBox13->Enable(enable);
-    m_checkBox14->Enable(enable);
-    m_checkBox15->Enable(enable);
-    m_checkBox16->Enable(enable);
     m_choiceBit12->Enable(enable);
     m_choiceBit13->Enable(enable);
     m_choiceBit14->Enable(enable);
@@ -561,10 +557,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_checkBox10->SetValue(window.digital.digital[9]);
     m_checkBox11->SetValue(window.digital.digital[10]);
     m_checkBox12->SetValue(window.digital.digital[11]);
-    m_checkBox13->SetValue(window.digital.digital[12]);
-    m_checkBox14->SetValue(window.digital.digital[13]);
-    m_checkBox15->SetValue(window.digital.digital[14]);
-    m_checkBox16->SetValue(window.digital.digital[15]);
     // output
     m_choiceBit0->SetSelection(window.digital.output[0]);
     m_choiceBit1->SetSelection(window.digital.output[1]);
