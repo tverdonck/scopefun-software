@@ -26,7 +26,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-static wxLocale* pLocalization = 0;
+wxLocale* pLocalization = 0;
 
 wxIMPLEMENT_ABSTRACT_CLASS(wxLanguageUserData, wxObject);
 

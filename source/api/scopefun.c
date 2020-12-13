@@ -287,7 +287,6 @@ SCOPEFUN_CREATE_DELETE(SFrameHeader)
 ---------------------------------------------------------------------*/
 SCOPEFUN_API int sfApiInit()
 {
-    socketInit();
     usbFxxInit(0);
     return SCOPEFUN_SUCCESS;
 }

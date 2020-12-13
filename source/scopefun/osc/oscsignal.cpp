@@ -68,7 +68,7 @@ uint ScopeFunCaptureBuffer::save(const char* path)
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     FORMAT("header.etsDelay,%d\n", *(char*)&frameHeader->etsDelay.bytes[0]);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
-    FORMAT("header.crc,%02x\n", (unsigned char)(unsigned char*)&frameHeader->crc.bytes[0]);
+    FORMAT("header.crc,%02x\n", *(unsigned char*)&frameHeader->crc.bytes[0]);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     // hardware
     int cnt = 0;
@@ -81,7 +81,7 @@ uint ScopeFunCaptureBuffer::save(const char* path)
         FORMAT("hardware.%s,%04x\n", (char*)stringId.bytes, ptr[j]);
         SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     }
-    FORMAT("sample.ch0[-512...511],sample.ch1[-512...511],sample.digital[0x000...0xfff]\n");
+    FORMAT("sample.ch0[-512...511],sample.ch1[-512...511],sample.digital[0x000...0xfff]\n",0);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     if(sampleCount)
     {

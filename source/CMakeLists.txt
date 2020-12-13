@@ -8,23 +8,125 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/source/version/sfversion.h.in ${CMAKE_SOURCE_
 #--------------------------------------------------------------------------------
 # cpp files
 #--------------------------------------------------------------------------------
-file(
-    GLOB_RECURSE HEADERS_SOURCE
-    LIST_DIRECTORIES false
-    "*.h*"
-)
+set(SOURCE_CORE ${CMAKE_SOURCE_DIR}/source/core/core.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/render/camera/camera.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/render/canvas/canvas2d.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/render/canvas/canvas3d.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/render/render/render.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/render/font/font.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/string/corestring.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/file/file.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/format/format.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/input/input.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/manager/manager.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/memory/memory.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_device.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_devicestate.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_shader.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_staticmesh.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_texture.cpp
+                ${CMAKE_SOURCE_DIR}/source/core/purec/purec.c
+                ${CMAKE_SOURCE_DIR}/source/core/purec/puresocket.c
+                ${CMAKE_SOURCE_DIR}/source/core/purec/pureusb.c
+                ${CMAKE_SOURCE_DIR}/source/core/timer/timer.cpp )
 
-file(
-    GLOB_RECURSE FILES_CORE
-    LIST_DIRECTORIES false
-    "core/*.c*"
-)
+set(SOURCE_SCOPEFUN ${CMAKE_SOURCE_DIR}/source/scopefun/app/app.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/app/managers.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/osc.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopConnection.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopDebug.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopDisplay.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopHardwareGenerator.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopInfo.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopMeasure.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopOsciloskop.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopSoftwareGenerator.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopStorage.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopThermal.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopTools.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/osccontrol.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscfft.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscfile.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscmng.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscrender.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscsettings.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscsignal.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/window/tool.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/window/wnddisplay.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndgenerate.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndmain.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndshadow.cpp
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm128.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm16.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm256.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm32.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm512.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm64.c
+                    ${CMAKE_SOURCE_DIR}/source/scopefun/xpm/xpm96.c )
 
-file(
-    GLOB_RECURSE FILES_SCOPEFUN
-    LIST_DIRECTORIES false
-	"ScopeFun/*.c*"
-)
+set( HEADER_CORE ${CMAKE_SOURCE_DIR}/source/core/core.h
+                 ${CMAKE_SOURCE_DIR}/source/core/render/camera/camera.h
+                 ${CMAKE_SOURCE_DIR}/source/core/render/canvas/canvas2d.h
+                 ${CMAKE_SOURCE_DIR}/source/core/render/canvas/canvas3d.h
+                 ${CMAKE_SOURCE_DIR}/source/core/string/corestring.h
+                 ${CMAKE_SOURCE_DIR}/source/core/global/endian.h
+                 ${CMAKE_SOURCE_DIR}/source/core/file/file.h
+                 ${CMAKE_SOURCE_DIR}/source/core/flag/flag.h
+                 ${CMAKE_SOURCE_DIR}/source/core/render/font/font.h
+                 ${CMAKE_SOURCE_DIR}/source/core/format/format.h
+                 ${CMAKE_SOURCE_DIR}/source/core/input/input.h
+                 ${CMAKE_SOURCE_DIR}/source/core/global/macro.h
+                 ${CMAKE_SOURCE_DIR}/source/core/manager/manager.h
+                 ${CMAKE_SOURCE_DIR}/source/core/memory/memory.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_device.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_devicestate.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_shader.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_staticmesh.h
+                 ${CMAKE_SOURCE_DIR}/source/core/opengl/opengl_texture.h
+                 ${CMAKE_SOURCE_DIR}/source/core/global/platform.h
+                 ${CMAKE_SOURCE_DIR}/source/core/purec/purec.h
+                 ${CMAKE_SOURCE_DIR}/source/core/purec/puresocket.h
+                 ${CMAKE_SOURCE_DIR}/source/core/purec/pureusb.h
+                 ${CMAKE_SOURCE_DIR}/source/core/render/render/render.h
+                 ${CMAKE_SOURCE_DIR}/source/core/data/ring.h
+                 ${CMAKE_SOURCE_DIR}/source/core/data/set.h
+                 ${CMAKE_SOURCE_DIR}/source/core/data/map.h
+                 ${CMAKE_SOURCE_DIR}/source/core/data/array.h
+                 ${CMAKE_SOURCE_DIR}/source/core/timer/timer.h
+                 ${CMAKE_SOURCE_DIR}/source/core/global/type.h
+                 ${CMAKE_SOURCE_DIR}/source/core/math/vector4.h
+                 ${CMAKE_SOURCE_DIR}/source/core/math/matrix4x4.h
+                 ${CMAKE_SOURCE_DIR}/source/core/math/interval.h
+                 ${CMAKE_SOURCE_DIR}/source/core/math/const.h )
+
+set( HEADER_SCOPEFUN ${CMAKE_SOURCE_DIR}/source/scopefun/ScopeFun.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/guiheader.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/osc.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopConnection.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopDebug.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopDisplay.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopHardwareGenerator.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopInfo.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopMeasure.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopOsciloskop.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopSoftwareGenerator.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopStorage.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopThermal.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/gui/OsciloskopTools.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscmng.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscrender.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscsettings.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscsignal.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/osccontrol.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscfft.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/osc/oscfile.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/window/tool.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/window/wnddisplay.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndgenerate.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndmain.h
+                     ${CMAKE_SOURCE_DIR}/source/scopefun/window/wndshadow.h )
 
 set( FILES_LIB 
 "${CMAKE_SOURCE_DIR}/lib/cJSON/cJSON.c"
@@ -49,20 +151,21 @@ if(SCOPEFUN_LINUX)
 	set( SCOPEFUN_EXE_TYPE "" )
 endif()
 if( SCOPEFUN_VISUALSTUDIO)
-	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${HEADERS_SOURCE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${HEADER_CORE} ${HEADER_SCOPEFUN} ${SOURCE_CORE} ${SOURCE_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
 else()
-	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${FILES_CORE} ${FILES_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
+	add_executable(ScopeFun ${SCOPEFUN_EXE_TYPE} ${SOURCE_CORE} ${SOURCE_SCOPEFUN} ${FILES_LIB} ${FILES_API} ${FILES_TOOL} )
 endif()
 	
 #--------------------------------------------------------------------------------
 # groups
 #--------------------------------------------------------------------------------			
-source_group("Core"     FILES ${FILES_CORE})
-source_group("ScopeFun" FILES ${FILES_SCOPEFUN})
-source_group("Lib"      FILES ${FILES_LIB})
-source_group("Tool"     FILES ${FILES_TOOL})
-source_group("Api"      FILES ${FILES_API})
-source_group("Header"   FILES ${HEADERS_SOURCE})
+source_group("Core"            FILES ${SOURCE_CORE})
+source_group("ScopeFun"        FILES ${SOURCE_SCOPEFUN})
+source_group("Lib"             FILES ${FILES_LIB})
+source_group("Tool"            FILES ${FILES_TOOL})
+source_group("Api"             FILES ${FILES_API})
+source_group("Header_Core"     FILES ${HEADER_CORE} )
+source_group("Header_ScopeFun" FILES ${HEADER_SCOPEFUN} )
 
 #--------------------------------------------------------------------------------
 # include
