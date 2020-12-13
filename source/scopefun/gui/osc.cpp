@@ -1154,42 +1154,42 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	m_staticText47 = new wxStaticText( m_panel3, wxID_ANY, _("Mode:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText47->Wrap( -1 );
-	bSizer29->Add( m_staticText47, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_staticText47, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxString m_comboBoxTriggerChoices[] = { _("Auto"), _("Normal"), _("Single"), _("Immediate") };
 	int m_comboBoxTriggerNChoices = sizeof( m_comboBoxTriggerChoices ) / sizeof( wxString );
 	m_comboBoxTrigger = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerNChoices, m_comboBoxTriggerChoices, 0 );
 	m_comboBoxTrigger->SetSelection( 2 );
-	bSizer29->Add( m_comboBoxTrigger, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_comboBoxTrigger, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticText45 = new wxStaticText( m_panel3, wxID_ANY, _("Source:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText45->Wrap( -1 );
-	bSizer29->Add( m_staticText45, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_staticText45, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxString m_comboBoxTriggerSourceChoices[] = { _("Channel 1"), _("Channel 2"), _("AWG 1"), _("AWG 2"), _("External") };
 	int m_comboBoxTriggerSourceNChoices = sizeof( m_comboBoxTriggerSourceChoices ) / sizeof( wxString );
 	m_comboBoxTriggerSource = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSourceNChoices, m_comboBoxTriggerSourceChoices, 0 );
 	m_comboBoxTriggerSource->SetSelection( 4 );
-	bSizer29->Add( m_comboBoxTriggerSource, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_comboBoxTriggerSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticText46 = new wxStaticText( m_panel3, wxID_ANY, _("Slope:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText46->Wrap( -1 );
-	bSizer29->Add( m_staticText46, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_staticText46, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxString m_comboBoxTriggerSlopeChoices[] = { _("Rising"), _("Falling"), _("Both") };
 	int m_comboBoxTriggerSlopeNChoices = sizeof( m_comboBoxTriggerSlopeChoices ) / sizeof( wxString );
 	m_comboBoxTriggerSlope = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSlopeNChoices, m_comboBoxTriggerSlopeChoices, 0 );
 	m_comboBoxTriggerSlope->SetSelection( 0 );
-	bSizer29->Add( m_comboBoxTriggerSlope, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_comboBoxTriggerSlope, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonReArm = new wxButton( m_panel3, wxID_ANY, _("Re-Arm"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer29->Add( m_buttonReArm, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_buttonReArm, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_radioBtnTriggered = new wxRadioButton( m_panel3, wxID_ANY, _("Triggered"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnTriggered->SetForegroundColour( wxColour( 0, 0, 0 ) );
 	m_radioBtnTriggered->SetBackgroundColour( wxColour( 255, 255, 255 ) );
 
-	bSizer29->Add( m_radioBtnTriggered, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer29->Add( m_radioBtnTriggered, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer28->Add( bSizer29, 1, wxEXPAND, 5 );
@@ -1197,18 +1197,24 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* bSizer168;
+	bSizer168 = new wxBoxSizer( wxHORIZONTAL );
+
 	m_staticText1222 = new wxStaticText( m_panel3, wxID_ANY, _("Level:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText1222->Wrap( -1 );
-	bSizer32->Add( m_staticText1222, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer168->Add( m_staticText1222, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_textCtrlTriggerLevel = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
-	bSizer32->Add( m_textCtrlTriggerLevel, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer168->Add( m_textCtrlTriggerLevel, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer32->Add( bSizer168, 1, wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_spinBtnTrigLevel = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer32->Add( m_spinBtnTrigLevel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_sliderTriggerLevel = new wxSlider( m_panel3, wxID_ANY, 0, -512, 512, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer32->Add( m_sliderTriggerLevel, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer32->Add( m_sliderTriggerLevel, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer28->Add( bSizer32, 1, wxEXPAND, 5 );
@@ -1216,18 +1222,24 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer321;
 	bSizer321 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* bSizer169;
+	bSizer169 = new wxBoxSizer( wxHORIZONTAL );
+
 	m_staticText12221 = new wxStaticText( m_panel3, wxID_ANY, _("Histeresis:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText12221->Wrap( -1 );
-	bSizer321->Add( m_staticText12221, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer169->Add( m_staticText12221, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_textCtrlTriggerHisteresis = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
-	bSizer321->Add( m_textCtrlTriggerHisteresis, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer169->Add( m_textCtrlTriggerHisteresis, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer321->Add( bSizer169, 1, wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_spinBtnTrigHis = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer321->Add( m_spinBtnTrigHis, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_sliderTriggerHisteresis = new wxSlider( m_panel3, wxID_ANY, 512, 0, 1023, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer321->Add( m_sliderTriggerHisteresis, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer321->Add( m_sliderTriggerHisteresis, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer28->Add( bSizer321, 1, wxEXPAND, 5 );
@@ -1235,18 +1247,24 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer322;
 	bSizer322 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* bSizer170;
+	bSizer170 = new wxBoxSizer( wxHORIZONTAL );
+
 	m_staticText12222 = new wxStaticText( m_panel3, wxID_ANY, _("Pre-Trigger:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText12222->Wrap( -1 );
-	bSizer322->Add( m_staticText12222, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer170->Add( m_staticText12222, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_textCtrlTriggerPre = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
-	bSizer322->Add( m_textCtrlTriggerPre, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer170->Add( m_textCtrlTriggerPre, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer322->Add( bSizer170, 1, wxEXPAND, 5 );
 
 	m_spinBtnTrigPre = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer322->Add( m_spinBtnTrigPre, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_sliderTriggerPre = new wxSlider( m_panel3, wxID_ANY, 50, 0, 99, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer322->Add( m_sliderTriggerPre, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer322->Add( m_sliderTriggerPre, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer28->Add( bSizer322, 1, wxEXPAND, 5 );
@@ -1254,18 +1272,24 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer43;
 	bSizer43 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* bSizer1711;
+	bSizer1711 = new wxBoxSizer( wxHORIZONTAL );
+
 	m_staticText55 = new wxStaticText( m_panel3, wxID_ANY, _("Holdoff:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText55->Wrap( -1 );
-	bSizer43->Add( m_staticText55, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1711->Add( m_staticText55, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_textCtrlTriggerHoldoff = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
-	bSizer43->Add( m_textCtrlTriggerHoldoff, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer1711->Add( m_textCtrlTriggerHoldoff, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer43->Add( bSizer1711, 1, wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_spinBtnTrigHoldoff = new wxSpinButton( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
 	bSizer43->Add( m_spinBtnTrigHoldoff, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_sliderTriggerHoldoff = new wxSlider( m_panel3, wxID_ANY, 0, 0, 400000000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer43->Add( m_sliderTriggerHoldoff, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer43->Add( m_sliderTriggerHoldoff, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer28->Add( bSizer43, 1, wxEXPAND, 5 );
@@ -1274,7 +1298,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel3->SetSizer( bSizer28 );
 	m_panel3->Layout();
 	bSizer28->Fit( m_panel3 );
-	m_notebook3->AddPage( m_panel3, _("Analog"), false );
+	m_notebook3->AddPage( m_panel3, _("Analog"), true );
 	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer78;
 	bSizer78 = new wxBoxSizer( wxVERTICAL );
@@ -1594,7 +1618,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel13->SetSizer( bSizer78 );
 	m_panel13->Layout();
 	bSizer78->Fit( m_panel13 );
-	m_notebook3->AddPage( m_panel13, _("Digital"), true );
+	m_notebook3->AddPage( m_panel13, _("Digital"), false );
 
 	bSizer156->Add( m_notebook3, 8, wxEXPAND | wxALL, 5 );
 
