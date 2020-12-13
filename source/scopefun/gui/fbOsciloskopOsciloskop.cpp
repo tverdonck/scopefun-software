@@ -522,16 +522,6 @@ void OsciloskopOsciloskop::m_checkBox1OnCheckBox( wxCommandEvent& event )
 // TODO: Implement m_checkBox1OnCheckBox
 }
 
-void OsciloskopOsciloskop::m_choiceBit15OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit15OnChoice
-}
-
-void OsciloskopOsciloskop::m_choiceBit13OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit13OnChoice
-}
-
 void OsciloskopOsciloskop::m_choiceBit11OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceBit11OnChoice
@@ -542,14 +532,9 @@ void OsciloskopOsciloskop::m_choiceBit9OnChoice( wxCommandEvent& event )
 // TODO: Implement m_choiceBit9OnChoice
 }
 
-void OsciloskopOsciloskop::m_choiceBit14OnChoice( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_choiceBit7OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceBit14OnChoice
-}
-
-void OsciloskopOsciloskop::m_choiceBit12OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit12OnChoice
+// TODO: Implement m_choiceBit7OnChoice
 }
 
 void OsciloskopOsciloskop::m_choiceBit10OnChoice( wxCommandEvent& event )
@@ -562,6 +547,11 @@ void OsciloskopOsciloskop::m_choiceBit8OnChoice( wxCommandEvent& event )
 // TODO: Implement m_choiceBit8OnChoice
 }
 
+void OsciloskopOsciloskop::m_choiceBit6OnChoice( wxCommandEvent& event )
+{
+// TODO: Implement m_choiceBit6OnChoice
+}
+
 void OsciloskopOsciloskop::m_choiceDS815OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceDS815OnChoice
@@ -570,11 +560,6 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_choiceInputOutputOnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceInputOutputOnChoice
-}
-
-void OsciloskopOsciloskop::m_choiceBit7OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit7OnChoice
 }
 
 void OsciloskopOsciloskop::m_choiceBit5OnChoice( wxCommandEvent& event )
@@ -590,11 +575,6 @@ void OsciloskopOsciloskop::m_choiceBit3OnChoice( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_choiceBit1OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceBit1OnChoice
-}
-
-void OsciloskopOsciloskop::m_choiceBit6OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceBit6OnChoice
 }
 
 void OsciloskopOsciloskop::m_choiceBit4OnChoice( wxCommandEvent& event )

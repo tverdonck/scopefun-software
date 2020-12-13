@@ -440,7 +440,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel15->SetSizer( bSizer14 );
 	m_panel15->Layout();
 	bSizer14->Fit( m_panel15 );
-	m_notebook4->AddPage( m_panel15, _("Channel 1"), false );
+	m_notebook4->AddPage( m_panel15, _("Channel 1"), true );
 	m_panel16 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer141;
 	bSizer141 = new wxBoxSizer( wxVERTICAL );
@@ -737,32 +737,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer157->Add( 0, 0, 1, wxEXPAND, 5 );
 
-	m_staticText89 = new wxStaticText( m_panel91, wxID_ANY, _("15"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText89->Wrap( -1 );
-	bSizer157->Add( m_staticText89, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit15Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit15NChoices = sizeof( m_choiceBit15Choices ) / sizeof( wxString );
-	m_choiceBit15 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit15NChoices, m_choiceBit15Choices, 0 );
-	m_choiceBit15->SetSelection( 0 );
-	bSizer157->Add( m_choiceBit15, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-
-	bSizer157->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText90 = new wxStaticText( m_panel91, wxID_ANY, _("13"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText90->Wrap( -1 );
-	bSizer157->Add( m_staticText90, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit13Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit13NChoices = sizeof( m_choiceBit13Choices ) / sizeof( wxString );
-	m_choiceBit13 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit13NChoices, m_choiceBit13Choices, 0 );
-	m_choiceBit13->SetSelection( 0 );
-	bSizer157->Add( m_choiceBit13, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-
-	bSizer157->Add( 0, 0, 1, wxEXPAND, 5 );
-
 	m_staticText91 = new wxStaticText( m_panel91, wxID_ANY, _("11"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText91->Wrap( -1 );
 	bSizer157->Add( m_staticText91, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
@@ -789,37 +763,24 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer157->Add( 0, 0, 1, wxEXPAND, 5 );
 
+	m_staticText971 = new wxStaticText( m_panel91, wxID_ANY, _("7"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText971->Wrap( -1 );
+	bSizer157->Add( m_staticText971, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxString m_choiceBit7Choices[] = { _("0"), _("1"), _("X") };
+	int m_choiceBit7NChoices = sizeof( m_choiceBit7Choices ) / sizeof( wxString );
+	m_choiceBit7 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit7NChoices, m_choiceBit7Choices, 0 );
+	m_choiceBit7->SetSelection( 0 );
+	bSizer157->Add( m_choiceBit7, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer157->Add( 0, 0, 1, wxEXPAND, 5 );
+
 
 	bSizer166->Add( bSizer157, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxBoxSizer* bSizer158;
 	bSizer158 = new wxBoxSizer( wxHORIZONTAL );
-
-
-	bSizer158->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText93 = new wxStaticText( m_panel91, wxID_ANY, _("14"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText93->Wrap( -1 );
-	bSizer158->Add( m_staticText93, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit14Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit14NChoices = sizeof( m_choiceBit14Choices ) / sizeof( wxString );
-	m_choiceBit14 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit14NChoices, m_choiceBit14Choices, 0 );
-	m_choiceBit14->SetSelection( 0 );
-	bSizer158->Add( m_choiceBit14, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-
-	bSizer158->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText94 = new wxStaticText( m_panel91, wxID_ANY, _("12"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText94->Wrap( -1 );
-	bSizer158->Add( m_staticText94, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit12Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit12NChoices = sizeof( m_choiceBit12Choices ) / sizeof( wxString );
-	m_choiceBit12 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit12NChoices, m_choiceBit12Choices, 0 );
-	m_choiceBit12->SetSelection( 0 );
-	bSizer158->Add( m_choiceBit12, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
 	bSizer158->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -846,6 +807,19 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_choiceBit8 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit8NChoices, m_choiceBit8Choices, 0 );
 	m_choiceBit8->SetSelection( 0 );
 	bSizer158->Add( m_choiceBit8, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer158->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText101 = new wxStaticText( m_panel91, wxID_ANY, _("6"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( -1 );
+	bSizer158->Add( m_staticText101, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	wxString m_choiceBit6Choices[] = { _("0"), _("1"), _("X") };
+	int m_choiceBit6NChoices = sizeof( m_choiceBit6Choices ) / sizeof( wxString );
+	m_choiceBit6 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit6NChoices, m_choiceBit6Choices, 0 );
+	m_choiceBit6->SetSelection( 2 );
+	bSizer158->Add( m_choiceBit6, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
 	bSizer158->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -893,26 +867,49 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer166->Add( bSizer162, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 
 
-	bSizer164->Add( bSizer166, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizer164->Add( bSizer166, 8, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer1691;
+	bSizer1691 = new wxBoxSizer( wxVERTICAL );
+
+	wxBoxSizer* bSizer1701;
+	bSizer1701 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText126 = new wxStaticText( m_panel91, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText126->Wrap( -1 );
+	bSizer1701->Add( m_staticText126, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1691->Add( bSizer1701, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer1712;
+	bSizer1712 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText125 = new wxStaticText( m_panel91, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText125->Wrap( -1 );
+	bSizer1712->Add( m_staticText125, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1691->Add( bSizer1712, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer172;
+	bSizer172 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText128 = new wxStaticText( m_panel91, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText128->Wrap( -1 );
+	bSizer172->Add( m_staticText128, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+
+	bSizer1691->Add( bSizer172, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer164->Add( bSizer1691, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer167;
 	bSizer167 = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* bSizer159;
 	bSizer159 = new wxBoxSizer( wxHORIZONTAL );
-
-
-	bSizer159->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText971 = new wxStaticText( m_panel91, wxID_ANY, _("7"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText971->Wrap( -1 );
-	bSizer159->Add( m_staticText971, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit7Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit7NChoices = sizeof( m_choiceBit7Choices ) / sizeof( wxString );
-	m_choiceBit7 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit7NChoices, m_choiceBit7Choices, 0 );
-	m_choiceBit7->SetSelection( 0 );
-	bSizer159->Add( m_choiceBit7, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
 	bSizer159->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -964,19 +961,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	wxBoxSizer* bSizer160;
 	bSizer160 = new wxBoxSizer( wxHORIZONTAL );
-
-
-	bSizer160->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText101 = new wxStaticText( m_panel91, wxID_ANY, _("6"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText101->Wrap( -1 );
-	bSizer160->Add( m_staticText101, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
-	wxString m_choiceBit6Choices[] = { _("0"), _("1"), _("X") };
-	int m_choiceBit6NChoices = sizeof( m_choiceBit6Choices ) / sizeof( wxString );
-	m_choiceBit6 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceBit6NChoices, m_choiceBit6Choices, 0 );
-	m_choiceBit6->SetSelection( 2 );
-	bSizer160->Add( m_choiceBit6, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
 	bSizer160->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1066,13 +1050,13 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer167->Add( bSizer161, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
-	bSizer164->Add( bSizer167, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizer164->Add( bSizer167, 8, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 
 	m_panel91->SetSizer( bSizer164 );
 	m_panel91->Layout();
 	bSizer164->Fit( m_panel91 );
-	m_notebook4->AddPage( m_panel91, _("Digital Pattern"), true );
+	m_notebook4->AddPage( m_panel91, _("Digital Pattern"), false );
 	m_panel25 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer152;
 	bSizer152 = new wxBoxSizer( wxVERTICAL );
@@ -1771,21 +1755,17 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_checkBox5->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox5OnCheckBox ), NULL, this );
 	m_checkBox3->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox3OnCheckBox ), NULL, this );
 	m_checkBox1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox1OnCheckBox ), NULL, this );
-	m_choiceBit15->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit15OnChoice ), NULL, this );
-	m_choiceBit13->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit13OnChoice ), NULL, this );
 	m_choiceBit11->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit11OnChoice ), NULL, this );
 	m_choiceBit9->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit9OnChoice ), NULL, this );
-	m_choiceBit14->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit14OnChoice ), NULL, this );
-	m_choiceBit12->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit12OnChoice ), NULL, this );
+	m_choiceBit7->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit7OnChoice ), NULL, this );
 	m_choiceBit10->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit10OnChoice ), NULL, this );
 	m_choiceBit8->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit8OnChoice ), NULL, this );
+	m_choiceBit6->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceDS815->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDS815OnChoice ), NULL, this );
 	m_choiceInputOutput->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceInputOutputOnChoice ), NULL, this );
-	m_choiceBit7->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit7OnChoice ), NULL, this );
 	m_choiceBit5->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit5OnChoice ), NULL, this );
 	m_choiceBit3->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit3OnChoice ), NULL, this );
 	m_choiceBit1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit1OnChoice ), NULL, this );
-	m_choiceBit6->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceBit4->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit4OnChoice ), NULL, this );
 	m_choiceBit2->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
 	m_choiceBit0->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit0OnChoice ), NULL, this );
@@ -1983,21 +1963,17 @@ Osciloskop::~Osciloskop()
 	m_checkBox5->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox5OnCheckBox ), NULL, this );
 	m_checkBox3->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox3OnCheckBox ), NULL, this );
 	m_checkBox1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox1OnCheckBox ), NULL, this );
-	m_choiceBit15->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit15OnChoice ), NULL, this );
-	m_choiceBit13->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit13OnChoice ), NULL, this );
 	m_choiceBit11->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit11OnChoice ), NULL, this );
 	m_choiceBit9->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit9OnChoice ), NULL, this );
-	m_choiceBit14->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit14OnChoice ), NULL, this );
-	m_choiceBit12->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit12OnChoice ), NULL, this );
+	m_choiceBit7->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit7OnChoice ), NULL, this );
 	m_choiceBit10->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit10OnChoice ), NULL, this );
 	m_choiceBit8->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit8OnChoice ), NULL, this );
+	m_choiceBit6->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceDS815->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDS815OnChoice ), NULL, this );
 	m_choiceInputOutput->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceInputOutputOnChoice ), NULL, this );
-	m_choiceBit7->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit7OnChoice ), NULL, this );
 	m_choiceBit5->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit5OnChoice ), NULL, this );
 	m_choiceBit3->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit3OnChoice ), NULL, this );
 	m_choiceBit1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit1OnChoice ), NULL, this );
-	m_choiceBit6->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit6OnChoice ), NULL, this );
 	m_choiceBit4->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit4OnChoice ), NULL, this );
 	m_choiceBit2->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit2OnChoice ), NULL, this );
 	m_choiceBit0->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceBit0OnChoice ), NULL, this );

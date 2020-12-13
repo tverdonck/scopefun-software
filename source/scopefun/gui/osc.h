@@ -153,36 +153,31 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBox3;
 		wxCheckBox* m_checkBox1;
 		wxPanel* m_panel91;
-		wxStaticText* m_staticText89;
-		wxChoice* m_choiceBit15;
-		wxStaticText* m_staticText90;
-		wxChoice* m_choiceBit13;
 		wxStaticText* m_staticText91;
 		wxChoice* m_choiceBit11;
 		wxStaticText* m_staticText92;
 		wxChoice* m_choiceBit9;
-		wxStaticText* m_staticText93;
-		wxChoice* m_choiceBit14;
-		wxStaticText* m_staticText94;
-		wxChoice* m_choiceBit12;
+		wxStaticText* m_staticText971;
+		wxChoice* m_choiceBit7;
 		wxStaticText* m_staticText95;
 		wxChoice* m_choiceBit10;
 		wxStaticText* m_staticText96;
 		wxChoice* m_choiceBit8;
+		wxStaticText* m_staticText101;
+		wxChoice* m_choiceBit6;
 		wxStaticText* m_staticText134;
 		wxChoice* m_choiceDS815;
 		wxStaticText* m_staticText1341;
 		wxChoice* m_choiceInputOutput;
-		wxStaticText* m_staticText971;
-		wxChoice* m_choiceBit7;
+		wxStaticText* m_staticText126;
+		wxStaticText* m_staticText125;
+		wxStaticText* m_staticText128;
 		wxStaticText* m_staticText98;
 		wxChoice* m_choiceBit5;
 		wxStaticText* m_staticText99;
 		wxChoice* m_choiceBit3;
 		wxStaticText* m_staticText100;
 		wxChoice* m_choiceBit1;
-		wxStaticText* m_staticText101;
-		wxChoice* m_choiceBit6;
 		wxStaticText* m_staticText102;
 		wxChoice* m_choiceBit4;
 		wxStaticText* m_staticText103;
@@ -374,21 +369,17 @@ class Osciloskop : public wxFrame
 		virtual void m_checkBox5OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox3OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit15OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit13OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit11OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit9OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit14OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit12OnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceBit7OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit10OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit8OnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceBit6OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDS815OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceInputOutputOnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit7OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit5OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit3OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit1OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceBit6OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit4OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit2OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit0OnChoice( wxCommandEvent& event ) { event.Skip(); }

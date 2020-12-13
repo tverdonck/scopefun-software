@@ -1669,20 +1669,6 @@ void OsciloskopOsciloskop::m_checkBox1OnCheckBox(wxCommandEvent& event)
     pOsciloscope->window.digital.digital[0] = m_checkBox1->GetValue();
 }
 
-void OsciloskopOsciloskop::m_choiceBit15OnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.output[15] = m_choiceBit15->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 15, m_choiceBit15->GetSelection());
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_choiceBit13OnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.output[13] = m_choiceBit13->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 13, m_choiceBit13->GetSelection());
-    pOsciloscope->transferData();
-}
-
 void OsciloskopOsciloskop::m_choiceBit11OnChoice(wxCommandEvent& event)
 {
     pOsciloscope->window.digital.output[11] = m_choiceBit11->GetSelection();
@@ -1697,17 +1683,10 @@ void OsciloskopOsciloskop::m_choiceBit9OnChoice(wxCommandEvent& event)
     pOsciloscope->transferData();
 }
 
-void OsciloskopOsciloskop::m_choiceBit14OnChoice(wxCommandEvent& event)
+void OsciloskopOsciloskop::m_choiceBit7OnChoice(wxCommandEvent& event)
 {
-    pOsciloscope->window.digital.output[14] = m_choiceBit14->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 14, m_choiceBit14->GetSelection());
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_choiceBit12OnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.output[12] = m_choiceBit12->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 12, m_choiceBit12->GetSelection());
+    pOsciloscope->window.digital.output[7] = m_choiceBit7->GetSelection();
+    sfSetDigitalOutputBit(getHw(), 7, m_choiceBit7->GetSelection());
     pOsciloscope->transferData();
 }
 
@@ -1725,6 +1704,13 @@ void OsciloskopOsciloskop::m_choiceBit8OnChoice(wxCommandEvent& event)
     pOsciloscope->transferData();
 }
 
+void OsciloskopOsciloskop::m_choiceBit6OnChoice(wxCommandEvent& event)
+{
+    pOsciloscope->window.digital.output[6] = m_choiceBit6->GetSelection();
+    sfSetDigitalOutputBit(getHw(), 6, m_choiceBit6->GetSelection());
+    pOsciloscope->transferData();
+}
+
 void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
 {
     int version = pOsciloscope->thread.getVersion();
@@ -1739,10 +1725,6 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
             m_choiceBit9->SetSelection(0);
             m_choiceBit10->SetSelection(0);
             m_choiceBit11->SetSelection(0);
-            m_choiceBit12->SetSelection(0);
-            m_choiceBit13->SetSelection(0);
-            m_choiceBit14->SetSelection(0);
-            m_choiceBit15->SetSelection(0);
             break;
         case 2:
             m_choiceBit6->SetSelection(1);
@@ -1751,10 +1733,6 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
             m_choiceBit9->SetSelection(1);
             m_choiceBit10->SetSelection(1);
             m_choiceBit11->SetSelection(1);
-            m_choiceBit12->SetSelection(1);
-            m_choiceBit13->SetSelection(1);
-            m_choiceBit14->SetSelection(1);
-            m_choiceBit15->SetSelection(1);
             break;
     };
     sfSetDigitalOutputBit(getHw(), 6, m_choiceBit6->GetSelection());
@@ -1763,10 +1741,6 @@ void OsciloskopOsciloskop::m_choiceDS815OnChoice(wxCommandEvent& event)
     sfSetDigitalOutputBit(getHw(), 9,  m_choiceBit9->GetSelection());
     sfSetDigitalOutputBit(getHw(), 10, m_choiceBit10->GetSelection());
     sfSetDigitalOutputBit(getHw(), 11, m_choiceBit11->GetSelection());
-    sfSetDigitalOutputBit(getHw(), 12, m_choiceBit12->GetSelection());
-    sfSetDigitalOutputBit(getHw(), 13, m_choiceBit13->GetSelection());
-    sfSetDigitalOutputBit(getHw(), 14, m_choiceBit14->GetSelection());
-    sfSetDigitalOutputBit(getHw(), 15, m_choiceBit15->GetSelection());
     pOsciloscope->transferData();
 }
 
@@ -1797,13 +1771,6 @@ void OsciloskopOsciloskop::m_choiceInputOutputOnChoice(wxCommandEvent& event)
     }
 }
 
-void OsciloskopOsciloskop::m_choiceBit7OnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.output[7] = m_choiceBit7->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 7, m_choiceBit7->GetSelection());
-    pOsciloscope->transferData();
-}
-
 void OsciloskopOsciloskop::m_choiceBit5OnChoice(wxCommandEvent& event)
 {
     pOsciloscope->window.digital.output[5] = m_choiceBit5->GetSelection();
@@ -1822,13 +1789,6 @@ void OsciloskopOsciloskop::m_choiceBit1OnChoice(wxCommandEvent& event)
 {
     pOsciloscope->window.digital.output[1] = m_choiceBit1->GetSelection();
     sfSetDigitalOutputBit(getHw(), 1, m_choiceBit1->GetSelection());
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_choiceBit6OnChoice(wxCommandEvent& event)
-{
-    pOsciloscope->window.digital.output[6] = m_choiceBit6->GetSelection();
-    sfSetDigitalOutputBit(getHw(), 6, m_choiceBit6->GetSelection());
     pOsciloscope->transferData();
 }
 

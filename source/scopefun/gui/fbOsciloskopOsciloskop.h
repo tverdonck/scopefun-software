@@ -196,6 +196,7 @@ class OsciloskopOsciloskop : public Osciloskop
 
 
 
+
 };
 
 #endif // __fbOsciloskopOsciloskop__

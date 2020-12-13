@@ -396,10 +396,6 @@ OsciloskopOsciloskop::~OsciloskopOsciloskop()
 
 void OsciloskopOsciloskop::SetDigital13To16(bool enable)
 {
-    m_choiceBit12->Enable(enable);
-    m_choiceBit13->Enable(enable);
-    m_choiceBit14->Enable(enable);
-    m_choiceBit15->Enable(enable);
 }
 
 void OsciloskopOsciloskop::SaveOldSlotLoadNewSlot(int newSlot)
@@ -566,10 +562,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_choiceBit9->SetSelection(window.digital.output[9]);
     m_choiceBit10->SetSelection(window.digital.output[10]);
     m_choiceBit11->SetSelection(window.digital.output[11]);
-    m_choiceBit12->SetSelection(window.digital.output[12]);
-    m_choiceBit13->SetSelection(window.digital.output[13]);
-    m_choiceBit14->SetSelection(window.digital.output[14]);
-    m_choiceBit15->SetSelection(window.digital.output[15]);
     ////////////////////////////////////////////////////////////////////////////////////////
     // digital setup
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -583,25 +575,21 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_choiceInputOutput->SetSelection(window.digitalSetup.inputOutput15);
     if(m_choiceInputOutput->GetSelection() == 1)
     {
+        m_choiceBit6->Disable();
+        m_choiceBit7->Disable();
         m_choiceBit8->Disable();
         m_choiceBit9->Disable();
         m_choiceBit10->Disable();
         m_choiceBit11->Disable();
-        m_choiceBit12->Disable();
-        m_choiceBit13->Disable();
-        m_choiceBit14->Disable();
-        m_choiceBit15->Disable();
     }
     else
     {
+        m_choiceBit6->Enable();
+        m_choiceBit7->Enable();
         m_choiceBit8->Enable();
         m_choiceBit9->Enable();
         m_choiceBit10->Enable();
         m_choiceBit11->Enable();
-        m_choiceBit12->Enable();
-        m_choiceBit13->Enable();
-        m_choiceBit14->Enable();
-        m_choiceBit15->Enable();
     }
     // inputOutput7
     m_choiceInputOutput1->SetSelection(window.digitalSetup.inputOutput7);
@@ -613,8 +601,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
         m_choiceBit3->Disable();
         m_choiceBit4->Disable();
         m_choiceBit5->Disable();
-        m_choiceBit6->Disable();
-        m_choiceBit7->Disable();
     }
     else
     {
@@ -624,8 +610,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
         m_choiceBit3->Enable();
         m_choiceBit4->Enable();
         m_choiceBit5->Enable();
-        m_choiceBit6->Enable();
-        m_choiceBit7->Enable();
     }
     ////////////////////////////////////////////////////////////////////////////////////////
     // function
