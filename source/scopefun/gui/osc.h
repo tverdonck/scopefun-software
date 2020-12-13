@@ -24,12 +24,12 @@
 #include <wx/stattext.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
+#include <wx/panel.h>
 #include <wx/textctrl.h>
 #include <wx/spinbutt.h>
 #include <wx/slider.h>
-#include <wx/panel.h>
-#include <wx/filepicker.h>
 #include <wx/notebook.h>
+#include <wx/filepicker.h>
 #include <wx/radiobut.h>
 #include <wx/frame.h>
 #include <wx/dialog.h>
@@ -59,6 +59,7 @@ class Osciloskop : public wxFrame
 		wxMenu* m_menu5;
 		wxMenu* m_menu8;
 		wxMenu* m_menu7;
+		wxPanel* m_panel26;
 		wxCheckBox* m_checkBox26;
 		wxButton* m_buttonConnect;
 		wxButton* m_buttonDisconnect;
@@ -66,6 +67,8 @@ class Osciloskop : public wxFrame
 		wxButton* m_buttonRedo;
 		wxStaticText* m_staticText19;
 		wxChoice* m_comboBoxTimeControl;
+		wxNotebook* m_notebook7;
+		wxPanel* m_panel251;
 		wxStaticText* m_staticText141;
 		wxChoice* m_comboBoxTimeCapture;
 		wxCheckBox* m_checkBoxETS;
