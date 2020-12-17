@@ -3709,7 +3709,10 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
             case SIGNAL_MODE_SIMULATE:
             case SIGNAL_MODE_CAPTURE:
                 {
-                    DisplayFrame(frameIndex - 1, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+                    if( pCaptureData->m_window.horizontal.Full )
+                       DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+                    else
+                       DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
                 }
                 break;
             case SIGNAL_MODE_PAUSE:

@@ -20,7 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #define EXE_VERSION_MAJOR       "2"
-#define EXE_VERSION_MINOR       "0"
+#define EXE_VERSION_MINOR       "1"
 #define EXE_VERSION_MICRO       "0"
-#define EXE_VERSION_TIMESTAMP   "00:46 01-05-2020"
-#define EXE_VERSION_TYPE        "release"
+#define EXE_VERSION_TIMESTAMP   "00:41 14-12-2020"
+#define EXE_VERSION_TYPE        "not for public release"

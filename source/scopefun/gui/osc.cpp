@@ -357,7 +357,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	int m_comboBoxCh0CaptureNChoices = sizeof( m_comboBoxCh0CaptureChoices ) / sizeof( wxString );
 	m_comboBoxCh0Capture = new wxChoice( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxCh0CaptureNChoices, m_comboBoxCh0CaptureChoices, 0 );
 	m_comboBoxCh0Capture->SetSelection( 1 );
-	bSizer15->Add( m_comboBoxCh0Capture, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer15->Add( m_comboBoxCh0Capture, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticTextCh0Scale = new wxStaticText( m_panel15, wxID_ANY, _("Scale:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextCh0Scale->Wrap( -1 );
@@ -372,22 +372,22 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer15->Add( m_textCtrlCh0Scale, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxCh0Invert = new wxCheckBox( m_panel15, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer15->Add( m_checkBoxCh0Invert, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_checkBoxCh0Ground = new wxCheckBox( m_panel15, wxID_ANY, _("Ground"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer15->Add( m_checkBoxCh0Ground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
 	wxString m_choiceCh0ACDCChoices[] = { _("AC"), _("DC") };
 	int m_choiceCh0ACDCNChoices = sizeof( m_choiceCh0ACDCChoices ) / sizeof( wxString );
 	m_choiceCh0ACDC = new wxChoice( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceCh0ACDCNChoices, m_choiceCh0ACDCChoices, 0 );
 	m_choiceCh0ACDC->SetSelection( 0 );
 	bSizer15->Add( m_choiceCh0ACDC, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxSignal1 = new wxCheckBox( m_panel15, wxID_ANY, _("Display Signal"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxCh0Invert = new wxCheckBox( m_panel15, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_checkBoxCh0Invert, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_checkBoxCh0Ground = new wxCheckBox( m_panel15, wxID_ANY, _("Ground"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( m_checkBoxCh0Ground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_checkBoxSignal1 = new wxCheckBox( m_panel15, wxID_ANY, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer15->Add( m_checkBoxSignal1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxFFT1 = new wxCheckBox( m_panel15, wxID_ANY, _("Display FFT"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxFFT1 = new wxCheckBox( m_panel15, wxID_ANY, _("FFT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer15->Add( m_checkBoxFFT1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_checkBoxAvg01 = new wxCheckBox( m_panel15, wxID_ANY, _("Average"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -450,22 +450,22 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	bSizer151->Add( m_textCtrlCh1Scale, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxCh1Invert = new wxCheckBox( m_panel16, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer151->Add( m_checkBoxCh1Invert, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_checkBoxCh1Ground = new wxCheckBox( m_panel16, wxID_ANY, _("Ground"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer151->Add( m_checkBoxCh1Ground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
 	wxString m_choiceCh1ACDCChoices[] = { _("AC"), _("DC") };
 	int m_choiceCh1ACDCNChoices = sizeof( m_choiceCh1ACDCChoices ) / sizeof( wxString );
 	m_choiceCh1ACDC = new wxChoice( m_panel16, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceCh1ACDCNChoices, m_choiceCh1ACDCChoices, 0 );
 	m_choiceCh1ACDC->SetSelection( 0 );
 	bSizer151->Add( m_choiceCh1ACDC, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxSignal2 = new wxCheckBox( m_panel16, wxID_ANY, _("Display Signal"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxCh1Invert = new wxCheckBox( m_panel16, wxID_ANY, _("Invert"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer151->Add( m_checkBoxCh1Invert, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_checkBoxCh1Ground = new wxCheckBox( m_panel16, wxID_ANY, _("Ground"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer151->Add( m_checkBoxCh1Ground, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_checkBoxSignal2 = new wxCheckBox( m_panel16, wxID_ANY, _("Signal"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer151->Add( m_checkBoxSignal2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_checkBoxFFT2 = new wxCheckBox( m_panel16, wxID_ANY, _("Display FFT"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxFFT2 = new wxCheckBox( m_panel16, wxID_ANY, _("FFT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer151->Add( m_checkBoxFFT2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_checkBoxAvg02 = new wxCheckBox( m_panel16, wxID_ANY, _("Average"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1037,8 +1037,59 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 
 	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_FIXEDWIDTH );
 	m_panel3 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer28;
-	bSizer28 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* bSizer1721;
+	bSizer1721 = new wxBoxSizer( wxHORIZONTAL );
+
+	wxGridSizer* gSizer71;
+	gSizer71 = new wxGridSizer( 4, 2, 0, 0 );
+
+	m_staticText47 = new wxStaticText( m_panel3, wxID_ANY, _("Mode:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_staticText47->Wrap( -1 );
+	gSizer71->Add( m_staticText47, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+
+	wxString m_comboBoxTriggerChoices[] = { _("Auto"), _("Normal"), _("Single"), _("Immediate") };
+	int m_comboBoxTriggerNChoices = sizeof( m_comboBoxTriggerChoices ) / sizeof( wxString );
+	m_comboBoxTrigger = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerNChoices, m_comboBoxTriggerChoices, 0 );
+	m_comboBoxTrigger->SetSelection( 2 );
+	gSizer71->Add( m_comboBoxTrigger, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_staticText45 = new wxStaticText( m_panel3, wxID_ANY, _("Source:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_staticText45->Wrap( -1 );
+	gSizer71->Add( m_staticText45, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+
+	wxString m_comboBoxTriggerSourceChoices[] = { _("Channel 1"), _("Channel 2"), _("AWG 1"), _("AWG 2"), _("External") };
+	int m_comboBoxTriggerSourceNChoices = sizeof( m_comboBoxTriggerSourceChoices ) / sizeof( wxString );
+	m_comboBoxTriggerSource = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSourceNChoices, m_comboBoxTriggerSourceChoices, 0 );
+	m_comboBoxTriggerSource->SetSelection( 4 );
+	gSizer71->Add( m_comboBoxTriggerSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_staticText46 = new wxStaticText( m_panel3, wxID_ANY, _("Slope:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText46->Wrap( -1 );
+	gSizer71->Add( m_staticText46, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+
+	wxString m_comboBoxTriggerSlopeChoices[] = { _("Rising"), _("Falling"), _("Both") };
+	int m_comboBoxTriggerSlopeNChoices = sizeof( m_comboBoxTriggerSlopeChoices ) / sizeof( wxString );
+	m_comboBoxTriggerSlope = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSlopeNChoices, m_comboBoxTriggerSlopeChoices, 0 );
+	m_comboBoxTriggerSlope->SetSelection( 0 );
+	gSizer71->Add( m_comboBoxTriggerSlope, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_buttonReArm = new wxButton( m_panel3, wxID_ANY, _("Re-Arm"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer71->Add( m_buttonReArm, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_radioBtnTriggered = new wxRadioButton( m_panel3, wxID_ANY, _("Triggered"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_radioBtnTriggered->SetForegroundColour( wxColour( 0, 0, 0 ) );
+	m_radioBtnTriggered->SetBackgroundColour( wxColour( 255, 255, 255 ) );
+
+	gSizer71->Add( m_radioBtnTriggered, 0, wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer1721->Add( gSizer71, 0, wxEXPAND, 5 );
+
+	m_staticline11 = new wxStaticLine( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer1721->Add( m_staticline11, 0, wxALL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer1741;
+	bSizer1741 = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxHORIZONTAL );
@@ -1063,7 +1114,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer32->Add( m_sliderTriggerLevel, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer28->Add( bSizer32, 1, wxEXPAND, 5 );
+	bSizer1741->Add( bSizer32, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer321;
 	bSizer321 = new wxBoxSizer( wxHORIZONTAL );
@@ -1088,7 +1139,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer321->Add( m_sliderTriggerHisteresis, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer28->Add( bSizer321, 1, wxEXPAND, 5 );
+	bSizer1741->Add( bSizer321, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer322;
 	bSizer322 = new wxBoxSizer( wxHORIZONTAL );
@@ -1113,7 +1164,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer322->Add( m_sliderTriggerPre, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer28->Add( bSizer322, 1, wxEXPAND, 5 );
+	bSizer1741->Add( bSizer322, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer43;
 	bSizer43 = new wxBoxSizer( wxHORIZONTAL );
@@ -1138,16 +1189,25 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer43->Add( m_sliderTriggerHoldoff, 12, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer28->Add( bSizer43, 1, wxEXPAND, 5 );
+	bSizer1741->Add( bSizer43, 1, wxEXPAND, 5 );
 
 
-	m_panel3->SetSizer( bSizer28 );
+	bSizer1721->Add( bSizer1741, 1, wxEXPAND, 5 );
+
+
+	m_panel3->SetSizer( bSizer1721 );
 	m_panel3->Layout();
-	bSizer28->Fit( m_panel3 );
+	bSizer1721->Fit( m_panel3 );
 	m_notebook3->AddPage( m_panel3, _("Analog"), false );
 	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer78;
-	bSizer78 = new wxBoxSizer( wxVERTICAL );
+	bSizer78 = new wxBoxSizer( wxHORIZONTAL );
+
+	wxBoxSizer* bSizer1752;
+	bSizer1752 = new wxBoxSizer( wxHORIZONTAL );
+
+	wxBoxSizer* bSizer1761;
+	bSizer1761 = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* bSizer1672;
 	bSizer1672 = new wxBoxSizer( wxHORIZONTAL );
@@ -1173,7 +1233,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer1672->Add( m_staticText1241, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer78->Add( bSizer1672, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer1761->Add( bSizer1672, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxBoxSizer* bSizer79;
 	bSizer79 = new wxBoxSizer( wxHORIZONTAL );
@@ -1404,129 +1464,81 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer79->Add( bSizer811, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer78->Add( bSizer79, 4, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer1761->Add( bSizer79, 4, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer1752->Add( bSizer1761, 1, wxEXPAND, 5 );
+
+
+	bSizer78->Add( bSizer1752, 1, wxEXPAND, 5 );
 
 
 	m_panel13->SetSizer( bSizer78 );
 	m_panel13->Layout();
 	bSizer78->Fit( m_panel13 );
 	m_notebook3->AddPage( m_panel13, _("Digital"), false );
-	m_panel29 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer80;
-	bSizer80 = new wxBoxSizer( wxVERTICAL );
+	m_panel27 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer1731;
+	bSizer1731 = new wxBoxSizer( wxHORIZONTAL );
 
 	wxGridSizer* gSizer81;
-	gSizer81 = new wxGridSizer( 5, 2, 0, 0 );
+	gSizer81 = new wxGridSizer( 2, 6, 0, 0 );
 
-	m_staticText63 = new wxStaticText( m_panel29, wxID_ANY, _("Stage:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText63 = new wxStaticText( m_panel27, wxID_ANY, _("Stage:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText63->Wrap( -1 );
-	gSizer81->Add( m_staticText63, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	gSizer81->Add( m_staticText63, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxString m_comboBoxDigitalStageChoices[] = { _("1"), _("2"), _("3"), _("4") };
 	int m_comboBoxDigitalStageNChoices = sizeof( m_comboBoxDigitalStageChoices ) / sizeof( wxString );
-	m_comboBoxDigitalStage = new wxChoice( m_panel29, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalStageNChoices, m_comboBoxDigitalStageChoices, 0 );
+	m_comboBoxDigitalStage = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalStageNChoices, m_comboBoxDigitalStageChoices, 0 );
 	m_comboBoxDigitalStage->SetSelection( 0 );
-	gSizer81->Add( m_comboBoxDigitalStage, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	gSizer81->Add( m_comboBoxDigitalStage, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText64 = new wxStaticText( m_panel29, wxID_ANY, _("Delay:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText64 = new wxStaticText( m_panel27, wxID_ANY, _("Delay:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText64->Wrap( -1 );
-	gSizer81->Add( m_staticText64, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	gSizer81->Add( m_staticText64, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_textCtrDigitallDelay = new wxTextCtrl( m_panel29, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
-	gSizer81->Add( m_textCtrDigitallDelay, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_textCtrDigitallDelay = new wxTextCtrl( m_panel27, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
+	gSizer81->Add( m_textCtrDigitallDelay, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText65 = new wxStaticText( m_panel29, wxID_ANY, _("Stage Start:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText65 = new wxStaticText( m_panel27, wxID_ANY, _("Stage Start:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText65->Wrap( -1 );
-	gSizer81->Add( m_staticText65, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	gSizer81->Add( m_staticText65, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxString m_comboBoxDigitalStageStartChoices[] = { _("1"), _("2"), _("3"), _("4") };
 	int m_comboBoxDigitalStageStartNChoices = sizeof( m_comboBoxDigitalStageStartChoices ) / sizeof( wxString );
-	m_comboBoxDigitalStageStart = new wxChoice( m_panel29, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalStageStartNChoices, m_comboBoxDigitalStageStartChoices, 0 );
+	m_comboBoxDigitalStageStart = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalStageStartNChoices, m_comboBoxDigitalStageStartChoices, 0 );
 	m_comboBoxDigitalStageStart->SetSelection( 0 );
-	gSizer81->Add( m_comboBoxDigitalStageStart, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	gSizer81->Add( m_comboBoxDigitalStageStart, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText66 = new wxStaticText( m_panel29, wxID_ANY, _("Mode:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText66 = new wxStaticText( m_panel27, wxID_ANY, _("Mode:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText66->Wrap( -1 );
-	gSizer81->Add( m_staticText66, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
+	gSizer81->Add( m_staticText66, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxString m_comboBoxDigitalModeChoices[] = { _("Parallel"), _("Serial") };
 	int m_comboBoxDigitalModeNChoices = sizeof( m_comboBoxDigitalModeChoices ) / sizeof( wxString );
-	m_comboBoxDigitalMode = new wxChoice( m_panel29, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalModeNChoices, m_comboBoxDigitalModeChoices, 0 );
+	m_comboBoxDigitalMode = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalModeNChoices, m_comboBoxDigitalModeChoices, 0 );
 	m_comboBoxDigitalMode->SetSelection( 0 );
-	gSizer81->Add( m_comboBoxDigitalMode, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	gSizer81->Add( m_comboBoxDigitalMode, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText68 = new wxStaticText( m_panel29, wxID_ANY, _("Serial Channel:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText68 = new wxStaticText( m_panel27, wxID_ANY, _("Serial Channel:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText68->Wrap( -1 );
-	gSizer81->Add( m_staticText68, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	gSizer81->Add( m_staticText68, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxString m_comboBoxDigitalSerialChannelChoices[] = { _("0"), _("1"), _("2"), _("3"), _("4"), _("5"), _("6"), _("7"), _("8"), _("9"), _("10"), _("11"), _("12"), _("13"), _("14"), _("15") };
 	int m_comboBoxDigitalSerialChannelNChoices = sizeof( m_comboBoxDigitalSerialChannelChoices ) / sizeof( wxString );
-	m_comboBoxDigitalSerialChannel = new wxChoice( m_panel29, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalSerialChannelNChoices, m_comboBoxDigitalSerialChannelChoices, 0 );
+	m_comboBoxDigitalSerialChannel = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxDigitalSerialChannelNChoices, m_comboBoxDigitalSerialChannelChoices, 0 );
 	m_comboBoxDigitalSerialChannel->SetSelection( 0 );
-	gSizer81->Add( m_comboBoxDigitalSerialChannel, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	gSizer81->Add( m_comboBoxDigitalSerialChannel, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 
-	bSizer80->Add( gSizer81, 1, 0, 5 );
+	bSizer1731->Add( gSizer81, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 
-	m_panel29->SetSizer( bSizer80 );
-	m_panel29->Layout();
-	bSizer80->Fit( m_panel29 );
-	m_notebook3->AddPage( m_panel29, _("Stage"), false );
-	m_panel27 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer175;
-	bSizer175 = new wxBoxSizer( wxVERTICAL );
-
-	wxGridSizer* gSizer71;
-	gSizer71 = new wxGridSizer( 4, 2, 0, 0 );
-
-	m_staticText47 = new wxStaticText( m_panel27, wxID_ANY, _("Mode:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	m_staticText47->Wrap( -1 );
-	gSizer71->Add( m_staticText47, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
-
-	wxString m_comboBoxTriggerChoices[] = { _("Auto"), _("Normal"), _("Single"), _("Immediate") };
-	int m_comboBoxTriggerNChoices = sizeof( m_comboBoxTriggerChoices ) / sizeof( wxString );
-	m_comboBoxTrigger = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerNChoices, m_comboBoxTriggerChoices, 0 );
-	m_comboBoxTrigger->SetSelection( 2 );
-	gSizer71->Add( m_comboBoxTrigger, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_staticText45 = new wxStaticText( m_panel27, wxID_ANY, _("Source:"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	m_staticText45->Wrap( -1 );
-	gSizer71->Add( m_staticText45, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
-
-	wxString m_comboBoxTriggerSourceChoices[] = { _("Channel 1"), _("Channel 2"), _("AWG 1"), _("AWG 2"), _("External") };
-	int m_comboBoxTriggerSourceNChoices = sizeof( m_comboBoxTriggerSourceChoices ) / sizeof( wxString );
-	m_comboBoxTriggerSource = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSourceNChoices, m_comboBoxTriggerSourceChoices, 0 );
-	m_comboBoxTriggerSource->SetSelection( 4 );
-	gSizer71->Add( m_comboBoxTriggerSource, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_staticText46 = new wxStaticText( m_panel27, wxID_ANY, _("Slope:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText46->Wrap( -1 );
-	gSizer71->Add( m_staticText46, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
-
-	wxString m_comboBoxTriggerSlopeChoices[] = { _("Rising"), _("Falling"), _("Both") };
-	int m_comboBoxTriggerSlopeNChoices = sizeof( m_comboBoxTriggerSlopeChoices ) / sizeof( wxString );
-	m_comboBoxTriggerSlope = new wxChoice( m_panel27, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxTriggerSlopeNChoices, m_comboBoxTriggerSlopeChoices, 0 );
-	m_comboBoxTriggerSlope->SetSelection( 0 );
-	gSizer71->Add( m_comboBoxTriggerSlope, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_radioBtnTriggered = new wxRadioButton( m_panel27, wxID_ANY, _("Triggered"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_radioBtnTriggered->SetForegroundColour( wxColour( 0, 0, 0 ) );
-	m_radioBtnTriggered->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-
-	gSizer71->Add( m_radioBtnTriggered, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
-
-	m_buttonReArm = new wxButton( m_panel27, wxID_ANY, _("Re-Arm"), wxDefaultPosition, wxDefaultSize, 0 );
-	gSizer71->Add( m_buttonReArm, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-
-	bSizer175->Add( gSizer71, 1, 0, 5 );
-
-
-	m_panel27->SetSizer( bSizer175 );
+	m_panel27->SetSizer( bSizer1731 );
 	m_panel27->Layout();
-	bSizer175->Fit( m_panel27 );
-	m_notebook3->AddPage( m_panel27, _("Trigger"), true );
+	bSizer1731->Fit( m_panel27 );
+	m_notebook3->AddPage( m_panel27, _("Stage"), true );
 
 	bSizer156->Add( m_notebook3, 8, wxEXPAND | wxALL, 5 );
 
@@ -1615,9 +1627,9 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_textCtrlTimeFFTSize->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlTimeFFTSizeOnTextEnter ), NULL, this );
 	m_comboBoxCh0Capture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh0CaptureOnCombobox ), NULL, this );
 	m_textCtrlCh0Scale->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh0ScaleOnTextEnter ), NULL, this );
+	m_choiceCh0ACDC->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh0ACDCOnChoice ), NULL, this );
 	m_checkBoxCh0Invert->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh0InvertOnCheckBox ), NULL, this );
 	m_checkBoxCh0Ground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh0GroundOnCheckBox ), NULL, this );
-	m_choiceCh0ACDC->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh0ACDCOnChoice ), NULL, this );
 	m_checkBoxSignal1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal1OnCheckBox ), NULL, this );
 	m_checkBoxFFT1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT1OnCheckBox ), NULL, this );
 	m_checkBoxAvg01->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg01OnCheckBox ), NULL, this );
@@ -1635,9 +1647,9 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_sliderCh0Position->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( Osciloskop::m_sliderCh0PositionOnScroll ), NULL, this );
 	m_comboBoxCh1Capture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh1CaptureOnCombobox ), NULL, this );
 	m_textCtrlCh1Scale->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh1ScaleOnTextEnter ), NULL, this );
+	m_choiceCh1ACDC->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh1ACDCOnChoice ), NULL, this );
 	m_checkBoxCh1Invert->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh1InvertOnCheckBox ), NULL, this );
 	m_checkBoxCh1Ground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh1GroundOnCheckBox ), NULL, this );
-	m_choiceCh1ACDC->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh1ACDCOnChoice ), NULL, this );
 	m_checkBoxSignal2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal2OnCheckBox ), NULL, this );
 	m_checkBoxFFT2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT2OnCheckBox ), NULL, this );
 	m_checkBoxAvg02->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg02OnCheckBox ), NULL, this );
@@ -1694,6 +1706,10 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_spinBtnDigVoltage->Connect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnDigVoltageOnSpinDown ), NULL, this );
 	m_spinBtnDigVoltage->Connect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnDigVoltageOnSpinUp ), NULL, this );
 	m_textCtrlFreqDivider->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlFreqDividerOnTextEnter ), NULL, this );
+	m_comboBoxTrigger->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerOnCombobox ), NULL, this );
+	m_comboBoxTriggerSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSourceOnCombobox ), NULL, this );
+	m_comboBoxTriggerSlope->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSlopeOnCombobox ), NULL, this );
+	m_buttonReArm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonReArmOnButtonClick ), NULL, this );
 	m_textCtrlTriggerLevel->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlTriggerLevelOnTextEnter ), NULL, this );
 	m_spinBtnTrigLevel->Connect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnTrigLevelOnSpinDown ), NULL, this );
 	m_spinBtnTrigLevel->Connect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnTrigLevelOnSpinUp ), NULL, this );
@@ -1761,10 +1777,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_comboBoxDigitalStageStart->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalStageStartOnCombobox ), NULL, this );
 	m_comboBoxDigitalMode->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalModeOnCombobox ), NULL, this );
 	m_comboBoxDigitalSerialChannel->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalSerialChannelOnCombobox ), NULL, this );
-	m_comboBoxTrigger->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerOnCombobox ), NULL, this );
-	m_comboBoxTriggerSource->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSourceOnCombobox ), NULL, this );
-	m_comboBoxTriggerSlope->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSlopeOnCombobox ), NULL, this );
-	m_buttonReArm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonReArmOnButtonClick ), NULL, this );
 }
 
 Osciloskop::~Osciloskop()
@@ -1817,9 +1829,9 @@ Osciloskop::~Osciloskop()
 	m_textCtrlTimeFFTSize->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlTimeFFTSizeOnTextEnter ), NULL, this );
 	m_comboBoxCh0Capture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh0CaptureOnCombobox ), NULL, this );
 	m_textCtrlCh0Scale->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh0ScaleOnTextEnter ), NULL, this );
+	m_choiceCh0ACDC->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh0ACDCOnChoice ), NULL, this );
 	m_checkBoxCh0Invert->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh0InvertOnCheckBox ), NULL, this );
 	m_checkBoxCh0Ground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh0GroundOnCheckBox ), NULL, this );
-	m_choiceCh0ACDC->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh0ACDCOnChoice ), NULL, this );
 	m_checkBoxSignal1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal1OnCheckBox ), NULL, this );
 	m_checkBoxFFT1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT1OnCheckBox ), NULL, this );
 	m_checkBoxAvg01->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg01OnCheckBox ), NULL, this );
@@ -1837,9 +1849,9 @@ Osciloskop::~Osciloskop()
 	m_sliderCh0Position->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( Osciloskop::m_sliderCh0PositionOnScroll ), NULL, this );
 	m_comboBoxCh1Capture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxCh1CaptureOnCombobox ), NULL, this );
 	m_textCtrlCh1Scale->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlCh1ScaleOnTextEnter ), NULL, this );
+	m_choiceCh1ACDC->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh1ACDCOnChoice ), NULL, this );
 	m_checkBoxCh1Invert->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh1InvertOnCheckBox ), NULL, this );
 	m_checkBoxCh1Ground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxCh1GroundOnCheckBox ), NULL, this );
-	m_choiceCh1ACDC->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceCh1ACDCOnChoice ), NULL, this );
 	m_checkBoxSignal2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignal2OnCheckBox ), NULL, this );
 	m_checkBoxFFT2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFT2OnCheckBox ), NULL, this );
 	m_checkBoxAvg02->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxAvg02OnCheckBox ), NULL, this );
@@ -1896,6 +1908,10 @@ Osciloskop::~Osciloskop()
 	m_spinBtnDigVoltage->Disconnect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnDigVoltageOnSpinDown ), NULL, this );
 	m_spinBtnDigVoltage->Disconnect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnDigVoltageOnSpinUp ), NULL, this );
 	m_textCtrlFreqDivider->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlFreqDividerOnTextEnter ), NULL, this );
+	m_comboBoxTrigger->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerOnCombobox ), NULL, this );
+	m_comboBoxTriggerSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSourceOnCombobox ), NULL, this );
+	m_comboBoxTriggerSlope->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSlopeOnCombobox ), NULL, this );
+	m_buttonReArm->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonReArmOnButtonClick ), NULL, this );
 	m_textCtrlTriggerLevel->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlTriggerLevelOnTextEnter ), NULL, this );
 	m_spinBtnTrigLevel->Disconnect( wxEVT_SCROLL_LINEDOWN, wxSpinEventHandler( Osciloskop::m_spinBtnTrigLevelOnSpinDown ), NULL, this );
 	m_spinBtnTrigLevel->Disconnect( wxEVT_SCROLL_LINEUP, wxSpinEventHandler( Osciloskop::m_spinBtnTrigLevelOnSpinUp ), NULL, this );
@@ -1963,10 +1979,6 @@ Osciloskop::~Osciloskop()
 	m_comboBoxDigitalStageStart->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalStageStartOnCombobox ), NULL, this );
 	m_comboBoxDigitalMode->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalModeOnCombobox ), NULL, this );
 	m_comboBoxDigitalSerialChannel->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxDigitalSerialChannelOnCombobox ), NULL, this );
-	m_comboBoxTrigger->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerOnCombobox ), NULL, this );
-	m_comboBoxTriggerSource->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSourceOnCombobox ), NULL, this );
-	m_comboBoxTriggerSlope->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_comboBoxTriggerSlopeOnCombobox ), NULL, this );
-	m_buttonReArm->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Osciloskop::m_buttonReArmOnButtonClick ), NULL, this );
 
 }
 
@@ -4042,7 +4054,7 @@ Info::Info( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_panel11->SetSizer( bSizer102 );
 	m_panel11->Layout();
 	bSizer102->Fit( m_panel11 );
-	m_notebook5->AddPage( m_panel11, _("License"), false );
+	m_notebook5->AddPage( m_panel11, _("License"), true );
 	m_panel12 = new wxPanel( m_notebook5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer101;
 	bSizer101 = new wxBoxSizer( wxVERTICAL );
@@ -4075,7 +4087,7 @@ Info::Info( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_panel22->SetSizer( bSizer1031 );
 	m_panel22->Layout();
 	bSizer1031->Fit( m_panel22 );
-	m_notebook7->AddPage( m_panel22, _("GLEW"), true );
+	m_notebook7->AddPage( m_panel22, _("GLEW"), false );
 	m_panel23 = new wxPanel( m_notebook7, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer10311;
 	bSizer10311 = new wxBoxSizer( wxVERTICAL );
@@ -4159,7 +4171,7 @@ Info::Info( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_panel28->SetSizer( bSizer158 );
 	m_panel28->Layout();
 	bSizer158->Fit( m_panel28 );
-	m_notebook7->AddPage( m_panel28, _("Python"), false );
+	m_notebook7->AddPage( m_panel28, _("Lua"), true );
 
 	bSizer103->Add( m_notebook7, 8, wxALL|wxEXPAND, 5 );
 
@@ -4167,7 +4179,7 @@ Info::Info( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_panel13->SetSizer( bSizer103 );
 	m_panel13->Layout();
 	bSizer103->Fit( m_panel13 );
-	m_notebook5->AddPage( m_panel13, _("Documentation"), true );
+	m_notebook5->AddPage( m_panel13, _("Documentation"), false );
 	m_panel17 = new wxPanel( m_notebook5, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer1021;
 	bSizer1021 = new wxBoxSizer( wxVERTICAL );

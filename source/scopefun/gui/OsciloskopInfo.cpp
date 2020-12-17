@@ -60,7 +60,7 @@ void OsciloskopInfo::ThermalOnActivate(wxActivateEvent& event)
     m_textCtrlDateTime->Clear();
     m_textCtrlDateTime->AppendText(wxT(EXE_VERSION_TIMESTAMP));
     wxBitmap bm;
-    bm.LoadFile(pFormat->fixPath("data/icon/icon512.bmp"), wxBITMAP_TYPE_BMP);
+    bm.LoadFile(pFormat->fixPath("data/icon/icon256.bmp"), wxBITMAP_TYPE_BMP);
     m_bitmapLogo->SetBitmap(bm);
     m_bitmapLogo->Center(wxHORIZONTAL);
     wxBitmap gplbm;
@@ -75,7 +75,7 @@ void OsciloskopInfo::ThermalOnActivate(wxActivateEvent& event)
     m_textCtrlSDL2->LoadFile(pFormat->fixPath("data/about/sdl2.txt"));
     m_textCtrlLibUSB->LoadFile(pFormat->fixPath("data/about/libusb.txt"));
     m_textCtrlCJSON->LoadFile(pFormat->fixPath("data/about/cjson.txt"));
-    m_textCtrlLibPython->LoadFile(pFormat->fixPath("data/about/python.txt"));
+    m_textCtrlLibPython->LoadFile(pFormat->fixPath("data/about/lua.txt"));
     m_textCtrlPThreads->LoadFile(pFormat->fixPath("data/about/winpthreads.txt"));
     #if !defined(PLATFORM_MINGW) && !defined(PLATFORM_WIN)
     if(m_notebook7->GetPageCount() == 7)
