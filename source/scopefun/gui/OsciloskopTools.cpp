@@ -440,8 +440,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     // display
     uint  multiEnum = multiplyerFromValue(window.horizontal.Display);
     float multiFloat = multiplyerFromEnum(multiEnum);
-    m_textCtrlTimeDisplay->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Display / multiFloat)));
-    m_comboBoxTimeDisplay->SetSelection(multiEnum);
     // position
     m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Position)));
     m_sliderTimePosition->SetValue(window.horizontal.Position);
@@ -488,12 +486,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_comboBoxCh0Capture->SetSelection(captureVoltFromValue(window.channel01.Capture));
     // Scale
     m_textCtrlCh0Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.Scale)));
-    // Display
-    {
-        float value = window.channel01.Display / multiplyerFromEnum(multiplyerFromValue(window.channel01.Display));
-        m_textCtrlCh0Display->SetValue(wxString::FromAscii(pFormat->floatToString(value)));
-        m_comboBoxCh0Display->SetSelection(multiplyerFromValue(window.channel01.Display));
-    }
     // YPosition
     m_sliderCh0Position->SetValue(window.channel01.YPosition);
     m_textCtrlCh0Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.YPosition)));
@@ -514,12 +506,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
     m_comboBoxCh1Capture->SetSelection(captureVoltFromValue(window.channel02.Capture));
     // Scale
     m_textCtrlCh1Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.Scale)));
-    // Display
-    {
-        float value = window.channel02.Display / multiplyerFromEnum(multiplyerFromValue(window.channel02.Display));
-        m_textCtrlCh1Display->SetValue(wxString::FromAscii(pFormat->floatToString(value)));
-        m_comboBoxCh1Display->SetSelection(multiplyerFromValue(window.channel02.Display));
-    }
     // YPosition
     m_sliderCh1Position->SetValue(window.channel02.YPosition);
     m_textCtrlCh1Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.YPosition)));

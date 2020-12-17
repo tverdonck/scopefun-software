@@ -72,9 +72,6 @@ class Osciloskop : public wxFrame
 		wxStaticText* m_staticText141;
 		wxChoice* m_comboBoxTimeCapture;
 		wxCheckBox* m_checkBoxETS;
-		wxStaticText* m_staticText151;
-		wxTextCtrl* m_textCtrlTimeDisplay;
-		wxChoice* m_comboBoxTimeDisplay;
 		wxCheckBox* m_checkBoxFull;
 		wxStaticText* m_staticText12;
 		wxTextCtrl* m_textCtrlTimePosition;
@@ -102,9 +99,6 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBoxCh0Invert;
 		wxCheckBox* m_checkBoxCh0Ground;
 		wxChoice* m_choiceCh0ACDC;
-		wxStaticText* m_staticText35;
-		wxTextCtrl* m_textCtrlCh0Display;
-		wxChoice* m_comboBoxCh0Display;
 		wxCheckBox* m_checkBoxSignal1;
 		wxCheckBox* m_checkBoxFFT1;
 		wxCheckBox* m_checkBoxAvg01;
@@ -120,9 +114,6 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBoxCh1Invert;
 		wxCheckBox* m_checkBoxCh1Ground;
 		wxChoice* m_choiceCh1ACDC;
-		wxTextCtrl* m_textCtrlCh1Display;
-		wxStaticText* m_staticText351;
-		wxChoice* m_comboBoxCh1Display;
 		wxCheckBox* m_checkBoxSignal2;
 		wxCheckBox* m_checkBoxFFT2;
 		wxCheckBox* m_checkBoxAvg02;
@@ -133,14 +124,16 @@ class Osciloskop : public wxFrame
 		wxPanel* m_panel161;
 		wxStaticText* m_staticTextFunction;
 		wxChoice* m_comboBoxFunction;
-		wxStaticText* m_staticText116;
-		wxTextCtrl* m_textCtrlFuncCustom;
 		wxCheckBox* m_checkBoxXYVoltageGraph;
 		wxCheckBox* m_checkBoxSignalF;
 		wxCheckBox* m_checkBoxFFTF;
+		wxStaticText* m_staticText116;
+		wxTextCtrl* m_textCtrlFuncCustom;
 		wxPanel* m_panel9;
+		wxStaticText* m_staticText1232;
 		wxChoice* m_choiceDOnOff815;
 		wxChoice* m_choiceDOnOff70;
+		wxStaticText* m_staticText1242;
 		wxCheckBox* m_checkBox12;
 		wxCheckBox* m_checkBox10;
 		wxCheckBox* m_checkBox8;
@@ -156,6 +149,9 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBox3;
 		wxCheckBox* m_checkBox1;
 		wxPanel* m_panel91;
+		wxStaticText* m_staticText1251;
+		wxChoice* m_choiceDS815;
+		wxChoice* m_choiceInputOutput;
 		wxStaticText* m_staticText91;
 		wxChoice* m_choiceBit11;
 		wxStaticText* m_staticText92;
@@ -168,13 +164,12 @@ class Osciloskop : public wxFrame
 		wxChoice* m_choiceBit8;
 		wxStaticText* m_staticText101;
 		wxChoice* m_choiceBit6;
-		wxStaticText* m_staticText134;
-		wxChoice* m_choiceDS815;
-		wxStaticText* m_staticText1341;
-		wxChoice* m_choiceInputOutput;
 		wxStaticText* m_staticText126;
 		wxStaticText* m_staticText125;
 		wxStaticText* m_staticText128;
+		wxChoice* m_choiceInputOutput1;
+		wxChoice* m_choiceDS70;
+		wxStaticText* m_staticText135;
 		wxStaticText* m_staticText98;
 		wxChoice* m_choiceBit5;
 		wxStaticText* m_staticText99;
@@ -187,10 +182,6 @@ class Osciloskop : public wxFrame
 		wxChoice* m_choiceBit2;
 		wxStaticText* m_staticText104;
 		wxChoice* m_choiceBit0;
-		wxStaticText* m_staticText135;
-		wxChoice* m_choiceDS70;
-		wxStaticText* m_staticText1351;
-		wxChoice* m_choiceInputOutput1;
 		wxPanel* m_panel25;
 		wxStaticText* m_staticText821;
 		wxFilePickerCtrl* m_filePicker1;
@@ -204,14 +195,6 @@ class Osciloskop : public wxFrame
 		wxStaticText* m_staticTextMhz;
 		wxNotebook* m_notebook3;
 		wxPanel* m_panel3;
-		wxStaticText* m_staticText47;
-		wxChoice* m_comboBoxTrigger;
-		wxStaticText* m_staticText45;
-		wxChoice* m_comboBoxTriggerSource;
-		wxStaticText* m_staticText46;
-		wxChoice* m_comboBoxTriggerSlope;
-		wxButton* m_buttonReArm;
-		wxRadioButton* m_radioBtnTriggered;
 		wxStaticText* m_staticText1222;
 		wxTextCtrl* m_textCtrlTriggerLevel;
 		wxSpinButton* m_spinBtnTrigLevel;
@@ -229,18 +212,10 @@ class Osciloskop : public wxFrame
 		wxSpinButton* m_spinBtnTrigHoldoff;
 		wxSlider* m_sliderTriggerHoldoff;
 		wxPanel* m_panel13;
-		wxStaticText* m_staticText63;
-		wxChoice* m_comboBoxDigitalStage;
-		wxStaticText* m_staticText64;
-		wxTextCtrl* m_textCtrDigitallDelay;
-		wxStaticText* m_staticText65;
-		wxChoice* m_comboBoxDigitalStageStart;
-		wxStaticText* m_staticText66;
-		wxChoice* m_comboBoxDigitalMode;
-		wxStaticText* m_staticText68;
-		wxChoice* m_comboBoxDigitalSerialChannel;
+		wxStaticText* m_staticText1231;
 		wxChoice* m_choiceBit158;
 		wxChoice* m_choiceBit70;
+		wxStaticText* m_staticText1241;
 		wxStaticText* m_staticTextBit11;
 		wxChoice* m_comboBoxBit11;
 		wxStaticText* m_staticTextBit9;
@@ -267,6 +242,26 @@ class Osciloskop : public wxFrame
 		wxChoice* m_comboBoxBit2;
 		wxStaticText* m_staticTextBit0;
 		wxChoice* m_comboBoxBit0;
+		wxPanel* m_panel29;
+		wxStaticText* m_staticText63;
+		wxChoice* m_comboBoxDigitalStage;
+		wxStaticText* m_staticText64;
+		wxTextCtrl* m_textCtrDigitallDelay;
+		wxStaticText* m_staticText65;
+		wxChoice* m_comboBoxDigitalStageStart;
+		wxStaticText* m_staticText66;
+		wxChoice* m_comboBoxDigitalMode;
+		wxStaticText* m_staticText68;
+		wxChoice* m_comboBoxDigitalSerialChannel;
+		wxPanel* m_panel27;
+		wxStaticText* m_staticText47;
+		wxChoice* m_comboBoxTrigger;
+		wxStaticText* m_staticText45;
+		wxChoice* m_comboBoxTriggerSource;
+		wxStaticText* m_staticText46;
+		wxChoice* m_comboBoxTriggerSlope;
+		wxRadioButton* m_radioBtnTriggered;
+		wxButton* m_buttonReArm;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void onActivate( wxActivateEvent& event ) { event.Skip(); }
@@ -306,8 +301,6 @@ class Osciloskop : public wxFrame
 		virtual void m_comboBoxTimeControlOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxTimeCaptureOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxETSOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrlTimeDisplayOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxTimeDisplayOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFullOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlTimePositionOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnXPosOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
@@ -329,8 +322,6 @@ class Osciloskop : public wxFrame
 		virtual void m_checkBoxCh0InvertOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxCh0GroundOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceCh0ACDCOnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrlCh0DisplayOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxCh0DisplayOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignal1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFT1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxAvg01OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
@@ -343,8 +334,6 @@ class Osciloskop : public wxFrame
 		virtual void m_checkBoxCh1InvertOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxCh1GroundOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceCh1ACDCOnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrlCh1DisplayOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxCh1DisplayOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignal2OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFT2OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxAvg02OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
@@ -353,10 +342,10 @@ class Osciloskop : public wxFrame
 		virtual void m_spinBtnCh1YPosOnSpinUp( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_sliderCh1PositionOnScroll( wxScrollEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxFunctionTypeOnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxXYVoltageGraphOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignalFOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFTFOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDOnOff815OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDOnOff70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox12OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
@@ -371,32 +360,28 @@ class Osciloskop : public wxFrame
 		virtual void m_checkBox5OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox3OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox1OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceDS815OnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceInputOutputOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit11OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit9OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit7OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit10OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit8OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit6OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceDS815OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceInputOutputOnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceInputOutput1OnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_choiceDS70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit5OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit3OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit1OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit4OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit2OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit0OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceDS70OnChoice( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_choiceInputOutput1OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_filePicker1OnFileChanged( wxFileDirPickerEvent& event ) { event.Skip(); }
 		virtual void m_buttonCustomFileOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlDigitalVoltageOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnDigVoltageOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnDigVoltageOnSpinUp( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlFreqDividerOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxTriggerOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_buttonReArmOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_textCtrlTriggerLevelOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnTrigLevelOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnTrigLevelOnSpinUp( wxSpinEvent& event ) { event.Skip(); }
@@ -413,11 +398,6 @@ class Osciloskop : public wxFrame
 		virtual void m_spinBtnTrigHoldoffOnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnTrigHoldoffOnSpinUp( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_sliderTriggerHoldoffOnScroll( wxScrollEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit158OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceBit70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit11OnCombobox( wxCommandEvent& event ) { event.Skip(); }
@@ -432,6 +412,15 @@ class Osciloskop : public wxFrame
 		virtual void m_comboBoxBit4OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit2OnCombobox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_comboBoxBit0OnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxTriggerOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonReArmOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

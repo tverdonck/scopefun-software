@@ -52,8 +52,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_comboBoxTimeControlOnCombobox( wxCommandEvent& event );
 		void m_comboBoxTimeCaptureOnCombobox( wxCommandEvent& event );
 		void m_checkBoxETSOnCheckBox( wxCommandEvent& event );
-		void m_textCtrlTimeDisplayOnTextEnter( wxCommandEvent& event );
-		void m_comboBoxTimeDisplayOnCombobox( wxCommandEvent& event );
 		void m_checkBoxFullOnCheckBox( wxCommandEvent& event );
 		void m_textCtrlTimePositionOnTextEnter( wxCommandEvent& event );
 		void m_spinBtnXPosOnSpinDown( wxSpinEvent& event );
@@ -75,8 +73,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_checkBoxCh0InvertOnCheckBox( wxCommandEvent& event );
 		void m_checkBoxCh0GroundOnCheckBox( wxCommandEvent& event );
 		void m_choiceCh0ACDCOnChoice( wxCommandEvent& event );
-		void m_textCtrlCh0DisplayOnTextEnter( wxCommandEvent& event );
-		void m_comboBoxCh0DisplayOnCombobox( wxCommandEvent& event );
 		void m_checkBoxSignal1OnCheckBox( wxCommandEvent& event );
 		void m_checkBoxFFT1OnCheckBox( wxCommandEvent& event );
 		void m_checkBoxAvg01OnCheckBox( wxCommandEvent& event );
@@ -89,8 +85,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_checkBoxCh1InvertOnCheckBox( wxCommandEvent& event );
 		void m_checkBoxCh1GroundOnCheckBox( wxCommandEvent& event );
 		void m_choiceCh1ACDCOnChoice( wxCommandEvent& event );
-		void m_textCtrlCh1DisplayOnTextEnter( wxCommandEvent& event );
-		void m_comboBoxCh1DisplayOnCombobox( wxCommandEvent& event );
 		void m_checkBoxSignal2OnCheckBox( wxCommandEvent& event );
 		void m_checkBoxFFT2OnCheckBox( wxCommandEvent& event );
 		void m_checkBoxAvg02OnCheckBox( wxCommandEvent& event );
@@ -99,10 +93,10 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_spinBtnCh1YPosOnSpinUp( wxSpinEvent& event );
 		void m_sliderCh1PositionOnScroll( wxScrollEvent& event );
 		void m_comboBoxFunctionTypeOnChoice( wxCommandEvent& event );
-		void m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event );
 		void m_checkBoxXYVoltageGraphOnCheckBox( wxCommandEvent& event );
 		void m_checkBoxSignalFOnCheckBox( wxCommandEvent& event );
 		void m_checkBoxFFTFOnCheckBox( wxCommandEvent& event );
+		void m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event );
 		void m_choiceDOnOff815OnChoice( wxCommandEvent& event );
 		void m_choiceDOnOff70OnChoice( wxCommandEvent& event );
 		void m_checkBox12OnCheckBox( wxCommandEvent& event );
@@ -117,32 +111,28 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_checkBox5OnCheckBox( wxCommandEvent& event );
 		void m_checkBox3OnCheckBox( wxCommandEvent& event );
 		void m_checkBox1OnCheckBox( wxCommandEvent& event );
+		void m_choiceDS815OnChoice( wxCommandEvent& event );
+		void m_choiceInputOutputOnChoice( wxCommandEvent& event );
 		void m_choiceBit11OnChoice( wxCommandEvent& event );
 		void m_choiceBit9OnChoice( wxCommandEvent& event );
 		void m_choiceBit7OnChoice( wxCommandEvent& event );
 		void m_choiceBit10OnChoice( wxCommandEvent& event );
 		void m_choiceBit8OnChoice( wxCommandEvent& event );
 		void m_choiceBit6OnChoice( wxCommandEvent& event );
-		void m_choiceDS815OnChoice( wxCommandEvent& event );
-		void m_choiceInputOutputOnChoice( wxCommandEvent& event );
+		void m_choiceInputOutput1OnChoice( wxCommandEvent& event );
+		void m_choiceDS70OnChoice( wxCommandEvent& event );
 		void m_choiceBit5OnChoice( wxCommandEvent& event );
 		void m_choiceBit3OnChoice( wxCommandEvent& event );
 		void m_choiceBit1OnChoice( wxCommandEvent& event );
 		void m_choiceBit4OnChoice( wxCommandEvent& event );
 		void m_choiceBit2OnChoice( wxCommandEvent& event );
 		void m_choiceBit0OnChoice( wxCommandEvent& event );
-		void m_choiceDS70OnChoice( wxCommandEvent& event );
-		void m_choiceInputOutput1OnChoice( wxCommandEvent& event );
 		void m_filePicker1OnFileChanged( wxFileDirPickerEvent& event );
 		void m_buttonCustomFileOnButtonClick( wxCommandEvent& event );
 		void m_textCtrlDigitalVoltageOnTextEnter( wxCommandEvent& event );
 		void m_spinBtnDigVoltageOnSpinDown( wxSpinEvent& event );
 		void m_spinBtnDigVoltageOnSpinUp( wxSpinEvent& event );
 		void m_textCtrlFreqDividerOnTextEnter( wxCommandEvent& event );
-		void m_comboBoxTriggerOnCombobox( wxCommandEvent& event );
-		void m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event );
-		void m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event );
-		void m_buttonReArmOnButtonClick( wxCommandEvent& event );
 		void m_textCtrlTriggerLevelOnTextEnter( wxCommandEvent& event );
 		void m_spinBtnTrigLevelOnSpinDown( wxSpinEvent& event );
 		void m_spinBtnTrigLevelOnSpinUp( wxSpinEvent& event );
@@ -159,11 +149,6 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_spinBtnTrigHoldoffOnSpinDown( wxSpinEvent& event );
 		void m_spinBtnTrigHoldoffOnSpinUp( wxSpinEvent& event );
 		void m_sliderTriggerHoldoffOnScroll( wxScrollEvent& event );
-		void m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event );
-		void m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event );
-		void m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event );
-		void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event );
-		void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event );
 		void m_choiceBit158OnChoice( wxCommandEvent& event );
 		void m_choiceBit70OnChoice( wxCommandEvent& event );
 		void m_comboBoxBit11OnCombobox( wxCommandEvent& event );
@@ -178,10 +163,23 @@ class OsciloskopOsciloskop : public Osciloskop
 		void m_comboBoxBit4OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit2OnCombobox( wxCommandEvent& event );
 		void m_comboBoxBit0OnCombobox( wxCommandEvent& event );
+		void m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event );
+		void m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event );
+		void m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event );
+		void m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event );
+		void m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event );
+		void m_comboBoxTriggerOnCombobox( wxCommandEvent& event );
+		void m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event );
+		void m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event );
+		void m_buttonReArmOnButtonClick( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		OsciloskopOsciloskop( wxWindow* parent );
 	//// end generated class members
+
+
+
+
 
 
 

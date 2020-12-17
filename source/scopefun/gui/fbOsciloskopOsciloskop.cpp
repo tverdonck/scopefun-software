@@ -192,16 +192,6 @@ void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox( wxCommandEvent& event )
     // TODO: Implement m_checkBoxETSOnCheckBox
 }
 
-void OsciloskopOsciloskop::m_textCtrlTimeDisplayOnTextEnter( wxCommandEvent& event )
-{
-    // TODO: Implement m_textCtrlTimeDisplayOnTextEnter
-}
-
-void OsciloskopOsciloskop::m_comboBoxTimeDisplayOnCombobox( wxCommandEvent& event )
-{
-    // TODO: Implement m_comboBoxTimeDisplayOnCombobox
-}
-
 void OsciloskopOsciloskop::m_checkBoxFullOnCheckBox( wxCommandEvent& event )
 {
     // TODO: Implement m_checkBoxFullOnCheckBox
@@ -307,16 +297,6 @@ void OsciloskopOsciloskop::m_choiceCh0ACDCOnChoice( wxCommandEvent& event )
     // TODO: Implement m_choiceCh0ACDCOnChoice
 }
 
-void OsciloskopOsciloskop::m_textCtrlCh0DisplayOnTextEnter( wxCommandEvent& event )
-{
-    // TODO: Implement m_textCtrlCh0DisplayOnTextEnter
-}
-
-void OsciloskopOsciloskop::m_comboBoxCh0DisplayOnCombobox( wxCommandEvent& event )
-{
-    // TODO: Implement m_comboBoxCh0DisplayOnCombobox
-}
-
 void OsciloskopOsciloskop::m_checkBoxSignal1OnCheckBox( wxCommandEvent& event )
 {
     // TODO: Implement m_checkBoxSignal1OnCheckBox
@@ -377,16 +357,6 @@ void OsciloskopOsciloskop::m_choiceCh1ACDCOnChoice( wxCommandEvent& event )
     // TODO: Implement m_choiceCh1ACDCOnChoice
 }
 
-void OsciloskopOsciloskop::m_textCtrlCh1DisplayOnTextEnter( wxCommandEvent& event )
-{
-    // TODO: Implement m_textCtrlCh1DisplayOnTextEnter
-}
-
-void OsciloskopOsciloskop::m_comboBoxCh1DisplayOnCombobox( wxCommandEvent& event )
-{
-    // TODO: Implement m_comboBoxCh1DisplayOnCombobox
-}
-
 void OsciloskopOsciloskop::m_checkBoxSignal2OnCheckBox( wxCommandEvent& event )
 {
     // TODO: Implement m_checkBoxSignal2OnCheckBox
@@ -427,11 +397,6 @@ void OsciloskopOsciloskop::m_comboBoxFunctionTypeOnChoice( wxCommandEvent& event
     // TODO: Implement m_comboBoxFunctionTypeOnChoice
 }
 
-void OsciloskopOsciloskop::m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event )
-{
-    // TODO: Implement m_textCtrlFuncCustomOnTextEnter
-}
-
 void OsciloskopOsciloskop::m_checkBoxXYVoltageGraphOnCheckBox( wxCommandEvent& event )
 {
     // TODO: Implement m_checkBoxXYVoltageGraphOnCheckBox
@@ -445,6 +410,11 @@ void OsciloskopOsciloskop::m_checkBoxSignalFOnCheckBox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_checkBoxFFTFOnCheckBox( wxCommandEvent& event )
 {
     // TODO: Implement m_checkBoxFFTFOnCheckBox
+}
+
+void OsciloskopOsciloskop::m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event )
+{
+    // TODO: Implement m_textCtrlFuncCustomOnTextEnter
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice( wxCommandEvent& event )
@@ -517,6 +487,16 @@ void OsciloskopOsciloskop::m_checkBox1OnCheckBox( wxCommandEvent& event )
 // TODO: Implement m_checkBox1OnCheckBox
 }
 
+void OsciloskopOsciloskop::m_choiceDS815OnChoice( wxCommandEvent& event )
+{
+// TODO: Implement m_choiceDS815OnChoice
+}
+
+void OsciloskopOsciloskop::m_choiceInputOutputOnChoice( wxCommandEvent& event )
+{
+// TODO: Implement m_choiceInputOutputOnChoice
+}
+
 void OsciloskopOsciloskop::m_choiceBit11OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceBit11OnChoice
@@ -547,14 +527,14 @@ void OsciloskopOsciloskop::m_choiceBit6OnChoice( wxCommandEvent& event )
 // TODO: Implement m_choiceBit6OnChoice
 }
 
-void OsciloskopOsciloskop::m_choiceDS815OnChoice( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_choiceInputOutput1OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceDS815OnChoice
+// TODO: Implement m_choiceInputOutput1OnChoice
 }
 
-void OsciloskopOsciloskop::m_choiceInputOutputOnChoice( wxCommandEvent& event )
+void OsciloskopOsciloskop::m_choiceDS70OnChoice( wxCommandEvent& event )
 {
-// TODO: Implement m_choiceInputOutputOnChoice
+// TODO: Implement m_choiceDS70OnChoice
 }
 
 void OsciloskopOsciloskop::m_choiceBit5OnChoice( wxCommandEvent& event )
@@ -587,16 +567,6 @@ void OsciloskopOsciloskop::m_choiceBit0OnChoice( wxCommandEvent& event )
 // TODO: Implement m_choiceBit0OnChoice
 }
 
-void OsciloskopOsciloskop::m_choiceDS70OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceDS70OnChoice
-}
-
-void OsciloskopOsciloskop::m_choiceInputOutput1OnChoice( wxCommandEvent& event )
-{
-// TODO: Implement m_choiceInputOutput1OnChoice
-}
-
 void OsciloskopOsciloskop::m_filePicker1OnFileChanged( wxFileDirPickerEvent& event )
 {
 // TODO: Implement m_filePicker1OnFileChanged
@@ -625,26 +595,6 @@ void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinUp( wxSpinEvent& event )
 void OsciloskopOsciloskop::m_textCtrlFreqDividerOnTextEnter( wxCommandEvent& event )
 {
 // TODO: Implement m_textCtrlFreqDividerOnTextEnter
-}
-
-void OsciloskopOsciloskop::m_comboBoxTriggerOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxTriggerOnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxTriggerSourceOnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxTriggerSlopeOnCombobox
-}
-
-void OsciloskopOsciloskop::m_buttonReArmOnButtonClick( wxCommandEvent& event )
-{
-// TODO: Implement m_buttonReArmOnButtonClick
 }
 
 void OsciloskopOsciloskop::m_textCtrlTriggerLevelOnTextEnter( wxCommandEvent& event )
@@ -727,31 +677,6 @@ void OsciloskopOsciloskop::m_sliderTriggerHoldoffOnScroll( wxScrollEvent& event 
 // TODO: Implement m_sliderTriggerHoldoffOnScroll
 }
 
-void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxDigitalStageOnCombobox
-}
-
-void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event )
-{
-// TODO: Implement m_textCtrDigitallDelayOnTextEnter
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxDigitalStageStartOnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxDigitalModeOnCombobox
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event )
-{
-// TODO: Implement m_comboBoxDigitalSerialChannelOnCombobox
-}
-
 void OsciloskopOsciloskop::m_choiceBit158OnChoice( wxCommandEvent& event )
 {
 // TODO: Implement m_choiceBit158OnChoice
@@ -820,4 +745,49 @@ void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox( wxCommandEvent& event )
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox( wxCommandEvent& event )
 {
 // TODO: Implement m_comboBoxBit0OnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxDigitalStageOnCombobox
+}
+
+void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter( wxCommandEvent& event )
+{
+// TODO: Implement m_textCtrDigitallDelayOnTextEnter
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxDigitalStageStartOnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxDigitalModeOnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxDigitalSerialChannelOnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxTriggerOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxTriggerOnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxTriggerSourceOnCombobox
+}
+
+void OsciloskopOsciloskop::m_comboBoxTriggerSlopeOnCombobox( wxCommandEvent& event )
+{
+// TODO: Implement m_comboBoxTriggerSlopeOnCombobox
+}
+
+void OsciloskopOsciloskop::m_buttonReArmOnButtonClick( wxCommandEvent& event )
+{
+// TODO: Implement m_buttonReArmOnButtonClick
 }
