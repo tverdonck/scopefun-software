@@ -1198,7 +1198,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel3->SetSizer( bSizer1721 );
 	m_panel3->Layout();
 	bSizer1721->Fit( m_panel3 );
-	m_notebook3->AddPage( m_panel3, _("Analog"), false );
+	m_notebook3->AddPage( m_panel3, _("Analog"), true );
 	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer78;
 	bSizer78 = new wxBoxSizer( wxHORIZONTAL );
@@ -1538,7 +1538,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel27->SetSizer( bSizer1731 );
 	m_panel27->Layout();
 	bSizer1731->Fit( m_panel27 );
-	m_notebook3->AddPage( m_panel27, _("Stage"), true );
+	m_notebook3->AddPage( m_panel27, _("Stage"), false );
 
 	bSizer156->Add( m_notebook3, 8, wxEXPAND | wxALL, 5 );
 
