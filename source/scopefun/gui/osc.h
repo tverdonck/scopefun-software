@@ -166,7 +166,6 @@ class Osciloskop : public wxFrame
 		wxChoice* m_choiceBit6;
 		wxStaticText* m_staticText126;
 		wxStaticText* m_staticText125;
-		wxStaticText* m_staticText128;
 		wxChoice* m_choiceInputOutput1;
 		wxChoice* m_choiceDS70;
 		wxStaticText* m_staticText135;

@@ -434,7 +434,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxString m_comboBoxCh1CaptureChoices[] = { _("2V"), _("1V"), _("500mV"), _("200mV"), _("100mV"), _("50mV"), _("20mV"), _("10mV") };
 	int m_comboBoxCh1CaptureNChoices = sizeof( m_comboBoxCh1CaptureChoices ) / sizeof( wxString );
 	m_comboBoxCh1Capture = new wxChoice( m_panel16, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_comboBoxCh1CaptureNChoices, m_comboBoxCh1CaptureChoices, 0 );
-	m_comboBoxCh1Capture->SetSelection( 0 );
+	m_comboBoxCh1Capture->SetSelection( 1 );
 	bSizer151->Add( m_comboBoxCh1Capture, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticTextCh1Scale = new wxStaticText( m_panel16, wxID_ANY, _("Scale:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -793,35 +793,28 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer1691;
 	bSizer1691 = new wxBoxSizer( wxVERTICAL );
 
+
+	bSizer1691->Add( 0, 0, 3, wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+
 	wxBoxSizer* bSizer1701;
 	bSizer1701 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText126 = new wxStaticText( m_panel91, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText126 = new wxStaticText( m_panel91, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText126->Wrap( -1 );
 	bSizer1701->Add( m_staticText126, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer1691->Add( bSizer1701, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	bSizer1691->Add( bSizer1701, 6, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer1712;
 	bSizer1712 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText125 = new wxStaticText( m_panel91, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText125 = new wxStaticText( m_panel91, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText125->Wrap( -1 );
 	bSizer1712->Add( m_staticText125, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer1691->Add( bSizer1712, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
-
-	wxBoxSizer* bSizer172;
-	bSizer172 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText128 = new wxStaticText( m_panel91, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText128->Wrap( -1 );
-	bSizer172->Add( m_staticText128, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-
-	bSizer1691->Add( bSizer172, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+	bSizer1691->Add( bSizer1712, 6, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 
 
 	bSizer164->Add( bSizer1691, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
