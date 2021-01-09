@@ -3733,6 +3733,7 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
            // mode
            uint  signalMode = SDL_AtomicGet(&pOsciloscope->signalMode);
 
+           frameIndex -= 1;
            if (pCaptureData->m_window.horizontal.Full)
               frameIndex -= 1;
 

@@ -143,6 +143,9 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             if(item10)
             { item10->Enable(false); }
         }
+
+        m_buttonConnectOnButtonClick(evt);
+        m_buttonCaptureOnButtonClick(evt);
     }
 }
 
@@ -269,13 +272,8 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         ////////////////////////////////////////////////////////////////////////////////
         // usb
         ////////////////////////////////////////////////////////////////////////////////
-        if(timer > 1.0)
-        {
-            timer = 0.0;
-            int open = 0;
-            int usb = pOsciloscope->thread.isOpen();
-            m_checkBox26->SetValue(usb);
-        }
+        int usb = pOsciloscope->thread.isOpen();
+        m_checkBox26->SetValue(usb);
         int isFpga = pOsciloscope->thread.isFpga();
         int isOpen = pOsciloscope->thread.isOpen();
         if (isOpen && isFpga)
