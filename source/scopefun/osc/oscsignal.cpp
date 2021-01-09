@@ -28,7 +28,7 @@ uint ScopeFunCaptureBuffer::save(const char* path)
     SDL_AtomicSet(&m_active, 1);
     // frame index
     int   frameIndex = SDL_AtomicGet(&m_frameIndex);
-    lockFrame(frameIndex);
+    lock();
     FORMAT_BUFFER();
     // .sf
     FORMAT("%s", path);
@@ -118,14 +118,14 @@ uint ScopeFunCaptureBuffer::save(const char* path)
     }
     SDL_RWclose(sfFile);
     SDL_AtomicSet(&m_active, 0);
-    lockFrame(frameIndex);
+    unlock();
     return 0;
 }
 
 uint ScopeFunCaptureBuffer::load(const char* path)
 {
     SDL_AtomicSet(&m_active, 1);
-    lockFrame(SDL_AtomicGet(&m_frameIndex));
+    lock();
     FORMAT_BUFFER();
     // .sf
     FORMAT("%s", path);
@@ -231,7 +231,7 @@ uint ScopeFunCaptureBuffer::load(const char* path)
     }
     SDL_RWclose(sfFile);
     SDL_AtomicSet(&m_frameSize, frameSize);
-    unlockFrame(SDL_AtomicGet(&m_frameIndex));
+    unlock();
     SDL_AtomicSet(&m_active, 0);
     return 0;
 }
@@ -1211,6 +1211,58 @@ int LuaOnInit(lua_State* L, SFContext* ctx)
     }
     return 0;
 }
+
+int LuaOnFunction(lua_State* L, ishort ch0, ishort ch1, ishort* fun)
+{
+   if (!L) { return 0; }
+   // push function
+   if (lua_getglobal(L, "onFunction") == LUA_TFUNCTION)
+   {
+      // push parameters
+      lua_pushinteger(L, ch0);
+      lua_pushinteger(L, ch1);
+
+      // execute
+      if (lua_pcall(L, 2, 2, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         int func = lua_tointeger(L, -1);
+         *fun = func;
+         lua_pop(L, 1);
+      }
+   }
+   return 0;
+}
+
+int LuaOnUpload(lua_State* L, SGenerator* gen, uint* sampleCount)
+{
+   if (!L) { return 0; }
+   // push function
+   if (lua_getglobal(L, "onUpload") == LUA_TFUNCTION)
+   {
+      // push parameters
+      SWIG_Lua_NewPointerObj(L, gen, SWIGTYPE_p_SGenerator, 0);
+
+      // execute
+      if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+      {
+         LuaOnError(L);
+      }
+      else
+      {
+         // pop parameters
+         SWIG_Lua_ConvertPtr(L, -2, (void**)&gen, SWIGTYPE_p_SGenerator, 0);
+         *sampleCount = lua_tointeger(L, -1);
+         lua_pop(L, 2);
+      }
+   }
+   return 0;
+}
+
 OsciloscopeScript::OsciloscopeScript(int index)
 {
     m_arrayIdx = index;
@@ -1262,6 +1314,23 @@ int OsciloscopeScript::OnInit(SFContext* ctx)
     ret = LuaOnInit(m_luaState, ctx);
     SDL_AtomicSet(&m_locking, 1);
     return ret;
+}
+
+int OsciloscopeScript::OnFunction(ishort ch0, ishort ch1, ishort* fun)
+{
+   int ret = 0;
+   SDL_AtomicSet(&m_locking, 0);
+   ret = LuaOnFunction(m_luaState, ch0, ch1, fun);
+   SDL_AtomicSet(&m_locking, 1);
+   return ret;
+}
+int OsciloscopeScript::OnUpload(SGenerator* gen, uint* sampleCount)
+{
+   int ret = 0;
+   SDL_AtomicSet(&m_locking, 0);
+   ret = LuaOnUpload(m_luaState, gen, sampleCount);
+   SDL_AtomicSet(&m_locking, 1);
+   return ret;
 }
 
 int OsciloscopeScript::LuaPrint(const char* str)
@@ -1391,6 +1460,7 @@ int callSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, f
     { pOsciloscope->m_callback.Get(i)->OnSample(sample, ch0, ch1, fun, dig, pos, zoom, user); }
     return 0;
 }
+
 int callDisplay(SDisplay* data, float* pos, float* zoom, void* user)
 {
     for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
@@ -1410,6 +1480,24 @@ int callInit(SFContext* ctx)
     return 0;
 }
 
+int callFunction(ishort ch0, ishort ch1, ishort* fun)
+{
+   for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
+   {
+      pOsciloscope->m_callback.Get(i)->OnFunction(ch0, ch1, fun);
+   }
+   return 0;
+}
+
+int callUpload(SGenerator* gen, uint* sampelCount)
+{
+   for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
+   {
+      pOsciloscope->m_callback.Get(i)->OnUpload(gen, sampelCount);
+   }
+   return 0;
+}
+
 
 OsciloscopeCallback::OsciloscopeCallback()
 {
@@ -1418,6 +1506,8 @@ OsciloscopeCallback::OsciloscopeCallback()
     m_callback.onSample    = callSample;
     m_callback.onDisplay   = callDisplay;
     m_callback.onConfigure = callConfigure;
+    m_callback.onFunction  = callFunction;
+    m_callback.onUpload    = callUpload;
 }
 
 int OsciloscopeCallback::Add(String fileName)

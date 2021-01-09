@@ -28,3 +28,19 @@ function onInit(ctx)
   return ctx
 end
 
+-- onFunction
+function onFunction(ch0,ch1)
+	func = ch0+ch1
+    return func
+end
+
+-- onUpload
+function onUpload(gen)
+	for i=0,4096,1 do
+		gen.analog0[i] = math.sin( i )
+		gen.analog1[i] = math.tan( i )
+		gen.digital[i] = i % 12
+	end
+    return gen, 4096
+end
+

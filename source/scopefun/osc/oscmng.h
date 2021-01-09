@@ -21,9 +21,9 @@
 #ifndef __TOOL__OSCILOSCOPE__
 #define __TOOL__OSCILOSCOPE__
 
-#define SCOPEFUN_MAX_FRAMES   8
-#define SCOPEFUN_MAX_HISTORY  16
-#define SCOPEFUN_MAX_UNDO     1024
+#define SCOPEFUN_MAX_BUFFERING 4
+#define SCOPEFUN_MAX_HISTORY   16
+#define SCOPEFUN_MAX_UNDO      1024
 
 enum ETimer
 {
@@ -923,55 +923,109 @@ class ScopeFunCaptureBuffer
 public:
     byte*                                     m_dataPtr;
     ularge                                    m_dataMax;
-    SDL_atomic_t                              m_frameIndex;
-    SDL_atomic_t                              m_frameSize;
-    SDL_atomic_t                              m_frameCount;
-    SDL_atomic_t                              m_frameOffset;
+public:
     SDL_atomic_t                              m_progress;
-    Array<SDL_atomic_t, SCOPEFUN_MAX_FRAMES>   m_frameLock;
+    SDL_atomic_t                              m_threadCount;
     SDL_SpinLock                              m_lock;
     SDL_atomic_t                              m_active;
 public:
+    Array<SDL_atomic_t, SCOPEFUN_MAX_BUFFERING> m_frameLock;
+    SDL_atomic_t                                m_frameCount;
+    SDL_atomic_t                                m_frameSize;
+    SDL_atomic_t                                m_frameOffset;
+    SDL_atomic_t                                m_frameIndex;
+    SDL_atomic_t                                m_captureIndex;
+    SDL_atomic_t                                m_updateIndex;
+    SDL_atomic_t                                m_screenIndex;
+public:
     ScopeFunCaptureBuffer()
     {
+        // data
         m_dataPtr = 0;
         m_dataMax = 0;
-        m_lock = 0;
-        SDL_AtomicSet(&m_frameIndex, 0);
-        SDL_AtomicSet(&m_frameSize, 0);
-        SDL_AtomicSet(&m_frameCount, 1);
-        SDL_AtomicSet(&m_frameOffset, 0);
-        SDL_AtomicSet(&m_progress, 0);
-        SDL_AtomicSet(&m_active, 1);
-        m_frameLock.setCount(SCOPEFUN_MAX_FRAMES);
-        for(int i = 0; i < SCOPEFUN_MAX_FRAMES; i++)
+        m_lock    = 0;
+
+        // sync
+        SDL_AtomicSet(&m_captureIndex, 0);
+        SDL_AtomicSet(&m_updateIndex,  0);
+        SDL_AtomicSet(&m_screenIndex,  0);
+        SDL_AtomicSet(&m_frameIndex,   0);
+        SDL_AtomicSet(&m_frameSize,    10000 + SCOPEFUN_FRAME_HEADER);
+        SDL_AtomicSet(&m_frameCount,   1);
+        SDL_AtomicSet(&m_frameOffset,  0);
+        SDL_AtomicSet(&m_progress,     0);
+        SDL_AtomicSet(&m_active,       1);
+        SDL_AtomicSet(&m_threadCount, SCOPEFUN_MAX_BUFFERING);
+
+        // frames
+        m_frameLock.setCount(SCOPEFUN_MAX_BUFFERING);
+        for(int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
         { SDL_AtomicSet(&m_frameLock[i], 0); }
-        SDL_memset(m_dataPtr, 0, m_dataMax);
     }
 public:
-    void lock()
+    int lock()
     {
-        SDL_AtomicLock(&m_lock);
+       for (int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
+       {
+          while (SDL_AtomicCAS(&m_frameLock[i], 0, 8) == SDL_FALSE)
+          {
+             SDL_Delay(1);
+          }
+       }
+       return 0;
     }
-    void unlock()
+    int unlock()
     {
-        SDL_AtomicUnlock(&m_lock);
+       for (int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
+       {
+          while (SDL_AtomicCAS(&m_frameLock[i], 8, 0) == SDL_FALSE)
+          {
+             SDL_Delay(1);
+          }
+       }
+       return 0;
     }
-    int lockFrame(uint id)
+    int lockCapture(uint id)
     {
-        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_FRAMES], 0, 1) == SDL_FALSE)
+        if(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 0, 1) == SDL_FALSE)
+            return 0;
+        return 1;
+    }
+    int unlockCapture(uint id)
+    {
+        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 1, 2) == SDL_FALSE)
         {
             SDL_Delay(1);
         }
         return 0;
     }
-    int unlockFrame(uint id)
+    int lockUpdate(uint id)
     {
-        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_FRAMES], 1, 0) == SDL_FALSE)
-        {
-            SDL_Delay(1);
-        }
-        return 0;
+       if (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 2, 3) == SDL_FALSE)
+          return 0;
+       return 1;
+    }
+    int unlockUpdate(uint id)
+    {
+       while (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 3, 4) == SDL_FALSE)
+       {
+          SDL_Delay(1);
+       }
+       return 0;
+    }
+    int lockScreen(uint id)
+    {
+       if( SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 4, 5) == SDL_FALSE)
+         return 0;
+       return 1;
+    }
+    int unlockScreen(uint id)
+    {
+       while (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 5, 0) == SDL_FALSE)
+       {
+          SDL_Delay(1);
+       }
+       return 0;
     }
 public:
     int getProgress() { return SDL_AtomicGet(&m_progress); }
@@ -980,16 +1034,6 @@ public:
 public:
     uint save(const char* path);
     uint load(const char* path);
-public:
-    void clearFrame()
-    {
-        SDL_AtomicSet(&m_frameIndex, 0);
-        SDL_AtomicSet(&m_frameSize,  0);
-        SDL_AtomicSet(&m_frameCount, 1);
-        SDL_AtomicSet(&m_frameOffset, 0);
-        SDL_AtomicSet(&m_progress, 0);
-        SDL_AtomicSet(&m_active, 1);
-    };
 };
 
 class UndoRedo
@@ -1145,10 +1189,10 @@ public:
     OsciloscopeFrame       tmpDisplay;
     Ring<OsciloscopeFrame> tmpHistory;
 public:
-    bool                   captureDataThreadActive;
-    bool                   generateFrameThreadActive;
-    bool                   controlHardwareThreadActive;
-    bool                   updateThreadActive;
+    SDL_atomic_t           captureDataThreadActive;
+    SDL_atomic_t           controlHardwareThreadActive;
+    SDL_atomic_t           generateFrameThreadActive;
+    SDL_atomic_t           updateThreadActive;
     OsciloscopeFrame       threadDisplay;
     Ring<CapturePacket>    threadHistory;
 public:
@@ -1230,6 +1274,8 @@ public:
     int  isUndoActive();
     int  isRedoActive();
     void transferUI();
+public:
+    int Render();
 };
 
 SFContext* getCtx();

@@ -827,6 +827,7 @@ void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
         ((OsciloskopDebug*)script->GetUserData())->Show();
     }
 }
+
 //
 //void OsciloskopOsciloskop::m_menuItemAutoCallibrateOnMenuSelection(wxCommandEvent& event)
 //{

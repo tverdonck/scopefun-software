@@ -798,8 +798,8 @@ int OsciloscopeManager::start()
     // apply canvas allocation settings
     ////////////////////////////////////////////////
     pCanvas3d->setVertexBufferSize(settings.getSettings()->renderVertexBufferSizeMegaByte * 1024 * 1024);
-    pCanvas3d->setThreadBuffer(settings.getSettings()->renderThreadCount);
-    pCanvas2d->setThreadBuffer(settings.getSettings()->renderThreadCount);
+    pCanvas3d->setThreadBuffer(MAX_THREAD);
+    pCanvas2d->setThreadBuffer(MAX_THREAD);
     ////////////////////////////////////////////////
     // generator fs
     ////////////////////////////////////////////////
@@ -816,7 +816,9 @@ int OsciloscopeManager::start()
     // thread count
     //////////////////////////////////////////////////////////
     uint cpuCount = SDL_GetCPUCount();
-    pRender->setThreadCount(min(settings.getSettings()->renderThreadCount, MAX_THREAD));
+    // pRender->setThreadCount(min(settings.getSettings()->renderThreadCount, MAX_THREAD));
+    pRender->setThreadCount(MAX_THREAD);
+
     //////////////////////////////////////////////////////////
     // allocate memory for signal
     //////////////////////////////////////////////////////////
@@ -824,10 +826,10 @@ int OsciloscopeManager::start()
     //////////////////////////////////////////////////////////
     // setup thread data
     //////////////////////////////////////////////////////////
-    captureDataThreadActive = true;
-    generateFrameThreadActive = true;
-    controlHardwareThreadActive = true;
-    updateThreadActive = true;
+    SDL_AtomicSet(&captureDataThreadActive, 1);
+    SDL_AtomicSet(&generateFrameThreadActive, 1);
+    SDL_AtomicSet(&controlHardwareThreadActive, 1);
+    SDL_AtomicSet(&updateThreadActive, 1);
     threadLoop.capture.setCount(min(settings.getSettings()->renderThreadCount, MAX_THREAD));
     threadLoop.update.setCount(min(settings.getSettings()->renderThreadCount, MAX_THREAD));
     //////////////////////////////////////////////////////////
@@ -991,16 +993,19 @@ void OsciloscopeManager::exitThreads()
     ///////////////////////////////////////////////
     // thread cleanup
     //////////////////////////////////////////////
-    SDL_AtomicSet(&oscExit, 1);
-    captureDataThreadActive = false;
-    SDL_WaitThread(pCaptureData, &status);
-    pCaptureData = 0;
-    generateFrameThreadActive = false;
-    SDL_WaitThread(pGenerateFrame, &status);
-    pGenerateFrame = 0;
-    controlHardwareThreadActive = false;
+
+    SDL_AtomicSet(&controlHardwareThreadActive,0);
     SDL_WaitThread(pControlHardware, &status);
     pControlHardware = 0;
+
+    SDL_AtomicSet(&generateFrameThreadActive, 0);
+    SDL_WaitThread(pGenerateFrame, &status);
+    pGenerateFrame = 0;
+
+    SDL_AtomicSet(&oscExit, 1);
+    SDL_AtomicSet(&captureDataThreadActive, 0);
+    SDL_WaitThread(pCaptureData, &status);
+    pCaptureData = 0;
 }
 
 
@@ -2095,126 +2100,84 @@ int SDLCALL EventFilter(void* userdata, SDL_Event* event)
 
 bool OsciloscopeManager::onApplicationIdle()
 {
-    // render
-    pTimer->deltaTime(TIMER_RENDER_THREAD);
-    dtRender += pTimer->getDelta(TIMER_RENDER_THREAD);
-    // fps
-    uint maxFps = 0;
-    switch(window.speed)
-    {
-        case USB_SPEED_AUTOMATIC:
-            {
-                double maxFrameTime = window.horizontal.Capture * double(NUM_SAMPLES);
-                double maxFrameFps  = 1.0 / maxFrameTime;
-                maxFps = settings.getSettings()->speedHigh;
-                if(maxFrameFps <= double(settings.getSettings()->speedMedium))
-                {
-                    maxFps = settings.getSettings()->speedMedium;
-                }
-                if(maxFrameFps <= double(settings.getSettings()->speedLow))
-                {
-                    maxFps = settings.getSettings()->speedLow;
-                }
-            }
-            break;
-        case USB_SPEED_LOW:
-            maxFps = settings.getSettings()->speedLow;
-            break;
-        case USB_SPEED_MEDIUM:
-            maxFps = settings.getSettings()->speedMedium;
-            break;
-        case USB_SPEED_HIGH:
-            maxFps = settings.getSettings()->speedHigh;
-            break;
-    };
-    double        maxDelta = 1.0 / double(maxFps);
-    if(dtRender >= maxDelta)
-    {
-        dtRender = 0.0;
-        SDL_AtomicLock(&renderLock);
-        if(SDL_AtomicGet(&signalMode) != SIGNAL_MODE_PAUSE)
-        {
-            window.horizontal.Frame = renderWindow.horizontal.Frame;
-        }
-        // sync user interface -> capture
-        renderWindow = window;
-        renderData.cameraFFT = cameraFFT.ortho;
-        renderData.cameraOsc = cameraOsc.ortho;
-        renderData.width = pRender->width;
-        renderData.height = pRender->height;
-        renderData.sliderMode = sliderMode;
-        renderData.sliderSize = analogWindowSize;
-        renderData.fftScaleX = fftScaleX;
-        renderData.fftScaleY = fftScaleY;
-        renderData.oscScaleX = oscScaleX;
-        renderData.oscScaleY = oscScaleY;
-        renderData.zoomFFT = cameraFFT.zoom;
-        renderData.zoomOsc = cameraOsc.zoom;
-        renderData.signalPosition = signalPosition;
-        renderData.signalZoom     = signalZoom;
-        renderData.sliderPosition = sliderPosition;
-        renderData.maxEts         = settings.getHardware()->fpgaEtsCount;
-        renderData.shadowTexture  = aShadow[pTimer->getFrame(0) % 2];
-        renderData.shadowLine3dShader = shadowLine3dShader;
-        renderData.shadowColorShader = shadowColorShader;
-        renderData.shadowCoolingShader = shadowCoolingShader;
-        renderData.analogChannelYVoltageStep0 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 0, window.channel01.Capture);
-        renderData.analogChannelYVoltageStep1 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 1, window.channel02.Capture);
-        renderData.analogChannelOffsets0 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 0, window.channel01.Capture);
-        renderData.analogChannelOffsets1 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 1, window.channel02.Capture);
-        renderData.analogChannelPositin0 = sfGetYPositionA(getHw());
-        renderData.analogChannelPositin1 = sfGetYPositionB(getHw());
-        renderData.colorBackground = settings.getColors()->renderBackground;
-        renderData.colorTime       = settings.getColors()->renderTime;
-        renderData.colorChannel0   = settings.getColors()->renderChannel0;
-        renderData.colorChannel1   = settings.getColors()->renderChannel1;
-        renderData.colorFunction   = settings.getColors()->renderFunction;
-        renderData.colorXyGraph    = settings.getColors()->renderXyGraph;
-        renderData.colorGrid         = settings.getColors()->renderGrid;
-        renderData.colorBorder       = settings.getColors()->renderBorder;
-        renderData.colorTrigger      = settings.getColors()->renderTrigger;
-        renderData.colorDigital      = settings.getColors()->renderDigital;
-        renderData.etsAttr           = 0;
-        renderData.flags.bit(rfClearRenderTarget, SDL_AtomicGet(&clearRenderTarget));
-        SDL_AtomicUnlock(&renderLock);
-        // lock
-        uint renderId = 0;
-        bool ret = false;
-        // we do not want to stall main loop
-        // on MAC main rendering must be done from the same thread that created the device
-        // while(!ret && !SDL_AtomicGet(&oscExit) )
-        {
-            ret = pOsciloscope->threadLoop.update.consumerLock(renderId, false);
-            if(ret)
-            {
-                pTimer->deltaTime(TIMER_RENDER);
-                // render
-                renderMain(renderId);
-                // measure
-                window.measure.data.pick = measureData[renderId].pick;
-                window.measure.data.history[MEASURE_HISTORY_CURRENT] = measureData[renderId].history[MEASURE_HISTORY_CURRENT];
-                window.measure.data.history[MEASURE_HISTORY_MINIMUM].Minimum(measureData[renderId].history[MEASURE_HISTORY_CURRENT]);
-                window.measure.data.history[MEASURE_HISTORY_MAXIMUM].Maximum(measureData[renderId].history[MEASURE_HISTORY_CURRENT]);
-                window.measure.data.history[MEASURE_HISTORY_AVERAGE].Average(measureData[renderId].history[MEASURE_HISTORY_CURRENT]);
-                // unlock
-                pOsciloscope->threadLoop.update.consumerUnlock(renderId);
-                return true;
-            }
-            else
-            {
-                if(settings.getSettings()->delayRender > 0)
-                {
-                    SDL_Delay(settings.getSettings()->delayRender);
-                }
-            }
-        }
-    }
-    else
-    {
-        double diffMiliSeconds = (maxDelta - dtRender) * 1000.0;
-        SDL_Delay(uint(diffMiliSeconds));
-    }
-    return false;
+   SDL_AtomicLock(&renderLock);
+      if(SDL_AtomicGet(&signalMode) != SIGNAL_MODE_PAUSE)
+      {
+         window.horizontal.Frame = renderWindow.horizontal.Frame;
+      }
+      // sync user interface -> capture
+      renderWindow = window;
+      renderData.cameraFFT = cameraFFT.ortho;
+      renderData.cameraOsc = cameraOsc.ortho;
+      renderData.width = pRender->width;
+      renderData.height = pRender->height;
+      renderData.sliderMode = sliderMode;
+      renderData.sliderSize = analogWindowSize;
+      renderData.fftScaleX = fftScaleX;
+      renderData.fftScaleY = fftScaleY;
+      renderData.oscScaleX = oscScaleX;
+      renderData.oscScaleY = oscScaleY;
+      renderData.zoomFFT = cameraFFT.zoom;
+      renderData.zoomOsc = cameraOsc.zoom;
+      renderData.signalPosition = signalPosition;
+      renderData.signalZoom     = signalZoom;
+      renderData.sliderPosition = sliderPosition;
+      renderData.maxEts         = settings.getHardware()->fpgaEtsCount;
+      renderData.shadowTexture  = aShadow[pTimer->getFrame(0) % 2];
+      renderData.shadowLine3dShader = shadowLine3dShader;
+      renderData.shadowColorShader = shadowColorShader;
+      renderData.shadowCoolingShader = shadowCoolingShader;
+      renderData.analogChannelYVoltageStep0 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 0, window.channel01.Capture);
+      renderData.analogChannelYVoltageStep1 = settings.getHardware()->getAnalogStep(window.horizontal.Capture, 1, window.channel02.Capture);
+      renderData.analogChannelOffsets0 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 0, window.channel01.Capture);
+      renderData.analogChannelOffsets1 = settings.getHardware()->getAnalogOffsetDouble(window.horizontal.Capture, 1, window.channel02.Capture);
+      renderData.analogChannelPositin0 = sfGetYPositionA(getHw());
+      renderData.analogChannelPositin1 = sfGetYPositionB(getHw());
+      renderData.colorBackground = settings.getColors()->renderBackground;
+      renderData.colorTime       = settings.getColors()->renderTime;
+      renderData.colorChannel0   = settings.getColors()->renderChannel0;
+      renderData.colorChannel1   = settings.getColors()->renderChannel1;
+      renderData.colorFunction   = settings.getColors()->renderFunction;
+      renderData.colorXyGraph    = settings.getColors()->renderXyGraph;
+      renderData.colorGrid         = settings.getColors()->renderGrid;
+      renderData.colorBorder       = settings.getColors()->renderBorder;
+      renderData.colorTrigger      = settings.getColors()->renderTrigger;
+      renderData.colorDigital      = settings.getColors()->renderDigital;
+      renderData.etsAttr           = 0;
+      renderData.flags.bit(rfClearRenderTarget, SDL_AtomicGet(&clearRenderTarget));
+   SDL_AtomicUnlock(&renderLock);
+
+   // lock
+   uint screenIndex  = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_screenIndex);   
+   uint frameCount   = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+   uint threadCount  = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_threadCount);
+
+   // thread id
+   uint threadId = screenIndex % threadCount;
+
+   // lock
+   if( pOsciloscope->m_captureBuffer.lockScreen(screenIndex) )
+   {
+      // timer
+      pTimer->deltaTime(TIMER_RENDER);
+
+      // render
+      renderMain(threadId);
+
+      // measure
+      window.measure.data.pick = measureData[threadId].pick;
+      window.measure.data.history[MEASURE_HISTORY_CURRENT] = measureData[threadId].history[MEASURE_HISTORY_CURRENT];
+      window.measure.data.history[MEASURE_HISTORY_MINIMUM].Minimum(measureData[threadId].history[MEASURE_HISTORY_CURRENT]);
+      window.measure.data.history[MEASURE_HISTORY_MAXIMUM].Maximum(measureData[threadId].history[MEASURE_HISTORY_CURRENT]);
+      window.measure.data.history[MEASURE_HISTORY_AVERAGE].Average(measureData[threadId].history[MEASURE_HISTORY_CURRENT]);
+
+      // inc
+      SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_screenIndex, screenIndex + 1);
+
+      // unlock
+      pOsciloscope->m_captureBuffer.unlockScreen(screenIndex);
+   }  
+   return false;
 }
 
 void OsciloscopeManager::onResize(int width, int height, int oldWidth, int oldHeight)
@@ -3412,6 +3375,36 @@ ushort OsciloscopeManager::getVolt(int channel, ushort gain)
     return 0;
 }
 
+
+int OsciloscopeManager::Render()
+{
+   ////////////////////////////////////////////////////////////////////////////////
+   // process events
+   ////////////////////////////////////////////////////////////////////////////////
+   pInput->clear();
+   SDL_PumpEvents();
+   SDL_Event e = { 0 };
+   while (SDL_PollEvent(&e))
+   {
+      pManager->queueEvent(e);
+   }
+   pManager->fireEvents();
+
+   ////////////////////////////////////////////////////////////////////////////////
+   // update main loop
+   ////////////////////////////////////////////////////////////////////////////////
+   pTimer->deltaTime(TIMER_MAIN_THREAD);
+   pOsciloscope->dtUpdate = pTimer->getDelta(TIMER_MAIN_THREAD);
+   pManager->update(pOsciloscope->dtUpdate);
+
+   ////////////////////////////////////////////////////////////////////////////////
+   // render
+   ////////////////////////////////////////////////////////////////////////////////
+   pOsciloscope->onApplicationIdle();
+
+   return 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ETS
@@ -3508,57 +3501,44 @@ void OsciloscopeETS::onPause(OsciloscopeFrame& frame, WndMain& window)
 // CaptureThread
 //
 ////////////////////////////////////////////////////////////////////////////////
-void SendToRenderer(OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft,  OsciloscopeThreadData& captureData, uint delay)
+void SendToRenderer(uint frameIndex,OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, OsciloscopeThreadData& captureData, uint delay)
 {
-    pTimer->deltaTime(TIMER_CAPTURE);
-    //SDL_AtomicLock(&pOsciloscope->displayLock);
-    //pOsciloscope->display = captureFrame;
-    //SDL_AtomicUnlock(&pOsciloscope->displayLock);
-    //// history
-    //pOsciloscope->tmpHistory.write(captureFrame);
-    //// ets
-    // ets.onCapture(captureFrame, render);
-    // send to renderer
-    uint captureId = 0;
-    bool ret = false;
-    while(!ret && pOsciloscope->captureDataThreadActive)
-    {
-        // lock
-        ret = pOsciloscope->threadLoop.update.producerLock(captureId, false);
-        if(ret)
-        {
-            /* Ring<OsciloscopeFrame> history = pOsciloscope->tmpHistory;
-             OsciloscopeFrame       frame;
-             uint count = history.getCount();
-             captureData.history.clear();
-             for(uint i = 0; i < count; i++)
-             {
-                 history.read(frame);
-                 captureData.history.write(frame);
-             }
-             captureData.etsClear = ets.etsClear;
-             captureData.frame    = frame;
-             captureData.render   = render;
-             captureData.window   = window;*/
-            // clear
-            renderer.clearFast();
-            fft.clear();
-            // clear render target?
-            /* if( captureData.m_frame.attr & daETS )
-                captureData.m_render.flags.bit( rfClearRenderTarget, captureData.m_frame.attr & daETS  );*/
-            // render
-            pOsciloscope->renderThread(captureId, captureData, renderer, fft);
-            // unlock
-            pOsciloscope->threadLoop.update.producerUnlock(captureId);
-        }
-        else
-        {
-            // delay
-            if(delay > 0)
-            { SDL_Delay(delay); }
-        }
-    }
+   // lock
+   //uint frame = 0;
+   uint threadId = 0;
+
+   threadId = frameIndex;
+   //pOsciloscope->m_captureBuffer.lockThreadProducer(threadId);
+
+   // pOsciloscope->m_captureBuffer.lockThread(threadId);
+   /* Ring<OsciloscopeFrame> history = pOsciloscope->tmpHistory;
+      OsciloscopeFrame       frame;
+      uint count = history.getCount();
+      captureData.history.clear();
+      for(uint i = 0; i < count; i++)
+      {
+         history.read(frame);
+         captureData.history.write(frame);
+      }
+      captureData.etsClear = ets.etsClear;
+      captureData.frame    = frame;
+      captureData.render   = render;
+      captureData.window   = window;*/
+      // clear
+   renderer.clearFast();
+   fft.clear();
+   // clear render target?
+   /* if( captureData.m_frame.attr & daETS )
+         captureData.m_render.flags.bit( rfClearRenderTarget, captureData.m_frame.attr & daETS  );*/
+         // render
+   pOsciloscope->renderThread(frameIndex % SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_threadCount), captureData, renderer, fft);
+   
+  // pOsciloscope->m_captureBuffer.unlockThread(threadId);
+
+  // pOsciloscope->m_captureBuffer.unlockThreadProducer(threadId);
+
 }
+
 
 int SDLCALL CaptureDataThreadFunction(void* data)
 {
@@ -3568,70 +3548,109 @@ int SDLCALL CaptureDataThreadFunction(void* data)
     SInt                   receivedBytes = { 0 };
     SInt               receivedFrameSize = { 0 };
     double                          time = 0.0;
-    while(pOsciloscope->captureDataThreadActive)
+    while(SDL_AtomicGet(&pOsciloscope->captureDataThreadActive) > 0 )
     {
         // timer
         pTimer->deltaTime(TIMER_HARDWARE);
         time += pTimer->getDelta(TIMER_HARDWARE);
+
         // mode
         SignalMode mode = (SignalMode)SDL_AtomicGet(&pOsciloscope->signalMode);
+
         // simulate
         if(mode == SIGNAL_MODE_SIMULATE)
         {
             int ret = sfSimulate(getCtx(), getHw(), &receivedBytes, &receivedFrameSize, time);
         }
+
         // capture
         if(mode == SIGNAL_MODE_CAPTURE)
         {
             int isFpga = pOsciloscope->thread.isFpga();
-            if(!isFpga)
+            int isOpen = pOsciloscope->thread.isOpen();
+            if(!isOpen || !isFpga)
             {
                 SDL_Delay(100);
                 continue;
             }
             int ret = sfFrameCapture(getCtx(), &receivedBytes, &receivedFrameSize);
         }
-        // copy frame
-        if(mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE)
+
+        // capture
+        uint   captureIndex = SDL_AtomicGet(&captureBuffer.m_captureIndex);
+
+        // lock
+        if (captureBuffer.lockCapture(captureIndex))
         {
-            captureBuffer.lock();
-            // info
-            uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
-            uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
-            uint     frameSize  = SDL_AtomicGet(&captureBuffer.m_frameSize);
-            uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
-            // size
-            if(receivedFrameSize.value != frameSize && receivedFrameSize.value != 0)
-            {
-                frameSize = receivedFrameSize.value;
-                frameCount = max<uint>(1, captureBuffer.m_dataMax / receivedFrameSize.value);
-                frameIndex = 0;
-                frameOffset = 0;
-                SDL_AtomicSet(&captureBuffer.m_frameSize, frameSize);
-                SDL_AtomicSet(&captureBuffer.m_frameCount, frameCount);
-                SDL_AtomicSet(&captureBuffer.m_frameIndex, frameIndex);
-                SDL_AtomicSet(&captureBuffer.m_frameOffset, frameOffset);
-            }
-            // lock
-            captureBuffer.lockFrame(frameIndex);
-            // output
-            ularge framePos = frameIndex * frameSize + frameOffset;
-            int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize);
-            // unlock
-            captureBuffer.unlockFrame(frameIndex);
-            // offset
-            SDL_AtomicSet(&captureBuffer.m_frameOffset, receivedBytes.value);
-            // index++
-            if(receivedBytes.value == frameSize)
-            {
-                receivedBytes.value = receivedFrameSize.value = 0;
-                uint index = frameIndex;
-                index = (index + 1) % frameCount;
-                SDL_AtomicSet(&captureBuffer.m_frameIndex, index);
-                SDL_AtomicSet(&captureBuffer.m_frameOffset, 0);
-            }
-            // unlock
-            captureBuffer.unlock();
+
+           // copy frame
+           if (mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE)
+           {
+              // info
+              uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
+              uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
+              uint      frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
+              uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
+
+              // size
+              if (receivedFrameSize.value != frameSize && receivedFrameSize.value != 0)
+              {
+                 frameSize = receivedFrameSize.value;
+                 frameCount = max<uint>(1, captureBuffer.m_dataMax / receivedFrameSize.value);
+                 frameOffset = 0;
+                 SDL_AtomicSet(&captureBuffer.m_frameSize, frameSize);
+                 SDL_AtomicSet(&captureBuffer.m_frameCount, frameCount);
+                 SDL_AtomicSet(&captureBuffer.m_frameOffset, frameOffset);
+              }
+
+              // output
+              ularge framePos = (frameIndex % frameCount) * frameSize + frameOffset;
+              int ret = sfFrameOutput(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize);
+
+              // offset
+              SDL_AtomicSet(&captureBuffer.m_frameOffset, receivedBytes.value);
+
+              // index++
+              if (receivedBytes.value == frameSize)
+              {
+                 receivedBytes.value = receivedFrameSize.value = 0;
+                 SDL_AtomicSet(&captureBuffer.m_frameOffset, 0);
+              }
+              SDL_AtomicSet(&captureBuffer.m_frameIndex, frameIndex + 1);
+           }
+
+           // clear
+           if (mode == SIGNAL_MODE_CLEAR)
+           {
+              uint   frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
+              uint   frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
+              uint    frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
+              uint  frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
+
+              ularge framePos = ((frameIndex - 1) % frameCount) * frameSize + frameOffset;
+              SDL_memset(&captureBuffer.m_dataPtr[framePos], 0, frameSize);
+           }
+
+           // play
+           if (mode == SIGNAL_MODE_PLAY)
+           {
+              // index
+              uint frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
+              SDL_AtomicSet(&captureBuffer.m_frameIndex, frameIndex + 1);
+              SDL_AtomicSet(&captureBuffer.m_frameOffset, 0);
+           }
+
+           // pause | clear
+           if (mode == SIGNAL_MODE_PAUSE)
+           {
+              SDL_Delay(10);
+           }
+
+           // index
+           SDL_AtomicSet(&captureBuffer.m_captureIndex, captureIndex + 1);
+
+           // unlock
+           captureBuffer.unlockCapture(captureIndex);
         }
     }
     SDL_MemoryBarrierRelease();
@@ -3641,29 +3660,37 @@ int SDLCALL CaptureDataThreadFunction(void* data)
 int DisplayFrame(uint frameIndex, uint frameCount, uint frameSize, ScopeFunCaptureBuffer& captureBuffer, OsciloscopeThreadData& threadData, OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, float delay, float pos, float zoom)
 {
     // safety
-    frameIndex = frameIndex % frameCount;
-    // lock
-    captureBuffer.lockFrame(frameIndex);
+    uint index = frameIndex % frameCount;
+    
     // framePos
-    ularge framePos = frameIndex * frameSize;
+    ularge framePos = index * frameSize;
+
+    // clear
+    SDL_memset(&threadData.m_frame, 0, sizeof(SDisplay));
+
     // display
     sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], frameSize, &threadData.m_frame, pos, zoom);
+    
     // hardware
     SFrameHeader header = { 0 };
     sfGetHeader(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], &header);
     sfGetHeaderHardware(getCtx(), (SFrameHeader*)&header, &threadData.m_hw);
+    
     // history
     threadData.m_historyCount = 0;
     if(threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D))
     { threadData.m_historyCount = SCOPEFUN_MAX_HISTORY; }
     for(int i = 0; i < threadData.m_historyCount; i++)
     {
-        uint historyIndex = (frameIndex - i) % frameCount;
+        uint historyIndex = (index - i) % frameCount;
         ularge historyPos = historyIndex * frameSize;
+
+        // clear
+        SDL_memset(&threadData.m_history[i], 0, sizeof(SDisplay));
+
+        // display
         sfFrameDisplay(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[historyPos], frameSize, &threadData.m_history[i], pos, zoom);
     }
-    // unlock
-    captureBuffer.unlockFrame(frameIndex);
     return 0;
 }
 
@@ -3683,53 +3710,48 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
     sfSetNumSamples((SHardware*) & ((SFrameHeader*)pCaptureBuffer->m_dataPtr)->hardware, SCOPEFUN_DISPLAY);
     ularge playFrameIdx = 0;
     uint   delayCapture = 1;
-    while(pOsciloscope->generateFrameThreadActive)
+    while( SDL_AtomicGet(&pOsciloscope->generateFrameThreadActive) > 0 )
     {
         // render info
         SDL_AtomicUnlock(&pOsciloscope->renderLock);
-        pCaptureData->m_pos    = pOsciloscope->signalPosition;
-        pCaptureData->m_zoom   = pOsciloscope->signalZoom;
-        pCaptureData->m_render = pOsciloscope->renderData;
-        pCaptureData->m_window = pOsciloscope->renderWindow;
+           pCaptureData->m_pos    = pOsciloscope->signalPosition;
+           pCaptureData->m_zoom   = pOsciloscope->signalZoom;
+           pCaptureData->m_render = pOsciloscope->renderData;
+           pCaptureData->m_window = pOsciloscope->renderWindow;
         SDL_AtomicUnlock(&pOsciloscope->renderLock);
-        // capture mode
-        uint frameIndex = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
-        uint frameCount = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
-        uint frameSize  = SDL_AtomicGet(&pCaptureBuffer->m_frameSize);
-        SignalMode mode = (SignalMode)SDL_AtomicGet(&pOsciloscope->signalMode);
-        switch(mode)
+
+        // capture index
+        uint  updateIndex   = SDL_AtomicGet(&pCaptureBuffer->m_updateIndex);
+       
+        // lock
+        if (pCaptureBuffer->lockUpdate(updateIndex))
         {
-            case SIGNAL_MODE_PLAY:
-                {
-                    frameIndex = (frameIndex + 1) % frameCount;
-                    SDL_AtomicSet(&pCaptureBuffer->m_frameIndex, frameIndex);
-                    DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
-                }
-                break;
-            case SIGNAL_MODE_SIMULATE:
-            case SIGNAL_MODE_CAPTURE:
-                {
-                    if( pCaptureData->m_window.horizontal.Full )
-                       DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
-                    else
-                       DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
-                }
-                break;
-            case SIGNAL_MODE_PAUSE:
-                {
-                    DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
-                }
-                break;
-            case SIGNAL_MODE_CLEAR:
-                for(int i = 0; i < SCOPEFUN_MAX_HISTORY; i++)
-                { pCaptureData->m_history[i].samples = 0; }
-                pCaptureData->m_frame.samples = 0;
-                break;
-        };
-        // render
-        SendToRenderer(renderer, fft, *pCaptureData, delayCapture);
-        // on capture
-        pOsciloscope->onCallibrateFrameCaptured(pCaptureData->m_frame, 2);
+           uint  frameIndex = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
+           uint  frameCount = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
+           uint  frameSize = SDL_AtomicGet(&pCaptureBuffer->m_frameSize);
+
+           // mode
+           uint  signalMode = SDL_AtomicGet(&pOsciloscope->signalMode);
+
+           if (pCaptureData->m_window.horizontal.Full)
+              frameIndex -= 1;
+
+           // display 
+           DisplayFrame(frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);
+
+           // render
+           SendToRenderer(updateIndex, renderer, fft, *pCaptureData, delayCapture);
+
+           // inc
+           SDL_AtomicSet(&pCaptureBuffer->m_updateIndex, updateIndex + 1);
+
+           // unlock
+           pCaptureBuffer->unlockUpdate(updateIndex);
+
+           
+           // on capture
+           pOsciloscope->onCallibrateFrameCaptured(pCaptureData->m_frame, 2);
+        }
     }
     SDL_MemoryBarrierRelease();
     return 0;
@@ -3739,7 +3761,7 @@ int SDLCALL ControlHardwareThreadFunction(void* data)
 {
     SDL_MemoryBarrierAcquire();
     pOsciloscope->setThreadPriority(THREAD_ID_CAPTURE);
-    while(pOsciloscope->controlHardwareThreadActive)
+    while(SDL_AtomicGet(&pOsciloscope->controlHardwareThreadActive) > 0 )
     {
         pOsciloscope->thread.update();
         SDL_Delay(1);

@@ -512,6 +512,8 @@ typedef struct
     SSimulate         simulateData;
     SCtxFrame         frame;
     EFunctionType     functionType;
+    SGenerator        generator;
+    uint              generatorCount;
     void*             pCallback;
     void*             pUserData;
     byte*             usb;
@@ -524,6 +526,8 @@ typedef struct _SCallback
     int (*onDisplay)(SDisplay* data, float* pos, float* zoom, void* user);
     int (*onConfigure)(SHardware* hw);
     int (*onInit)(SFContext* ctx);
+    int (*onFunction)(ishort ch0, ishort ch1, ishort* fun);
+    int (*onUpload)(SGenerator* generator, uint* sampleCount);
 } SCallback;
 
 typedef struct _SInt

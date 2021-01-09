@@ -115,7 +115,11 @@ float channelFunction(float ch0value, float ch1value, int function, WndMain& win
             return max(ch0value, ch1value);
             break;
         case ANALOG_FUNCTION_CUSTOM:
-            return window.function.custom.evaluate(ch0value, ch1value);
+           {
+              ishort func = 0;
+              pOsciloscope->m_callback.Ptr()->onFunction(ch0value*MAXOSCVALUE, ch1value*MAXOSCVALUE, &func);
+              return double(func)/MAXOSCVALUE;
+           }
     };
     return 0.f;
 }

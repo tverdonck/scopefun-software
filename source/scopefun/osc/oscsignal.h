@@ -207,6 +207,8 @@ public:
     int OnDisplay(SDisplay* data, float* pos, float* zoom, void* user);
     int OnConfigure(SHardware* hw);
     int OnInit(SFContext* ctx);
+    int OnFunction(ishort ch0, ishort ch1, ishort* fun);
+    int OnUpload(SGenerator* gen, uint* sampleCount);
 public:
     int LuaError(const char* str);
     int LuaPrint(const char* str);
@@ -228,7 +230,7 @@ public:
 class OsciloscopeCallback
 {
 private:
-    SCallback                                     m_callback;
+    SCallback                                      m_callback;
     Array<OsciloscopeScript*, SCOPEFUN_MAX_SCRIPT> m_script;
 public:
     OsciloscopeCallback();
