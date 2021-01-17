@@ -37,6 +37,7 @@
 #include <wx/dataview.h>
 #include <wx/scrolwin.h>
 #include <wx/statbmp.h>
+#include <wx/stc/stc.h>
 
 #include "guiheader.h"
 
@@ -940,23 +941,26 @@ class Debug : public wxDialog
 	private:
 
 	protected:
-		wxButton* m_button561;
-		wxButton* m_button56;
-		wxButton* m_button562;
-		wxButton* m_button5621;
+		wxStyledTextCtrl* m_scintilla1;
+		wxButton* m_buttonStart;
+		wxButton* m_buttonStop;
+		wxButton* m_buttonSave;
+		wxButton* m_buttonLua;
+		wxButton* m_buttonHelp;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void ThermalOnActivate( wxActivateEvent& event ) { event.Skip(); }
-		virtual void m_button561OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_button56OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_button562OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_button5621OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonStartOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonStopOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonSaveOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonLuaOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonHelpOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
-		wxTextCtrl* m_textCtrl41;
+		wxTextCtrl* m_textCtrlOutput;
 
-		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 700,700 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 877,700 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER );
 		~Debug();
 
 };

@@ -4270,8 +4270,45 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	wxBoxSizer* bSizer158;
 	bSizer158 = new wxBoxSizer( wxVERTICAL );
 
-	m_textCtrl41 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
-	bSizer158->Add( m_textCtrl41, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	m_scintilla1 = new wxStyledTextCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxEmptyString );
+	m_scintilla1->SetUseTabs( true );
+	m_scintilla1->SetTabWidth( 4 );
+	m_scintilla1->SetIndent( 4 );
+	m_scintilla1->SetTabIndents( true );
+	m_scintilla1->SetBackSpaceUnIndents( true );
+	m_scintilla1->SetViewEOL( false );
+	m_scintilla1->SetViewWhiteSpace( false );
+	m_scintilla1->SetMarginWidth( 2, 0 );
+	m_scintilla1->SetIndentationGuides( true );
+	m_scintilla1->SetMarginType( 1, wxSTC_MARGIN_SYMBOL );
+	m_scintilla1->SetMarginMask( 1, wxSTC_MASK_FOLDERS );
+	m_scintilla1->SetMarginWidth( 1, 16);
+	m_scintilla1->SetMarginSensitive( 1, true );
+	m_scintilla1->SetProperty( wxT("fold"), wxT("1") );
+	m_scintilla1->SetFoldFlags( wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED );
+	m_scintilla1->SetMarginType( 0, wxSTC_MARGIN_NUMBER );
+	m_scintilla1->SetMarginWidth( 0, m_scintilla1->TextWidth( wxSTC_STYLE_LINENUMBER, wxT("_99999") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY );
+	m_scintilla1->SetSelBackground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
+	m_scintilla1->SetSelForeground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
+	bSizer158->Add( m_scintilla1, 1, wxEXPAND | wxALL, 5 );
+
+	m_textCtrlOutput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+	bSizer158->Add( m_textCtrlOutput, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
 
 
 	bSizer55->Add( bSizer158, 10, wxEXPAND, 5 );
@@ -4279,17 +4316,20 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	wxBoxSizer* bSizer159;
 	bSizer159 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_button561 = new wxButton( this, wxID_ANY, _("Reload"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_button561, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_buttonStart = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer159->Add( m_buttonStart, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_button56 = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_button56, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_buttonStop = new wxButton( this, wxID_ANY, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer159->Add( m_buttonStop, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_button562 = new wxButton( this, wxID_ANY, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_button562, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_buttonSave = new wxButton( this, wxID_ANY, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer159->Add( m_buttonSave, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_button5621 = new wxButton( this, wxID_ANY, _("Exit"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_button5621, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_buttonLua = new wxButton( this, wxID_ANY, _("Lua"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer159->Add( m_buttonLua, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+
+	m_buttonHelp = new wxButton( this, wxID_ANY, _("Help"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer159->Add( m_buttonHelp, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer55->Add( bSizer159, 1, wxEXPAND, 5 );
@@ -4302,20 +4342,22 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 
 	// Connect Events
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( Debug::ThermalOnActivate ) );
-	m_button561->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button561OnButtonClick ), NULL, this );
-	m_button56->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button56OnButtonClick ), NULL, this );
-	m_button562->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button562OnButtonClick ), NULL, this );
-	m_button5621->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button5621OnButtonClick ), NULL, this );
+	m_buttonStart->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonStartOnButtonClick ), NULL, this );
+	m_buttonStop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonStopOnButtonClick ), NULL, this );
+	m_buttonSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonSaveOnButtonClick ), NULL, this );
+	m_buttonLua->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonLuaOnButtonClick ), NULL, this );
+	m_buttonHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonHelpOnButtonClick ), NULL, this );
 }
 
 Debug::~Debug()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( Debug::ThermalOnActivate ) );
-	m_button561->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button561OnButtonClick ), NULL, this );
-	m_button56->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button56OnButtonClick ), NULL, this );
-	m_button562->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button562OnButtonClick ), NULL, this );
-	m_button5621->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_button5621OnButtonClick ), NULL, this );
+	m_buttonStart->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonStartOnButtonClick ), NULL, this );
+	m_buttonStop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonStopOnButtonClick ), NULL, this );
+	m_buttonSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonSaveOnButtonClick ), NULL, this );
+	m_buttonLua->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonLuaOnButtonClick ), NULL, this );
+	m_buttonHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonHelpOnButtonClick ), NULL, this );
 
 }
 

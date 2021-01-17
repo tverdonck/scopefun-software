@@ -807,14 +807,6 @@ void OsciloskopOsciloskop::OnInit()
 void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
 {
     OsciloscopeScript* script = (OsciloscopeScript*)(event.m_callbackUserData);
-    if(!GetMenuBar()->GetMenu(6)->GetMenuItems()[script->GetArrayIdx()]->IsChecked())
-    {
-        script->Stop();
-    }
-    else
-    {
-        script->Run();
-    }
     if(script->GetUserData() == 0)
     {
         OsciloskopDebug*   pDebug = new OsciloskopDebug(this);

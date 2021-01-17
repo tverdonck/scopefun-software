@@ -194,11 +194,13 @@ class OsciloscopeScript
 private:
     SDL_SpinLock m_spinLock;
     SDL_atomic_t m_locking;
-    String       m_fileName;
     lua_State*   m_luaState;
     char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
     void*        m_userData;
     int          m_arrayIdx;
+public:
+    String       m_fileName;
+    byte*        m_luaScript;
 public:
     OsciloscopeScript(int index);
 public:
@@ -230,6 +232,7 @@ public:
 class OsciloscopeCallback
 {
 private:
+    byte*                                          m_help;
     SCallback                                      m_callback;
     Array<OsciloscopeScript*, SCOPEFUN_MAX_SCRIPT> m_script;
 public:
@@ -238,6 +241,8 @@ public:
     SCallback*          Ptr();
     OsciloscopeScript*  Get(int i);
     int                 Add(String fileName);
+    int                 SetHelp(String helpFile);
+    const char*         GetHelp();
     int                 Clear();
     int                 Count();
 };

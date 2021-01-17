@@ -33,6 +33,8 @@ class OsciloskopThermal;
 class OsciloskopSoftwareGenerator;
 class OsciloskopHardwareGenerator;
 
+class wxStreamToCppTextRedirector;
+
 #include "ScopeFun/ScopeFun.h"
 extern "C" {
 #include "api/scopefunapi.h"
@@ -53,6 +55,8 @@ extern "C" {
 #include <wx/app.h>
 
 #include <version/sfversion.h>
+
+#include <sstream>
 
 #endif
 //////////////////////////////////////////////////////////////////////////////////////

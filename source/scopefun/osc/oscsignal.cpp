@@ -1367,7 +1367,7 @@ int OsciloscopeScript::Run()
 {
     if(m_luaState)
     { return 1; }
-    const char* redirect = "\r\n"
+      const char* redirect = "\r\n"
                            "print_stdout = print\r\n"
                            "\r\n"
                            "print = function(...)\r\n"
@@ -1510,6 +1510,16 @@ OsciloscopeCallback::OsciloscopeCallback()
     m_callback.onUpload    = callUpload;
 }
 
+int OsciloscopeCallback::SetHelp(String fileName)
+{
+   ilarge size = 0;
+   fileLoadString(fileName.asChar(),(char**)&m_help, &size);
+   return 0;
+}
+const char* OsciloscopeCallback::GetHelp()
+{
+   return (const char*)m_help;
+}
 int OsciloscopeCallback::Add(String fileName)
 {
     if(m_script.getCount() < SCOPEFUN_MAX_SCRIPT)
@@ -1517,6 +1527,9 @@ int OsciloscopeCallback::Add(String fileName)
         OsciloscopeScript* script = new OsciloscopeScript(m_script.getCount());
         script->Load(fileName);
         m_script.pushBack(script);
+
+        ilarge size = 0;
+        fileLoadString(fileName.asChar(), (char**)&script->m_luaScript, &size);
         return 0;
     }
     return 1;

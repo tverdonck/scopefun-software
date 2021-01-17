@@ -918,6 +918,14 @@ public:
 };
 
 // ScopeFunCaptureBuffer
+
+class LockFrame {
+public:
+   SDL_atomic_t lock;
+   SDL_atomic_t offset;
+   SDL_atomic_t index;
+};
+
 class ScopeFunCaptureBuffer
 {
 public:
@@ -929,10 +937,9 @@ public:
     SDL_SpinLock                              m_lock;
     SDL_atomic_t                              m_active;
 public:
-    Array<SDL_atomic_t, SCOPEFUN_MAX_BUFFERING> m_frameLock;
+    Array<LockFrame, SCOPEFUN_MAX_BUFFERING>    m_frameLock;
     SDL_atomic_t                                m_frameCount;
     SDL_atomic_t                                m_frameSize;
-    SDL_atomic_t                                m_frameOffset;
     SDL_atomic_t                                m_frameIndex;
     SDL_atomic_t                                m_captureIndex;
     SDL_atomic_t                                m_updateIndex;
@@ -952,7 +959,6 @@ public:
         SDL_AtomicSet(&m_frameIndex,   0);
         SDL_AtomicSet(&m_frameSize,    10000 + SCOPEFUN_FRAME_HEADER);
         SDL_AtomicSet(&m_frameCount,   1);
-        SDL_AtomicSet(&m_frameOffset,  0);
         SDL_AtomicSet(&m_progress,     0);
         SDL_AtomicSet(&m_active,       1);
         SDL_AtomicSet(&m_threadCount, SCOPEFUN_MAX_BUFFERING);
@@ -960,14 +966,18 @@ public:
         // frames
         m_frameLock.setCount(SCOPEFUN_MAX_BUFFERING);
         for(int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
-        { SDL_AtomicSet(&m_frameLock[i], 0); }
+        { 
+           SDL_AtomicSet(&m_frameLock[i].lock,   0); 
+           SDL_AtomicSet(&m_frameLock[i].offset, 0);
+           SDL_AtomicSet(&m_frameLock[i].index,  0);
+        }
     }
 public:
     int lock()
     {
        for (int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
        {
-          while (SDL_AtomicCAS(&m_frameLock[i], 0, 8) == SDL_FALSE)
+          while (SDL_AtomicCAS(&m_frameLock[i].lock, 0, 8) == SDL_FALSE)
           {
              SDL_Delay(1);
           }
@@ -978,36 +988,59 @@ public:
     {
        for (int i = 0; i < SCOPEFUN_MAX_BUFFERING; i++)
        {
-          while (SDL_AtomicCAS(&m_frameLock[i], 8, 0) == SDL_FALSE)
+          while (SDL_AtomicCAS(&m_frameLock[i].lock, 8, 0) == SDL_FALSE)
           {
              SDL_Delay(1);
           }
        }
        return 0;
     }
-    int lockCapture(uint id)
+    int lockCapture(uint id,uint bytesToWrite)
     {
-        if(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 0, 1) == SDL_FALSE)
-            return 0;
-        return 1;
-    }
-    int unlockCapture(uint id)
-    {
-        while(SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 1, 2) == SDL_FALSE)
+        id = id % SCOPEFUN_MAX_BUFFERING;
+
+        while(SDL_AtomicCAS(&m_frameLock[id].lock, 0, 1) == SDL_FALSE)
         {
-            SDL_Delay(1);
+           SDL_Delay(1);
         }
+
         return 0;
     }
-    int lockUpdate(uint id)
+    int unlockCapture(uint id,uint frameOffset,uint index)
     {
-       if (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 2, 3) == SDL_FALSE)
-          return 0;
+       id = id % SCOPEFUN_MAX_BUFFERING;
+
+       SDL_AtomicSet(&m_frameLock[id].offset, frameOffset);
+       SDL_AtomicSet(&m_frameLock[id].index,  index);
+
+       while (SDL_AtomicCAS(&m_frameLock[id].lock, 1, 2) == SDL_FALSE)
+       {
+          SDL_Delay(1);
+       }
+
+       return 0;
+    }
+    int lockUpdate(uint id,uint& bytesToRead,uint& index)
+    {
+       id = id % SCOPEFUN_MAX_BUFFERING;
+
+       while (SDL_AtomicCAS(&m_frameLock[id].lock, 2, 3) == SDL_FALSE)
+       {
+          SDL_Delay(1);
+       }
+
+       bytesToRead = SDL_AtomicGet(&m_frameLock[id].offset);
+       index       = SDL_AtomicGet(&m_frameLock[id].index);
        return 1;
     }
     int unlockUpdate(uint id)
     {
-       while (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 3, 4) == SDL_FALSE)
+       id = id % SCOPEFUN_MAX_BUFFERING;
+
+       SDL_AtomicSet(&m_frameLock[id].offset,0);
+       SDL_AtomicSet(&m_frameLock[id].index, 0);
+
+       while (SDL_AtomicCAS(&m_frameLock[id].lock, 3, 4) == SDL_FALSE)
        {
           SDL_Delay(1);
        }
@@ -1015,13 +1048,13 @@ public:
     }
     int lockScreen(uint id)
     {
-       if( SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 4, 5) == SDL_FALSE)
+       if( SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING].lock, 4, 5) == SDL_FALSE)
          return 0;
        return 1;
     }
     int unlockScreen(uint id)
     {
-       while (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING], 5, 0) == SDL_FALSE)
+       while (SDL_AtomicCAS(&m_frameLock[id % SCOPEFUN_MAX_BUFFERING].lock, 5, 0) == SDL_FALSE)
        {
           SDL_Delay(1);
        }

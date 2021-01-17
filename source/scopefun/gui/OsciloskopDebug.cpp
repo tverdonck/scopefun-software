@@ -26,34 +26,57 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     Debug(parent)
 {
     m_script = 0;
-    m_Redirect = new wxStreamToTextRedirector(m_textCtrl41);
-    wxFont font(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Courier New");
-    m_textCtrl41->SetFont(font);
-    //m_textCtrl41->GetScrollHelper()->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_NEVER, wxScrollbarVisibility::wxSHOW_SB_ALWAYS);
     SetSize(500, 500);
     SetTitle("Script");
-    // SetWindowStyleFlag(wxRESIZE_BORDER|wxCAPTION|wxCLOSE);
-    // m_scrollHelp = new wxScrollHelper( m_textCtrl41->GetMainWindowOfCompositeControl() );
-    // m_scrollHelp->ShowScrollbars(wxScrollbarVisibility::wxSHOW_SB_DEFAULT, wxScrollbarVisibility::wxSHOW_SB_DEFAULT);
-    // SetScrollHelper(m_scrollHelp);
-    wxColour black((unsigned long)RGB(64, 64, 64));
-    wxColour white(RGB(255, 255, 255));
-    m_textCtrl41->SetBackgroundColour(black);
-    m_textCtrl41->SetForegroundColour(white);
-    SetBackgroundColour(black);
-    SetForegroundColour(white);
+    m_scintilla1->SetLexer(wxSTC_LEX_LUA);
+    m_scintilla1->SetIndent(4);
+    m_scintilla1->SetCodePage(CP_UTF8);
+
+    wxFont font;
+    font.SetFaceName(L"Courier New");
+    m_scintilla1->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+
+    m_scintilla1->StyleSetItalic(wxSTC_LUA_DEFAULT, true);
+    m_scintilla1->StyleSetItalic(wxSTC_LUA_COMMENT, true);
+    m_scintilla1->StyleSetItalic(wxSTC_LUA_COMMENTLINE, true);
+    m_scintilla1->StyleSetItalic(wxSTC_LUA_COMMENTDOC, true);
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_DEFAULT, wxColour(0, 128, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_COMMENT, wxColour(0, 128, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_COMMENTLINE, wxColour(0, 128, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_COMMENTDOC, wxColour(0, 128, 0));
+
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_STRING, wxColour(64, 64, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_CHARACTER, wxColour(64, 64, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_LITERALSTRING, wxColour(64, 64, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_STRINGEOL, wxColour(64, 64, 0));
+
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_NUMBER, wxColour(0, 0, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_PREPROCESSOR, wxColour(64, 64, 64));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_OPERATOR, wxColour(128, 0, 0));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_IDENTIFIER, wxColour(128, 128, 128));
+
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD2, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD3, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD5, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD6, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD7, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_WORD8, wxColour(0, 0, 128));
+    m_scintilla1->StyleSetForeground(wxSTC_LUA_LABEL, wxColour(0, 0, 128));
+
+    m_scintilla1->SetKeyWords(wxSTC_LUA_WORD, L"for do if while end function");
+
     Connect(wxEVT_CLOSE_WINDOW, wxActivateEventHandler(OsciloskopDebug::OnDestroy));
 }
 
 void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
 {
-    // TODO: Implement ThermalOnActivate
 }
 
 
 void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
 {
-    // TODO: Implement ThermalOnActivate
     if(m_script)
     {
         m_script->Stop();
@@ -63,36 +86,46 @@ void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
     { ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false); }
     Hide();
 }
-
-void OsciloskopDebug::m_button561OnButtonClick(wxCommandEvent& event)
+void OsciloskopDebug::m_buttonStartOnButtonClick( wxCommandEvent& event )
 {
-    if(m_script)
-    { m_script->Reload(); }
-    event.Skip();
+   if (m_script)
+   {
+      m_script->Run();
+   }
+   event.Skip();
 }
 
-void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
+void OsciloskopDebug::m_buttonStopOnButtonClick( wxCommandEvent& event )
 {
-    if(m_script)
-    { m_script->Run(); }
-    event.Skip();
-}
-void OsciloskopDebug::m_button562OnButtonClick(wxCommandEvent& event)
-{
-    if(m_script)
-    { m_script->Stop(); }
-    event.Skip();
-}
-void OsciloskopDebug::m_button5621OnButtonClick(wxCommandEvent& event)
-{
-    Close();
-    event.Skip();
+   if (m_script)
+   {
+      m_script->Stop();
+   }
+   event.Skip();
 }
 
+void OsciloskopDebug::m_buttonSaveOnButtonClick( wxCommandEvent& event )
+{
+   fileSaveString(m_script->m_fileName.asChar(), m_scintilla1->GetText());
+}
+
+void OsciloskopDebug::m_buttonLuaOnButtonClick( wxCommandEvent& event )
+{
+   m_scintilla1->SetText((const char*)m_script->m_luaScript);
+   m_buttonSave->Enable();
+   event.Skip();
+}
+
+void OsciloskopDebug::m_buttonHelpOnButtonClick( wxCommandEvent& event )
+{
+   m_scintilla1->SetText(pOsciloscope->m_callback.GetHelp());
+   m_buttonSave->Disable();
+   event.Skip();
+}
 
 void OsciloskopDebug::SetText(std::string str)
 {
-    m_textCtrl41->SetValue(str.c_str());
+   m_textCtrlOutput->SetValue(str.c_str());
 }
 
 void OsciloskopDebug::Clear()
@@ -102,13 +135,20 @@ void OsciloskopDebug::Clear()
     #else
     system("clear");
     #endif
-    m_textCtrl41->Clear();
+    m_textCtrlOutput->Clear();
+}
+
+void OsciloskopDebug::Redirect()
+{
+   if (!m_script)
+      return;
+   m_textCtrlOutput->AppendText(m_script->GetPrint());
+   m_script->ClrPrint();
 }
 
 OsciloskopDebug::~OsciloskopDebug()
 {
-    // delete m_scrollHelp;
-    delete m_Redirect;
+
 }
 
 void OsciloskopDebug::AppendText(const char* str)

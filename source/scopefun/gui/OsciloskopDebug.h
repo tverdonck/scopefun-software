@@ -38,6 +38,11 @@ class OsciloskopDebug : public Debug
 protected:
     // Handlers for Debug events.
     void ThermalOnActivate(wxActivateEvent& event);
+	 void m_buttonStartOnButtonClick( wxCommandEvent& event );
+	 void m_buttonStopOnButtonClick( wxCommandEvent& event );
+	 void m_buttonSaveOnButtonClick( wxCommandEvent& event );
+	 void m_buttonLuaOnButtonClick( wxCommandEvent& event );
+	 void m_buttonHelpOnButtonClick( wxCommandEvent& event );
 public:
     /** Constructor */
     OsciloskopDebug(wxWindow* parent);
@@ -46,18 +51,12 @@ public:
 private:
     void SetText(std::string str);
 private:
-    wxScrollHelper*           m_scrollHelp;
-    wxStreamToTextRedirector* m_Redirect;
-    OsciloscopeScript*        m_script;
+    OsciloscopeScript*           m_script;
 public:
-    virtual void m_button561OnButtonClick(wxCommandEvent& event);
-    virtual void m_button56OnButtonClick(wxCommandEvent& event);
-    virtual void m_button562OnButtonClick(wxCommandEvent& event);
-    virtual void m_button5621OnButtonClick(wxCommandEvent& event);
-
     void OnDestroy(wxActivateEvent& event);
 public:
     void Clear();
+    void Redirect();
     void AppendText(const char* str);
     void AssignScript(OsciloscopeScript* script) { m_script = script; }
 

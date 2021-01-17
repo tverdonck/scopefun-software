@@ -34,7 +34,9 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
         String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
-        scriptPath += "/Script/*.*";
+        String helpPath  = scriptPath;
+               helpPath += "/Script/scopefunapi.help";
+        scriptPath += "/Script/*.lua";
         wxString f = wxFindFirstFile(scriptPath.asChar());
         for(int i = 0; i < SCOPEFUN_MAX_SCRIPT; i++)
         {
@@ -49,6 +51,10 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             Connect(menuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OsciloskopOsciloskop::MenuScriptSelection), (wxObject*)pOsciloscope->m_callback.Get(i), this);
             f = wxFindNextFile();
         }
+        pOsciloscope->m_callback.SetHelp(helpPath);
+
+       
+
         pTimer->init(TIMER_MAIN_THREAD);
         ////////////////////////////////////////////////////////////////////////////////////////
         // version
@@ -189,7 +195,19 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
     ////////////////////////////////////////////////////////////////////////////////
     if(timer > 0.1)
     {
+       
         timer = 0;
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // redirect
+        ////////////////////////////////////////////////////////////////////////////////
+        for(int i=0;i<pOsciloscope->m_callback.Count();i++)
+        {
+          OsciloskopDebug* pDebug = (OsciloskopDebug*)pOsciloscope->m_callback.Get(i)->GetUserData();
+          if (pDebug)
+             pDebug->Redirect();
+        }
+
         ////////////////////////////////////////////////////////////////////////////////
         // undo / redo
         ////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +297,9 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         if (isOpen && isFpga)
            m_buttonCapture->Enable();
         else
+        {
            m_buttonCapture->Disable();
+        }
 
         ////////////////////////////////////////////////////////////////////////////////
         // trigger LED
@@ -1050,22 +1070,29 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
 {
-    pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CAPTURE;
-    SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_CAPTURE);
-    pOsciloscope->simOnOff(0);
-    if(!pOsciloscope->settings.getColors()->windowDefault)
+    int isFpga = pOsciloscope->thread.isFpga();
+    int isOpen = pOsciloscope->thread.isOpen();
+    if (isOpen && isFpga)
     {
-        SetButtonColors();
-        m_buttonCapture->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
-        m_buttonCapture->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
+       pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CAPTURE;
+       SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_CAPTURE);
+       pOsciloscope->simOnOff(0);
+       if (!pOsciloscope->settings.getColors()->windowDefault)
+       {
+          SetButtonColors();
+          m_buttonCapture->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
+          m_buttonCapture->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
+       }
+       if (event.GetClientData() == 0)
+       {
+          pOsciloscope->transferData();
+       }
+       m_buttonPause->Enable();
+       m_buttonPlay->Enable();
+       m_buttonCapture->Disable();
+       m_buttonSimulate->Enable();
+       m_buttonClear->Enable();
     }
-    if(event.GetClientData() == 0)
-    { pOsciloscope->transferData(); }
-    m_buttonPause->Enable();
-    m_buttonPlay->Enable();
-    m_buttonCapture->Disable();
-    m_buttonSimulate->Enable();
-    m_buttonClear->Enable();
 }
 
 void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)

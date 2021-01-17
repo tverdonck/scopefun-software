@@ -80,5 +80,4 @@ void maximizeOglWindow(int& outW, int& outH);
 int SDLCALL PopulateFunction(void* data);
 void SetupUI(WndMain& window);
 
-
 #endif // __OsciloskopConnection__

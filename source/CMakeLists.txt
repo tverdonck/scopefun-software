@@ -240,7 +240,7 @@ else()
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
-list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext )
+list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext stc )
 if(SCOPEFUN_WINDOWS)
 	if( SCOPEFUN_VISUALSTUDIO )
 		target_link_libraries( ScopeFun  
