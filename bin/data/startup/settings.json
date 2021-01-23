@@ -36,7 +36,7 @@
 		"frameClipboard":	16
 	},
 	"window":	{
-		"debug" : 1,
+		"debug" : 0,
 		"displayWidth":	 600,
 		"displayHeight": 900,
 		"controlWidth":	 800,
