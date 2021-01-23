@@ -419,7 +419,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel15->SetSizer( bSizer14 );
 	m_panel15->Layout();
 	bSizer14->Fit( m_panel15 );
-	m_notebook4->AddPage( m_panel15, _("Channel 1"), true );
+	m_notebook4->AddPage( m_panel15, _("Channel 1"), false );
 	m_panel16 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer141;
 	bSizer141 = new wxBoxSizer( wxVERTICAL );
@@ -525,22 +525,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer1511->Add( m_checkBoxFFTF, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer1411->Add( bSizer1511, 1, 0, 5 );
-
-	wxBoxSizer* bSizer1581;
-	bSizer1581 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText116 = new wxStaticText( m_panel161, wxID_ANY, _("Custom Function ="), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText116->Wrap( -1 );
-	bSizer1581->Add( m_staticText116, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-	m_textCtrlFuncCustom = new wxTextCtrl( m_panel161, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-	m_textCtrlFuncCustom->SetToolTip( _("operators = + - * / %\nfunctions = min(p1,p2) max(p1,p2) sin( p1, p2 ) cos(p1,p2)\nchannels  = ch0 ch1\nconstants = 0...N\ndouble      = whole.decimal") );
-
-	bSizer1581->Add( m_textCtrlFuncCustom, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-
-
-	bSizer1411->Add( bSizer1581, 1, wxEXPAND, 5 );
+	bSizer1411->Add( bSizer1511, 1, wxEXPAND, 5 );
 
 
 	m_panel161->SetSizer( bSizer1411 );
@@ -971,7 +956,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_filePicker1 = new wxFilePickerCtrl( m_panel25, wxID_ANY, wxEmptyString, _("./data/signal/digital.signal"), _("*.signal"), wxDefaultPosition, wxSize( -1,-1 ), wxFLP_DEFAULT_STYLE|wxFLP_FILE_MUST_EXIST );
 	bSizer112->Add( m_filePicker1, 8, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_buttonCustomFile = new wxButton( m_panel25, wxID_ANY, _("upload"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonCustomFile = new wxButton( m_panel25, wxID_ANY, _("Upload"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer112->Add( m_buttonCustomFile, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -1018,7 +1003,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel25->SetSizer( bSizer152 );
 	m_panel25->Layout();
 	bSizer152->Fit( m_panel25 );
-	m_notebook4->AddPage( m_panel25, _("Setup"), false );
+	m_notebook4->AddPage( m_panel25, _("Setup"), true );
 
 	bSizer155->Add( m_notebook4, 2, wxEXPAND|wxALL, 5 );
 
@@ -1662,7 +1647,6 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_checkBoxXYVoltageGraph->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxXYVoltageGraphOnCheckBox ), NULL, this );
 	m_checkBoxSignalF->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignalFOnCheckBox ), NULL, this );
 	m_checkBoxFFTF->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFTFOnCheckBox ), NULL, this );
-	m_textCtrlFuncCustom->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlFuncCustomOnTextEnter ), NULL, this );
 	m_choiceDOnOff815->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDOnOff815OnChoice ), NULL, this );
 	m_choiceDOnOff70->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDOnOff70OnChoice ), NULL, this );
 	m_checkBox12->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox12OnCheckBox ), NULL, this );
@@ -1864,7 +1848,6 @@ Osciloskop::~Osciloskop()
 	m_checkBoxXYVoltageGraph->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxXYVoltageGraphOnCheckBox ), NULL, this );
 	m_checkBoxSignalF->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxSignalFOnCheckBox ), NULL, this );
 	m_checkBoxFFTF->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBoxFFTFOnCheckBox ), NULL, this );
-	m_textCtrlFuncCustom->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Osciloskop::m_textCtrlFuncCustomOnTextEnter ), NULL, this );
 	m_choiceDOnOff815->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDOnOff815OnChoice ), NULL, this );
 	m_choiceDOnOff70->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( Osciloskop::m_choiceDOnOff70OnChoice ), NULL, this );
 	m_checkBox12->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Osciloskop::m_checkBox12OnCheckBox ), NULL, this );
@@ -4305,10 +4288,10 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY );
 	m_scintilla1->SetSelBackground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
 	m_scintilla1->SetSelForeground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
-	bSizer158->Add( m_scintilla1, 1, wxEXPAND | wxALL, 5 );
+	bSizer158->Add( m_scintilla1, 1, wxEXPAND, 5 );
 
 	m_textCtrlOutput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
-	bSizer158->Add( m_textCtrlOutput, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	bSizer158->Add( m_textCtrlOutput, 1, wxEXPAND, 5 );
 
 
 	bSizer55->Add( bSizer158, 10, wxEXPAND, 5 );
@@ -4316,20 +4299,29 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	wxBoxSizer* bSizer159;
 	bSizer159 = new wxBoxSizer( wxHORIZONTAL );
 
+	wxBoxSizer* bSizer173;
+	bSizer173 = new wxBoxSizer( wxHORIZONTAL );
+
 	m_buttonStart = new wxButton( this, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_buttonStart, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer173->Add( m_buttonStart, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_buttonStop = new wxButton( this, wxID_ANY, _("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_buttonStop, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer173->Add( m_buttonStop, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_buttonSave = new wxButton( this, wxID_ANY, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_buttonSave, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer173->Add( m_buttonSave, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_buttonLua = new wxButton( this, wxID_ANY, _("Lua"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_buttonLua, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer173->Add( m_buttonLua, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 	m_buttonHelp = new wxButton( this, wxID_ANY, _("Help"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer159->Add( m_buttonHelp, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer173->Add( m_buttonHelp, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+
+	m_buttonUpload = new wxButton( this, wxID_ANY, _("Upload"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer173->Add( m_buttonUpload, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+
+
+	bSizer159->Add( bSizer173, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 
 
 	bSizer55->Add( bSizer159, 1, wxEXPAND, 5 );
@@ -4337,6 +4329,7 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 
 	this->SetSizer( bSizer55 );
 	this->Layout();
+	bSizer55->Fit( this );
 
 	this->Centre( wxBOTH );
 
@@ -4347,6 +4340,7 @@ Debug::Debug( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	m_buttonSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonSaveOnButtonClick ), NULL, this );
 	m_buttonLua->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonLuaOnButtonClick ), NULL, this );
 	m_buttonHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonHelpOnButtonClick ), NULL, this );
+	m_buttonUpload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonUploadOnButtonClick ), NULL, this );
 }
 
 Debug::~Debug()
@@ -4358,6 +4352,7 @@ Debug::~Debug()
 	m_buttonSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonSaveOnButtonClick ), NULL, this );
 	m_buttonLua->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonLuaOnButtonClick ), NULL, this );
 	m_buttonHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonHelpOnButtonClick ), NULL, this );
+	m_buttonUpload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Debug::m_buttonUploadOnButtonClick ), NULL, this );
 
 }
 

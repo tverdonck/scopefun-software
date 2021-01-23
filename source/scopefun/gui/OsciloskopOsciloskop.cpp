@@ -1846,15 +1846,11 @@ void OsciloskopOsciloskop::m_choiceBit0OnChoice(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_filePicker1OnFileChanged(wxFileDirPickerEvent& event)
 {
    pOsciloscope->window.hardwareGenerator.loadCustomDigital(m_filePicker1->GetFileName().GetFullPath().ToAscii().data());
-   pOsciloscope->window.hardwareGenerator.uploadDigital();
-   pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_buttonCustomFileOnButtonClick(wxCommandEvent& event)
 {
-   pOsciloscope->m_callback.Ptr()->onUpload( &getCtx()->generator, &getCtx()->generatorCount);
-   pOsciloscope->thread.setGeneratorData(&getCtx()->generator);
-   pOsciloscope->thread.function(afUploadGenerator);
+   pOsciloscope->window.hardwareGenerator.uploadDigital();
    pOsciloscope->transferData();
 }
 

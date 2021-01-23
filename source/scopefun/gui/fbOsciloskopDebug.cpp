@@ -37,18 +37,9 @@ void OsciloskopDebug::m_buttonHelpOnButtonClick( wxCommandEvent& event )
     // TODO: Implement m_button561OnButtonClick
 }
 
-
-void OsciloskopDebug::m_button56OnButtonClick(wxCommandEvent& event)
+void OsciloskopDebug::m_buttonUploadOnButtonClick( wxCommandEvent& event )
 {
-    // TODO: Implement m_button56OnButtonClick
+// TODO: Implement m_buttonUploadOnButtonClick
 }
 
-void OsciloskopDebug::m_button562OnButtonClick(wxCommandEvent& event)
-{
-    // TODO: Implement m_button562OnButtonClick
-}
 
-void OsciloskopDebug::m_button5621OnButtonClick(wxCommandEvent& event)
-{
-    // TODO: Implement m_button5621OnButtonClick
-}

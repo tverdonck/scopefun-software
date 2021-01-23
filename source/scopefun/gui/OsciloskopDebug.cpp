@@ -71,6 +71,10 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
 
     if (!isFileWritable())
        m_buttonSave->Disable();
+
+    m_buttonUpload->Disable();
+    m_buttonStop->Disable();
+    m_buttonLua->Disable();
 }
 
 void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
@@ -81,7 +85,6 @@ void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
       m_scintilla1->SetText((const char*)m_script->m_luaScript);
    }
 }
-
 
 void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
 {
@@ -101,6 +104,7 @@ void OsciloskopDebug::m_buttonStartOnButtonClick( wxCommandEvent& event )
       m_script->Run();
       m_buttonStart->Disable();
       m_buttonStop->Enable();
+      m_buttonUpload->Enable();
    }
    event.Skip();
 }
@@ -112,6 +116,7 @@ void OsciloskopDebug::m_buttonStopOnButtonClick( wxCommandEvent& event )
       m_script->Stop();
       m_buttonStart->Enable();
       m_buttonStop->Disable();
+      m_buttonUpload->Disable();
    }
    event.Skip();
 }
@@ -137,6 +142,16 @@ void OsciloskopDebug::m_buttonHelpOnButtonClick( wxCommandEvent& event )
    m_buttonSave->Disable();
    m_buttonLua->Enable();
    m_buttonHelp->Disable();
+   event.Skip();
+}
+
+
+void OsciloskopDebug::m_buttonUploadOnButtonClick(wxCommandEvent& event)
+{
+   m_script->OnUpload(&getCtx()->generator, &getCtx()->generatorCount);
+   pOsciloscope->thread.setGeneratorData(&getCtx()->generator);
+   pOsciloscope->thread.function(afUploadGenerator);
+   pOsciloscope->transferData();
    event.Skip();
 }
 

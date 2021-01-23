@@ -128,8 +128,6 @@ class Osciloskop : public wxFrame
 		wxCheckBox* m_checkBoxXYVoltageGraph;
 		wxCheckBox* m_checkBoxSignalF;
 		wxCheckBox* m_checkBoxFFTF;
-		wxStaticText* m_staticText116;
-		wxTextCtrl* m_textCtrlFuncCustom;
 		wxPanel* m_panel9;
 		wxStaticText* m_staticText1232;
 		wxChoice* m_choiceDOnOff815;
@@ -345,7 +343,6 @@ class Osciloskop : public wxFrame
 		virtual void m_checkBoxXYVoltageGraphOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxSignalFOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBoxFFTFOnCheckBox( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_textCtrlFuncCustomOnTextEnter( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDOnOff815OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_choiceDOnOff70OnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_checkBox12OnCheckBox( wxCommandEvent& event ) { event.Skip(); }
@@ -947,6 +944,7 @@ class Debug : public wxDialog
 		wxButton* m_buttonSave;
 		wxButton* m_buttonLua;
 		wxButton* m_buttonHelp;
+		wxButton* m_buttonUpload;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void ThermalOnActivate( wxActivateEvent& event ) { event.Skip(); }
@@ -955,12 +953,13 @@ class Debug : public wxDialog
 		virtual void m_buttonSaveOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonLuaOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_buttonHelpOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_buttonUploadOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 		wxTextCtrl* m_textCtrlOutput;
 
-		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 877,700 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER );
+		Debug( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Debug"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER );
 		~Debug();
 
 };
