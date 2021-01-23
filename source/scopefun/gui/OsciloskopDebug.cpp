@@ -75,6 +75,11 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
 
 void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
 {
+   if (m_script && m_script->m_luaScript)
+   {
+      m_script->Reload();
+      m_scintilla1->SetText((const char*)m_script->m_luaScript);
+   }
 }
 
 

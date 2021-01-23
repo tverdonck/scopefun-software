@@ -1539,8 +1539,8 @@ void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice(wxCommandEvent& event)
             m_checkBox12->SetValue(true);
             break;
     };
-    pOsciloscope->window.digital.digital[7] = m_checkBox7->GetValue();
-    pOsciloscope->window.digital.digital[8] = m_checkBox8->GetValue();
+    pOsciloscope->window.digital.digital[6] = m_checkBox7->GetValue();
+    pOsciloscope->window.digital.digital[7] = m_checkBox8->GetValue();
     pOsciloscope->window.digital.digital[8]  = m_checkBox9->GetValue();
     pOsciloscope->window.digital.digital[9]  = m_checkBox10->GetValue();
     pOsciloscope->window.digital.digital[10] = m_checkBox11->GetValue();
@@ -1845,17 +1845,17 @@ void OsciloskopOsciloskop::m_choiceBit0OnChoice(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_filePicker1OnFileChanged(wxFileDirPickerEvent& event)
 {
-   // pOsciloscope->window.hardwareGenerator.loadCustomDigital(m_filePicker1->GetFileName().GetFullPath().ToAscii().data());
+   pOsciloscope->window.hardwareGenerator.loadCustomDigital(m_filePicker1->GetFileName().GetFullPath().ToAscii().data());
+   pOsciloscope->window.hardwareGenerator.uploadDigital();
+   pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_buttonCustomFileOnButtonClick(wxCommandEvent& event)
 {
-  //  pOsciloscope->transferData();
-    // pOsciloscope->window.hardwareGenerator.uploadDigital();
    pOsciloscope->m_callback.Ptr()->onUpload( &getCtx()->generator, &getCtx()->generatorCount);
    pOsciloscope->thread.setGeneratorData(&getCtx()->generator);
    pOsciloscope->thread.function(afUploadGenerator);
-  
+   pOsciloscope->transferData();
 }
 
 void OsciloskopOsciloskop::m_textCtrlDigitalVoltageOnTextEnter(wxCommandEvent& event)

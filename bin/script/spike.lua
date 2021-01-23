@@ -32,7 +32,7 @@ function onInit(ctx)
 end
 
 -- onFunction
-function onFunction(ch0,ch1)
+function onFunction23(ch0,ch1)
     func = ch0/(math.abs(ch1)+1)
     return func
 end

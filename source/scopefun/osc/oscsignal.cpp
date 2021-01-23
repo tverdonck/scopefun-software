@@ -1126,6 +1126,7 @@ int LuaOnFrame(lua_State* L, SFrameData* data, int len, float* pos, float* zoom,
        }
        else
        {
+          lua_pop(L, 1);
           LuaOnPrint(L, "function is missing: onFrame(data,len)");
        }
     }
@@ -1169,6 +1170,7 @@ int LuaOnSample(lua_State* L, int sample, ishort* ch0, ishort* ch1, ishort* fun,
        }
        else
        {
+          lua_pop(L, 1);
           LuaOnPrint(L, "function is missing: onSample(ch0,ch1,fun,dig)");
        }
     }
@@ -1204,6 +1206,7 @@ int LuaOnDisplay(lua_State* L, SDisplay* data, float* pos, float* zoom, void* us
        }
        else
        {
+          lua_pop(L, 1);
           LuaOnPrint(L, "function is missing: onDisplay(data)");
        }
     }
@@ -1239,6 +1242,7 @@ int LuaOnConfigure(lua_State* L, SHardware* hw)
        }
        else
        {
+          lua_pop(L, 1);
           LuaOnPrint(L, "function is missing: onConfigure(hw)");
        }
     }
@@ -1274,6 +1278,7 @@ int LuaOnInit(lua_State* L, SFContext* ctx)
        }
        else
        {
+          lua_pop(L, 1);
           LuaOnPrint(L, "function is missing: onInit(ctx)");
        }
     }
@@ -1328,24 +1333,42 @@ int LuaOnUpload(lua_State* L, SGenerator* gen, uint* sampleCount)
 {
    if (!L) { return 0; }
 
-   // push function
-   if (lua_getglobal(L, "onUpload") == LUA_TFUNCTION)
+   try
    {
-      // push parameters
-      SWIG_Lua_NewPointerObj(L, gen, SWIGTYPE_p_SGenerator, 0);
-
-      // execute
-      if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+      // push function
+      if (lua_getglobal(L, "onUpload") == LUA_TFUNCTION)
       {
-         LuaOnError(L);
+         // push parameters
+         SWIG_Lua_NewPointerObj(L, gen, SWIGTYPE_p_SGenerator, 0);
+
+         // execute
+         if (lua_pcall(L, 1, 2, 0) != LUA_OK)
+         {
+            LuaOnError(L);
+         }
+         else
+         {
+            // pop parameters
+            SWIG_Lua_ConvertPtr(L, -2, (void**)&gen, SWIGTYPE_p_SGenerator, 0);
+
+            for (int i = 0; i < SCOPEFUN_GENERATOR; i++)
+            {
+               gen->digital.bytes[i] = endianSwap16(gen->digital.bytes[i]);
+            }
+
+            *sampleCount = lua_tointeger(L, -1);
+            lua_pop(L, 2);
+         }
       }
       else
       {
-         // pop parameters
-         SWIG_Lua_ConvertPtr(L, -2, (void**)&gen, SWIGTYPE_p_SGenerator, 0);
-         *sampleCount = lua_tointeger(L, -1);
-         lua_pop(L, 2);
+         lua_pop(L, 1);
+         LuaOnPrint(L, "function is missing: onUpload(gen)");
       }
+   }
+   catch (std::exception msg)
+   {
+      LuaOnPrint(L, msg.what());
    }
    return 0;
 }
@@ -1357,7 +1380,7 @@ OsciloscopeScript::OsciloscopeScript(int index)
     m_userData = 0;
     m_luaState = 0;
     SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
-    SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_ERROR);
+    m_luaScript = 0;
 }
 int OsciloscopeScript::OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user)
 {
@@ -1385,11 +1408,13 @@ int OsciloscopeScript::OnDisplay(SDisplay* data, float* pos, float* zoom, void* 
 }
 int OsciloscopeScript::OnConfigure(SHardware* hw)
 {
-    int ret = 0;
-    SDL_AtomicLock(&m_spinLock);
-    ret = LuaOnConfigure(m_luaState, hw);
-    SDL_AtomicUnlock(&m_spinLock);
-    return ret;
+   int ret = 0;
+   if (SDL_AtomicTryLock(&m_spinLock) == SDL_TRUE)
+   {
+      ret = LuaOnConfigure(m_luaState, hw);
+      SDL_AtomicUnlock(&m_spinLock);
+   }
+   return ret;
 }
 int OsciloscopeScript::OnInit(SFContext* ctx)
 {
@@ -1503,8 +1528,10 @@ int OsciloscopeScript::Run()
 
 int OsciloscopeScript::Reload()
 {
-    Stop();
-    Run();
+    ilarge size = 0;
+    if(m_luaScript)
+       pMemory->free(m_luaScript);
+    fileLoadString(m_fileName.asChar(), (char**)&m_luaScript, &size);
     return 0;
 }
 
@@ -1625,10 +1652,8 @@ int OsciloscopeCallback::Add(String fileName)
     {
         OsciloscopeScript* script = new OsciloscopeScript(m_script.getCount());
         script->Load(fileName);
+        script->Reload();
         m_script.pushBack(script);
-
-        ilarge size = 0;
-        fileLoadString(fileName.asChar(), (char**)&script->m_luaScript, &size);
         return 0;
     }
     return 1;

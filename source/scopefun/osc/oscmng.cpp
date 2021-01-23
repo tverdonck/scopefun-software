@@ -1737,10 +1737,10 @@ void OsciloscopeManager::renderThread(uint threadId, OsciloscopeThreadData& thre
         // digital
         ////////////////////////////////////////////////////////////////////////////////
         int bits = (int)pow(float(2), float(wndMain.display.digitalBits + 3));
-        renderer.renderDigitalGrid(threadId, threadData, bits, 16);
-        renderer.renderDigitalAxis(threadId, threadData, bits, 16);
-        renderer.renderDigitalUnit(threadId, threadData, bits, 16);
-        renderer.renderDigital(threadId, threadData, measure, bits, 16);
+        renderer.renderDigitalGrid(threadId, threadData, bits, 12);
+        renderer.renderDigitalAxis(threadId, threadData, bits, 12);
+        renderer.renderDigitalUnit(threadId, threadData, bits, 12);
+        renderer.renderDigital(threadId, threadData, measure, bits, 12);
     }
     else
     {

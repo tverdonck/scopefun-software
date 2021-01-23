@@ -2698,10 +2698,10 @@ void OsciloscopeThreadRenderer::renderDigitalGrid(uint threadId, OsciloscopeThre
     {
         return;
     }
-    pCanvas3d->beginBatch(threadId,  CANVAS3D_BATCH_LINE, 16 + 3);
-    for(int i = 0; i <= 16; i++)
+    pCanvas3d->beginBatch(threadId,  CANVAS3D_BATCH_LINE, 12 + 3);
+    for(int i = 0; i <= 12; i++)
     {
-        float y = float(i) / float(16.f) - 0.5f;
+        float y = float(i) / float(12.f) - 0.5f;
         pCanvas3d->bLine(threadId,  Vector4(xMin, y, 0.f, 1.f), Vector4(xMax, y, 0.f, 1.f));
     }
     pCanvas3d->bLine(threadId,  Vector4(xMax, -0.5f, 0.f, 1.f),  Vector4(xMax, 0.5f, 0.f, 1.f));
@@ -2753,8 +2753,8 @@ void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadDa
         return;
     }
     int digitalCount     = 0;
-    int indicesArray[16] = {0};
-    for(int i = 0; i < 16; i++)
+    int indicesArray[12] = {0};
+    for(int i = 0; i < 12; i++)
     {
         if(i < wndMain.digital.digital.getCount() && wndMain.digital.digital[i])
         {
@@ -2767,14 +2767,14 @@ void OsciloscopeThreadRenderer::renderDigital(uint threadId, OsciloscopeThreadDa
         uint    count = frame.samples;
         double xScale = 1.0;
         pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, digitalCount * count * 2);
-        for(int i = 0; i < 16; i++)
+        for(int i = 0; i < 12; i++)
         {
             if(!indicesArray[i])
             {
                 continue;
             }
-            double     ymin = (float(i) / 16.f) - 0.5f;
-            double     ymax = (float(i + 1) / 16.f) - 0.5f - (1.f / 16.f) * 0.5f;
+            double     ymin = (float(i) / 12.f) - 0.5f;
+            double     ymax = (float(i + 1) / 12.f) - 0.5f - (1.f / 12.f) * 0.25f;
             for(uint j = 0; j < count; j++)
             {
                 int    idx  = clamp(j, 0U, count - 1);

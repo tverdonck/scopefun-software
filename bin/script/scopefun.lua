@@ -36,11 +36,15 @@ end
 
 -- onUpload
 function onUpload(gen)
-	for i=0,4096,1 do
-		gen.analog0[i] = math.sin( i )
-		gen.analog1[i] = math.tan( i )
-		gen.digital[i] = i % 12
+	for i=0,32767,1 do
+		gen.analog0[i] = 0
+		gen.analog1[i] = 0
+        bits = 0
+		for j=0,11,1 do
+			bits = bits | ((i%2)<<j)
+		end
+		gen.digital[i] = bits
 	end
-    return gen, 4096
+    return gen, 32768
 end
 

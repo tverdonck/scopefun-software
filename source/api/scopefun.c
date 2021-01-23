@@ -1059,17 +1059,24 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                     byte byte1 = *(dataStart + offset + 1);
                     byte byte2 = *(dataStart + offset + 2);
                     byte byte3 = *(dataStart + offset + 3);
-                    ch0 |= byte0;
-                    ch0 = ch0 << 2;
-                    ch0 |= ((byte1 >> 6) & 0x3F);
-                    ch1 |= (byte1 & 0x3F);
-                    ch1 = ch1 << 4;
-                    ch1 |= ((byte2 >> 4) & 0xF);
-                    dig |= (byte2 & 0xF);
-                    dig = dig << 8;
-                    dig |= byte3;
-                    ishort ich0 = leadBitShift(ch0 & 0x000003FF);
-                    ishort ich1 = leadBitShift(ch1 & 0x000003FF);
+                    //ch0 |= byte0;
+                    //ch0 = ch0 << 2;
+                    //ch0 |= ((byte1 >> 6) & 0x3F);
+                    //ch1 |= (byte1 & 0x3F);
+                    //ch1 = ch1 << 4;
+                    //ch1 |= ((byte2 >> 4) & 0xF);
+                    //dig |= (byte2 & 0xF);
+                    //dig = dig << 8;
+                    //dig |= byte3;
+
+                  /*  ishort ich0 = leadBitShift(ch0 & 0x000003FF);
+                    ishort ich1 = leadBitShift(ch1 & 0x000003FF);*/
+
+                     ishort ich0 = 0;
+                     ishort ich1 = 0;
+
+                    sfGetData((uint)byte0 | ((uint)byte1 << 8)| ((uint)byte2 << 16) | ((uint)byte3 << 24), &ich0, &ich1, &dig);
+
                     ishort fun = cDisplayFunction(ctx, ctx->functionType, ch0, ch1, dig);
                     if(ctx->pCallback)
                     { ((SCallback*)ctx->pCallback)->onSample(sample, &ich0, &ich1, &fun, &dig, &displayPos, &displayZoom, ctx->pUserData); }
@@ -1120,18 +1127,24 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                 byte byte1 = *(dataStart + offset + 1);
                 byte byte2 = *(dataStart + offset + 2);
                 byte byte3 = *(dataStart + offset + 3);
-                ch0 |= byte0;
-                ch0 = ch0 << 2;
-                ch0 |= ((byte1 >> 6) & 0x3F);
-                ch1 |= (byte1 & 0x3F);
-                ch1 = ch1 << 4;
-                ch1 |= ((byte2 >> 4) & 0xF);
-                dig |= (byte2 & 0xF);
-                dig = dig << 8;
-                dig |= byte3;
+                //ch0 |= byte0;
+                //ch0 = ch0 << 2;
+                //ch0 |= ((byte1 >> 6) & 0x3F);
+                //ch1 |= (byte1 & 0x3F);
+                //ch1 = ch1 << 4;
+                //ch1 |= ((byte2 >> 4) & 0xF);
+                //dig |= (byte2 & 0xF);
+                //dig = dig << 8;
+                //dig |= byte3;
                 // channels
-                ishort channel0 = leadBitShift(ch0 & 0x000003FF);
-                ishort channel1 = leadBitShift(ch1 & 0x000003FF);
+               /* ishort channel0 = leadBitShift(ch0 & 0x000003FF);
+                ishort channel1 = leadBitShift(ch1 & 0x000003FF);*/
+
+                ishort channel0 = 0;
+                ishort channel1 = 0;
+
+                sfGetData((uint)byte0 | ((uint)byte1 << 8) | ((uint)byte2 << 16) | ((uint)byte3 << 24), &channel0, &channel1, &dig);
+
                 ushort digital = dig;
                 ushort function = cDisplayFunction(ctx,ctx->functionType, channel0, channel1, digital);
                 if(ctx->pCallback)
@@ -1464,7 +1477,7 @@ SCOPEFUN_API int sfGetData(uint data, ishort* channel0, ishort* channel1, ushort
     ch1 = ch1 << 4;
     ch1 |= ((byte2 >> 4) & 0xF);
     dig |= (byte2 & 0xF);
-    dig = dig << 8;
+    dig  = dig << 8;
     dig |= byte3;
     *channel0 = leadBitShift(ch0 & 0x000003FF);
     *channel1 = leadBitShift(ch1 & 0x000003FF);
