@@ -31,6 +31,14 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 {
     if(once)
     {
+        once = 0;
+
+        if (!isFileWritable())
+        {
+           wxMessageDialog msgBox(this, "Some features will be disabled. You must run ScopeFun.exe as administrator or install it out of 'Progream Files' folder.", wxT("Warning"), wxOK | wxCENTRE);
+           int ret = msgBox.ShowModal();
+        }
+
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
         String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
@@ -87,7 +95,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         {
             m_menu7->Remove(m_menuItemDebug);
         }
-        once = 0;
         ////////////////////////////////////////////////////////////////////////////////////////
         // license
         ////////////////////////////////////////////////////////////////////////////////////////
@@ -162,22 +169,9 @@ void OsciloskopOsciloskop::onActivateApp(wxActivateEvent& event)
 
 void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
 {
-    // main.state save
-    wxFileName fn = GetOscDataFolder();
-    wxString string = fn.GetPath().append(_("/data/state/main.state"));
-    SDL_RWops* ctx = SDL_RWFromFile(string.ToAscii().data(), "wb+");
-    if(ctx)
-    {
-        SDL_RWwrite(ctx, &pOsciloscope->windowName[0], 1, 4 * sizeof(String));
-        SDL_RWclose(ctx);
-    }
-    // save slot
-    SaveSlot(0, pOsciloscope->windowName[0].asChar());
-    SaveSlot(1, pOsciloscope->windowName[1].asChar());
-    SaveSlot(2, pOsciloscope->windowName[2].asChar());
-    SaveSlot(3, pOsciloscope->windowName[3].asChar());
     // threds exit
     pOsciloscope->exitThreads();
+
     // exit
     Destroy();
 }

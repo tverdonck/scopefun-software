@@ -14,7 +14,7 @@ function onDisplay(data)
 		data.analog0[i] = data.analog0[(i*2)%9999]
 	end
 	for i = 0,9999,1 do
-		data.analog1[i] = data.analog1[i%1999]
+		data.analog1[i] = data.analog1[i%24]
 	end
 	return data
 end

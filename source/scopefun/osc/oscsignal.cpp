@@ -1075,6 +1075,18 @@ int LuaOnPrint(lua_State* L)
 }
 
 
+int LuaOnPrint(lua_State* L,const char* msg)
+{
+   if (!L) { return 0; }
+   const char* str = lua_tostring(L, -1);
+   lua_getglobal(L, "ScriptPointer");
+   OsciloscopeScript* pScript = (OsciloscopeScript*)lua_touserdata(L, -1);
+   pScript->LuaPrint(msg);
+   lua_pop(L, 1);
+   return 0;
+}
+
+
 int LuaOnError(lua_State* L)
 {
     if(!L) { return 0; }
@@ -1089,25 +1101,37 @@ int LuaOnError(lua_State* L)
 int LuaOnFrame(lua_State* L, SFrameData* data, int len, float* pos, float* zoom, void* user)
 {
     if(!L) { return 0; }
-    // push function
-    if(lua_getglobal(L, "onFrame") == LUA_TFUNCTION)
+
+    try
     {
-        // push parameters
-        SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SFrameData, 0);
-        lua_pushinteger(L, len);
-        // execute
-        if(lua_pcall(L, 2, 2, 0) != LUA_OK)
-        {
-            LuaOnError(L);
-        }
-        else
-        {
-            // pop parameters
-            SWIG_Lua_ConvertPtr(L, -2, (void**)&data, SWIGTYPE_p_SFrameData, 0);
-            lua_pop(L, 1);
-            // cleanup
-            lua_pop(L, 1);
-        }
+       // push function
+       if (lua_getglobal(L, "onFrame") == LUA_TFUNCTION)
+       {
+          // push parameters
+          SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SFrameData, 0);
+          lua_pushinteger(L, len);
+          // execute
+          if (lua_pcall(L, 2, 2, 0) != LUA_OK)
+          {
+             LuaOnError(L);
+          }
+          else
+          {
+             // pop parameters
+             SWIG_Lua_ConvertPtr(L, -2, (void**)&data, SWIGTYPE_p_SFrameData, 0);
+             lua_pop(L, 1);
+             // cleanup
+             lua_pop(L, 1);
+          }
+       }
+       else
+       {
+          LuaOnPrint(L, "function is missing: onFrame(data,len)");
+       }
+    }
+    catch (std::exception msg)
+    {
+       LuaOnPrint(L, msg.what());
     }
     return 0;
 }
@@ -1115,30 +1139,42 @@ int LuaOnFrame(lua_State* L, SFrameData* data, int len, float* pos, float* zoom,
 int LuaOnSample(lua_State* L, int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user)
 {
     if(!L) { return 0; }
-    // push function
-    if(lua_getglobal(L, "onSample") == LUA_TFUNCTION)
+
+    try
     {
-        // push parameters
-        lua_pushinteger(L, sample);
-        lua_pushinteger(L, *ch0);
-        lua_pushinteger(L, *ch1);
-        lua_pushinteger(L, *fun);
-        lua_pushinteger(L, *dig);
-        // execute
-        if(lua_pcall(L, 5, 5, 0) != LUA_OK)
-        {
-            LuaOnError(L);
-        }
-        else
-        {
-            // pop parameters
-            sample = lua_tointeger(L, -5);
-            *ch0 = lua_tointeger(L, -4);
-            *ch1 = lua_tointeger(L, -3);
-            *fun = lua_tointeger(L, -2);
-            *dig = lua_tointeger(L, -1);
-            lua_pop(L, 5);
-        }
+       // push function
+       if (lua_getglobal(L, "onSample") == LUA_TFUNCTION)
+       {
+          // push parameters
+          lua_pushinteger(L, sample);
+          lua_pushinteger(L, *ch0);
+          lua_pushinteger(L, *ch1);
+          lua_pushinteger(L, *fun);
+          lua_pushinteger(L, *dig);
+          // execute
+          if (lua_pcall(L, 5, 5, 0) != LUA_OK)
+          {
+             LuaOnError(L);
+          }
+          else
+          {
+             // pop parameters
+             sample = lua_tointeger(L, -5);
+             *ch0 = lua_tointeger(L, -4);
+             *ch1 = lua_tointeger(L, -3);
+             *fun = lua_tointeger(L, -2);
+             *dig = lua_tointeger(L, -1);
+             lua_pop(L, 5);
+          }
+       }
+       else
+       {
+          LuaOnPrint(L, "function is missing: onSample(ch0,ch1,fun,dig)");
+       }
+    }
+    catch (std::exception msg)
+    {
+       LuaOnPrint(L, msg.what());
     }
     return 0;
 }
@@ -1146,22 +1182,34 @@ int LuaOnSample(lua_State* L, int sample, ishort* ch0, ishort* ch1, ishort* fun,
 int LuaOnDisplay(lua_State* L, SDisplay* data, float* pos, float* zoom, void* user)
 {
     if(!L) { return 0; }
-    // push function
-    if(lua_getglobal(L, "onDisplay") == LUA_TFUNCTION)
+
+    try
     {
-        // push parameters
-        SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SDisplay, 0);
-        // execute
-        if(lua_pcall(L, 1, 1, 0) != LUA_OK)
-        {
-            LuaOnError(L);
-        }
-        else
-        {
-            // pop parameters
-            SWIG_Lua_ConvertPtr(L, -1, (void**)&data, SWIGTYPE_p_SDisplay, 0);
-            lua_pop(L, 1);
-        }
+       // push function
+       if (lua_getglobal(L, "onDisplay") == LUA_TFUNCTION)
+       {
+          // push parameters
+          SWIG_Lua_NewPointerObj(L, data, SWIGTYPE_p_SDisplay, 0);
+          // execute
+          if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+          {
+             LuaOnError(L);
+          }
+          else
+          {
+             // pop parameters
+             SWIG_Lua_ConvertPtr(L, -1, (void**)&data, SWIGTYPE_p_SDisplay, 0);
+             lua_pop(L, 1);
+          }
+       }
+       else
+       {
+          LuaOnPrint(L, "function is missing: onDisplay(data)");
+       }
+    }
+    catch (std::exception msg)
+    {
+       LuaOnPrint(L, msg.what());
     }
     return 0;
 }
@@ -1169,22 +1217,34 @@ int LuaOnDisplay(lua_State* L, SDisplay* data, float* pos, float* zoom, void* us
 int LuaOnConfigure(lua_State* L, SHardware* hw)
 {
     if(!L) { return 0; }
-    // push function
-    if(lua_getglobal(L, "onConfigure") == LUA_TFUNCTION)
+
+    try
     {
-        // push parameters
-        SWIG_Lua_NewPointerObj(L, hw, SWIGTYPE_p_SHardware, 0);
-        // execute
-        if(lua_pcall(L, 1, 1, 0) != LUA_OK)
-        {
-            LuaOnError(L);
-        }
-        else
-        {
-            // pop parameters
-            SWIG_Lua_ConvertPtr(L, -1, (void**)&hw, SWIGTYPE_p_SHardware, 0);
-            lua_pop(L, 1);
-        }
+       // push function
+       if (lua_getglobal(L, "onConfigure") == LUA_TFUNCTION)
+       {
+          // push parameters
+          SWIG_Lua_NewPointerObj(L, hw, SWIGTYPE_p_SHardware, 0);
+          // execute
+          if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+          {
+             LuaOnError(L);
+          }
+          else
+          {
+             // pop parameters
+             SWIG_Lua_ConvertPtr(L, -1, (void**)&hw, SWIGTYPE_p_SHardware, 0);
+             lua_pop(L, 1);
+          }
+       }
+       else
+       {
+          LuaOnPrint(L, "function is missing: onConfigure(hw)");
+       }
+    }
+    catch (std::exception msg)
+    {
+       LuaOnPrint(L, msg.what());
     }
     return 0;
 }
@@ -1192,22 +1252,34 @@ int LuaOnConfigure(lua_State* L, SHardware* hw)
 int LuaOnInit(lua_State* L, SFContext* ctx)
 {
     if(!L) { return 0; }
-    // push function
-    if(lua_getglobal(L, "onInit") == LUA_TFUNCTION)
+
+    try
     {
-        // push parameters
-        SWIG_Lua_NewPointerObj(L, ctx, SWIGTYPE_p_SFContext, 0);
-        // execute
-        if(lua_pcall(L, 1, 1, 0) != LUA_OK)
-        {
-            LuaOnError(L);
-        }
-        else
-        {
-            // pop parameters
-            SWIG_Lua_ConvertPtr(L, -1, (void**)&ctx, SWIGTYPE_p_SFContext, 0);
-            lua_pop(L, 1);
-        }
+       // push function
+       if (lua_getglobal(L, "onInit") == LUA_TFUNCTION)
+       {
+          // push parameters
+          SWIG_Lua_NewPointerObj(L, ctx, SWIGTYPE_p_SFContext, 0);
+          // execute
+          if (lua_pcall(L, 1, 1, 0) != LUA_OK)
+          {
+             LuaOnError(L);
+          }
+          else
+          {
+             // pop parameters
+             SWIG_Lua_ConvertPtr(L, -1, (void**)&ctx, SWIGTYPE_p_SFContext, 0);
+             lua_pop(L, 1);
+          }
+       }
+       else
+       {
+          LuaOnPrint(L, "function is missing: onInit(ctx)");
+       }
+    }
+    catch (std::exception msg)
+    {
+       LuaOnPrint(L, msg.what() );
     }
     return 0;
 }
@@ -1215,25 +1287,39 @@ int LuaOnInit(lua_State* L, SFContext* ctx)
 int LuaOnFunction(lua_State* L, ishort ch0, ishort ch1, ishort* fun)
 {
    if (!L) { return 0; }
-   // push function
-   if (lua_getglobal(L, "onFunction") == LUA_TFUNCTION)
-   {
-      // push parameters
-      lua_pushinteger(L, ch0);
-      lua_pushinteger(L, ch1);
 
-      // execute
-      if (lua_pcall(L, 2, 2, 0) != LUA_OK)
+   try 
+   {
+      // push function
+      if (lua_getglobal(L, "onFunction") == LUA_TFUNCTION)
       {
-         LuaOnError(L);
+         // push parameters
+         lua_pushinteger(L, ch0);
+         lua_pushinteger(L, ch1);
+
+         // execute
+         if (lua_pcall(L, 2, 1, 0) != LUA_OK)
+         {
+            LuaOnError(L);
+         }
+         else
+         {
+            // pop parameters
+            int ret = lua_tointeger(L, -1);
+            lua_pop(L, 1);
+
+            *fun = ret;
+         }
       }
       else
       {
-         // pop parameters
-         int func = lua_tointeger(L, -1);
-         *fun = func;
          lua_pop(L, 1);
+         LuaOnPrint(L, "function is missing: onFunction(ch0,ch1)");
       }
+   }  
+   catch (std::exception msg)
+   {
+      LuaOnPrint(L, msg.what());
    }
    return 0;
 }
@@ -1241,6 +1327,7 @@ int LuaOnFunction(lua_State* L, ishort ch0, ishort ch1, ishort* fun)
 int LuaOnUpload(lua_State* L, SGenerator* gen, uint* sampleCount)
 {
    if (!L) { return 0; }
+
    // push function
    if (lua_getglobal(L, "onUpload") == LUA_TFUNCTION)
    {
@@ -1267,7 +1354,6 @@ OsciloscopeScript::OsciloscopeScript(int index)
 {
     m_arrayIdx = index;
     m_spinLock = 0;
-    SDL_AtomicSet(&m_locking, 1);
     m_userData = 0;
     m_luaState = 0;
     SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
@@ -1300,43 +1386,46 @@ int OsciloscopeScript::OnDisplay(SDisplay* data, float* pos, float* zoom, void* 
 int OsciloscopeScript::OnConfigure(SHardware* hw)
 {
     int ret = 0;
-    if(SDL_AtomicGet(&m_locking) == 1)
-    { SDL_AtomicLock(&m_spinLock); }
+    SDL_AtomicLock(&m_spinLock);
     ret = LuaOnConfigure(m_luaState, hw);
-    if(SDL_AtomicGet(&m_locking) == 1)
-    { SDL_AtomicUnlock(&m_spinLock); }
+    SDL_AtomicUnlock(&m_spinLock);
     return ret;
 }
 int OsciloscopeScript::OnInit(SFContext* ctx)
 {
     int ret = 0;
-    SDL_AtomicSet(&m_locking, 0);
+    SDL_AtomicLock(&m_spinLock);
     ret = LuaOnInit(m_luaState, ctx);
-    SDL_AtomicSet(&m_locking, 1);
+    SDL_AtomicUnlock(&m_spinLock);
     return ret;
 }
 
 int OsciloscopeScript::OnFunction(ishort ch0, ishort ch1, ishort* fun)
 {
    int ret = 0;
-   SDL_AtomicSet(&m_locking, 0);
+   SDL_AtomicLock(&m_spinLock);
    ret = LuaOnFunction(m_luaState, ch0, ch1, fun);
-   SDL_AtomicSet(&m_locking, 1);
+   SDL_AtomicUnlock(&m_spinLock);
    return ret;
 }
 int OsciloscopeScript::OnUpload(SGenerator* gen, uint* sampleCount)
 {
    int ret = 0;
-   SDL_AtomicSet(&m_locking, 0);
+   SDL_AtomicLock(&m_spinLock);
    ret = LuaOnUpload(m_luaState, gen, sampleCount);
-   SDL_AtomicSet(&m_locking, 1);
+   SDL_AtomicUnlock(&m_spinLock);;
    return ret;
 }
 
 int OsciloscopeScript::LuaPrint(const char* str)
 {
     if(str)
-    { SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER); }
+    {
+       int dstLen = SDL_strlen(m_luaPrint);
+       int srcLen = SDL_strlen(str);
+       if( SCOPEFUN_LUA_BUFFER > dstLen + srcLen + 1 )
+          SDL_strlcat(m_luaPrint, str, srcLen);
+    }
     return 0;
 }
 
@@ -1367,38 +1456,48 @@ int OsciloscopeScript::Run()
 {
     if(m_luaState)
     { return 1; }
-      const char* redirect = "\r\n"
-                           "print_stdout = print\r\n"
-                           "\r\n"
-                           "print = function(...)\r\n"
-                           "  local arg = { ... }\r\n"
-                           "  for i, v in ipairs(arg) do\r\n"
-                           "    LuaPrint(v)\r\n"
-                           "  end\r\n"
-                           "end\r\n";
+
+    int ret = 0;
     SDL_AtomicLock(&m_spinLock);
-    m_luaState = luaL_newstate();
-    luaopen_base(m_luaState);
-    luaL_openlibs(m_luaState);
-    luaopen_ScopeFun(m_luaState);
-    lua_pushlightuserdata(m_luaState, this);
-    lua_setglobal(m_luaState, "ScriptPointer");
-    lua_register(m_luaState, "LuaPrint", LuaOnPrint);
-    luaL_dostring(m_luaState, redirect);
-    int ret = luaL_dofile(m_luaState, m_fileName.asChar());
-    if(ret == LUA_OK)
+    try 
     {
-        LuaPrint("script loaded: ");
-        LuaPrint(m_fileName.asChar());
-        LuaPrint("\n");
-        // OnInit
-        ret = OnInit(getCtx());
+       const char* redirect = "\r\n"
+          "print_stdout = print\r\n"
+          "\r\n"
+          "print = function(...)\r\n"
+          "  local arg = { ... }\r\n"
+          "  for i, v in ipairs(arg) do\r\n"
+          "    LuaPrint(v)\r\n"
+          "  end\r\n"
+          "end\r\n";
+       m_luaState = luaL_newstate();
+       luaopen_base(m_luaState);
+       luaL_openlibs(m_luaState);
+       luaopen_ScopeFun(m_luaState);
+       lua_pushlightuserdata(m_luaState, this);
+       lua_setglobal(m_luaState, "ScriptPointer");
+       lua_register(m_luaState, "LuaPrint", LuaOnPrint);
+       luaL_dostring(m_luaState, redirect);
+       ret = luaL_dofile(m_luaState, m_fileName.asChar());
+       if (ret == LUA_OK)
+       {
+          LuaPrint("script loaded: ");
+          LuaPrint(m_fileName.asChar());
+          LuaPrint("\n");
+       }
+       else
+       {
+          LuaOnError(m_luaState);
+       }
     }
-    else
+    catch (std::exception msg)
     {
-        LuaOnError(m_luaState);
+       LuaOnPrint(m_luaState, msg.what());
     }
     SDL_AtomicUnlock(&m_spinLock);
+
+    // OnInit
+    ret = OnInit(getCtx());
     return ret;
 }
 

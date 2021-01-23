@@ -186,14 +186,13 @@ public:
 };
 
 #define SCOPEFUN_MAX_SCRIPT 8
-#define SCOPEFUN_LUA_BUFFER 1024*1024
+#define SCOPEFUN_LUA_BUFFER 16*1024
 #define SCOPEFUN_LUA_ERROR  2048
 
 class OsciloscopeScript
 {
 private:
     SDL_SpinLock m_spinLock;
-    SDL_atomic_t m_locking;
     lua_State*   m_luaState;
     char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
     void*        m_userData;

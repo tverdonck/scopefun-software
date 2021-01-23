@@ -990,23 +990,7 @@ void OsciloscopeManager::startThreads()
 
 void OsciloscopeManager::exitThreads()
 {
-    int status = 0;
-    ///////////////////////////////////////////////
-    // thread cleanup
-    //////////////////////////////////////////////
-
-    SDL_AtomicSet(&controlHardwareThreadActive,0);
-    SDL_WaitThread(pControlHardware, &status);
-    pControlHardware = 0;
-
-    SDL_AtomicSet(&generateFrameThreadActive, 0);
-    SDL_WaitThread(pGenerateFrame, &status);
-    pGenerateFrame = 0;
-
-    SDL_AtomicSet(&oscExit, 1);
-    SDL_AtomicSet(&captureDataThreadActive, 0);
-    SDL_WaitThread(pCaptureData, &status);
-    pCaptureData = 0;
+  
 }
 
 

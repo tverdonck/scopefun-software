@@ -68,6 +68,9 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     m_scintilla1->SetKeyWords(wxSTC_LUA_WORD, L"for do if while end function");
 
     Connect(wxEVT_CLOSE_WINDOW, wxActivateEventHandler(OsciloskopDebug::OnDestroy));
+
+    if (!isFileWritable())
+       m_buttonSave->Disable();
 }
 
 void OsciloskopDebug::ThermalOnActivate(wxActivateEvent& event)
@@ -91,6 +94,8 @@ void OsciloskopDebug::m_buttonStartOnButtonClick( wxCommandEvent& event )
    if (m_script)
    {
       m_script->Run();
+      m_buttonStart->Disable();
+      m_buttonStop->Enable();
    }
    event.Skip();
 }
@@ -100,6 +105,8 @@ void OsciloskopDebug::m_buttonStopOnButtonClick( wxCommandEvent& event )
    if (m_script)
    {
       m_script->Stop();
+      m_buttonStart->Enable();
+      m_buttonStop->Disable();
    }
    event.Skip();
 }
@@ -112,7 +119,10 @@ void OsciloskopDebug::m_buttonSaveOnButtonClick( wxCommandEvent& event )
 void OsciloskopDebug::m_buttonLuaOnButtonClick( wxCommandEvent& event )
 {
    m_scintilla1->SetText((const char*)m_script->m_luaScript);
-   m_buttonSave->Enable();
+   if(isFileWritable())
+      m_buttonSave->Enable();
+   m_buttonLua->Disable();
+   m_buttonHelp->Enable();
    event.Skip();
 }
 
@@ -120,6 +130,8 @@ void OsciloskopDebug::m_buttonHelpOnButtonClick( wxCommandEvent& event )
 {
    m_scintilla1->SetText(pOsciloscope->m_callback.GetHelp());
    m_buttonSave->Disable();
+   m_buttonLua->Enable();
+   m_buttonHelp->Disable();
    event.Skip();
 }
 

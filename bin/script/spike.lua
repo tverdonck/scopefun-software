@@ -1,3 +1,5 @@
+require "math"
+
 -- onFrame
 function onFrame(data,length)
 	return data,length
@@ -5,7 +7,7 @@ end
 
 -- onSample
 function onSample(sample,ch0,ch1,fun,dig)
-	spike = 1000
+	spike = 1000000
 	if sample%spike == 0 then 
 		ch0  = 500
 		ch1  = 250
@@ -29,3 +31,8 @@ function onInit(ctx)
   return ctx
 end
 
+-- onFunction
+function onFunction(ch0,ch1)
+    func = ch0/(math.abs(ch1)+1)
+    return func
+end
