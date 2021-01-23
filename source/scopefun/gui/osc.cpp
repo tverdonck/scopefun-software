@@ -419,7 +419,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel15->SetSizer( bSizer14 );
 	m_panel15->Layout();
 	bSizer14->Fit( m_panel15 );
-	m_notebook4->AddPage( m_panel15, _("Channel 1"), false );
+	m_notebook4->AddPage( m_panel15, _("Channel 1"), true );
 	m_panel16 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer141;
 	bSizer141 = new wxBoxSizer( wxVERTICAL );
@@ -601,11 +601,11 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxGridSizer* gSizer5;
 	gSizer5 = new wxGridSizer( 2, 1, 0, 0 );
 
-	m_staticText109 = new wxStaticText( m_panel9, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText109 = new wxStaticText( m_panel9, wxID_ANY, _("[+1.25V]"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText109->Wrap( -1 );
 	gSizer5->Add( m_staticText109, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText110 = new wxStaticText( m_panel9, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText110 = new wxStaticText( m_panel9, wxID_ANY, _("[0V]"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText110->Wrap( -1 );
 	gSizer5->Add( m_staticText110, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -784,7 +784,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer1701;
 	bSizer1701 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText126 = new wxStaticText( m_panel91, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText126 = new wxStaticText( m_panel91, wxID_ANY, _("[+1.25V]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText126->Wrap( -1 );
 	bSizer1701->Add( m_staticText126, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -794,7 +794,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer1712;
 	bSizer1712 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText125 = new wxStaticText( m_panel91, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
+	m_staticText125 = new wxStaticText( m_panel91, wxID_ANY, _("[0V]"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
 	m_staticText125->Wrap( -1 );
 	bSizer1712->Add( m_staticText125, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -972,7 +972,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_staticText80->Wrap( -1 );
 	bSizer109->Add( m_staticText80, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_textCtrlDigitalVoltage = new wxTextCtrl( m_panel25, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
+	m_textCtrlDigitalVoltage = new wxTextCtrl( m_panel25, wxID_ANY, _("1.25"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
 	bSizer109->Add( m_textCtrlDigitalVoltage, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_spinBtnDigVoltage = new wxSpinButton( m_panel25, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL );
@@ -982,7 +982,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_staticText108->Wrap( -1 );
 	bSizer109->Add( m_staticText108, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_textCtrlFreqDivider = new wxTextCtrl( m_panel25, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
+	m_textCtrlFreqDivider = new wxTextCtrl( m_panel25, wxID_ANY, _("0"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT );
 	bSizer109->Add( m_textCtrlFreqDivider, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticText97 = new wxStaticText( m_panel25, wxID_ANY, _("equals"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
@@ -1003,7 +1003,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel25->SetSizer( bSizer152 );
 	m_panel25->Layout();
 	bSizer152->Fit( m_panel25 );
-	m_notebook4->AddPage( m_panel25, _("Setup"), true );
+	m_notebook4->AddPage( m_panel25, _("Setup"), false );
 
 	bSizer155->Add( m_notebook4, 2, wxEXPAND|wxALL, 5 );
 
@@ -1324,11 +1324,11 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxGridSizer* gSizer6;
 	gSizer6 = new wxGridSizer( 2, 1, 0, 0 );
 
-	m_staticText123 = new wxStaticText( m_panel13, wxID_ANY, _("[+]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText123 = new wxStaticText( m_panel13, wxID_ANY, _("[+1.25V]"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText123->Wrap( -1 );
 	gSizer6->Add( m_staticText123, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_staticText124 = new wxStaticText( m_panel13, wxID_ANY, _("[-]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText124 = new wxStaticText( m_panel13, wxID_ANY, _("[0V]"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124->Wrap( -1 );
 	gSizer6->Add( m_staticText124, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 5 );
 

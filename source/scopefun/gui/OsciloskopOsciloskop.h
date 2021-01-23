@@ -204,6 +204,7 @@ public:
     void setCompatibility();
     void SetButtonColors();
     void SetDigital13To16(bool enable);
+    void DigitalMiddlePinMaxVoltText(float voltageMax);
 public:
     OsciloskopStorage*    pStorage;
     OsciloskopConnection* pConnection;
@@ -219,7 +220,6 @@ public:
     int once;
     int pulse;
     int userinterfaceupdate;
-
 };
 
 #endif // __OsciloskopOsciloskop__

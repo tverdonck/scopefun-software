@@ -820,6 +820,15 @@ void OsciloskopOsciloskop::MenuScriptSelection(wxCommandEvent& event)
     }
 }
 
+void OsciloskopOsciloskop::DigitalMiddlePinMaxVoltText(float voltageMax)
+{
+   FORMAT_BUFFER();
+   FORMAT("[+%.2f]", voltageMax);
+   m_staticText109->SetLabelText(formatBuffer);
+   m_staticText126->SetLabelText(formatBuffer);
+   m_staticText123->SetLabelText(formatBuffer);
+}
+
 //
 //void OsciloskopOsciloskop::m_menuItemAutoCallibrateOnMenuSelection(wxCommandEvent& event)
 //{

@@ -1860,7 +1860,7 @@ SCOPEFUN_API int  sfSetDigitalVoltage(SHardware* hw, double volt, double kDigita
     double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
     double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
     double dVolt = dClamp((double)volt, Vmin, Vmax);
-    hw->digitalVoltage = (ushort)((dVolt / 1.25) - 1.0) * kDigital;
+    hw->digitalVoltage = (ushort)(((dVolt / 1.25) - 1.0) * kDigital);
     return SCOPEFUN_SUCCESS;
 }
 

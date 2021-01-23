@@ -1860,7 +1860,9 @@ void OsciloskopOsciloskop::m_textCtrlDigitalVoltageOnTextEnter(wxCommandEvent& e
     pOsciloscope->window.digitalSetup.voltage = pFormat->stringToDouble(m_textCtrlDigitalVoltage->GetValue().ToAscii().data());
     sfSetDigitalVoltage(getHw(), pOsciloscope->window.digitalSetup.voltage, kDigital);
     pOsciloscope->transferData();
-    m_textCtrlDigitalVoltage->SetValue(pFormat->doubleToString(sfGetDigitalVoltage(getHw(), kDigital)));
+    const char* voltageMax = pFormat->doubleToString(sfGetDigitalVoltage(getHw(), kDigital));
+    m_textCtrlDigitalVoltage->SetValue(voltageMax);
+    DigitalMiddlePinMaxVoltText(sfGetDigitalVoltage(getHw(), kDigital));
 }
 
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinDown(wxSpinEvent& event)
@@ -1875,6 +1877,7 @@ void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinDown(wxSpinEvent& event)
     pOsciloscope->window.digitalSetup.voltage = value;
     sfSetDigitalVoltage(getHw(), value, kDigital);
     pOsciloscope->transferData();
+    DigitalMiddlePinMaxVoltText(value);
 }
 
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinUp(wxSpinEvent& event)
@@ -1889,6 +1892,7 @@ void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinUp(wxSpinEvent& event)
     pOsciloscope->window.digitalSetup.voltage = value;
     sfSetDigitalVoltage(getHw(), value, kDigital);
     pOsciloscope->transferData();
+    DigitalMiddlePinMaxVoltText(value);
 }
 
 void OsciloskopOsciloskop::m_textCtrlFreqDividerOnTextEnter(wxCommandEvent& event)
