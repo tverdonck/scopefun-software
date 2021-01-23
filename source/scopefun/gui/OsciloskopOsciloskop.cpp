@@ -159,6 +159,8 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 
         m_buttonConnectOnButtonClick(evt);
         m_buttonCaptureOnButtonClick(evt);
+        m_comboBoxTriggerOnCombobox(evt);
+        m_comboBoxTriggerSourceOnCombobox(evt);
     }
 }
 
@@ -1925,6 +1927,11 @@ void OsciloskopOsciloskop::m_comboBoxTriggerOnCombobox(wxCommandEvent& event)
         m_sliderTriggerPre->Enable();
     }
     pOsciloscope->transferData();
+
+    if (pOsciloscope->window.trigger.Mode == 2)
+       m_buttonReArm->Enable();
+    else
+       m_buttonReArm->Disable();
 }
 
 void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox(wxCommandEvent& event)
@@ -1935,6 +1942,11 @@ void OsciloskopOsciloskop::m_comboBoxTriggerSourceOnCombobox(wxCommandEvent& eve
     double newTriggerVoltagePerStep = pOsciloscope->getTriggerVoltagePerStep();
     RecalculateTriggerPosition(oldTriggerVoltagePerStep, newTriggerVoltagePerStep);
     pOsciloscope->transferData();
+
+    if (pOsciloscope->window.trigger.Source == 4)
+       m_comboBoxDigitalStageStart->Enable();
+    else
+       m_comboBoxDigitalStageStart->Disable();
 }
 
 void OsciloskopOsciloskop::m_comboBoxTriggerSlopeOnCombobox(wxCommandEvent& event)
