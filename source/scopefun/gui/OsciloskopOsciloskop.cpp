@@ -41,10 +41,10 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
-        String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
+        String scriptPath = GetOscDataFolder().GetFullPath().data().AsChar();
         String helpPath  = scriptPath;
-               helpPath += "/Script/scopefunapi.help";
-        scriptPath += "/Script/*.lua";
+               helpPath += "/script/scopefunapi.help";
+        scriptPath += "/script/*.lua";
         wxString f = wxFindFirstFile(scriptPath.asChar());
         for(int i = 0; i < SCOPEFUN_MAX_SCRIPT; i++)
         {

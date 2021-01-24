@@ -31,7 +31,7 @@ else()
 	include(ExternalProject)
 	if( SCOPEFUN_MACOSX )
 		externalproject_add(libUsb
-			PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			PREFIX 	          ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
 			SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
 			BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
 			CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no
@@ -41,7 +41,7 @@ else()
 		 )
 	else()
 		externalproject_add(libUsb
-			PREFIX 			  ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
+			PREFIX 	          ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
 			SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/
 			BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/
 			CONFIGURE_COMMAND sh ../../configure --disable-shared  --enable-shared=no --enable-static --without-pcre

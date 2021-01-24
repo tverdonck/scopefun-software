@@ -197,7 +197,6 @@ wxFileName GetOscDataFolder()
     #endif
     #ifdef PLATFORM_MAC
     fn = wxStandardPaths::Get().GetResourcesDir();
-    fn.AppendDir("Resources");
     #endif
     #ifdef PLATFORM_LINUX
     fn = "/usr/lib/oscilloscope";

@@ -236,8 +236,12 @@ if( SCOPEFUN_VISUALSTUDIO )
     set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/${SCOPEFUN_BUILD_TYPE}/lua.lib )
 	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb-1.0.lib )
 else()
+if( CMAKE_XCODE_PLATFORM_TOOLSET )
+    set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/${SCOPEFUN_BUILD_TYPE}/liblua.a )
+else()
     set( SCOPEFUN_LIB_LUA ${CMAKE_BINARY_DIR}/lib/liblua.a )
-	set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
+endif()
+    set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
 list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext stc )
@@ -435,29 +439,11 @@ else()
 			BUNDLE   DESTINATION "." )
 endif()
 if(SCOPEFUN_MACOSX)
-	add_custom_command(
-			TARGET ScopeFun POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_directory
-			${CMAKE_SOURCE_DIR}/bin/data
-			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources/data)
-			
-	add_custom_command(
-			TARGET ScopeFun POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_directory
-			${CMAKE_SOURCE_DIR}/bin/script
-			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources/script)
-			
-	add_custom_command(
-			TARGET ScopeFun POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_directory
-			${CMAKE_SOURCE_DIR}/bin/locale
-			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources/locale)
-					
-	add_custom_command(
-			TARGET ScopeFun POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy
-			${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns
-			${SCOPEFUN_BUILD_TYPE}/${SCOPEFUN_EXE_NAME}.app/Contents/Resources)
+
+	install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/data"                            DESTINATION ./ScopeFun.App/Contents/Resources )
+	install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/locale"                          DESTINATION ./ScopeFun.App/Contents/Resources )
+        install( DIRECTORY "${CMAKE_SOURCE_DIR}/bin/script"                          DESTINATION ./ScopeFun.App/Contents/Resources )
+	install( FILES     "${CMAKE_SOURCE_DIR}/package/scopefun-mac/AppIcon.icns"   DESTINATION ./ScopeFun.App/Contents/Resources )
 	
 	set(MACOSX_BUNDLE_INFO_STRING           "ScopeFun open source oscilloscope" )
 	set(MACOSX_BUNDLE_ICON_FILE    			 AppIcon )
@@ -466,11 +452,13 @@ if(SCOPEFUN_MACOSX)
 	set(MACOSX_BUNDLE_LONG_VERSION_STRING   ${SCOPEFUN_VERSION_MAJOR}.${SCOPEFUN_VERSION_MINOR}.${SCOPEFUN_VERSION_MICRO} )
 	set(MACOSX_BUNDLE_SHORT_VERSION_STRING  ${SCOPEFUN_VERSION_MAJOR}.${SCOPEFUN_VERSION_MINOR}.${SCOPEFUN_VERSION_MICRO} )
 	set(MACOSX_BUNDLE_BUNDLE_VERSION        ${SCOPEFUN_VERSION_MAJOR}.${SCOPEFUN_VERSION_MINOR}.${SCOPEFUN_VERSION_MICRO} )
-	set(MACOSX_BUNDLE_COPYRIGHT             "Copyright (C) 2016 - 2019 David Košenina" )
+	set(MACOSX_BUNDLE_COPYRIGHT             "Copyright (C) 2016 - 2021 David Košenina" )
 
-	set(CPACK_BUNDLE_PLIST ${CMAKE_SOURCE_DIR}/package/info.plist )
+	set(CPACK_BUNDLE_PLIST ${CMAKE_SOURCE_DIR}/package/scopefun-mac/info.plist )
 	set(CPACK_BUNDLE_ICON  ${CMAKE_SOURCE_DIR}/package/scopefun-mac/appicon.icns )
 	set(CPACK_BUNDLE_NAME "ScopeFun")
+
+	set(CPACK_GENERATOR "DragNDrop")
 endif()
 if(SCOPEFUN_WINDOWS)
 

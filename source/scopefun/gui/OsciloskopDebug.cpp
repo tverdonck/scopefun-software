@@ -30,7 +30,7 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     SetTitle("Script");
     m_scintilla1->SetLexer(wxSTC_LEX_LUA);
     m_scintilla1->SetIndent(4);
-    m_scintilla1->SetCodePage(CP_UTF8);
+    // m_scintilla1->SetCodePage(CP_UTF8);
 
     wxFont font;
     font.SetFaceName(L"Courier New");
