@@ -1318,7 +1318,7 @@ uint reverseBits(uint v)
 {
     // Bit Twiddling Hacks
     uint r = v;
-    int s = sizeof(v) * CHAR_BIT - 1;
+    int s = sizeof(v) * 8 - 1;
     for(v >>= 1; v; v >>= 1)
     {
         r <<= 1;
@@ -1338,7 +1338,7 @@ uint rotateBits(uint x, uint n)
 byte reverseByte(byte v)
 {
     byte r = v & 1; // r will be reversed bits of v; first get LSB of v
-    int s = sizeof(v) * CHAR_BIT - 1; // extra shift needed at end
+    int s = sizeof(v) * 8 - 1; // extra shift needed at end
     for(v >>= 1; v; v >>= 1)
     {
         r <<= 1;
