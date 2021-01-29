@@ -79,7 +79,9 @@ Build-Exe-Linux:
         key: "$CI_COMMIT_REF_SLUG"
         untracked: true
     allow_failure: true
+    image: ubuntu
     script:
+        - apt-get install -y cmake
         - mkdir -p sfExe
         - cd sfExe
         - rm -f *.deb
