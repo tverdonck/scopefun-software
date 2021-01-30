@@ -41,7 +41,11 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
+#ifdef PLATFORM_MAC
         String scriptPath = GetOscDataFolder().GetFullPath().data().AsChar();
+#else
+        String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();
+#endif
         String helpPath  = scriptPath;
                helpPath += "/script/scopefunapi.help";
         scriptPath += "/script/*.lua";
@@ -60,8 +64,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             f = wxFindNextFile();
         }
         pOsciloscope->m_callback.SetHelp(helpPath);
-
-       
 
         pTimer->init(TIMER_MAIN_THREAD);
         ////////////////////////////////////////////////////////////////////////////////////////
