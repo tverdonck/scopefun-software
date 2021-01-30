@@ -81,6 +81,7 @@ Build-Exe-Linux:
     allow_failure: true
     image: ubuntu
     script:
+        - ln -snf /usr/share/zoneinfo/Europe/Ljubljana /etc/localtime && echo Europe/Ljubljana > /etc/timezone
         - apt-get update && apt-get -y install cmake protobuf-compiler
         - mkdir -p sfExe
         - cd sfExe
