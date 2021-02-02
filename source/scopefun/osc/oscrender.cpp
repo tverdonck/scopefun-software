@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include<ScopeFun/ScopeFun.h>
+#include<scopefun/ScopeFun.h>
 
 float dBPower[] = { 0.1f,
                     0.01f,

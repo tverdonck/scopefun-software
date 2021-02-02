@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include<ScopeFun/ScopeFun.h>
+#include<scopefun/ScopeFun.h>
 
 
 int jsonToInt(cJSON* json)

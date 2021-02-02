@@ -30,18 +30,18 @@ extern "C" {
 }
 
 // osciloscope
-#include<ScopeFun/window/tool.h>
-#include<ScopeFun/osc/oscsignal.h>
-#include<ScopeFun/osc/oscfile.h>
-#include<ScopeFun/osc/oscsettings.h>
-#include<ScopeFun/osc/oscfft.h>
-#include<ScopeFun/osc/oscrender.h>
-#include<ScopeFun/window/wnddisplay.h>
-#include<ScopeFun/window/wndgenerate.h>
-#include<ScopeFun/window/wndshadow.h>
-#include<ScopeFun/window/wndmain.h>
-#include<ScopeFun/osc/osccontrol.h>
-#include<ScopeFun/osc/oscmng.h>
+#include<scopefun/window/tool.h>
+#include<scopefun/osc/oscsignal.h>
+#include<scopefun/osc/oscfile.h>
+#include<scopefun/osc/oscsettings.h>
+#include<scopefun/osc/oscfft.h>
+#include<scopefun/osc/oscrender.h>
+#include<scopefun/window/wnddisplay.h>
+#include<scopefun/window/wndgenerate.h>
+#include<scopefun/window/wndshadow.h>
+#include<scopefun/window/wndmain.h>
+#include<scopefun/osc/osccontrol.h>
+#include<scopefun/osc/oscmng.h>
 
 #endif
 ////////////////////////////////////////////////////////////////////////////////

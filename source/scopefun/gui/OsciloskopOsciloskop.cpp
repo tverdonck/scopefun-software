@@ -41,7 +41,7 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
 
         wxMenu* menu = new wxMenu();
         GetMenuBar()->Insert(6, menu, "Script");
-#ifdef PLATFORM_MAC
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) 
         String scriptPath = GetOscDataFolder().GetFullPath().data().AsChar();
 #else
         String scriptPath = GetOscDataFolder().GetCwd().data().AsChar();

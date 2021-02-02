@@ -180,6 +180,9 @@ if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Debug" )
 		if(SCOPEFUN_MACOSX)
 			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_BINARY_DIR}/lib/wx/include/osx_cocoa-unicode-static-3.1)
 		endif()
+		if(SCOPEFUN_LINUX)
+			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_BINARY_DIR}/lib/wx/include/gtk3-unicode-static-3.0)
+		endif()
 	endif()
 endif()
 if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Release" )
@@ -192,9 +195,13 @@ if( ${SCOPEFUN_BUILD_TYPE} MATCHES "Release" )
 		if(SCOPEFUN_MACOSX)
 			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_BINARY_DIR}/lib/wx/include/osx_cocoa-unicode-static-3.1)
 		endif()
+		if(SCOPEFUN_LINUX)
+			set(SCOPEFUN_INCLUDE_WX_SETUP 	${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/sfBuild${SCOPEFUN_BUILD_TYPE}/lib/wx/include/gtk3-unicode-static-3.0)
+		endif()
 	endif()
 endif()
-set(SCOPEFUN_INCLUDE_WX        "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.1.3/include"  CACHE PATH "include fodler for wxWidgets library" FORCE)
+
+set(SCOPEFUN_INCLUDE_WX        "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/include"  CACHE PATH "include fodler for wxWidgets library" FORCE)
 set(SCOPEFUN_INCLUDE_USB       "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/libusb"     CACHE PATH "include folder for libUsb library" FORCE)
 set(SCOPEFUN_INCLUDE_USB_EX    "${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/examples"   CACHE PATH "include folder for ezusb load library" FORCE)
 set(SCOPEFUN_INCLUDE_SDL2      "${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.12/include"      CACHE PATH "include fodler for SDL2 library " FORCE)
@@ -244,7 +251,11 @@ endif()
     set( SCOPEFUN_LIB_USB ${CMAKE_SOURCE_DIR}/lib/libusb-1.0.22/Build/${SCOPEFUN_BUILD_TYPE}/libusb/.libs/libusb-1.0.a )
 endif()
 list( APPEND SCOPEFUN_LIB_SDL2 SDL2-static )
-list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext stc )
+if( SCOPEFUN_LINUX )
+	list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext )
+else()
+	list( APPEND SCOPEFUN_LIB_WX core base adv propgrid richtext stc )
+endif()
 if(SCOPEFUN_WINDOWS)
 	if( SCOPEFUN_VISUALSTUDIO )
 		target_link_libraries( ScopeFun  
@@ -326,36 +337,59 @@ if(SCOPEFUN_MACOSX)
 	)
 endif()
 if(SCOPEFUN_LINUX)
+	set(SCOPEFUN_LINK_WX  "${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/sfBuild${SCOPEFUN_BUILD_TYPE}/lib" CACHE FILEPATH "link folder for wxWidgets" FORCE)
+	set(SCOPEFUN_LIB_WX
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_adv-3.0.a" 
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_core-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_baseu-3.0.a" 
+	"${SCOPEFUN_LINK_WX}/libwx_baseu_xml-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_baseu_net-3.0.a" 
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_aui-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_html-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_propgrid-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_qa-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_ribbon-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_richtext-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_xrc-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwxjpeg-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwxregexu-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwxscintilla-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwxtiff-3.0.a"
+	"${SCOPEFUN_LINK_WX}/libwx_gtk3u_stc-3.0.a" 
+	"gthread-2.0" 
+	"pthread" 
+	"X11" 
+	"Xext"
+	"Xxf86vm" 
+	"SM" 
+	"gtk-3"
+	"gdk-3" 
+	"pangocairo-1.0" 
+	"atk-1.0"
+	"cairo-gobject" 
+	"cairo"
+	"gdk_pixbuf-2.0"
+	"gio-2.0" 
+	"Xtst" 
+	"pangoft2-1.0" 
+	"pango-1.0"
+	"gobject-2.0" 
+	"glib-2.0"
+	"fontconfig" 
+	"freetype"
+	"expat" 
+	"png" 
+	"z"
+	"dl" 
+	"m")
 	target_link_libraries(ScopeFun
 		# libs
 		${SCOPEFUN_LIB_USB} 
-		${SCOPEFUN_LIB_SDL2} 
-		${SCOPEFUN_LIB_WX} 
+		${SCOPEFUN_LIB_SDL2}  
 		${SCOPEFUN_LIB_LUA} 
-		# system
-		dl 
-		X11 
-		Xext 
-		SM 
-		gtk-3 
-		gdk-3 
-		pango-1.0 
-		cairo 
-		pangocairo-1.0 
-		gdk_pixbuf-2.0 
-		gobject-2.0 
-		glib-2.0 
-		z 
-		m 
-		expat 
-		atk-1.0 
-		gio-2.0 
-		gthread-2.0 
-		pthread 
-		png 
-		GL 
-		udev 
-		Xxf86vm 
+		${SCOPEFUN_LIB_WX} 
+		"GL"
+		"udev"
 	)
 endif()
 
@@ -417,7 +451,7 @@ endif(SCOPEFUN_LINUX)
 if(SCOPEFUN_LINUX)
 	
 	set(ALL_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE )
-
+	set( SCOPEFUN_BITS 64)
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/DEBIAN"   DESTINATION "../" 
 	FILE_PERMISSIONS ${ALL_PERMISSIONS} DIRECTORY_PERMISSIONS  ${ALL_PERMISSIONS})
     install( DIRECTORY "${CMAKE_SOURCE_DIR}/package/scopefun-linux-${SCOPEFUN_BITS}/usr"      DESTINATION "../" 
@@ -558,9 +592,11 @@ set(CPACK_SOURCE_IGNORE_FILES  ""
 "/\\\\lib/libusb-1.0.22/tmp/;"
 "/\\\\lib/SDL2-2.0.12/Build/;"
 "/\\\\lib/SDL2-2.0.12/tmp/;"
-"/\\\\lib/wxWidgets-3.1.3/Build/;"
-"/\\\\lib/wxWidgets-3.1.3/src/wxWidgets313-stamp/;"
-"/\\\\lib/wxWidgets-3.1.3/tmp/;"
+"/\\\\lib/wxWidgets-3.0.5/Build/;"
+"/\\\\lib/wxWidgets-3.0.5/sfBuildRelease/;"
+"/\\\\lib/wxWidgets-3.0.5/sfBuildDebug/;"
+"/\\\\lib/wxWidgets-3.0.5/src/wxWidgets305-stamp/;"
+"/\\\\lib/wxWidgets-3.0.5/tmp/;"
 )
 
 include(CPack)

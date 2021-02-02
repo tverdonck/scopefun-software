@@ -43,7 +43,7 @@ bool isFileWritable()
 int loadLanguageFromConfig()
 {
     wxConfig config(wxApp::GetInstance()->GetAppName());
-    long language = wxLANGUAGE_UNKNOWN;
+    long language = wxLANGUAGE_ENGLISH;
     if(!config.Read(wxT("wxTranslation_Language"), &language, wxLANGUAGE_UNKNOWN))
     {
         language = wxLANGUAGE_ENGLISH;

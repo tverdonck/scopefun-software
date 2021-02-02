@@ -35,7 +35,7 @@ class OsciloskopHardwareGenerator;
 
 class wxStreamToCppTextRedirector;
 
-#include "ScopeFun/ScopeFun.h"
+#include "scopefun/ScopeFun.h"
 extern "C" {
 #include "api/scopefunapi.h"
 }

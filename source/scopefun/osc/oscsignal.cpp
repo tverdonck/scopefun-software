@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include<ScopeFun/ScopeFun.h>
+#include<scopefun/ScopeFun.h>
 
 extern "C" ishort leadBitShift(ushort value);
 extern "C" ishort leadBitCompl(ushort value);

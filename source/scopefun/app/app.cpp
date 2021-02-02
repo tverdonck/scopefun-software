@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include<ScopeFun/ScopeFun.h>
+#include<scopefun/ScopeFun.h>
 #include<api/scopefunapi.h>
 
 #include "wx/wxprec.h"
@@ -104,12 +104,12 @@ public:
             pOsciloscope->m_runScript = m_luaScript;
             pManager->start();
             #endif
-            // used by wxConfig
+	    // used by wxConfig
             SetAppName("Oscilloscope");
             // load localization
-            int language = loadLanguageFromConfig();
-            setLocalization(language);
-            saveLanguageToConfig(language);
+            //int language = loadLanguageFromConfig();
+            //setLocalization(language);
+            //saveLanguageToConfig(language);
             // gui
             void recreateGUI(int initial = 0);
             recreateGUI(1);
@@ -145,11 +145,6 @@ public:
 
 int main(int argc, char** argv)
 {
-    if(geteuid() != 0)
-    {
-        coreMessage("Access denied. Run program as super user!");
-        return 0;
-    }
     // create
     create();
     // working dir
