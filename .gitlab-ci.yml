@@ -89,6 +89,7 @@ Build-Exe-Linux:
         - apt-get -y install libudev-dev
         - apt-get -y install libgl1-mesa-dev
         - apt-get -y install autoconf
+        - apt-get -y install automake
         - mkdir -p sfExe
         - cd sfExe
         - rm -f *.deb
