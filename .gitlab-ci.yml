@@ -91,7 +91,7 @@ Build-Exe-Linux:
         - apt-get -y install autoconf
         - apt-get -y install automake
         - cd lib/libusb-1.0.22
-        - autoreconf -f -i
+        - touch aclocal.m4
         - cd ..
         - cd ..
         - mkdir -p sfExe
