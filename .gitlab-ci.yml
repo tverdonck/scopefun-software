@@ -92,7 +92,7 @@ Build-Exe-Linux:
         - cd sfExe
         - rm -f *.deb
         - rm -f *.sha512
-        - chmod +x ../lib/wxWidgets-3.0.5src/stc/gen_iface.py
+        - chmod +x ../lib/wxWidgets-3.0.5/src/stc/gen_iface.py
         - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_BINARY_DEB="true" -D CPACK_BINARY_TZ="false" -D CPACK_BINARY_TGZ="false" -D CPACK_BINARY_STGZ="false" ..
         - make package
     only:
