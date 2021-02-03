@@ -93,6 +93,7 @@ Build-Exe-Linux:
         - cd lib/libusb-1.0.22
         - autoreconf -f -i
         - cd ..
+        - cd ..
         - mkdir -p sfExe
         - cd sfExe
         - rm -f *.deb
