@@ -90,6 +90,9 @@ Build-Exe-Linux:
         - apt-get -y install libgl1-mesa-dev
         - apt-get -y install autoconf
         - apt-get -y install automake
+        - cd lib/libusb-1.0.22
+        - autoreconf -f -i
+        - cd ..
         - mkdir -p sfExe
         - cd sfExe
         - rm -f *.deb
