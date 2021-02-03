@@ -88,6 +88,7 @@ Build-Exe-Linux:
         - apt-get -y install libgtk-3-dev
         - apt-get -y install libudev-dev
         - apt-get -y install libgl1-mesa-dev
+        - apt-get -y install autoconf
         - mkdir -p sfExe
         - cd sfExe
         - rm -f *.deb
