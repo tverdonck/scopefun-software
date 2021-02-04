@@ -92,7 +92,6 @@ Build-Exe-Linux:
         - apt-get -y install automake
         - apt-get -y install libxxf86vm-dev
         - cd lib/libusb-1.0.22
-        - touch aclocal.m4
         - aclocal
         - automake
         - cd ..
@@ -152,12 +151,16 @@ Zip-Source-Linux:
       expire_in: 1 day
     dependencies: []
     allow_failure: true
+    image: ubuntu:20.04
     script:
+        - ln -snf /usr/share/zoneinfo/Europe/Ljubljana /etc/localtime && echo Europe/Ljubljana > /etc/timezone
+        - apt-get update
+        - apt-get -y install cmake protobuf-compiler
         - mkdir -p sfSrc
         - cd sfSrc
         - rm -f *.gz
         - rm -f *.sha512
-        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D CMAKE_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
+        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D SCOPEFUN_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -D CPACK_SOURCE_RPM="false" -D CPACK_SOURCE_TBZ2="false" -D CPACK_SOURCE_TXZ="false" -D CPACK_SOURCE_TZ="false" -D CPACK_SOURCE_TGZ="true" ..
         - make package_source
     when: always
     only:
@@ -204,7 +207,10 @@ Upload-Ftp-Linux:
     dependencies:
         - Build-Exe-Linux
         - Zip-Source-Linux
+    image: ubuntu:20.04
     script:
+        - apt-get update
+        - apt-get -y install ncftp
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
         - mkdir -p $COMMIT_TIME/Linux
