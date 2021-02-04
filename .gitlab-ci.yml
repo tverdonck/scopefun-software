@@ -211,6 +211,7 @@ Upload-Ftp-Linux:
     image: ubuntu:20.04
     script:
         - apt-get update
+        - apt-get install git
         - apt-get -y install ncftp
         - cd sfSrc
         - COMMIT_TIME=$(git show -s --format=%ct $CI_COMMIT_SHA)
