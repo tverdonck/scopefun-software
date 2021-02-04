@@ -156,6 +156,7 @@ Zip-Source-Linux:
         - ln -snf /usr/share/zoneinfo/Europe/Ljubljana /etc/localtime && echo Europe/Ljubljana > /etc/timezone
         - apt-get update
         - apt-get -y install cmake protobuf-compiler
+        - apt-get -y install build-essential
         - mkdir -p sfSrc
         - cd sfSrc
         - rm -f *.gz
