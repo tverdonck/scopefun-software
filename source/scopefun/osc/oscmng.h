@@ -620,6 +620,7 @@ public:
     SDisplay              m_history[SCOPEFUN_MAX_HISTORY];
     uint                  m_historyCount;
     SDisplay              m_frame;
+    SDisplay              m_etsClear;
     SHardware             m_hw;
 };
 
@@ -632,28 +633,6 @@ enum RenderFlag
 {
     rfClearRenderTarget = BIT(0),
 };
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ETS
-//
-////////////////////////////////////////////////////////////////////////////////
-class OsciloscopeETS
-{
-public:
-    OsciloscopeFrame             oscFrame;
-    Array<OsciloscopeFrame, 32>  etsHistory;
-    OsciloscopeFrame             etsClear;
-    uint                         etsIndex;
-    uint                         etsAttr;
-public:
-    void clear();
-    void redraw(OsciloscopeRenderData& render, SDL_atomic_t* redraw);
-    void onFrameChange(int framechange, Ring<CapturePacket> threadHistory, OsciloscopeRenderData& render);
-    void onCapture(OsciloscopeFrame& frame, OsciloscopeRenderData& render);
-    void onPause(OsciloscopeFrame& frame, WndMain& window);
-};
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -819,6 +798,7 @@ enum EThreadApiFunction
     afSetSimulateData,
     afSetSimulateOnOff,
     afUploadGenerator,
+    afReadFpgaStatus,
     afLast,
 };
 
@@ -832,6 +812,7 @@ private:
 private:
     SDL_atomic_t open;
     SDL_atomic_t fpga;
+    SDL_atomic_t fpgaStatus;
     SDL_atomic_t simulate;
     SDL_atomic_t vid;
     SDL_atomic_t pid;
@@ -880,6 +861,7 @@ public:
     int  getVersion();
     int  isOpen();
     int  isFpga();
+    int  isFpgaStatus();
     int  isSimulate();
     void setInit(int memory, int thread, int active, int timeout);
     void setFrame(int  version, int  header, int  data, int  packet);
@@ -1159,9 +1141,6 @@ public:
     GrShader* shadowLine3dShader;
     GrShader* shadowColorShader;
     GrShader* shadowCoolingShader;
-public:
-    OsciloscopeETS ets;
-    SDL_atomic_t   etsClear;
 public:
     float   mouseWheel;
     ularge  wheel;

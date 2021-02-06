@@ -1446,8 +1446,8 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
     float etsOffset = 0;
     if(isETS)
     {
-        float   etsDelta  = (1.f / float(isamples)) / float(render.maxEts);
-        etsOffset = etsDelta * float(frame.ets);
+        float   etsDelta  = (1.f / float(isamples)) / float(render.maxEts+1);
+        etsOffset = etsDelta * float(frame.ets)/sampleZoom;
     }
     // x
     float      xfactor = 1.f;
@@ -1485,16 +1485,13 @@ void OsciloscopeThreadRenderer::renderAnalog(uint threadId, OsciloscopeThreadDat
             {
                 uint idx = clamp<uint>(point, start, end);
                 float yStart = 0;
+                if(channelId == 0) yStart = frame.analog0.bytes[idx] * yfactor + float(yOffset);
+                if(channelId == 1) yStart = frame.analog1.bytes[idx] * yfactor + float(yOffset);
+                float xStart = (float(point) / float(sampleCount)) - 0.5f + xposition;
                 if(channelId == 0)
-                { yStart = frame.analog0.bytes[idx] * yfactor + float(yOffset); }
+                { xStart += offset2ns; }
                 if(channelId == 1)
-                { yStart = frame.analog1.bytes[idx] * yfactor + float(yOffset); }
-                float x = (float(point) / float(end)) - 0.5f;
-                if(channelId == 0)
-                { x += offset2ns; }
-                if(channelId == 1)
-                { x += offset2ns; }
-                float xStart = x * xfactor + xposition;
+                { xStart += offset2ns; }
                 Vector4 vpoint = Vector4(xStart, yStart, z, 1.f);
                 pCanvas3d->bPoint(threadId, vpoint);
             }

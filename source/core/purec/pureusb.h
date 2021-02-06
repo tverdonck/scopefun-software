@@ -99,6 +99,7 @@ int  usbFx3UploadFirmwareToFx3(UsbContext* ctx, const char* path);
 int  usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size, int swapBits);
 int  usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size, int adress);
+int  usbFx3ReadFpgaStatus(UsbContext* ctx, int* buffer);
 int  usbFx3WriteEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3WriteLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);
 int  usbFx3ReadLockableEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int adress);

@@ -220,6 +220,30 @@ int usbFx3ReadEEPROMFirmwareID(UsbContext* ctx, unsigned char* buffer, int size,
     }
     return PUREUSB_FAILURE;
 }
+
+int usbFx3ReadFpgaStatus(UsbContext* ctx, int* buffer)
+{
+   int transfered = 0;
+   if (usbFxxIsConnected(ctx))
+   {
+      int readadress = 0;
+
+      // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
+      int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
+         0xC0,
+         0xB1,
+         (readadress >> 16) & 0xffff,
+         (readadress) & 0xffff,
+         buffer,
+         1,
+         100000);
+      if (read == 1)
+      {
+         return PUREUSB_SUCCESS;
+      }
+   }
+   return PUREUSB_FAILURE;
+}
 int usbFx3ReadEEPROM(UsbContext* ctx, unsigned char* buffer, int size, int readadress)
 {
     int transfered = 0;

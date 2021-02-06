@@ -158,17 +158,12 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             if(item10)
             { item10->Enable(false); }
         }
-
-        m_buttonConnectOnButtonClick(evt);
-        m_buttonCaptureOnButtonClick(evt);
-        m_comboBoxTriggerOnCombobox(evt);
-        m_comboBoxTriggerSourceOnCombobox(evt);
     }
 }
 
 void OsciloskopOsciloskop::onActivateApp(wxActivateEvent& event)
 {
-// TODO: Implement onActivateApp
+   // TODO: Implement onActivateApp
 }
 
 void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
@@ -180,7 +175,6 @@ void OsciloskopOsciloskop::onClose(wxCloseEvent& event)
     Destroy();
 }
 
-
 void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
 {
     ////////////////////////////////////////////////////////////////////////////////
@@ -188,12 +182,13 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
     ////////////////////////////////////////////////////////////////////////////////
     pTimer->deltaTime(TIMER_USERINTERFACE);
     timer += pTimer->getDelta(TIMER_USERINTERFACE);
+   
     ////////////////////////////////////////////////////////////////////////////////
     // user interface
     ////////////////////////////////////////////////////////////////////////////////
     if(timer > 0.1)
-    {
-       
+    {   
+        double idleTimer = timer;
         timer = 0;
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -290,12 +285,45 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         ////////////////////////////////////////////////////////////////////////////////
         int usb = pOsciloscope->thread.isOpen();
         m_checkBox26->SetValue(usb);
-        int isFpga = pOsciloscope->thread.isFpga();
-        int isOpen = pOsciloscope->thread.isOpen();
+        int isFpga   = pOsciloscope->thread.isFpga();
+        int isOpen   = pOsciloscope->thread.isOpen();
         if (isOpen && isFpga)
            m_buttonCapture->Enable();
         else
         {
+           // startup ... try to connect
+           static int    usbOnce    = 1;
+           static double usbTimer   = 0.0;
+                         usbTimer  += idleTimer;
+           if (usbTimer > 1.0 && usbOnce)
+           {
+              usbOnce = 0;
+              wxCommandEvent evt;
+              m_buttonConnectOnButtonClick(evt);
+              m_buttonCaptureOnButtonClick(evt);
+              m_comboBoxTriggerOnCombobox(evt);
+              m_comboBoxTriggerSourceOnCombobox(evt);
+           }
+
+           //// query ... fpga and usb
+           //if (usbTimer > 30)
+           //{
+           //    pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
+           //    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+           //    pOsciloscope->thread.wait();
+           //    if (!pOsciloscope->thread.isOpen())
+           //    {
+           //       pOsciloscope->thread.function(EThreadApiFunction::afOpenUsb);
+           //       pOsciloscope->thread.wait();
+           //    }
+           //    else if(!pOsciloscope->thread.isFpgaStatus())
+           //    {
+           //      // pOsciloscope->thread.function(EThreadApiFunction::afUploadFpga);
+           //      // pOsciloscope->thread.wait();
+           //    }
+           //    usbTimer = 0;
+           //}
+
            m_buttonCapture->Disable();
         }
 
@@ -954,6 +982,7 @@ void OsciloskopOsciloskop::m_checkBoxETSOnCheckBox(wxCommandEvent& event)
     pOsciloscope->window.horizontal.ETS = m_checkBoxETS->GetValue() ? 1 : 0;
     sfSetEts(getHw(), pOsciloscope->window.horizontal.ETS);
     pOsciloscope->transferData();
+    SDL_AtomicSet(&pOsciloscope->clearRenderTarget,1);
     // pOsciloscope->clearEts(pOsciloscope->window.horizontal.ETS);
     // pOsciloscope->clearRenderTarget = !pOsciloscope->window.horizontal.ETS;
     //  pOsciloscope->sim = pOsciloscope->GetServerSim();
@@ -1510,12 +1539,6 @@ void OsciloskopOsciloskop::m_checkBoxSignalFOnCheckBox(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_checkBoxFFTFOnCheckBox(wxCommandEvent& event)
 {
     pOsciloscope->window.function.FFTOnOff = m_checkBoxFFTF->IsChecked() ? 1 : 0;
-}
-
-void OsciloskopOsciloskop::m_textCtrlFuncCustomOnTextEnter(wxCommandEvent& event)
-{
- //   pOsciloscope->window.function.custom.tokenize(m_textCtrlFuncCustom->GetValue().ToAscii().data());
-  // pOsciloscope->window.function.custom.parse();
 }
 
 void OsciloskopOsciloskop::m_choiceDOnOff815OnChoice(wxCommandEvent& event)
@@ -2141,6 +2164,105 @@ void OsciloskopOsciloskop::m_sliderTriggerHoldoffOnScroll(wxScrollEvent& event)
     m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->integerToString(newHoldOff)));
 }
 
+void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& event)
+{
+    int stage = m_comboBoxDigitalStage->GetSelection();
+    pOsciloscope->window.trigger.stage = stage;
+    ushort delay = pOsciloscope->window.trigger.delay[stage];
+    m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
+    m_comboBoxBit0->SetSelection(pOsciloscope->window.trigger.pattern[stage][0]);
+    m_comboBoxBit1->SetSelection(pOsciloscope->window.trigger.pattern[stage][1]);
+    m_comboBoxBit2->SetSelection(pOsciloscope->window.trigger.pattern[stage][2]);
+    m_comboBoxBit3->SetSelection(pOsciloscope->window.trigger.pattern[stage][3]);
+    m_comboBoxBit4->SetSelection(pOsciloscope->window.trigger.pattern[stage][4]);
+    m_comboBoxBit5->SetSelection(pOsciloscope->window.trigger.pattern[stage][5]);
+    m_comboBoxBit6->SetSelection(pOsciloscope->window.trigger.pattern[stage][6]);
+    m_comboBoxBit7->SetSelection(pOsciloscope->window.trigger.pattern[stage][7]);
+    m_comboBoxBit8->SetSelection(pOsciloscope->window.trigger.pattern[stage][8]);
+    m_comboBoxBit9->SetSelection(pOsciloscope->window.trigger.pattern[stage][9]);
+    m_comboBoxBit10->SetSelection(pOsciloscope->window.trigger.pattern[stage][10]);
+    m_comboBoxBit11->SetSelection(pOsciloscope->window.trigger.pattern[stage][11]);
+    if(!pOsciloscope->window.trigger.mask[stage][0])
+    {
+        m_comboBoxBit0->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][1])
+    {
+        m_comboBoxBit1->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][2])
+    {
+        m_comboBoxBit2->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][3])
+    {
+        m_comboBoxBit3->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][4])
+    {
+        m_comboBoxBit4->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][5])
+    {
+        m_comboBoxBit5->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][6])
+    {
+        m_comboBoxBit6->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][7])
+    {
+        m_comboBoxBit7->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][8])
+    {
+        m_comboBoxBit8->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][9])
+    {
+        m_comboBoxBit9->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][10])
+    {
+        m_comboBoxBit10->SetSelection(4);
+    }
+    if(!pOsciloscope->window.trigger.mask[stage][11])
+    {
+        m_comboBoxBit11->SetSelection(4);
+    }
+}
+
+void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter(wxCommandEvent& event)
+{
+    int stage = pOsciloscope->window.trigger.stage;
+    ushort delay = clamp((uint)pFormat->stringToInteger(m_textCtrDigitallDelay->GetValue().ToAscii().data()), 0U, 0xffffU);
+    m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
+    pOsciloscope->window.trigger.delay[stage] = delay;
+    sfSetDigitalDelay(getHw(), (DigitalStage)stage, delay);
+    pOsciloscope->transferData();
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox(wxCommandEvent& event)
+{
+    pOsciloscope->window.trigger.stageStart = m_comboBoxDigitalStageStart->GetSelection();
+    sfSetDigitalStart(getHw(), pOsciloscope->window.trigger.stageStart);
+    pOsciloscope->transferData();
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox(wxCommandEvent& event)
+{
+    pOsciloscope->window.trigger.stageMode = m_comboBoxDigitalMode->GetSelection();
+    sfSetDigitalMode(getHw(), pOsciloscope->window.trigger.stageMode);
+    pOsciloscope->transferData();
+}
+
+void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox(wxCommandEvent& event)
+{
+    pOsciloscope->window.trigger.stageChannel = m_comboBoxDigitalSerialChannel->GetSelection();
+    sfSetDigitalChannel(getHw(), pOsciloscope->window.trigger.stageChannel);
+    pOsciloscope->transferData();
+}
+
 void OsciloskopOsciloskop::m_choiceBit158OnChoice(wxCommandEvent& event)
 {
     switch(m_choiceBit158->GetSelection())
@@ -2279,103 +2401,4 @@ void OsciloskopOsciloskop::m_comboBoxBit2OnCombobox(wxCommandEvent& event)
 void OsciloskopOsciloskop::m_comboBoxBit0OnCombobox(wxCommandEvent& event)
 {
     setPattern(0, m_comboBoxBit0);
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalStageOnCombobox(wxCommandEvent& event)
-{
-    int stage = m_comboBoxDigitalStage->GetSelection();
-    pOsciloscope->window.trigger.stage = stage;
-    ushort delay = pOsciloscope->window.trigger.delay[stage];
-    m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
-    m_comboBoxBit0->SetSelection(pOsciloscope->window.trigger.pattern[stage][0]);
-    m_comboBoxBit1->SetSelection(pOsciloscope->window.trigger.pattern[stage][1]);
-    m_comboBoxBit2->SetSelection(pOsciloscope->window.trigger.pattern[stage][2]);
-    m_comboBoxBit3->SetSelection(pOsciloscope->window.trigger.pattern[stage][3]);
-    m_comboBoxBit4->SetSelection(pOsciloscope->window.trigger.pattern[stage][4]);
-    m_comboBoxBit5->SetSelection(pOsciloscope->window.trigger.pattern[stage][5]);
-    m_comboBoxBit6->SetSelection(pOsciloscope->window.trigger.pattern[stage][6]);
-    m_comboBoxBit7->SetSelection(pOsciloscope->window.trigger.pattern[stage][7]);
-    m_comboBoxBit8->SetSelection(pOsciloscope->window.trigger.pattern[stage][8]);
-    m_comboBoxBit9->SetSelection(pOsciloscope->window.trigger.pattern[stage][9]);
-    m_comboBoxBit10->SetSelection(pOsciloscope->window.trigger.pattern[stage][10]);
-    m_comboBoxBit11->SetSelection(pOsciloscope->window.trigger.pattern[stage][11]);
-    if(!pOsciloscope->window.trigger.mask[stage][0])
-    {
-        m_comboBoxBit0->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][1])
-    {
-        m_comboBoxBit1->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][2])
-    {
-        m_comboBoxBit2->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][3])
-    {
-        m_comboBoxBit3->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][4])
-    {
-        m_comboBoxBit4->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][5])
-    {
-        m_comboBoxBit5->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][6])
-    {
-        m_comboBoxBit6->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][7])
-    {
-        m_comboBoxBit7->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][8])
-    {
-        m_comboBoxBit8->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][9])
-    {
-        m_comboBoxBit9->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][10])
-    {
-        m_comboBoxBit10->SetSelection(4);
-    }
-    if(!pOsciloscope->window.trigger.mask[stage][11])
-    {
-        m_comboBoxBit11->SetSelection(4);
-    }
-}
-
-void OsciloskopOsciloskop::m_textCtrDigitallDelayOnTextEnter(wxCommandEvent& event)
-{
-    int stage = pOsciloscope->window.trigger.stage;
-    ushort delay = clamp((uint)pFormat->stringToInteger(m_textCtrDigitallDelay->GetValue().ToAscii().data()), 0U, 0xffffU);
-    m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
-    pOsciloscope->window.trigger.delay[stage] = delay;
-    sfSetDigitalDelay(getHw(), (DigitalStage)stage, delay);
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalStageStartOnCombobox(wxCommandEvent& event)
-{
-    pOsciloscope->window.trigger.stageStart = m_comboBoxDigitalStageStart->GetSelection();
-    sfSetDigitalStart(getHw(), pOsciloscope->window.trigger.stageStart);
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalModeOnCombobox(wxCommandEvent& event)
-{
-    pOsciloscope->window.trigger.stageMode = m_comboBoxDigitalMode->GetSelection();
-    sfSetDigitalMode(getHw(), pOsciloscope->window.trigger.stageMode);
-    pOsciloscope->transferData();
-}
-
-void OsciloskopOsciloskop::m_comboBoxDigitalSerialChannelOnCombobox(wxCommandEvent& event)
-{
-    pOsciloscope->window.trigger.stageChannel = m_comboBoxDigitalSerialChannel->GetSelection();
-    sfSetDigitalChannel(getHw(), pOsciloscope->window.trigger.stageChannel);
-    pOsciloscope->transferData();
 }

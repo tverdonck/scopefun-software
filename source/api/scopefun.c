@@ -559,6 +559,21 @@ SCOPEFUN_API int sfHardwareEepromReadFirmwareID(SFContext* ctx, SEeprom* eeprom,
     apiUnlock(ctx);
     return result;
 }
+
+SCOPEFUN_API int sfHardwareReadFpgaStatus(SFContext* ctx, SInt* fpga)
+{
+   int result = SCOPEFUN_FAILURE;
+   apiLock(ctx);
+   if (ctx->api.active > 0)
+   {
+      struct UsbContext* pUsbCtx = (struct UsbContext*)ctx->usb;
+      int ret = usbFx3ReadFpgaStatus(pUsbCtx, &fpga->value );
+      result = apiResult(ret);
+   }
+   apiUnlock(ctx);
+   return result;
+}
+
 SCOPEFUN_API int sfHardwareEepromWrite(SFContext* ctx, SEeprom* eeprom, int size, int adress)
 {
     int result = SCOPEFUN_FAILURE;
@@ -1112,70 +1127,140 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
         }
         else
         {
-            for(ilarge i = 1; i <= zoomSampleCnt; i++)
+            if (analogSwitch & CHANNEL_ETS)
             {
-                if (i > lenSamples)
-                  break;
+               for (ilarge i = 0; i < zoomSampleCnt; i++)
+               {
+                  if (i > lenSamples)
+                     break;
 
-                uint offset = 0;
-                ushort  ch0 = 0;
-                ushort  ch1 = 0;
-                ushort  dig = 0;
-                ilarge sample = iClamp(zoomSampleMin + i, 0, numSamples - 1);
-                offset = sample * 4;
-                byte byte0 = *(dataStart + offset + 0);
-                byte byte1 = *(dataStart + offset + 1);
-                byte byte2 = *(dataStart + offset + 2);
-                byte byte3 = *(dataStart + offset + 3);
-                //ch0 |= byte0;
-                //ch0 = ch0 << 2;
-                //ch0 |= ((byte1 >> 6) & 0x3F);
-                //ch1 |= (byte1 & 0x3F);
-                //ch1 = ch1 << 4;
-                //ch1 |= ((byte2 >> 4) & 0xF);
-                //dig |= (byte2 & 0xF);
-                //dig = dig << 8;
-                //dig |= byte3;
-                // channels
-               /* ishort channel0 = leadBitShift(ch0 & 0x000003FF);
-                ishort channel1 = leadBitShift(ch1 & 0x000003FF);*/
+                  uint offset = 0;
+                  ushort  ch0 = 0;
+                  ushort  ch1 = 0;
+                  ushort  dig = 0;
+                  ilarge sample = iClamp(zoomSampleMin + i, 0, numSamples - 1);
+                  offset = sample * 4;
+                  byte byte0 = *(dataStart + offset + 0);
+                  byte byte1 = *(dataStart + offset + 1);
+                  byte byte2 = *(dataStart + offset + 2);
+                  byte byte3 = *(dataStart + offset + 3);
 
-                ishort channel0 = 0;
-                ishort channel1 = 0;
+                  ishort channel0 = 0;
+                  ishort channel1 = 0;
+                  sfGetData((uint)byte0 | ((uint)byte1 << 8) | ((uint)byte2 << 16) | ((uint)byte3 << 24), &channel0, &channel1, &dig);
 
-                sfGetData((uint)byte0 | ((uint)byte1 << 8) | ((uint)byte2 << 16) | ((uint)byte3 << 24), &channel0, &channel1, &dig);
+                  ushort digital = dig;
+                  ushort function = cDisplayFunction(ctx, ctx->functionType, channel0, channel1, digital);
+                  if (ctx->pCallback)
+                  {
+                     ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &function, &digital, &displayPos, &displayZoom, ctx->pUserData);
+                  }
 
-                ushort digital = dig;
-                ushort function = cDisplayFunction(ctx,ctx->functionType, channel0, channel1, digital);
-                if(ctx->pCallback)
-                { ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &function, &digital, &displayPos, &displayZoom, ctx->pUserData); }
-                // floats
-                float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-                float fChannel1 = fClamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-                float fFunction = fClamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
-                // start, end, count
-                ularge start = sample > 0 ? sample - 1 : sample;
-                ularge end = sample;
-                // normalize
-                double nStart  = (double)(start - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
-                double nEnd    = (double)(end - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
-                // index
-                ularge iStart = SDL_floor(nStart * (double)(SCOPEFUN_DISPLAY - 1));
-                ularge   iEnd = SDL_floor(nEnd * (double)(SCOPEFUN_DISPLAY - 1));
-                // Output:
-                // Display full interval not only single sample.
-                // That is becouse we can zoom to single sample.
-                for(ularge k = iStart; k <= iEnd; k++)
-                {
-                    int displayIndex = iClamp(k, 0, SCOPEFUN_DISPLAY - 1);
-                    display->analog0.bytes[displayIndex] = fChannel0;
-                    display->analog1.bytes[displayIndex] = fChannel1;
-                    display->digital.bytes[displayIndex] = digital;
-                    display->analogF.bytes[displayIndex] = function;
-                }
+                  // floats
+                  float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+                  float fChannel1 = fClamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+                  float fFunction = fClamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+
+                  // normalize
+                  double nSample = (double)(sample - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
+
+                  // index
+                  ularge iSample = SDL_floor(nSample * (double)(SCOPEFUN_DISPLAY - 1));
+
+                  // Output:
+                  display->analog0.bytes[iSample] = fChannel0;
+                  display->analog1.bytes[iSample] = fChannel1;
+                  display->digital.bytes[iSample] = digital;
+                  display->analogF.bytes[iSample] = function;
+               }
+               if (ctx->pCallback)
+               {
+                  ((SCallback*)ctx->pCallback)->onDisplay(display, &displayPos, &displayZoom, ctx->pUserData);
+               }
             }
-            if(ctx->pCallback)
-            { ((SCallback*)ctx->pCallback)->onDisplay(display, &displayPos, &displayZoom, ctx->pUserData); }
+            else
+            {
+               for (ilarge i = 1; i <= zoomSampleCnt; i++)
+               {
+                  if (i > lenSamples)
+                     break;
+
+                  uint offset = 0;
+                  ushort  ch0 = 0;
+                  ushort  ch1 = 0;
+                  ushort  dig = 0;
+                  ilarge sample = iClamp(zoomSampleMin + i, 0, numSamples - 1);
+                  offset = sample * 4;
+                  byte byte0 = *(dataStart + offset + 0);
+                  byte byte1 = *(dataStart + offset + 1);
+                  byte byte2 = *(dataStart + offset + 2);
+                  byte byte3 = *(dataStart + offset + 3);
+                  //ch0 |= byte0;
+                  //ch0 = ch0 << 2;
+                  //ch0 |= ((byte1 >> 6) & 0x3F);
+                  //ch1 |= (byte1 & 0x3F);
+                  //ch1 = ch1 << 4;
+                  //ch1 |= ((byte2 >> 4) & 0xF);
+                  //dig |= (byte2 & 0xF);
+                  //dig = dig << 8;
+                  //dig |= byte3;
+                  // channels
+                  /* ishort channel0 = leadBitShift(ch0 & 0x000003FF);
+                  ishort channel1 = leadBitShift(ch1 & 0x000003FF);*/
+
+                  ishort channel0 = 0;
+                  ishort channel1 = 0;
+
+                  sfGetData((uint)byte0 | ((uint)byte1 << 8) | ((uint)byte2 << 16) | ((uint)byte3 << 24), &channel0, &channel1, &dig);
+
+                  ushort digital = dig;
+                  ushort function = cDisplayFunction(ctx, ctx->functionType, channel0, channel1, digital);
+                  if (ctx->pCallback)
+                  {
+                     ((SCallback*)ctx->pCallback)->onSample(sample, &channel0, &channel1, &function, &digital, &displayPos, &displayZoom, ctx->pUserData);
+                  }
+                  // floats
+                  float fChannel0 = fClamp((float)channel0 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+                  float fChannel1 = fClamp((float)channel1 / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+                  float fFunction = fClamp((float)function / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
+                  // start, end, count
+                  ularge start = sample > 0 ? sample - 1 : sample;
+                  ularge end = sample;
+                  // normalize
+                  double nSample = (double)(sample - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
+                  double nStart = (double)(start - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
+                  double nEnd = (double)(end - zoomSampleMin) / (double)(zoomSampleCnt); // [0...1]
+                  // index
+                  ularge iSample = SDL_floor(nSample * (double)(SCOPEFUN_DISPLAY - 1));
+                  ularge iStart = SDL_floor(nStart * (double)(SCOPEFUN_DISPLAY - 1));
+                  ularge   iEnd = SDL_floor(nEnd * (double)(SCOPEFUN_DISPLAY - 1));
+                  // Output:
+                  // Display full interval not only single sample.
+                  // That is becouse we can zoom to single sample.
+                  if (!(analogSwitch & CHANNEL_ETS))
+                  {
+                     for (ularge k = iStart; k <= iEnd; k++)
+                     {
+                        int displayIndex = iClamp(k, 0, SCOPEFUN_DISPLAY - 1);
+                        display->analog0.bytes[displayIndex] = fChannel0;
+                        display->analog1.bytes[displayIndex] = fChannel1;
+                        display->digital.bytes[displayIndex] = digital;
+                        display->analogF.bytes[displayIndex] = function;
+                     }
+                  }
+                  else
+                  {
+                     display->analog0.bytes[iSample] = fChannel0;
+                     display->analog1.bytes[iSample] = fChannel1;
+                     display->digital.bytes[iSample] = digital;
+                     display->analogF.bytes[iSample] = function;
+                  }
+               }
+               if (ctx->pCallback)
+               {
+                  ((SCallback*)ctx->pCallback)->onDisplay(display, &displayPos, &displayZoom, ctx->pUserData);
+               }
+            }
         }
     }
     return SCOPEFUN_SUCCESS;

@@ -625,6 +625,7 @@ SCOPEFUN_API int sfHardwareUploadFpga(SFContext* INOUT, SFpga* INOUT);
 SCOPEFUN_API int sfHardwareUploadGenerator(SFContext* INOUT, SGenerator* INOUT);
 SCOPEFUN_API int sfHardwareEepromRead(SFContext* INOUT, SEeprom* INOUT, int INPUT, int INPUT);
 SCOPEFUN_API int sfHardwareEepromReadFirmwareID(SFContext* INOUT, SEeprom* INOUT, int INPUT, int INPUT);
+SCOPEFUN_API int sfHardwareReadFpgaStatus(SFContext* ctx, SInt* INOUT);
 SCOPEFUN_API int sfHardwareEepromWrite(SFContext* INOUT, SEeprom* INOUT, int INPUT, int INPUT);
 SCOPEFUN_API int sfHardwareEepromErase(SFContext* INOUT);
 SCOPEFUN_API int sfHardwareClose(SFContext* INOUT);

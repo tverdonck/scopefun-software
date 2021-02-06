@@ -129,6 +129,7 @@ ThreadApi::ThreadApi()
     resultClearAll();
     SDL_AtomicSet(&open, 0);
     SDL_AtomicSet(&fpga, 0);
+    SDL_AtomicSet(&fpgaStatus, 0);
     SDL_AtomicSet(&simulate, 0);
     SDL_AtomicSet(&vid, 0);
     SDL_AtomicSet(&pid, 0);
@@ -295,6 +296,15 @@ void ThreadApi::update()
                 iret += sfHardwareUploadGenerator(getCtx(), &generatorData);
                 SDL_AtomicUnlock(&lock);
                 break;
+            case afReadFpgaStatus:
+               {
+                  SDL_AtomicLock(&lock);
+                  SInt status = { 0 };
+                  iret += sfHardwareReadFpgaStatus(getCtx(), &status);
+                  SDL_AtomicSet(&fpgaStatus,status.value);
+                  SDL_AtomicUnlock(&lock);
+               }
+               break;
         };
         SDL_AtomicSet(&ret[f], iret);
     }
@@ -317,6 +327,11 @@ int ThreadApi::isOpen()
 int ThreadApi::isFpga()
 {
     return SDL_AtomicGet(&fpga);
+}
+
+int ThreadApi::isFpgaStatus()
+{
+   return SDL_AtomicGet(&fpgaStatus);
 }
 int ThreadApi::isSimulate()
 {
@@ -466,8 +481,13 @@ int ThreadApi::writeFpgaToArtix7(SHardware* ctrl, OscHardware* hw)
     // callibration
     useEepromCallibration(hw);
     // fpga
-    function(afUploadFpga);
-    wait();
+    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+    pOsciloscope->thread.wait();
+    if (!pOsciloscope->thread.isFpgaStatus())
+    {
+       function(afUploadFpga);
+       wait();
+    }
     // delay
     SDL_Delay(4000);
     // control
@@ -734,7 +754,6 @@ OsciloscopeManager::OsciloscopeManager()
     analogWindowSize = 1.f;
     sliderMode  = 0;
     openglFocus = 1;
-    SDL_AtomicSet(&etsClear, 1);
     SDL_AtomicSet(&signalMode, SIGNAL_MODE_PAUSE);
     windowSlot = 0;
     SDL_AtomicSet(&oscExit, 0);
@@ -1672,39 +1691,67 @@ void OsciloscopeManager::renderThread(uint threadId, OsciloscopeThreadData& thre
     //{
     //    if(wndMain.channel01.OscOnOff)
     //    {
-    //        if(frame.etsAttr & ETS_CLEAR)
+    //        if(frame.attr & ETS_CLEAR)
     //        {
-    //            renderer.renderAnalog(threadId, threadData, 0.f, 0, 0, threadData.etsClear, wndMain.horizontal.Capture, wndMain.channel01.Capture, 0xff303030, wndMain.channel01.Invert);
+    //            renderer.renderAnalog(threadId, threadData, 0.f, 0, 0, threadData.m_etsClear, wndMain.horizontal.Capture, wndMain.channel01.Capture, 0xff303030, wndMain.channel01.Invert);
     //        }
     //    }
     //    if(wndMain.channel02.OscOnOff)
     //    {
-    //        if(frame.etsAttr & ETS_CLEAR)
+    //        if(frame.attr & ETS_CLEAR)
     //        {
-    //            renderer.renderAnalog(threadId, threadData, 0.f, 1, 0, threadData.etsClear, wndMain.horizontal.Capture, wndMain.channel02.Capture, 0xff303030, wndMain.channel02.Invert);
+    //            renderer.renderAnalog(threadId, threadData, 0.f, 1, 0, threadData.m_etsClear, wndMain.horizontal.Capture, wndMain.channel02.Capture, 0xff303030, wndMain.channel02.Invert);
     //        }
     //    }
     //}
+
     ////////////////////////////////////////////////////////////////////////////////
-    // Signal Channel01
+    // Signal
     ////////////////////////////////////////////////////////////////////////////////
-    if(wndMain.channel01.OscOnOff)
+    if(wndMain.horizontal.ETS)
     {
-        renderer.renderAnalog(threadId, threadData, 0.f, 0, 0, frame, wndMain.horizontal.Capture, wndMain.channel01.Capture, render.colorChannel0, wndMain.channel01.Invert);
+       ////////////////////////////////////////////////////////////////////////////////
+       // ETS
+       ////////////////////////////////////////////////////////////////////////////////
+       for (uint i = 0; i < threadData.m_historyCount; i++)
+       {
+          if (wndMain.channel01.OscOnOff)
+          {
+             renderer.renderAnalog(threadId, threadData, 0.f, 0, 0, threadData.m_history[i], wndMain.horizontal.Capture, wndMain.channel01.Capture, render.colorChannel0, wndMain.channel01.Invert);
+          }
+          if (wndMain.channel02.OscOnOff)
+          {
+             renderer.renderAnalog(threadId, threadData, 0.f, 1, 0, threadData.m_history[i], wndMain.horizontal.Capture, wndMain.channel02.Capture, render.colorChannel1, wndMain.channel02.Invert);
+          }
+          if (wndMain.function.OscOnOff)
+          {
+             renderer.renderAnalogFunction(threadId, threadData, 0.f, wndMain.function.Type, threadData.m_history[i], wndMain.horizontal.Capture, wndMain.channel01.Capture, wndMain.channel02.Capture, render.colorFunction, wndMain.channel01.Invert, wndMain.channel02.Invert);
+          }
+       }
     }
-    ////////////////////////////////////////////////////////////////////////////////
-    // Signal Channel02
-    ////////////////////////////////////////////////////////////////////////////////
-    if(wndMain.channel02.OscOnOff)
+    else
     {
-        renderer.renderAnalog(threadId, threadData, 0.f, 1, 0, frame, wndMain.horizontal.Capture, wndMain.channel02.Capture, render.colorChannel1, wndMain.channel02.Invert);
-    }
-    ////////////////////////////////////////////////////////////////////////////////
-    // Function
-    ////////////////////////////////////////////////////////////////////////////////
-    if(wndMain.function.OscOnOff)
-    {
-        renderer.renderAnalogFunction(threadId, threadData, 0.f, wndMain.function.Type, frame, wndMain.horizontal.Capture, wndMain.channel01.Capture, wndMain.channel02.Capture, render.colorFunction, wndMain.channel01.Invert, wndMain.channel02.Invert);
+       ////////////////////////////////////////////////////////////////////////////////
+       // Signal Channel01
+       ////////////////////////////////////////////////////////////////////////////////
+       if (wndMain.channel01.OscOnOff)
+       {
+          renderer.renderAnalog(threadId, threadData, 0.f, 0, 0, frame, wndMain.horizontal.Capture, wndMain.channel01.Capture, render.colorChannel0, wndMain.channel01.Invert);
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       // Signal Channel02
+       ////////////////////////////////////////////////////////////////////////////////
+       if (wndMain.channel02.OscOnOff)
+       {
+          renderer.renderAnalog(threadId, threadData, 0.f, 1, 0, frame, wndMain.horizontal.Capture, wndMain.channel02.Capture, render.colorChannel1, wndMain.channel02.Invert);
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       // Function
+       ////////////////////////////////////////////////////////////////////////////////
+       if (wndMain.function.OscOnOff)
+       {
+          renderer.renderAnalogFunction(threadId, threadData, 0.f, wndMain.function.Type, frame, wndMain.horizontal.Capture, wndMain.channel01.Capture, wndMain.channel02.Capture, render.colorFunction, wndMain.channel01.Invert, wndMain.channel02.Invert);
+       }
     }
     ////////////////////////////////////////////////////////////////////////////////
     // FunctionXY
@@ -3392,136 +3439,17 @@ int OsciloscopeManager::Render()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// ETS
-//
-////////////////////////////////////////////////////////////////////////////////
-void OsciloscopeETS::clear()
-{
-    etsHistory.clear();
-    etsIndex = 0;
-}
-
-void OsciloscopeETS::redraw(OsciloscopeRenderData& render, SDL_atomic_t* redrawEts)
-{
-    if(SDL_AtomicGet(redrawEts) == 12)
-    {
-        render.flags.bit(rfClearRenderTarget, 0);
-        SDL_AtomicSet(redrawEts, 0);
-    }
-    if(SDL_AtomicGet(redrawEts) > 1 && SDL_AtomicGet(redrawEts) < 12)
-    {
-        render.flags.bit(rfClearRenderTarget, 1);
-        SDL_AtomicSet(redrawEts, SDL_AtomicGet(redrawEts) + 1);
-    }
-    if(SDL_AtomicGet(redrawEts) == 1)
-    {
-        etsIndex = etsHistory.getCount() - 1;
-        etsIndex = max(0U, etsIndex);
-        SDL_AtomicSet(redrawEts, 2);
-        render.flags.bit(rfClearRenderTarget, 1);
-    }
-}
-
-void OsciloscopeETS::onFrameChange(int framechange, Ring<CapturePacket> threadHistory, OsciloscopeRenderData& render)
-{
-    //// return;
-    //render.flags.raise(rfClearRenderTarget);
-    //// ets, display
-    //clear();
-    //// frame
-    //CaptureFrame frame;
-    //for(int i = max<int>(0, framechange - 32); i < framechange; i++)
-    //{
-    //    pOsciloscope->captureBuffer->captureFrame(frame, i);
-    //    pOsciloscope->captureBuffer->historyRead(frame, frame.version, frame.header, frame.data, frame.packet);
-    //    pOsciloscope->captureBuffer->display(oscFrame, frame.version, frame.header, frame.data, frame.packet);
-    //    onCapture(oscFrame, render);
-    //}
-    //redraw(render, &pOsciloscope->etsClear);
-}
-
-void OsciloscopeETS::onCapture(OsciloscopeFrame& frame, OsciloscopeRenderData& render)
-{
-    // attributes, index
-    etsAttr  = 0;
-    etsIndex = 0;
-    // frame to clear
-    for(int i = 0; i < etsHistory.getCount(); i++)
-    {
-        if(frame.ets == etsHistory[i].ets)
-        {
-            etsClear = etsHistory[i];
-            etsHistory.remove(i);
-            etsAttr = ETS_CLEAR;
-            break;
-        }
-    }
-    // add frames
-    if(etsHistory.getCount() < etsHistory.getSize() &&
-       etsHistory.getCount() < (int)pOsciloscope->settings.getSettings()->historyFrameCount)
-    {
-        etsHistory.pushBack(frame);
-    }
-    render.etsAttr = etsAttr;
-}
-
-void OsciloscopeETS::onPause(OsciloscopeFrame& frame, WndMain& window)
-{
-    if(window.horizontal.ETS)
-    {
-        etsAttr = 0;
-        if(etsHistory.getCount())
-        {
-            if(etsIndex >= 0 && etsIndex < (uint)etsHistory.getCount())
-            {
-                frame = etsHistory[etsIndex];
-                etsIndex--;
-            }
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // CaptureThread
 //
 ////////////////////////////////////////////////////////////////////////////////
 void SendToRenderer(uint frameIndex,OsciloscopeThreadRenderer& renderer, OsciloscopeFFT& fft, OsciloscopeThreadData& captureData, uint delay)
 {
-   // lock
-   //uint frame = 0;
-   uint threadId = 0;
-
-   threadId = frameIndex;
-   //pOsciloscope->m_captureBuffer.lockThreadProducer(threadId);
-
-   // pOsciloscope->m_captureBuffer.lockThread(threadId);
-   /* Ring<OsciloscopeFrame> history = pOsciloscope->tmpHistory;
-      OsciloscopeFrame       frame;
-      uint count = history.getCount();
-      captureData.history.clear();
-      for(uint i = 0; i < count; i++)
-      {
-         history.read(frame);
-         captureData.history.write(frame);
-      }
-      captureData.etsClear = ets.etsClear;
-      captureData.frame    = frame;
-      captureData.render   = render;
-      captureData.window   = window;*/
-      // clear
+   // clear
    renderer.clearFast();
    fft.clear();
-   // clear render target?
-   /* if( captureData.m_frame.attr & daETS )
-         captureData.m_render.flags.bit( rfClearRenderTarget, captureData.m_frame.attr & daETS  );*/
-         // render
+
+   // render
    pOsciloscope->renderThread(frameIndex % SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_threadCount), captureData, renderer, fft);
-   
-  // pOsciloscope->m_captureBuffer.unlockThread(threadId);
-
-  // pOsciloscope->m_captureBuffer.unlockThreadProducer(threadId);
-
 }
 
 
@@ -3550,16 +3478,22 @@ int SDLCALL CaptureDataThreadFunction(void* data)
         }
 
         // capture
-        if(mode == SIGNAL_MODE_CAPTURE)
+        if (mode == SIGNAL_MODE_CAPTURE)
         {
-            int isFpga = pOsciloscope->thread.isFpga();
-            int isOpen = pOsciloscope->thread.isOpen();
-            if(!isOpen || !isFpga)
-            {
-                SDL_Delay(100);
-                continue;
-            }
-            int ret = sfFrameCapture(getCtx(), &receivedBytes, &receivedFrameSize);
+           int isFpga = pOsciloscope->thread.isFpga();
+           int isOpen = pOsciloscope->thread.isOpen();
+           if (!isOpen || !isFpga)
+           {
+              SDL_Delay(100);
+              continue;
+           }
+           try {
+               int ret = sfFrameCapture(getCtx(), &receivedBytes, &receivedFrameSize);
+           }
+           catch (...)
+           {
+
+           }
         }
 
         // capture
@@ -3659,9 +3593,12 @@ int DisplayFrame(uint maxBytesToRead,uint frameIndex, uint frameCount, uint fram
     sfGetHeader(getCtx(), (SFrameData*)&captureBuffer.m_dataPtr[framePos], &header);
     sfGetHeaderHardware(getCtx(), (SFrameHeader*)&header, &threadData.m_hw);
     
+    // ets
+    int isEts = sfGetAnalogSwitch(&threadData.m_hw) && CHANNEL_ETS;
+
     // history
     threadData.m_historyCount = 0;
-    if(threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D))
+    if( isEts || threadData.m_window.fftDigital.is(VIEW_SELECT_OSC_3D) || threadData.m_window.fftDigital.is(VIEW_SELECT_FFT_3D))
     { threadData.m_historyCount = SCOPEFUN_MAX_HISTORY; }
     for(int i = 0; i < threadData.m_historyCount; i++)
     {
