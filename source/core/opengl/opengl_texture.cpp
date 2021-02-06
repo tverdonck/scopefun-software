@@ -29,7 +29,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 GrTexture::GrTexture()
 {
+    frameBufferIndex = 0;
     textureIndex = 0;
+    memory = 0;
+    mips = 0;
+    width = 0;
+    height = 0;
+    format = 0;
+    internalFormat = 0;
+    type = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -201,11 +209,12 @@ void grCopyToBackBuffer(GrTexture* src, int x, int y, int width, int height)
     }
     if(grGetMode() == OPENGL_MODE_32)
     {
-        grStateDepthStencil(DEPTH_STENCIL_OFF);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, pRender->frameBufferIndex);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glDrawBuffer(GL_BACK);
-        glBlitFramebuffer(0, 0, src->width, src->height, 0, 0, src->width, src->height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+      grStateDepthStencil(DEPTH_STENCIL_OFF);
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, pRender->frameBufferIndex);
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+      glDrawBuffer(GL_BACK);
+      if( !(SDL_GetWindowFlags(pRender->sdlWindow) & SDL_WINDOW_MINIMIZED) )
+         glBlitFramebuffer(0, 0, src->width, src->height, 0, 0, src->width, src->height, GL_COLOR_BUFFER_BIT, GL_NEAREST); 
     }
 }
 

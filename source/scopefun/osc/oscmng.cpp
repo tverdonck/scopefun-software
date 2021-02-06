@@ -921,6 +921,8 @@ int OsciloscopeManager::start()
     {
         grSetMode(OPENGL_MODE_32);
     }
+    pRender->sdlWindow = pOsciloscope->sdlWindow;
+
     #if !defined(LINUX) && !defined(MAC)
     SDL_GetWindowSize(pOsciloscope->sdlWindow, &pOsciloscope->sdlW, &pOsciloscope->sdlH);
     #endif

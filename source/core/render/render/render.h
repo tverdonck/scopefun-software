@@ -42,7 +42,8 @@ public:
 class RenderManager : public Manager
 {
 public:
-    OpenGLMode openGlMode;
+    SDL_Window* sdlWindow;
+    OpenGLMode  openGlMode;
 public:
     uint frameBufferIndex;
 public:
