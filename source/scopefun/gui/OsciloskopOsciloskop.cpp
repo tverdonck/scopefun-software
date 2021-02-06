@@ -792,7 +792,7 @@ void OsciloskopOsciloskop::m_menuItemReadCertificateOnMenuSelection(wxCommandEve
 {
     m_buttonConnectOnButtonClick(event);
     pOsciloscope->thread.wait();
-    char verify[256] = { 0 };
+    char verify[257] = { 0 };
     int ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, 256, 0);
     if(ret == PUREUSB_SUCCESS)
     {
