@@ -861,7 +861,6 @@ public:
     int  getVersion();
     int  isOpen();
     int  isFpga();
-    int  isFpgaStatus();
     int  isSimulate();
     void setInit(int memory, int thread, int active, int timeout);
     void setFrame(int  version, int  header, int  data, int  packet);
@@ -884,6 +883,7 @@ public:
 public:
     // controlThread
     int  openUSB(OscHardware* hw);
+    int  uploadFpga(OscHardware* hw);
     int  useEepromCallibration(OscHardware* hw);
     int  writeFpgaToArtix7(SHardware* ctrl, OscHardware* hw);
 

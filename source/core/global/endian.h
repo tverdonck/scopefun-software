@@ -30,11 +30,11 @@ CORE_FORCE_INLINE ushort endianSwap16(ushort& value)
 
 CORE_FORCE_INLINE uint endianSwap32(uint& value)
 {
-    uint v0 = (value & 0x000000FF);
-    uint v1 = (value & 0x0000FF00);
-    uint v2 = (value & 0x00FF0000);
-    uint v3 = (value & 0xFF000000);
-    return (v0 >> 24) | (v1 >> 4) | (v2 << 4) | (v3 << 24);
+    uint v0 = (value & 0xff000000);
+    uint v1 = (value & 0x00ff0000);
+    uint v2 = (value & 0x0000ff00);
+    uint v3 = (value & 0x000000ff);
+    return (v0 >> 24) | (v1 >> 8) | (v2 << 8) | (v3 << 24);
 }
 
 #endif

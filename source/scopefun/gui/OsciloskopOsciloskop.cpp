@@ -285,46 +285,60 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         ////////////////////////////////////////////////////////////////////////////////
         int usb = pOsciloscope->thread.isOpen();
         m_checkBox26->SetValue(usb);
+
+        static int open = 0;
         int isFpga   = pOsciloscope->thread.isFpga();
         int isOpen   = pOsciloscope->thread.isOpen();
         if (isOpen && isFpga)
-           m_buttonCapture->Enable();
-        else
+           open = 1;
+        if (open == 1 && isOpen && !isFpga)
+        {
+           open = 0;
+           pOsciloscope->thread.function(EThreadApiFunction::afCloseUsb);
+           pOsciloscope->thread.wait();
+        }
+
+        m_buttonCapture->Enable();
+        //else
         {
            // startup ... try to connect
-           static int    usbOnce    = 1;
            static double usbTimer   = 0.0;
                          usbTimer  += idleTimer;
-           if (usbTimer > 1.0 && usbOnce)
+
+           // query ... fpga and usb
+           if (usbTimer > 2.0 ) //&& SDL_AtomicGet(&pOsciloscope->signalMode)  == SIGNAL_MODE_CAPTURE )
            {
-              usbOnce = 0;
-              wxCommandEvent evt;
-              m_buttonConnectOnButtonClick(evt);
-              m_buttonCaptureOnButtonClick(evt);
-              m_comboBoxTriggerOnCombobox(evt);
-              m_comboBoxTriggerSourceOnCombobox(evt);
+              pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
+              pOsciloscope->thread.wait();
+
+              pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+              pOsciloscope->thread.wait();
+
+              // usb
+              if (!pOsciloscope->thread.isOpen())
+              {
+                 pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());             
+                 pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
+              }
+              else // fpga
+              {
+                 if (!pOsciloscope->thread.isFpga())
+                 {
+                    pOsciloscope->thread.uploadFpga( pOsciloscope->settings.getHardware() );
+                    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+                    pOsciloscope->thread.wait();
+                    if (pOsciloscope->thread.isFpga())
+                    {
+                       pOsciloscope->thread.hardwareControlFunction(getHw());
+                       pOsciloscope->thread.wait();
+                       pOsciloscope->transferData();
+                    }
+                 }
+              }
+              usbTimer = 0;
            }
 
-           //// query ... fpga and usb
-           //if (usbTimer > 30)
-           //{
-           //    pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
-           //    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
-           //    pOsciloscope->thread.wait();
-           //    if (!pOsciloscope->thread.isOpen())
-           //    {
-           //       pOsciloscope->thread.function(EThreadApiFunction::afOpenUsb);
-           //       pOsciloscope->thread.wait();
-           //    }
-           //    else if(!pOsciloscope->thread.isFpgaStatus())
-           //    {
-           //      // pOsciloscope->thread.function(EThreadApiFunction::afUploadFpga);
-           //      // pOsciloscope->thread.wait();
-           //    }
-           //    usbTimer = 0;
-           //}
-
-           m_buttonCapture->Disable();
+        /*   m_buttonCapture->Disable();*/
         }
 
         ////////////////////////////////////////////////////////////////////////////////

@@ -129,7 +129,6 @@ ThreadApi::ThreadApi()
     resultClearAll();
     SDL_AtomicSet(&open, 0);
     SDL_AtomicSet(&fpga, 0);
-    SDL_AtomicSet(&fpgaStatus, 0);
     SDL_AtomicSet(&simulate, 0);
     SDL_AtomicSet(&vid, 0);
     SDL_AtomicSet(&pid, 0);
@@ -301,7 +300,7 @@ void ThreadApi::update()
                   SDL_AtomicLock(&lock);
                   SInt status = { 0 };
                   iret += sfHardwareReadFpgaStatus(getCtx(), &status);
-                  SDL_AtomicSet(&fpgaStatus,status.value);
+                  SDL_AtomicSet(&fpga,status.value);
                   SDL_AtomicUnlock(&lock);
                }
                break;
@@ -329,10 +328,6 @@ int ThreadApi::isFpga()
     return SDL_AtomicGet(&fpga);
 }
 
-int ThreadApi::isFpgaStatus()
-{
-   return SDL_AtomicGet(&fpgaStatus);
-}
 int ThreadApi::isSimulate()
 {
     return SDL_AtomicGet(&simulate);
@@ -452,49 +447,70 @@ void ThreadApi::setDisplay(SDisplay* dis)
 int ThreadApi::writeFpgaToArtix7(SHardware* ctrl, OscHardware* hw)
 {
     SDL_AtomicLock(&lock);
-    // usb
-    usbData = hw->getUSB();
-    usbSize = sizeof(SUsb);
-    // fx2
-    {
-        char usbPath[1024] = { 0 };
-        int         ret = pFormat->formatPath(usbPath, 1024, hw->usbFirmware.asChar());
-        fx3Size = (uint)SDL_strlen(usbPath);
-        fx3Data.size = fx3Size;
-        SDL_memcpy(fx3Data.data.bytes, usbPath, fx3Size);
-        fx3Data.data.bytes[fx3Size] = 0;
-    }
-    // fpga
-    {
-        char*  buffer = 0;
-        ilarge bufferSize = 0;
-        char fpgaPath[1024] = { 0 };
-        int         ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
-        int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
-        fpgaData.size = fpgaSize = bufferSize;
-        SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
-        pMemory->free(buffer);
-    }
+      // usb
+      usbData = hw->getUSB();
+      usbSize = sizeof(SUsb);
+      // fx3
+      char usbPath[1024] = { 0 };
+      int         ret = pFormat->formatPath(usbPath, 1024, hw->usbFirmware.asChar());
+      fx3Size = (uint)SDL_strlen(usbPath);
+      fx3Data.size = fx3Size;
+      SDL_memcpy(fx3Data.data.bytes, usbPath, fx3Size);
+      fx3Data.data.bytes[fx3Size] = 0;
+      // fpga
+      char*  buffer = 0;
+      ilarge bufferSize = 0;
+      char fpgaPath[1024] = { 0 };
+                 ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
+      int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
+      fpgaData.size = fpgaSize = bufferSize;
+      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+      pMemory->free(buffer);
     SDL_AtomicUnlock(&lock);
+
     // open
     openUSB(hw);
+
     // callibration
     useEepromCallibration(hw);
+
     // fpga
     pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
     pOsciloscope->thread.wait();
-    if (!pOsciloscope->thread.isFpgaStatus())
+    if (!pOsciloscope->thread.isFpga())
     {
        function(afUploadFpga);
        wait();
     }
-    // delay
-    SDL_Delay(4000);
+    SDL_Delay(200);
+    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+    pOsciloscope->thread.wait();
+
     // control
     hardwareControlFunction(ctrl);
     wait();
+    
     // ret
     return result(afUploadFpga);
+}
+
+int ThreadApi::uploadFpga(OscHardware* hw)
+{
+   SDL_AtomicLock(&lock);
+      // fpga
+      char*  buffer = 0;
+      ilarge bufferSize = 0;
+      char fpgaPath[1024] = { 0 };
+      int  ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
+      int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
+      fpgaData.size = fpgaSize = bufferSize;
+      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+      pMemory->free(buffer);
+   SDL_AtomicUnlock(&lock);
+   function(afUploadFpga);
+   wait();
+   SDL_Delay(200);
+   return 0;
 }
 
 int ThreadApi::openUSB(OscHardware* hw)
@@ -554,7 +570,7 @@ int ThreadApi::writeUsbToEEPROM(OscHardware* hw)
         ret = pFormat->formatPath(path, 1024, hw->usbFirmware.asChar());
         eepromSize = sizeof(SEeprom);
         eepromOffset = 0;
-        fileLoadPtr(path, (char*)&eepromData, &eepromSize);
+        fileLoadPtr(path, (char*)&eepromData.data.bytes[0], &eepromSize);
         SDL_AtomicUnlock(&lock);
         SUsb usb = hw->getUSB();
         setUSB(&usb);

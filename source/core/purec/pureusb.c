@@ -24,6 +24,8 @@
 #include<ezusb.h>
 #include<stdio.h>
 #include<stdarg.h>
+#include<SDL.h>
+#include<core/global/macro.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -96,6 +98,15 @@ unsigned short endianSwapLoHi(unsigned short value)
     return (low << 8) | (high >> 8);
 }
 
+unsigned int endianSwapInt(unsigned int value)
+{
+   unsigned int v0 = (value & 0xff000000);
+   unsigned int v1 = (value & 0x00ff0000);
+   unsigned int v2 = (value & 0x0000ff00);
+   unsigned int v3 = (value & 0x000000ff);
+   return (v0 >> 24) | (v1 >> 8) | (v2 << 8) | (v3 << 24);
+}
+
 int writeData(UsbContext* ctx, int address, char* buffer, int len)
 {
     unsigned short hi = endianSwapLoHi((address >> 16) & 0xffff);
@@ -139,8 +150,31 @@ int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size,
     int data[4] = { 0 };
     if(usbFxxIsConnected(ctx))
     {
-        data[0] = 0x7c320500;
+        // data
+        data[0] = size;
+
+        // len
         int length = 0x10;
+
+        // upload
+        if (swapBits)
+        {
+           for (int i = 0; i < size; i++)
+           {
+              unsigned char temp = buffer[i];
+              unsigned char bit0 = temp & 0x1;
+              unsigned char bit1 = (temp >> 1) & 0x1;
+              unsigned char bit2 = (temp >> 2) & 0x1;
+              unsigned char bit3 = (temp >> 3) & 0x1;
+              unsigned char bit4 = (temp >> 4) & 0x1;
+              unsigned char bit5 = (temp >> 5) & 0x1;
+              unsigned char bit6 = (temp >> 6) & 0x1;
+              unsigned char bit7 = (temp >> 7) & 0x1;
+              buffer[i] = (bit0 << 7) | (bit1 << 6) | (bit2 << 5) | (bit3 << 4) | (bit4 << 3) | (bit5 << 2) | (bit6 << 1) | (bit7 << 0);
+           }
+        }
+
+
         // bReqType: 0x40, bRequest : 0xB2, wLength : 0x10
         int ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
                                           0x40,
@@ -149,39 +183,24 @@ int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size,
                                           0,
                                           (unsigned char*)data,
                                           length,
-                                          1000);
+                                          0);
         if(ret != length)
         {
             return PUREUSB_FAILURE;
         }
-        // upload
-        if(swapBits)
-        {
-            for(int i = 0; i < size; i++)
-            {
-                unsigned char temp = buffer[i];
-                unsigned char bit0 = temp & 0x1;
-                unsigned char bit1 = (temp >> 1) & 0x1;
-                unsigned char bit2 = (temp >> 2) & 0x1;
-                unsigned char bit3 = (temp >> 3) & 0x1;
-                unsigned char bit4 = (temp >> 4) & 0x1;
-                unsigned char bit5 = (temp >> 5) & 0x1;
-                unsigned char bit6 = (temp >> 6) & 0x1;
-                unsigned char bit7 = (temp >> 7) & 0x1;
-                buffer[i] = (bit0 << 7) | (bit1 << 6) | (bit2 << 5) | (bit3 << 4) | (bit4 << 3) | (bit5 << 2) | (bit6 << 1) | (bit7 << 0);
-            }
-        }
+
         int transfered = 0;
-        ret = libusb_bulk_transfer((libusb_device_handle*)ctx->device, 2 | LIBUSB_ENDPOINT_OUT, buffer, size, &transfered, 30000);
+        ret = libusb_bulk_transfer((libusb_device_handle*)ctx->device, 2 | LIBUSB_ENDPOINT_OUT, buffer, size, &transfered, 0);
         if(ret > 0)
         {
             return PUREUSB_FAILURE;
         }
         // wait for the upload to complete ... todo: check
-        cSleep(1000);
+        // cSleep(1000);
+
         // bReqType: 0xC0, bRequest : 0xB1, wLength : 0x1
         data[0] = 0;
-        length  = 1;
+        length  = 2;
         ret = libusb_control_transfer((libusb_device_handle*)ctx->device,
                                       0xC0,
                                       0xB1,
@@ -189,7 +208,7 @@ int usbFx3UploadFirmwareToFpga(UsbContext* ctx, unsigned char* buffer, int size,
                                       0,
                                       (unsigned char*)data,
                                       length,
-                                      10000);
+                                      0);
         if(ret != length)
         {
             return PUREUSB_FAILURE;
@@ -229,14 +248,16 @@ int usbFx3ReadFpgaStatus(UsbContext* ctx, int* buffer)
       int readadress = 0;
 
       // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
+      byte data[2] = { 0 };
       int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
          0xC0,
          0xB1,
          (readadress >> 16) & 0xffff,
          (readadress) & 0xffff,
-         buffer,
-         1,
+         &data[0],
+         2,
          100000);
+      *buffer = data[0];
       if (read == 1)
       {
          return PUREUSB_SUCCESS;
@@ -748,7 +769,8 @@ int usbFxxOpenNormal(UsbContext* ctx, usbDevice** foundList, int maxCount)
         if(device)
         {
             int ret = usbFxxOpen(ctx, (usbDevice*)device);
-            ctx->serialBufferSize = libusb_get_string_descriptor_ascii((libusb_device_handle*)ctx->device, ctx->serialId, ctx->serialBuffer, 1024);
+            if(ret==PUREUSB_SUCCESS)
+               ctx->serialBufferSize = libusb_get_string_descriptor_ascii((libusb_device_handle*)ctx->device, ctx->serialId, ctx->serialBuffer, 1024);
             return ret;
         }
     }
