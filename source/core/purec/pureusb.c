@@ -248,7 +248,7 @@ int usbFx3ReadFpgaStatus(UsbContext* ctx, int* buffer)
       int readadress = 0;
 
       // bReqType: 0xC0, bRequest : 0xB0, wLength - MAX : 0x1000
-      byte data[2] = { 0 };
+      unsigned char data[2] = { 0 };
       int read = libusb_control_transfer((libusb_device_handle*)ctx->device,
          0xC0,
          0xB1,
