@@ -306,7 +306,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                          usbTimer  += idleTimer;
 
            // query ... fpga and usb
-           if (usbTimer > 2.0 ) //&& SDL_AtomicGet(&pOsciloscope->signalMode)  == SIGNAL_MODE_CAPTURE )
+           if (usbTimer > 2.0 )
            {
               pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
               pOsciloscope->thread.wait();
