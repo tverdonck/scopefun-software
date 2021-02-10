@@ -544,7 +544,7 @@ int ThreadApi::useEepromCallibration(OscHardware* hw)
         function(afEEPROMRead);
         wait();
         // use callibration from eeprom
-        if(result(afEEPROMRead) == 0 || eepromData.data.bytes[0] == 0)
+        if(result(afEEPROMRead) == 0)
         {
             cJSON* json = hw->json;
             SDL_memcpy(hw, &eepromData, eepromSize);

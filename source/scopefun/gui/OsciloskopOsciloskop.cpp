@@ -318,7 +318,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
               if (!pOsciloscope->thread.isOpen())
               {
                  pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());             
-                 pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
               }
               else // fpga
               {
@@ -329,8 +328,12 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     pOsciloscope->thread.wait();
                     if (pOsciloscope->thread.isFpga())
                     {
+                       pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
                        pOsciloscope->thread.hardwareControlFunction(getHw());
                        pOsciloscope->thread.wait();
+                       wxCommandEvent event;
+                       m_comboBoxCh0CaptureOnCombobox(event);
+                       m_comboBoxCh1CaptureOnCombobox(event);
                        pOsciloscope->transferData();
                     }
                  }
