@@ -93,20 +93,14 @@ public:
     void PopulateWithData();
 public:
     void CopyToClipBoard(wxDataViewListCtrl* list);
-    void insertRow1(int row, int i);
-    void insertRow2(int row, int i);
-    void removeRow1(int i);
-    void removeRow2(int i);
-    void setCell1(int row, int i, MeasureHistory his);
-    void setCell2(int row, int i, int column);
+    void insertRow(int row, int i);
+    void removeRow(int i);
+    void setCell(int row, int i, MeasureHistory his);
     void setHistory(MeasureHistory type);
-    int HideRow1(int selected, int rowID, int count);
-    int ShowRow1(int selected, int rowID, int count);
-    int HideRow2(int selected, int rowID, int count);
-    int ShowRow2(int selected, int rowID, int count);
 public:
     wxString aStringR[Last1];
     wxString aStringC[Last1];
+    int      aHideCount[Last1];
 public:
     void onScrollWinMeasure(wxScrollWinEvent& evt);
 };

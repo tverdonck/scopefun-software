@@ -317,6 +317,20 @@ OsciloskopMeasure::OsciloskopMeasure(wxWindow* parent)
     {
         aStringC[i] = aStringCol[i];
     }
+
+    SDL_memset(aHideCount, 0, sizeof(aHideCount));
+    aHideCount[Channel0] = Ch0XCursor - Channel0 - 1;
+    aHideCount[Channel1] = Ch1XCursor - Channel1 - 1;
+    aHideCount[Function] = FunXCursor - Function - 1;
+    aHideCount[Ch0XCursor] = Ch0YCursor - Ch0XCursor - 1;
+    aHideCount[Ch0YCursor] = Channel1 - Ch0YCursor - 1;
+    aHideCount[Ch1XCursor] = Ch1YCursor - Ch1XCursor - 1;
+    aHideCount[Ch1YCursor] = Function - Ch1YCursor - 1;
+    aHideCount[FunXCursor] = FunYCursor - FunXCursor - 1;
+    aHideCount[FunYCursor] = FFT - FunYCursor - 1;
+    aHideCount[FFT] = DigitalX1 - FFT - 1;
+    aHideCount[DigitalX1] = DigitalX2 - DigitalX1 - 1;
+    aHideCount[DigitalX2] = Last1 - DigitalX2 - 1;
 }
 
 void OsciloskopMeasure::onScrollWinMeasure(wxScrollWinEvent& evt)
@@ -442,29 +456,29 @@ double mulFreqFromIndex(int index)
     return 1.f;
 }
 
-
 #define MAX_FILTER 256
 
 class ListModel1 : public wxDataViewListStore
 {
 public:
-    wxDataViewListCtrl* list;
-    Array<uint, MAX_FILTER> rowID;
+    wxDataViewListCtrl*     m_list;
+    Array<uint, MAX_FILTER> m_row2ID;
+    Array<uint, MAX_FILTER> m_ID2Row;
 public:
     ListModel1()
     {
-        list = 0;
+        m_list = 0;
     }
 
     virtual bool GetAttr(const wxDataViewItem& item, unsigned int col, wxDataViewItemAttr& attr) const
     {
         wxColour color;
         color.Set(128, 128, 128);
-        int index = list->ItemToRow(item);
-        int row  = -1;
-        if(rowID.getCount() >= index)
+        int rowIndex = m_list->ItemToRow(item);
+        int row      = -1;
+        if(rowIndex >= 0 && rowIndex < m_row2ID.getCount())
         {
-            row = rowID[index];
+            row = m_row2ID[rowIndex];
         }
         if(row == Channel0 || row == Ch0XCursor || row == Ch0YCursor || row == Channel1 || row == Ch1XCursor || row == Ch1YCursor || row == Function || row == FunXCursor || row == FunYCursor || row == FFT || row == DigitalX1 || row == DigitalX2)
         {
@@ -474,13 +488,13 @@ public:
     }
 } Model1;
 
-void OsciloskopMeasure::insertRow1(int row, int pos)
+void OsciloskopMeasure::insertRow(int row,int id)
 {
     wxVector<wxVariant> temp;
-    if(row == Channel0 || row == Ch0XCursor || row == Ch0YCursor || row == Channel1 || row == Ch1XCursor || row == Ch1YCursor || row == Function || row == FunXCursor || row == FunYCursor || row == FFT || row == DigitalX1 || row == DigitalX2)
+    if(id == Channel0 || id == Ch0XCursor || id == Ch0YCursor || id == Channel1 || id == Ch1XCursor || id == Ch1YCursor || id == Function || id == FunXCursor || id == FunYCursor || id == FFT || id == DigitalX1 || id == DigitalX2)
     {
         temp.push_back(wxVariant("-"));
-        temp.push_back(wxVariant(aStringR[row]));
+        temp.push_back(wxVariant(aStringR[id]));
         temp.push_back(wxVariant("0"));
         temp.push_back(wxVariant("0"));
         temp.push_back(wxVariant("0"));
@@ -489,19 +503,19 @@ void OsciloskopMeasure::insertRow1(int row, int pos)
     else
     {
         temp.push_back(wxVariant(""));
-        temp.push_back(wxVariant(aStringR[row]));
+        temp.push_back(wxVariant(aStringR[id]));
         temp.push_back(wxVariant("0"));
         temp.push_back(wxVariant("0"));
         temp.push_back(wxVariant("0"));
         temp.push_back(wxVariant("0"));
     }
-    m_dataViewListCtrl1->InsertItem(pos, temp);
-    Model1.rowID.insert(pos, row);
+    m_dataViewListCtrl1->InsertItem(row, temp);
 }
 
-void OsciloskopMeasure::removeRow1(int row)
+void OsciloskopMeasure::removeRow(int row)
 {
-    if(row >= 0)
+    int maxRow = m_dataViewListCtrl1->GetItemCount();
+    if(row >= 0 && row<maxRow)
     {
         m_dataViewListCtrl1->DeleteItem(row);
     }
@@ -517,10 +531,10 @@ void OsciloskopMeasure::DisplayOnInitDialog(wxInitDialogEvent& event)
     pOsciloscope->window.measure.data.history[MEASURE_HISTORY_MINIMUM].SetValue(MAX_DOUBLE);
     pOsciloscope->window.measure.data.history[MEASURE_HISTORY_MAXIMUM].SetValue(-MAX_DOUBLE);
     pTimer->init(TIMER_MEASURE);
-    if(!Model1.list)
+    if(!Model1.m_list)
     {
-        Model1.list  = m_dataViewListCtrl1;
-        Model1.rowID.clear();
+        Model1.m_list  = m_dataViewListCtrl1;
+        Model1.m_row2ID.clear();
         m_dataViewListCtrl1->AssociateModel(&Model1);
         #ifndef PLATFORM_MAC
         m_dataViewListCtrl1->SetDoubleBuffered(true);
@@ -552,7 +566,9 @@ void OsciloskopMeasure::DisplayOnInitDialog(wxInitDialogEvent& event)
         m_dataViewListCtrl1->SetRowHeight(formheight);
         for(int i = 0; i < Last1; i++)
         {
-            insertRow1(i, i);
+            insertRow(i, i);
+            Model1.m_row2ID.pushBack(i);
+            Model1.m_ID2Row.pushBack(i);
         }
     }
 }
@@ -614,9 +630,6 @@ void OsciloskopMeasure::m_buttonCopyOnButtonClick(wxCommandEvent& event)
     CopyToClipBoard(m_dataViewListCtrl1);
 }
 
-void OsciloskopMeasure::m_buttonCopy2OnButtonClick(wxCommandEvent& event)
-{
-}
 
 void OsciloskopMeasure::m_buttonClearXOnButtonClick(wxCommandEvent& event)
 {
@@ -955,67 +968,12 @@ float rangeToSeconds(float range)
     return xCount * range * capture * (float(NUM_SAMPLES) / xCount);
 }
 
-int OsciloskopMeasure::HideRow1(int selected, int rowID, int count)
-{
-    int index = -1;
-    for(int i = 0; i < Model1.rowID.getCount(); i++)
-    {
-        if(Model1.rowID[i] == rowID)
-        {
-            index = i;
-        }
-    }
-    if(index == selected)
-    {
-        for(int i = 0; i < count; i++)
-        {
-            int removeIdx = index + 1;
-            if(removeIdx < Model1.rowID.getCount())
-            {
-                m_dataViewListCtrl1->DeleteItem(removeIdx);
-                Model1.rowID.remove(removeIdx);
-            }
-        }
-        return 1;
-    }
-    return 0;
-}
-
-int OsciloskopMeasure::ShowRow1(int selected, int rowID, int count)
-{
-    int index = -1;
-    for(int i = 0; i < Model1.rowID.getCount(); i++)
-    {
-        if(Model1.rowID[i] == rowID)
-        {
-            index = i;
-        }
-    }
-    if(index == selected)
-    {
-        for(int i = 0; i < count; i++)
-        {
-            insertRow1(rowID + i + 1, index + 1 + i);
-        }
-        return 1;
-    }
-    return 0;
-}
-
-int OsciloskopMeasure::HideRow2(int selected, int rowID, int count)
-{
-    return 0;
-}
-
-int OsciloskopMeasure::ShowRow2(int selected, int rowID, int count)
-{
-    return 0;
-}
 
 void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
 {
-    int row = m_dataViewListCtrl1->ItemToRow(event.GetItem());
-    if(row >= 0)
+    int    row = m_dataViewListCtrl1->ItemToRow(event.GetItem());
+    int maxRow = m_dataViewListCtrl1->GetItemCount();
+    if(row >= 0 && row < maxRow )
     {
         wxVariant showHide;
         m_dataViewListCtrl1->GetValue(showHide, row, 0);
@@ -1033,53 +991,38 @@ void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
         {
             // hide
             showHide = _T("+");
+
             int hide = 0;
-            hide += HideRow1(row, Channel0, Ch0XCursor - Channel0 - 1);
-            hide += HideRow1(row, Channel1, Ch1XCursor - Channel1 - 1);
-            hide += HideRow1(row, Function, FunXCursor - Function - 1);
-            hide += HideRow1(row, Ch0XCursor, Ch0YCursor - Ch0XCursor - 1);
-            hide += HideRow1(row, Ch0YCursor, Channel1   - Ch0YCursor - 1);
-            hide += HideRow1(row, Ch1XCursor, Ch1YCursor - Ch1XCursor - 1);
-            hide += HideRow1(row, Ch1YCursor, Function   - Ch1YCursor - 1);
-            hide += HideRow1(row, FunXCursor, FunYCursor - FunXCursor - 1);
-            hide += HideRow1(row, FunYCursor, FFT        - FunYCursor - 1);
-            hide += HideRow1(row, FFT,       DigitalX1 - FFT - 1);
-            hide += HideRow1(row, DigitalX1, DigitalX2 - DigitalX1 - 1);
-            hide += HideRow1(row, DigitalX2, Last1     - DigitalX2 - 1);
-            if(hide)
+            m_dataViewListCtrl1->SetValue(showHide, row, 0);
+
+            int id    = Model1.m_row2ID[row];
+            int count = aHideCount[id];
+            for(int i=0;i<count;i++)
             {
-                m_dataViewListCtrl1->SetValue(showHide, row, 0);
-            }
+               removeRow(row+1);
+               Model1.m_row2ID.remove(row + 1);
+            } 
         }
         else if(showHide == wxVariant(_T("+")))
         {
             // show
             showHide = _T("-");
             int show = 0;
-            show += ShowRow1(row, Channel1, Ch0XCursor - Channel0 - 1);
-            show += ShowRow1(row, Channel0, Ch1XCursor - Channel1 - 1);
-            show += ShowRow1(row, Function, FunXCursor - Function - 1);
-            show += ShowRow1(row, Ch0XCursor, Ch0YCursor - Ch0XCursor - 1);
-            show += ShowRow1(row, Ch0YCursor, Channel1   - Ch0YCursor - 1);
-            show += ShowRow1(row, Ch1XCursor, Ch1YCursor - Ch1XCursor - 1);
-            show += ShowRow1(row, Ch1YCursor, Function   - Ch1YCursor - 1);
-            show += ShowRow1(row, FunXCursor, FunYCursor - FunXCursor - 1);
-            show += ShowRow1(row, FunYCursor, FFT        - FunYCursor - 1);
-            show += ShowRow1(row, FFT,       DigitalX1 - FFT - 1);
-            show += ShowRow1(row, DigitalX1, DigitalX2 - DigitalX1 - 1);
-            show += ShowRow1(row, DigitalX2, Last1     - DigitalX2 - 1);
-            if(show)
+
+            m_dataViewListCtrl1->SetValue(showHide, row, 0);
+
+            int    id = Model1.m_row2ID[row];
+            int count = aHideCount[id];
+            for (int i = 0; i < count; i++)
             {
-                m_dataViewListCtrl1->SetValue(showHide, row, 0);
-            }
+               insertRow(row + i + 1, id + i + 1);
+               Model1.m_row2ID.insert(row + i + 1, id + i + 1 );
+            }           
         }
     }
     event.Skip();
 }
 
-void OsciloskopMeasure::m_SelectionChanged2(wxDataViewEvent& event)
-{
-}
 
 void DoubleToString(char* buffer, int size, double value, char* unit)
 {
@@ -1099,7 +1042,7 @@ void DoubleToString(char* buffer, int size, double value, char* unit)
     memcpy(buffer, formatBuffer, FORMAT_BUFFER_SIZE);
 }
 
-void OsciloskopMeasure::setCell1(int r, int i, MeasureHistory his)
+void OsciloskopMeasure::setCell(int r, int i, MeasureHistory his)
 {
     int c = (int)his + 2;
     EValueGrid1 type = (EValueGrid1)r;
@@ -1121,16 +1064,12 @@ void OsciloskopMeasure::setCell1(int r, int i, MeasureHistory his)
     }
 }
 
-void OsciloskopMeasure::setCell2(int r, int i, int c)
-{
-}
-
 void OsciloskopMeasure::setHistory(MeasureHistory type)
 {
     MeasureChannelData& his = pOsciloscope->window.measure.data.history[type];
-    for(int i = 0; i < Model1.rowID.getCount(); i++)
+    for(int i = 0; i < Model1.m_row2ID.getCount(); i++)
     {
-        setCell1(Model1.rowID[i], i, type);
+        setCell(Model1.m_row2ID[i], i, type);
     }
 }
 

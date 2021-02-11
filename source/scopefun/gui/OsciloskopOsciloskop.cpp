@@ -708,33 +708,37 @@ void OsciloskopOsciloskop::m_menuItemReadCallibrateOnMenuSelection(wxCommandEven
     int     size = 0;
     int     offset = 0;
     memset(eeprom.data.bytes, 0xdd, sizeof(SEeprom));
-    pOsciloscope->thread.readCallibrateSettingsFromEEPROM(pOsciloscope->settings.getHardware());
-    pOsciloscope->thread.getEEPROM(&eeprom, &size, &offset);
-    // save
-    OscHardware* save = pOsciloscope->settings.getHardware();
-    cJSON* json = save->json;
-    save->load();
-    SDL_memcpy(save, &eeprom, size);
-    save->json = json;
-    save->save();
-    // debug
-    wxCommandEvent et;
-    m_menuItemDebugOnMenuSelection(et);
-    if(pDebug && pDebug->IsShown())
+    if (pOsciloscope->thread.readCallibrateSettingsFromEEPROM(pOsciloscope->settings.getHardware())== SCOPEFUN_SUCCESS)
     {
-        pDebug->Clear();
-        FORMAT_BUFFER();
-        int count = min(16, size / EEPROM_BYTE_COUNT);
-        for(int i = 0; i < count; i++)
-        {
-            for(int j = 0; j < EEPROM_BYTE_COUNT; j++)
-            {
+       pOsciloscope->thread.getEEPROM(&eeprom, &size, &offset);
+
+       // save
+       OscHardware* save = pOsciloscope->settings.getHardware();
+       cJSON* json = save->json;
+       save->load();
+       SDL_memcpy(save, &eeprom, size);
+       save->json = json;
+       save->save();
+
+       // debug
+       wxCommandEvent et;
+       m_menuItemDebugOnMenuSelection(et);
+       if (pDebug && pDebug->IsShown())
+       {
+          pDebug->Clear();
+          FORMAT_BUFFER();
+          int count = min(16, size / EEPROM_BYTE_COUNT);
+          for (int i = 0; i < count; i++)
+          {
+             for (int j = 0; j < EEPROM_BYTE_COUNT; j++)
+             {
                 byte byteToPrint = eeprom.data.bytes[i * EEPROM_BYTE_COUNT + j];
                 FORMAT("%02x ", byteToPrint);
                 pDebug->AppendText(wxString::FromAscii(formatBuffer));
-            }
-            pDebug->AppendText(wxString::FromAscii("\n"));
-        }
+             }
+             pDebug->AppendText(wxString::FromAscii("\n"));
+          }
+       }
     }
 }
 
