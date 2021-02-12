@@ -62,6 +62,9 @@ int fileLoad(const char* fileName, char** buffer, ilarge* bufferSize)
     {
         return 1;
     }
+    int sizeCheck = SDL_RWsize(ctx);
+    if (sizeCheck == -1)
+       return 1;
     *bufferSize = SDL_RWsize(ctx);
     *buffer = (char*)pMemory->allocate(*bufferSize);
     SDL_RWread(ctx, *buffer, 1, *bufferSize);

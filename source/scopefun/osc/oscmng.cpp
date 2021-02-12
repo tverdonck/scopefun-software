@@ -463,10 +463,13 @@ int ThreadApi::writeFpgaToArtix7(SHardware* ctrl, OscHardware* hw)
       char fpgaPath[1024] = { 0 };
                  ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
       int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
-      fpgaData.size = fpgaSize = bufferSize;
-      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
-      pMemory->free(buffer);
-    SDL_AtomicUnlock(&lock);
+      if (fret == 0)
+      {
+         fpgaData.size = fpgaSize = bufferSize;
+         SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+         pMemory->free(buffer);
+      }
+   SDL_AtomicUnlock(&lock);
 
     // open
     openUSB(hw);
@@ -503,9 +506,12 @@ int ThreadApi::uploadFpga(OscHardware* hw)
       char fpgaPath[1024] = { 0 };
       int  ret = pFormat->formatPath(fpgaPath, 1024, hw->fpgaFirmware.asChar());
       int fret = fileLoad(fpgaPath, &buffer, &bufferSize);
-      fpgaData.size = fpgaSize = bufferSize;
-      SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
-      pMemory->free(buffer);
+      if(fret==0)
+      {
+         fpgaData.size = fpgaSize = bufferSize;
+         SDL_memcpy(fpgaData.data.bytes, buffer, fpgaSize);
+         pMemory->free(buffer);
+      }
    SDL_AtomicUnlock(&lock);
    function(afUploadFpga);
    wait();
