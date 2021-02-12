@@ -98,6 +98,7 @@ public:
     void setCell(int row, int i, MeasureHistory his);
     void setHistory(MeasureHistory type);
 public:
+    int      recursive;
     wxString aStringR[Last1];
     wxString aStringC[Last1];
     int      aHideCount[Last1];

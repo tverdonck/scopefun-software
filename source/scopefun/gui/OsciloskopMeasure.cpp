@@ -318,7 +318,7 @@ OsciloskopMeasure::OsciloskopMeasure(wxWindow* parent)
         aStringC[i] = aStringCol[i];
     }
 
-    SDL_memset(aHideCount, 0, sizeof(aHideCount));
+    SDL_memset(aHideCount, 0, Last1*sizeof(int) );
     aHideCount[Channel0] = Ch0XCursor - Channel0 - 1;
     aHideCount[Channel1] = Ch1XCursor - Channel1 - 1;
     aHideCount[Function] = FunXCursor - Function - 1;
@@ -331,6 +331,7 @@ OsciloskopMeasure::OsciloskopMeasure(wxWindow* parent)
     aHideCount[FFT] = DigitalX1 - FFT - 1;
     aHideCount[DigitalX1] = DigitalX2 - DigitalX1 - 1;
     aHideCount[DigitalX2] = Last1 - DigitalX2 - 1;
+    recursive = 0;
 }
 
 void OsciloskopMeasure::onScrollWinMeasure(wxScrollWinEvent& evt)
@@ -971,6 +972,12 @@ float rangeToSeconds(float range)
 
 void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
 {
+    if (recursive)
+    {
+      event.Skip();
+      return;
+    }
+    recursive = 1;
     int    row = m_dataViewListCtrl1->ItemToRow(event.GetItem());
     int maxRow = m_dataViewListCtrl1->GetItemCount();
     if(row >= 0 && row < maxRow )
@@ -991,10 +998,6 @@ void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
         {
             // hide
             showHide = _T("+");
-
-            int hide = 0;
-            m_dataViewListCtrl1->SetValue(showHide, row, 0);
-
             int id    = Model1.m_row2ID[row];
             int count = aHideCount[id];
             for(int i=0;i<count;i++)
@@ -1002,15 +1005,12 @@ void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
                removeRow(row+1);
                Model1.m_row2ID.remove(row + 1);
             } 
+            m_dataViewListCtrl1->SetValue(showHide, row, 0);
         }
         else if(showHide == wxVariant(_T("+")))
         {
             // show
             showHide = _T("-");
-            int show = 0;
-
-            m_dataViewListCtrl1->SetValue(showHide, row, 0);
-
             int    id = Model1.m_row2ID[row];
             int count = aHideCount[id];
             for (int i = 0; i < count; i++)
@@ -1018,8 +1018,10 @@ void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
                insertRow(row + i + 1, id + i + 1);
                Model1.m_row2ID.insert(row + i + 1, id + i + 1 );
             }           
+            m_dataViewListCtrl1->SetValue(showHide, row, 0);
         }
     }
+    recursive = 0;
     event.Skip();
 }
 
