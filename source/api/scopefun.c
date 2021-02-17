@@ -928,16 +928,17 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SInt* received, SInt* frameSize)
         int transfered = 0;
         int  ret = sfHardwareCapture(ctx, &ctx->frame.data, SCOPEFUN_FRAME_HEADER, ctx->frame.received, (SInt*)&transfered);
         ctx->frame.received += transfered;
-        ctx->frame.frameSize = SCOPEFUN_FRAME_HEADER;
+        SHardware hw = { 0 };
+        sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
+        ctx->frame.frameSize = sfGetFrameSize(&hw);
+        if(transfered != SCOPEFUN_FRAME_HEADER)
+            SDL_ShowSimpleMessageBox(0,"Frame De-Sync","USB capture must be multiple of 1024bytes. Possible header de-sync ...",0);
     }
     // data
     if(ctx->frame.received >= SCOPEFUN_FRAME_HEADER)
     {
-        SHardware hw = { 0 };
-        sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
-        ctx->frame.frameSize = sfGetFrameSize(&hw);
         int         transfered = 0;
-        int frameLeftToReceive = (int)ctx->frame.frameSize - (int)ctx->frame.received;
+        int frameLeftToReceive = iMin(10*1024*1024,(int)ctx->frame.frameSize - (int)ctx->frame.received);
         if(frameLeftToReceive > 0)
         {
             int  ret = sfHardwareCapture(ctx, &ctx->frame.data, frameLeftToReceive, ctx->frame.received, (SInt*)&transfered);
@@ -1010,10 +1011,6 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
     if(numSamples == 0) { return 1; }
     if(numSamples > SCOPEFUN_FRAME_DATA / 4) { return 1; }
 
-    uint lenSamples = 0;
-    if( len >= SCOPEFUN_FRAME_HEADER )
-      lenSamples = (len - SCOPEFUN_FRAME_HEADER) / 4;
-
     // init display
     SDL_memset(display, 0, sizeof(SDisplay));
     display->samples = SCOPEFUN_DISPLAY;
@@ -1065,7 +1062,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                     ushort  dig = 0;
                     ularge index  = i * lPointsPerInterval + j;
 
-                    if ((zoomSampleMin + index) > lenSamples)
+                    if ((zoomSampleMin + index) > numSamples)
                        break;
 
                     ularge sample = iClamp(zoomSampleMin + index, 0, numSamples - 1);
@@ -1131,7 +1128,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             {
                for (ilarge i = 0; i < zoomSampleCnt; i++)
                {
-                  if (i > lenSamples)
+                  if (i > numSamples)
                      break;
 
                   uint offset = 0;
@@ -1182,7 +1179,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             {
                for (ilarge i = 1; i <= zoomSampleCnt; i++)
                {
-                  if (i > lenSamples)
+                  if (i > numSamples)
                      break;
 
                   uint offset = 0;

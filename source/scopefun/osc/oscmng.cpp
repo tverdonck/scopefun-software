@@ -818,7 +818,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // api
     ////////////////////////////////////////////////
-    pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE, 0, 1, 25);
+    pOsciloscope->thread.setInit(settings.getSettings()->memoryFrame * MEGABYTE, 0, 1, 1000);
     pOsciloscope->thread.function(afInit);
     sim = pOsciloscope->GetServerSim();
     pOsciloscope->transmitSim(sim);
