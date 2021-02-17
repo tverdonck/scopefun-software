@@ -3561,22 +3561,22 @@ fail:
 }
 
 
-static int _wrap_SHardware_triggerPercent_set(lua_State* L) {
+static int _wrap_SHardware_reserved1_set(lua_State* L) {
   int SWIG_arg = 0;
   SHardware *arg1 = (SHardware *) 0 ;
   ushort arg2 ;
   
-  SWIG_check_num_args("SHardware::triggerPercent",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::triggerPercent",1,"SHardware *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::triggerPercent",2,"ushort");
+  SWIG_check_num_args("SHardware::reserved1",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved1",1,"SHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::reserved1",2,"ushort");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
-    SWIG_fail_ptr("SHardware_triggerPercent_set",1,SWIGTYPE_p_SHardware);
+    SWIG_fail_ptr("SHardware_reserved1_set",1,SWIGTYPE_p_SHardware);
   }
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   arg2 = (ushort)lua_tonumber(L, 2);
-  if (arg1) (arg1)->triggerPercent = arg2;
+  if (arg1) (arg1)->reserved1 = arg2;
   
   return SWIG_arg;
   
@@ -3588,19 +3588,19 @@ fail:
 }
 
 
-static int _wrap_SHardware_triggerPercent_get(lua_State* L) {
+static int _wrap_SHardware_reserved1_get(lua_State* L) {
   int SWIG_arg = 0;
   SHardware *arg1 = (SHardware *) 0 ;
   ushort result;
   
-  SWIG_check_num_args("SHardware::triggerPercent",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::triggerPercent",1,"SHardware *");
+  SWIG_check_num_args("SHardware::reserved1",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved1",1,"SHardware *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
-    SWIG_fail_ptr("SHardware_triggerPercent_get",1,SWIGTYPE_p_SHardware);
+    SWIG_fail_ptr("SHardware_reserved1_get",1,SWIGTYPE_p_SHardware);
   }
   
-  result = (ushort) ((arg1)->triggerPercent);
+  result = (ushort) ((arg1)->reserved1);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5701,21 +5701,174 @@ fail:
 }
 
 
+static int _wrap_SHardware_preTriggerH_set(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort arg2 ;
+  
+  SWIG_check_num_args("SHardware::preTriggerH",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::preTriggerH",1,"SHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::preTriggerH",2,"ushort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_preTriggerH_set",1,SWIGTYPE_p_SHardware);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (ushort)lua_tonumber(L, 2);
+  if (arg1) (arg1)->preTriggerH = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SHardware_preTriggerH_get(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort result;
+  
+  SWIG_check_num_args("SHardware::preTriggerH",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::preTriggerH",1,"SHardware *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_preTriggerH_get",1,SWIGTYPE_p_SHardware);
+  }
+  
+  result = (ushort) ((arg1)->preTriggerH);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SHardware_preTriggerL_set(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort arg2 ;
+  
+  SWIG_check_num_args("SHardware::preTriggerL",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::preTriggerL",1,"SHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::preTriggerL",2,"ushort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_preTriggerL_set",1,SWIGTYPE_p_SHardware);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (ushort)lua_tonumber(L, 2);
+  if (arg1) (arg1)->preTriggerL = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SHardware_preTriggerL_get(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort result;
+  
+  SWIG_check_num_args("SHardware::preTriggerL",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::preTriggerL",1,"SHardware *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_preTriggerL_get",1,SWIGTYPE_p_SHardware);
+  }
+  
+  result = (ushort) ((arg1)->preTriggerL);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SHardware_generatorPhase_set(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort arg2 ;
+  
+  SWIG_check_num_args("SHardware::generatorPhase",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::generatorPhase",1,"SHardware *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::generatorPhase",2,"ushort");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_generatorPhase_set",1,SWIGTYPE_p_SHardware);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (ushort)lua_tonumber(L, 2);
+  if (arg1) (arg1)->generatorPhase = arg2;
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_SHardware_generatorPhase_get(lua_State* L) {
+  int SWIG_arg = 0;
+  SHardware *arg1 = (SHardware *) 0 ;
+  ushort result;
+  
+  SWIG_check_num_args("SHardware::generatorPhase",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::generatorPhase",1,"SHardware *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
+    SWIG_fail_ptr("SHardware_generatorPhase_get",1,SWIGTYPE_p_SHardware);
+  }
+  
+  result = (ushort) ((arg1)->generatorPhase);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_SHardware_reserved2_set(lua_State* L) {
   int SWIG_arg = 0;
   SHardware *arg1 = (SHardware *) 0 ;
-  uint arg2 ;
+  ushort arg2 ;
   
   SWIG_check_num_args("SHardware::reserved2",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved2",1,"SHardware *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::reserved2",2,"uint");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::reserved2",2,"ushort");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
     SWIG_fail_ptr("SHardware_reserved2_set",1,SWIGTYPE_p_SHardware);
   }
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
-  arg2 = (uint)lua_tonumber(L, 2);
+  arg2 = (ushort)lua_tonumber(L, 2);
   if (arg1) (arg1)->reserved2 = arg2;
   
   return SWIG_arg;
@@ -5731,7 +5884,7 @@ fail:
 static int _wrap_SHardware_reserved2_get(lua_State* L) {
   int SWIG_arg = 0;
   SHardware *arg1 = (SHardware *) 0 ;
-  uint result;
+  ushort result;
   
   SWIG_check_num_args("SHardware::reserved2",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved2",1,"SHardware *");
@@ -5740,7 +5893,7 @@ static int _wrap_SHardware_reserved2_get(lua_State* L) {
     SWIG_fail_ptr("SHardware_reserved2_get",1,SWIGTYPE_p_SHardware);
   }
   
-  result = (uint) ((arg1)->reserved2);
+  result = (ushort) ((arg1)->reserved2);
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5905,57 +6058,6 @@ fail:
 }
 
 
-static int _wrap_SHardware_reserved6_set(lua_State* L) {
-  int SWIG_arg = 0;
-  SHardware *arg1 = (SHardware *) 0 ;
-  uint arg2 ;
-  
-  SWIG_check_num_args("SHardware::reserved6",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved6",1,"SHardware *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("SHardware::reserved6",2,"uint");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
-    SWIG_fail_ptr("SHardware_reserved6_set",1,SWIGTYPE_p_SHardware);
-  }
-  
-  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
-  arg2 = (uint)lua_tonumber(L, 2);
-  if (arg1) (arg1)->reserved6 = arg2;
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_SHardware_reserved6_get(lua_State* L) {
-  int SWIG_arg = 0;
-  SHardware *arg1 = (SHardware *) 0 ;
-  uint result;
-  
-  SWIG_check_num_args("SHardware::reserved6",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("SHardware::reserved6",1,"SHardware *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_SHardware,0))){
-    SWIG_fail_ptr("SHardware_reserved6_get",1,SWIGTYPE_p_SHardware);
-  }
-  
-  result = (uint) ((arg1)->reserved6);
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_new_SHardware(lua_State* L) {
   int SWIG_arg = 0;
   SHardware *result = 0 ;
@@ -5998,7 +6100,7 @@ static swig_lua_attribute swig_SHardware_attributes[] = {
     { "triggerSlope", _wrap_SHardware_triggerSlope_get, _wrap_SHardware_triggerSlope_set },
     { "triggerLevel", _wrap_SHardware_triggerLevel_get, _wrap_SHardware_triggerLevel_set },
     { "triggerHis", _wrap_SHardware_triggerHis_get, _wrap_SHardware_triggerHis_set },
-    { "triggerPercent", _wrap_SHardware_triggerPercent_get, _wrap_SHardware_triggerPercent_set },
+    { "reserved1", _wrap_SHardware_reserved1_get, _wrap_SHardware_reserved1_set },
     { "xRange", _wrap_SHardware_xRange_get, _wrap_SHardware_xRange_set },
     { "holdoffH", _wrap_SHardware_holdoffH_get, _wrap_SHardware_holdoffH_set },
     { "holdoffL", _wrap_SHardware_holdoffL_get, _wrap_SHardware_holdoffL_set },
@@ -6040,11 +6142,13 @@ static swig_lua_attribute swig_SHardware_attributes[] = {
     { "digitalClkDivideH", _wrap_SHardware_digitalClkDivideH_get, _wrap_SHardware_digitalClkDivideH_set },
     { "digitalClkDivideL", _wrap_SHardware_digitalClkDivideL_get, _wrap_SHardware_digitalClkDivideL_set },
     { "average", _wrap_SHardware_average_get, _wrap_SHardware_average_set },
+    { "preTriggerH", _wrap_SHardware_preTriggerH_get, _wrap_SHardware_preTriggerH_set },
+    { "preTriggerL", _wrap_SHardware_preTriggerL_get, _wrap_SHardware_preTriggerL_set },
+    { "generatorPhase", _wrap_SHardware_generatorPhase_get, _wrap_SHardware_generatorPhase_set },
     { "reserved2", _wrap_SHardware_reserved2_get, _wrap_SHardware_reserved2_set },
     { "reserved3", _wrap_SHardware_reserved3_get, _wrap_SHardware_reserved3_set },
     { "reserved4", _wrap_SHardware_reserved4_get, _wrap_SHardware_reserved4_set },
     { "reserved5", _wrap_SHardware_reserved5_get, _wrap_SHardware_reserved5_set },
-    { "reserved6", _wrap_SHardware_reserved6_get, _wrap_SHardware_reserved6_set },
     {0,0,0}
 };
 static swig_lua_method swig_SHardware_methods[]= {

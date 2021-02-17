@@ -1731,8 +1731,11 @@ SCOPEFUN_API int  sfSetTriggerSlope(SHardware* hw, int value)
 SCOPEFUN_API int  sfSetTriggerPre(SHardware* hw, float perc)
 {
     uint numSamples = (((uint)hw->sampleSizeH) << 16) | (uint)hw->sampleSizeL;
-    hw->triggerPercent = (perc / 100.f) * (float)(numSamples - 1) / 2048;
-    hw->triggerPercent = 4 * (hw->triggerPercent / 4);
+
+        uint preTrigger = (perc / 100.f) * (float)(numSamples - 1);
+            preTrigger = 4 * (preTrigger / 4);
+    hw->preTriggerH = (preTrigger >> 16) & 0xFFFF;
+    hw->preTriggerL = (preTrigger & 0xFFFF);
     return SCOPEFUN_SUCCESS;
 }
 
@@ -2256,7 +2259,8 @@ SCOPEFUN_API float sfGetTriggerPre(SHardware* hw)
     uint lo = hw->sampleSizeL;
     uint hi = hw->sampleSizeH;
     uint sampleSize = lo | (hi << 16);
-    return 100.f * ((float)(hw->triggerPercent * 4) / (float)(sampleSize - 1));
+    uint perTrigger = hw->preTriggerL | (hw->preTriggerH << 16);
+    return 100.f * ((float)(perTrigger) / (float)(sampleSize - 1));
 }
 
 SCOPEFUN_API int sfGetTriggerHis(SHardware* hw)

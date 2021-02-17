@@ -246,7 +246,7 @@ typedef struct
     ushort triggerSlope;
     short  triggerLevel;
     ushort triggerHis;
-    ushort triggerPercent;
+    ushort reserved1;
     ushort xRange;
     ushort holdoffH;
     ushort holdoffL;
@@ -288,11 +288,13 @@ typedef struct
     ushort digitalClkDivideH;
     ushort digitalClkDivideL;
     ushort average;
-    uint   reserved2;
+    ushort preTriggerH;
+    ushort preTriggerL;
+    ushort generatorPhase;
+    ushort reserved2;
     uint   reserved3;
     uint   reserved4;
     uint   reserved5;
-    uint   reserved6;
 } SHardware;
 
 /*----------------------------------------
