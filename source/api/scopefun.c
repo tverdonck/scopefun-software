@@ -1018,7 +1018,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
     // init display
     SDL_memset(display, 0, sizeof(SDisplay));
     display->samples = SCOPEFUN_DISPLAY;
-    display->capture = numSamples;
+    display->capture = lenSamples;
     // frame size
     uint frameSize = sfGetFrameSize(&hw);
     if(frameSize > SCOPEFUN_FRAME_MEMORY) { return 1; }
@@ -1105,6 +1105,9 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                     funMin = cDisplayFunction(ctx,ctx->functionType, ch0Min, ch1Min, digMin);
                     funMax = cDisplayFunction(ctx,ctx->functionType, ch0Max, ch1Max, digMax);
                 }
+                ularge index = i * lPointsPerInterval + lPointsPerInterval;
+                if ((zoomSampleMin + index) > lenSamples)
+                   break;
                 // floats Min
                 float fChannel0Min = fClamp((float)ch0Min / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
                 float fChannel1Min = fClamp((float)ch1Min / (float)SCOPEFUN_MAX_VOLTAGE, -1.f, 1.f);
