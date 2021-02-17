@@ -1011,6 +1011,10 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
     if(numSamples == 0) { return 1; }
     if(numSamples > SCOPEFUN_FRAME_DATA / 4) { return 1; }
 
+    uint lenSamples = 0;
+    if (len >= SCOPEFUN_FRAME_HEADER)
+       lenSamples = (len - SCOPEFUN_FRAME_HEADER) / 4;
+
     // init display
     SDL_memset(display, 0, sizeof(SDisplay));
     display->samples = SCOPEFUN_DISPLAY;
@@ -1062,7 +1066,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
                     ushort  dig = 0;
                     ularge index  = i * lPointsPerInterval + j;
 
-                    if ((zoomSampleMin + index) > numSamples)
+                    if ((zoomSampleMin + index) > lenSamples)
                        break;
 
                     ularge sample = iClamp(zoomSampleMin + index, 0, numSamples - 1);
@@ -1128,7 +1132,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             {
                for (ilarge i = 0; i < zoomSampleCnt; i++)
                {
-                  if (i > numSamples)
+                  if (i > lenSamples)
                      break;
 
                   uint offset = 0;
@@ -1179,7 +1183,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
             {
                for (ilarge i = 1; i <= zoomSampleCnt; i++)
                {
-                  if (i > numSamples)
+                  if (i > lenSamples)
                      break;
 
                   uint offset = 0;
