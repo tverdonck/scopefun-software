@@ -3530,7 +3530,7 @@ int SDLCALL CaptureDataThreadFunction(void* data)
         uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
         uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
         uint      frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
-        uint    frameOffset = 0;
+        uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
 
          // copy frame
          if (mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE)
@@ -3560,11 +3560,11 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          // clear
          if (mode == SIGNAL_MODE_CLEAR)
          {
-            uint   frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
-            uint   frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
-            uint    frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
-            ularge   framePos = ((frameIndex - 1) % frameCount) * frameSize;
-            SDL_memset(&captureBuffer.m_dataPtr[framePos], 0, frameSize);
+            if (SDL_AtomicGet(&captureBuffer.m_frameClear) == 1)
+            {
+               SDL_AtomicSet(&captureBuffer.m_frameClear, 0);
+               SDL_memset(&captureBuffer.m_dataPtr[0], 0, captureBuffer.m_dataMax);
+            }
          }
 
          // play
@@ -3581,12 +3581,13 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          // pause | clear
          if (mode == SIGNAL_MODE_PAUSE)
          {
-            // offset
-            frameOffset = frameSize;
-
-            // delay
+            if (receivedBytes.value == 0)
+               frameIndex = (frameIndex - 1) % frameCount;
             SDL_Delay(10);
          }
+
+         // offset
+         SDL_AtomicSet(&captureBuffer.m_frameOffset, frameOffset);
 
          // index
          SDL_AtomicSet(&captureBuffer.m_captureIndex, captureIndex + 1);
@@ -3672,19 +3673,11 @@ int SDLCALL GenerateFrameThreadFunction(void* data)
          uint frameIndex     = 0;
          pCaptureBuffer->lockUpdate(updateIndex, maxBytesToRead, frameIndex);
         
-         // uint  frameIndex = SDL_AtomicGet(&pCaptureBuffer->m_frameIndex);
          uint  frameCount = SDL_AtomicGet(&pCaptureBuffer->m_frameCount);
          uint  frameSize = SDL_AtomicGet(&pCaptureBuffer->m_frameSize);
 
          // mode
          uint  signalMode = SDL_AtomicGet(&pOsciloscope->signalMode);
-
-         // full
-         if (pCaptureData->m_window.horizontal.Full)
-         {
-            frameIndex     = clamp<uint>(frameIndex-1,0,frameCount-1);
-            maxBytesToRead = frameSize;
-         }
 
          // display 
          DisplayFrame(maxBytesToRead, frameIndex, frameCount, frameSize, *pCaptureBuffer, *pCaptureData, renderer, fft, delayCapture, pCaptureData->m_pos, pCaptureData->m_zoom);

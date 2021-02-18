@@ -33,6 +33,10 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
     {
         once = 0;
 
+        #ifndef _DEBUG
+            m_menu4->Remove(m_menu4->FindItem("Software Simulator"));
+        #endif   
+
         m_spinBtnDigVoltage->SetRange(0, 1024*1024);
         m_spinBtnDigVoltage->SetValue(0);
         m_textCtrlDigitalVoltage->SetValue("1.238");
@@ -1171,6 +1175,7 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 {
     pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CLEAR;
     SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_CLEAR);
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameClear, 1);
     pOsciloscope->simOnOff(0);
     if(!pOsciloscope->settings.getColors()->windowDefault)
     {

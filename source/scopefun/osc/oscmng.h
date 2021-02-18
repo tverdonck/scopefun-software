@@ -21,7 +21,7 @@
 #ifndef __TOOL__OSCILOSCOPE__
 #define __TOOL__OSCILOSCOPE__
 
-#define SCOPEFUN_MAX_BUFFERING 4
+#define SCOPEFUN_MAX_BUFFERING 2
 #define SCOPEFUN_MAX_HISTORY   16
 #define SCOPEFUN_MAX_UNDO      1024
 
@@ -923,6 +923,8 @@ public:
     SDL_atomic_t                                m_frameCount;
     SDL_atomic_t                                m_frameSize;
     SDL_atomic_t                                m_frameIndex;
+    SDL_atomic_t                                m_frameClear;
+    SDL_atomic_t                                m_frameOffset;
     SDL_atomic_t                                m_captureIndex;
     SDL_atomic_t                                m_updateIndex;
     SDL_atomic_t                                m_screenIndex;
@@ -939,6 +941,8 @@ public:
         SDL_AtomicSet(&m_updateIndex,  0);
         SDL_AtomicSet(&m_screenIndex,  0);
         SDL_AtomicSet(&m_frameIndex,   0);
+        SDL_AtomicSet(&m_frameClear,   0);
+        SDL_AtomicSet(&m_frameOffset,  0);
         SDL_AtomicSet(&m_frameSize,    10000 + SCOPEFUN_FRAME_HEADER);
         SDL_AtomicSet(&m_frameCount,   1);
         SDL_AtomicSet(&m_progress,     0);

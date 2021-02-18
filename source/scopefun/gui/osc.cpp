@@ -234,6 +234,8 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer36->Add( m_checkBoxETS, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_checkBoxFull = new wxCheckBox( m_panel251, wxID_ANY, _("Full"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxFull->Hide();
+
 	bSizer36->Add( m_checkBoxFull, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -305,6 +307,8 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer8->Add( m_buttonCapture, 2, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonSimulate = new wxButton( m_panel251, wxID_ANY, _("Simulate"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_buttonSimulate->Hide();
+
 	bSizer8->Add( m_buttonSimulate, 2, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_buttonClear = new wxButton( m_panel251, wxID_ANY, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
