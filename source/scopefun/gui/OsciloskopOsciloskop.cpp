@@ -37,7 +37,7 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             m_menu4->Remove(m_menu4->FindItem("Software Simulator"));
         #endif   
 
-        m_spinBtnDigVoltage->SetRange(0, 1024*1024);
+        m_spinBtnDigVoltage->SetRange(-1024*1024, 1024*1024);
         m_spinBtnDigVoltage->SetValue(0);
         m_textCtrlDigitalVoltage->SetValue("1.238");
 
