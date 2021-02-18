@@ -1949,10 +1949,10 @@ SCOPEFUN_API int  sfSetGeneratorSquareDuty1(SHardware* hw, float perc)
 
 SCOPEFUN_API int  sfSetDigitalVoltage(SHardware* hw, double volt, double kDigital)
 {
-    double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
-    double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
-    double dVolt = dClamp((double)volt, Vmin, Vmax);
-    hw->digitalVoltage = (ushort)(((dVolt / 1.25) - 1.0) * kDigital);
+    double rab = 50000;
+    double rw = 75;
+    double rwb1 = 29763;
+    hw->digitalVoltage = 256 * (rwb1*((volt / 1.235) - 1.0) - rw) / rab;
     return SCOPEFUN_SUCCESS;
 }
 
@@ -2529,10 +2529,13 @@ SCOPEFUN_API float sfGetGeneratorSquareDuty1(SHardware* hw)
 
 SCOPEFUN_API double sfGetDigitalVoltage(SHardware* hw, double kDigital)
 {
-    double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
-    double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
-    double voltage = 1.25 * (((double)(hw->digitalVoltage) / kDigital) + 1.0);
-    return dClamp(voltage, Vmin, Vmax);
+    double rab  = 50000;
+    double rw   = 75;
+    double rwb1 = 29763;
+    double    a = hw->digitalVoltage;
+    double rwb0    = (rab*a / 256.0) + rw;
+    double voltage = 1.235*((rwb0/rwb1) + 1.0);
+    return voltage;
 }
 
 SCOPEFUN_API int sfGetDigitalInputOutput15(SHardware* hw)

@@ -33,6 +33,10 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
     {
         once = 0;
 
+        m_spinBtnDigVoltage->SetRange(0, 1024*1024);
+        m_spinBtnDigVoltage->SetValue(0);
+        m_textCtrlDigitalVoltage->SetValue("1.238");
+
         if (!isFileWritable())
         {
            wxMessageDialog msgBox(this, "Some features will be disabled. You must run ScopeFun.exe as administrator or install it out of 'Progream Files' folder.", wxT("Warning"), wxOK | wxCENTRE);
@@ -1916,11 +1920,9 @@ void OsciloskopOsciloskop::m_textCtrlDigitalVoltageOnTextEnter(wxCommandEvent& e
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinDown(wxSpinEvent& event)
 {
     double kDigital = pOsciloscope->settings.getHardware()->digitalVoltageCoeficient;
-    double Vstep = 1.25 * ((1.0 / kDigital) + 1.0) - 1.25;
-    double Vmin = 1.25 * ((0.0 / kDigital) + 1.0);
-    double Vmax = 1.25 * ((255.0 / kDigital) + 1.0);
+    double Vstep = 8.104/1000.0;
     double value = pFormat->stringToDouble(m_textCtrlDigitalVoltage->GetValue()) - Vstep;
-    value = clamp(value, Vmin, Vmax);
+    value = clamp(value, 1.238, 3.305);
     m_textCtrlDigitalVoltage->SetValue(pFormat->doubleToString(value));
     pOsciloscope->window.digitalSetup.voltage = value;
     sfSetDigitalVoltage(getHw(), value, kDigital);
@@ -1931,11 +1933,9 @@ void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinDown(wxSpinEvent& event)
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinUp(wxSpinEvent& event)
 {
     double kDigital = pOsciloscope->settings.getHardware()->digitalVoltageCoeficient;
-    double Vstep = 1.25 * ((1.0 / kDigital) + 1.0) - 1.25;
-    double Vmin  = 1.25 * ((0.0 / kDigital) + 1.0);
-    double Vmax  = 1.25 * ((255.0 / kDigital) + 1.0);
+    double Vstep = 8.104 / 1000.0;
     double value = pFormat->stringToDouble(m_textCtrlDigitalVoltage->GetValue()) + Vstep;
-    value = clamp(value, Vmin, Vmax);
+    value = clamp(value, 1.238, 3.305);
     m_textCtrlDigitalVoltage->SetValue(pFormat->doubleToString(value));
     pOsciloscope->window.digitalSetup.voltage = value;
     sfSetDigitalVoltage(getHw(), value, kDigital);
