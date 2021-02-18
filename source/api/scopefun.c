@@ -931,7 +931,7 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SInt* received, SInt* frameSize)
         SHardware hw = { 0 };
         sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
         ctx->frame.frameSize = sfGetFrameSize(&hw);
-        if(transfered != SCOPEFUN_FRAME_HEADER)
+        if( !(transfered == SCOPEFUN_FRAME_HEADER || transfered == 0 ) )
             SDL_ShowSimpleMessageBox(0,"Frame De-Sync","USB capture must be multiple of 1024bytes. Possible header de-sync ...",0);
     }
     // data
