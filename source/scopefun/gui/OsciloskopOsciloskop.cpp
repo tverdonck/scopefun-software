@@ -1915,11 +1915,12 @@ void OsciloskopOsciloskop::m_textCtrlDigitalVoltageOnTextEnter(wxCommandEvent& e
 {
     double kDigital = pOsciloscope->settings.getHardware()->digitalVoltageCoeficient;
     pOsciloscope->window.digitalSetup.voltage = pFormat->stringToDouble(m_textCtrlDigitalVoltage->GetValue().ToAscii().data());
+    pOsciloscope->window.digitalSetup.voltage = clamp(pOsciloscope->window.digitalSetup.voltage, 1.238, 3.305);
     sfSetDigitalVoltage(getHw(), pOsciloscope->window.digitalSetup.voltage, kDigital);
     pOsciloscope->transferData();
-    const char* voltageMax = pFormat->doubleToString(sfGetDigitalVoltage(getHw(), kDigital));
-    m_textCtrlDigitalVoltage->SetValue(voltageMax);
-    DigitalMiddlePinMaxVoltText(sfGetDigitalVoltage(getHw(), kDigital));
+    const char* voltageStr = pFormat->doubleToString(pOsciloscope->window.digitalSetup.voltage);
+    m_textCtrlDigitalVoltage->SetValue(voltageStr);
+    DigitalMiddlePinMaxVoltText(pOsciloscope->window.digitalSetup.voltage);
 }
 
 void OsciloskopOsciloskop::m_spinBtnDigVoltageOnSpinDown(wxSpinEvent& event)
