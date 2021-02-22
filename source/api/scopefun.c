@@ -1394,13 +1394,13 @@ ushort twos_complement(ushort input_value, ushort num_bits)
     return -(input_value & mask) + (input_value & ~mask);
 }
 
-uint endianSwap123(uint value)
+uint endianSwap32(uint value)
 {
     uint v0 = (value & 0x000000FF);
     uint v1 = (value & 0x0000FF00);
     uint v2 = (value & 0x00FF0000);
     uint v3 = (value & 0xFF000000);
-    return (v0 >> 24) | (v1 >> 4) | (v2 << 4) | (v3 << 24);
+    return (v0 << 24) | (v1 << 8) | (v2 >> 8) | (v3 >> 24);
 }
 
 uint reverseBits(uint v)

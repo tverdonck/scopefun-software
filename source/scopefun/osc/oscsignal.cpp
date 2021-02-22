@@ -26,19 +26,21 @@ extern "C" ishort leadBitCompl(ushort value);
 uint ScopeFunCaptureBuffer::save(const char* path)
 {
     SDL_AtomicSet(&m_active, 1);
+    
+    lock();
     // frame index
     int   frameIndex = SDL_AtomicGet(&m_frameIndex);
-    lock();
     FORMAT_BUFFER();
     // .sf
     FORMAT("%s", path);
     SDL_RWops* sfFile = SDL_RWFromFile(formatBuffer, "w+b");
-    int frameCount = SDL_AtomicGet(&m_frameCount);
+    int frameCount  = SDL_AtomicGet(&m_frameCount);
+    int frameOffset = SDL_AtomicGet(&m_frameOffset);
     FORMAT("----scopefun----\n", frameCount);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     // structures
     SFContext*             ctx       = sfCreateSFContext();
-    SFrameData*     frameData        = sfCreateSFrameData();
+    SFrameData*     frameData        = 0;
     SFrameHeader*   frameHeader      = sfCreateSFrameHeader();
     SHardware*      frameHardware    = sfCreateSHardware();
     uint            frameEts         = 0;
@@ -47,20 +49,23 @@ uint ScopeFunCaptureBuffer::save(const char* path)
     sfApiCreateContext(ctx, SCOPEFUN_FRAME_MEMORY);
     // info
     int   frameSize  = SDL_AtomicGet(&m_frameSize);
-    ularge  framePos = frameIndex * frameSize;
-    // copy header
-    SDL_memcpy(frameData->data.bytes, &m_dataPtr[framePos], frameSize);
+    ularge  framePos = ((frameIndex-1)%frameCount) * frameSize;
+    // header
+    frameData = (SFrameData*)&m_dataPtr[framePos];
     // get
     sfGetHeader(ctx, frameData, frameHeader);
     sfGetHeaderHardware(ctx, frameHeader, frameHardware);
     sfGetHeaderEts(frameHeader, &frameEts);
     sfGetHeaderTemperature(frameHeader, &frameTemperature);
     // frame
-    FORMAT("frame.index,%d\n", frameIndex);
+    FORMAT("frame.index,%d\n", (frameIndex%frameCount) );
+    SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
+    FORMAT("frame.count,%d\n", frameCount);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     FORMAT("frame.size,%d\n", frameSize);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
-    int sampleCount = sfGetNumSamples(getHw());
+    FORMAT("frame.offset,%d\n", frameOffset);
+    SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     FORMAT("frame.samples,%d\n", sfGetNumSamples(frameHardware));
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
     // header
@@ -83,6 +88,8 @@ uint ScopeFunCaptureBuffer::save(const char* path)
     }
     FORMAT("sample.ch0[-512...511],sample.ch1[-512...511],sample.digital[0x000...0xfff]\n",0);
     SDL_RWwrite(sfFile, &formatBuffer, SDL_strlen(formatBuffer), 1);
+    // samples
+    int sampleCount = sfGetNumSamples(frameHardware);
     if(sampleCount)
     {
         int textSampleBytes = 16;
@@ -133,13 +140,13 @@ uint ScopeFunCaptureBuffer::load(const char* path)
     Sint64 fileSize = SDL_RWsize(sfFile);
     // header
     int    textheaderBytes = FORMAT_BUFFER_SIZE;
-    int    textheaderCount = 67;
+    int    textheaderCount = 69;
     char*     lineMem = (char*)pMemory->allocate(textheaderBytes * textheaderCount);
     SDL_memset(lineMem, 0, textheaderBytes * textheaderCount);
     SDL_RWread(sfFile, lineMem, textheaderBytes * textheaderCount, 1);
     // load header line by line
     char*                             lineArray = lineMem;
-    char    headerArray[67][FORMAT_BUFFER_SIZE] = { 0 };
+    char    headerArray[69][FORMAT_BUFFER_SIZE] = { 0 };
     ularge                           headerSize = 0;
     for(int l = 0; l < textheaderCount; l++)
     {
@@ -154,32 +161,48 @@ uint ScopeFunCaptureBuffer::load(const char* path)
     // seek to end of header where samples start
     SDL_RWseek(sfFile, headerSize, RW_SEEK_SET);
     pMemory->free(lineMem);
-    // framePos, spaceLeft
-    ularge framePos  = SDL_AtomicGet(&m_frameIndex) * SDL_AtomicGet(&m_frameSize);
-    ularge spaceLeft = m_dataMax - framePos;
-    // parse header
-    SFrameHeader* frameHeader   = (SFrameHeader*)&m_dataPtr[framePos];
-    SHardware*    frameHardware = (SHardware*)&frameHeader->hardware.bytes[0];
+
     // "frame.index,%d\n"
     int frameIndex = 0;
     SDL_sscanf(&headerArray[1][0], "frame.index,%d\n", &frameIndex);
+    // "frame.count,%d\n"
+    int frameCount = 0;
+    SDL_sscanf(&headerArray[2][0], "frame.count,%d\n", &frameCount);
     // "frame.size,%d\n"
     int frameSize = 0;
-    SDL_sscanf(&headerArray[2][0], "frame.size,%d\n", &frameSize);
+    SDL_sscanf(&headerArray[3][0], "frame.size,%d\n", &frameSize);
+    // "frame.frameOffset,%d\n"
+    int frameOffset = 0;
+    SDL_sscanf(&headerArray[4][0], "frame.offset,%d\n", &frameOffset);
     // "frame.samples,%d\n"
     int frameSamples = 0;
-    SDL_sscanf(&headerArray[3][0], "frame.samples,%d\n", &frameSamples);
-    // "header.magic,%c%c%c%c\n"
+    SDL_sscanf(&headerArray[5][0], "frame.samples,%d\n", &frameSamples);
+
+    SDL_AtomicSet(&m_frameIndex,   frameIndex);
+    SDL_AtomicSet(&m_frameCount,   frameCount);
+    SDL_AtomicSet(&m_frameSize,    frameSize);
+    SDL_AtomicSet(&m_frameOffset,  frameOffset);
+    SDL_AtomicSet(&m_frameSamples, frameSamples);
+
+    // framePos, spaceLeft
+    ularge  framePos = (frameIndex % frameCount) * frameSize;
+    ularge spaceLeft = m_dataMax - framePos;
+
+    // parse header
+    SFrameHeader* frameHeader   = (SFrameHeader*)&m_dataPtr[framePos];
+    SHardware*    frameHardware = (SHardware*)&frameHeader->hardware.bytes[0];
+
+    // "header.magic,%c%c%c%c\n"ž
     uint magic = 0;
-    SDL_sscanf(&headerArray[4][0], "header.magic,%08x\n", &magic);
+    SDL_sscanf(&headerArray[6][0], "header.magic,%08x\n", &magic);
     *(uint*)&frameHeader->magic.bytes[0] = magic;
     // "header.etsDelay,%c\n"
     int etsDelay = 0;
-    SDL_sscanf(&headerArray[5][0], "header.etsDelay,%02x\n", &etsDelay);
+    SDL_sscanf(&headerArray[7][0], "header.etsDelay,%02x\n", &etsDelay);
     frameHeader->etsDelay.bytes[0] = etsDelay;
     // "header.crc,%c\n"
     int crc = 0;
-    SDL_sscanf(&headerArray[6][0], "header.crc,%d\n", &crc);
+    SDL_sscanf(&headerArray[8][0], "header.crc,%d\n", &crc);
     frameHeader->crc.bytes[0] = crc;
     // hardware
     int cnt = 0;
@@ -190,7 +213,7 @@ uint ScopeFunCaptureBuffer::load(const char* path)
         sfHardwareWordId(i, &stringId);
         FORMAT("hardware.%s,%%04x\n", stringId.bytes);
         uint hex = 0;
-        SDL_sscanf(&headerArray[i + 7][0], formatBuffer, &hex);
+        SDL_sscanf(&headerArray[i + 9][0], formatBuffer, &hex);
         ushort* ptr = (ushort*)&frameHardware->controlAddr;
         ptr[i] = cSwap16((ushort*)&hex);
     }
@@ -198,38 +221,29 @@ uint ScopeFunCaptureBuffer::load(const char* path)
     ularge fileTextSize    = min(fileSize - headerSize, spaceLeft);
     byte*  memorySamples   = &m_dataPtr[framePos];
     memorySamples  += SCOPEFUN_FRAME_HEADER;
-    int    textSampleBytes = 16;
-    int    textSampleCount = 64 * 1024;
-    Sint64 textAllocated   = textSampleBytes * textSampleCount;
-    char*  textArray       = (char*)pMemory->allocate(textAllocated);
-    Sint64 textLoop        = fileTextSize / textAllocated;
-    Sint64 textModulo      = fileTextSize % textAllocated;
-    for(int i = 0; i < textLoop + 1; i++)
+    char*  textArray = (char*)pMemory->allocate(frameSamples*16);
+    SDL_RWread(sfFile, textArray, frameSamples*16, 1);
+    for(int i = 0; i < frameSamples; i++)
     {
-        SDL_AtomicSet(&m_progress, 100 * i / (textLoop + 1));
+        SDL_AtomicSet(&m_progress, 100*i/frameSamples);
         if(SDL_AtomicGet(&m_active) == 0)
         { break; }
-        int textSize = textAllocated;
-        if(i == textLoop) { textSize = textModulo; }
-        SDL_RWread(sfFile, textArray, textSize, 1);
-        for(int i = 0; i < textSize;)
+        char sampleBuffer[16] = { 0 };
+        for(int k = 0; k < 16; k++)
         {
-            char sampleBuffer[16] = { 0 };
-            for(int k = 0; k < 16; k++)
-            {
-                sampleBuffer[k] = textArray[i]; i++;
-                if(sampleBuffer[k] == '\n')
-                { break; }
-            }
-            int    ch0 = 0;
-            int    ch1 = 0;
-            uint   dig = 0;
-            SDL_sscanf(sampleBuffer, "%d,%d,%04x\n", &ch0, &ch1, &dig);
-            sfSetData(memorySamples, ch0, ch1, dig);
-            memorySamples += 4;
+            sampleBuffer[k] = textArray[0]; textArray++;
+            if(sampleBuffer[k] == '\n')
+            { break; }
         }
+        int    ch0 = 0;
+        int    ch1 = 0;
+        uint   dig = 0;
+        SDL_sscanf(sampleBuffer, "%d,%d,%04x\n", &ch0, &ch1, &dig);
+        sfSetData(memorySamples, ch0, ch1, dig);
+        memorySamples += 4;
     }
     SDL_RWclose(sfFile);
+    pMemory->free(textArray);
     SDL_AtomicSet(&m_frameSize, frameSize);
     unlock();
     SDL_AtomicSet(&m_active, 0);

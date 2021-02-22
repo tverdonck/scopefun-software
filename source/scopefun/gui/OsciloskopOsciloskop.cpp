@@ -37,9 +37,19 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             m_menu4->Remove(m_menu4->FindItem("Software Simulator"));
         #endif   
 
-        m_spinBtnDigVoltage->SetRange(-1024*1024, 1024*1024);
+        m_spinBtnXPos->SetRange(-1000000, 1000000);
+        m_spinBtnTrigPre->SetRange(-1000000, 1000000);
+        m_spinBtnTrigHis->SetRange(-1000000, 1000000);
+        m_spinBtnTrigLevel->SetRange(-1000000, 1000000);
+        m_spinBtnTrigHoldoff->SetRange(-1000000, 1000000);
+        m_spinBtnFrameHistory->SetRange(-1000000, 1000000);
+        m_spinBtnDigVoltage->SetRange(-1000000, 1000000);
+        m_spinBtnCh0YPos->SetRange(-1000000, 1000000);
+        m_spinBtnCh1YPos->SetRange(-1000000, 1000000);
+
         m_spinBtnDigVoltage->SetValue(0);
         m_textCtrlDigitalVoltage->SetValue("1.238");
+        m_sliderTimeFrame->SetValue(0);
 
         if (!isFileWritable())
         {
@@ -373,8 +383,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         ////////////////////////////////////////////////////////////////////////////////
         // frame index
         ////////////////////////////////////////////////////////////////////////////////
-        SignalMode mode = (SignalMode)SDL_AtomicGet(&pOsciloscope->signalMode);
-        if(mode == SIGNAL_MODE_CAPTURE || mode == SIGNAL_MODE_SIMULATE || mode == SIGNAL_MODE_PLAY)
         {
             int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
             int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
@@ -517,6 +525,8 @@ void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
     {
         LoadDialog->Destroy();
     }
+    int frameSamples = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameSamples);
+    m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(frameSamples)));
 }
 
 void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
@@ -1194,31 +1204,22 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameSizeOnTextEnter(wxCommandEvent& event)
 {
-    int version = 0;
-    int header  = 0;
-    int data    = 0;
-    int packet  = 0;
+    // hw
     uint frameSize = 0;
     frameSize = atoi(m_textCtrlTimeFrameSize->GetValue().ToAscii().data());
-    if(version == 1)
-    {
-        sfSetSampleSize(getHw(), frameSize);
-        sfSetTriggerPre(getHw(), pOsciloscope->window.trigger.Percent);
-        pOsciloscope->window.horizontal.FrameSize = sfGetSampleSize(getHw());
-        data = pOsciloscope->window.horizontal.FrameSize * 6;
-    }
-    else
-    {
-        SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameSize,  frameSize + SCOPEFUN_FRAME_HEADER);
-        SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameCount, max<ularge>(1,pOsciloscope->m_captureBuffer.m_dataMax / ularge(frameSize + SCOPEFUN_FRAME_HEADER) ) );
+    sfSetSampleSize(getHw(), frameSize);
+    sfSetTriggerPre(getHw(), pOsciloscope->window.trigger.Percent);
+    frameSize = sfGetFrameSize(getHw());
 
-        sfSetSampleSize(getHw(), frameSize);
-        sfSetTriggerPre(getHw(), pOsciloscope->window.trigger.Percent);
-        pOsciloscope->window.horizontal.FrameSize = sfGetSampleSize(getHw());
-        data = pOsciloscope->window.horizontal.FrameSize * 4;
-        SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameSize, frameSize + SCOPEFUN_FRAME_HEADER);
-    }
+    // capture
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameSize,  frameSize);
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameCount, max<ularge>(1,pOsciloscope->m_captureBuffer.m_dataMax / ularge(frameSize) ) );
+    
+    // ui
+    pOsciloscope->window.horizontal.FrameSize = ((frameSize-SCOPEFUN_FRAME_HEADER)/4);
     m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(sfGetSampleSize(getHw()))));
+
+    // transfer
     pOsciloscope->transferData();
 }
 

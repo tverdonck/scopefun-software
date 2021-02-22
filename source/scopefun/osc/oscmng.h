@@ -925,6 +925,7 @@ public:
     SDL_atomic_t                                m_frameIndex;
     SDL_atomic_t                                m_frameClear;
     SDL_atomic_t                                m_frameOffset;
+    SDL_atomic_t                                m_frameSamples;
     SDL_atomic_t                                m_captureIndex;
     SDL_atomic_t                                m_updateIndex;
     SDL_atomic_t                                m_screenIndex;
@@ -943,6 +944,7 @@ public:
         SDL_AtomicSet(&m_frameIndex,   0);
         SDL_AtomicSet(&m_frameClear,   0);
         SDL_AtomicSet(&m_frameOffset,  0);
+        SDL_AtomicSet(&m_frameSamples, 0);
         SDL_AtomicSet(&m_frameSize,    10000 + SCOPEFUN_FRAME_HEADER);
         SDL_AtomicSet(&m_frameCount,   1);
         SDL_AtomicSet(&m_progress,     0);

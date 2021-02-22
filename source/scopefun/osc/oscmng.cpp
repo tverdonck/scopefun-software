@@ -3582,7 +3582,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          if (mode == SIGNAL_MODE_PAUSE)
          {
             if (receivedBytes.value == 0)
-               frameIndex = (frameIndex - 1) % frameCount;
+               frameIndex = (frameIndex-1) % frameCount;
+
             SDL_Delay(10);
          }
 
@@ -3606,6 +3607,7 @@ int DisplayFrame(uint maxBytesToRead,uint frameIndex, uint frameCount, uint fram
     
     // framePos
     ularge framePos = index * frameSize;
+           framePos = min<ularge>(framePos, captureBuffer.m_dataMax - 2 * SCOPEFUN_FRAME_HEADER);
 
     // clear
     SDL_memset(&threadData.m_frame, 0, sizeof(SDisplay));
