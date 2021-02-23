@@ -1843,9 +1843,12 @@ SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
             delta = 65536.0 * (double)freq / (double)fs;
             break;
     };
-    uint gDelta = (uint)(delta * 131071.0);
-    hw->generatorDeltaH0 = (gDelta & 0xFFFF0000) >> 16;
-    hw->generatorDeltaL0 = gDelta & 0x0000FFFF;
+    uint   iDeltaInt = (uint)(delta);
+    double dDeltaDec = delta - iDeltaInt;
+    uint   iDeltaDec = dDeltaDec * 1000000.0;
+    uint   genDelta = iDeltaInt << 17 | iDeltaDec;
+    hw->generatorDeltaH0 = (genDelta & 0xFFFF0000) >> 16;
+    hw->generatorDeltaL0 = genDelta & 0x0000FFFF;
     return SCOPEFUN_SUCCESS;
 }
 
@@ -1935,9 +1938,12 @@ SCOPEFUN_API int  sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs)
             break;
     };
     //
-    uint gDelta = (uint)(delta * 131071.0);
-    hw->generatorDeltaH1 = (gDelta & 0xFFFF0000) >> 16;
-    hw->generatorDeltaL1 = gDelta & 0x0000FFFF;
+    uint   iDeltaInt = (uint)(delta);
+    double dDeltaDec = delta - iDeltaInt;
+    uint   iDeltaDec = dDeltaDec*1000000.0;
+    uint   genDelta = iDeltaInt << 17 | iDeltaDec;
+    hw->generatorDeltaH1 = (genDelta & 0xFFFF0000) >> 16;
+    hw->generatorDeltaL1 =  genDelta & 0x0000FFFF;
     return SCOPEFUN_SUCCESS;
 }
 
@@ -2449,7 +2455,11 @@ SCOPEFUN_API int sfGetGeneratorOffset0(SHardware* hw)
 SCOPEFUN_API float sfGetGeneratorFrequency0(SHardware* hw, float fs)
 {
     uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
-    double delta = (double)(gDelta / 1048575.0);
+    uint iDeltaInt = gDelta >> 17;
+    uint iDeltaDec = (gDelta << 15) >> 15;
+    double dInt  = iDeltaInt;
+    double dDec  = iDeltaDec;
+    double delta = dInt + dDec/1000000.0;
     return (float)delta * (double)(fs) / 8188.0;
 }
 
@@ -2513,9 +2523,13 @@ SCOPEFUN_API int sfGetGeneratorOffset1(SHardware* hw)
 
 SCOPEFUN_API float sfGetGeneratorFrequency1(SHardware* hw, float fs)
 {
-    uint gDelta = (uint)(hw->generatorDeltaL1) | (uint)(hw->generatorDeltaH1 << 16);
-    double delta = (double)(gDelta / 1048575.0);
-    return (float)(delta * (double)(fs) / 8188.0);
+   uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
+   uint iDeltaInt = gDelta >> 17;
+   uint iDeltaDec = (gDelta << 15) >> 15;
+   double dInt = iDeltaInt;
+   double dDec = iDeltaDec;
+   double delta = dInt + dDec / 1000000.0;
+   return (float)(delta * (double)(fs) / 8188.0);
 }
 
 SCOPEFUN_API float sfGetGeneratorSquareDuty1(SHardware* hw)
