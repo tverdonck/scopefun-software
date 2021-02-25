@@ -129,6 +129,7 @@ ThreadApi::ThreadApi()
     resultClearAll();
     SDL_AtomicSet(&open, 0);
     SDL_AtomicSet(&fpga, 0);
+    SDL_AtomicSet(&callibrated, 0);
     SDL_AtomicSet(&simulate, 0);
     SDL_AtomicSet(&vid, 0);
     SDL_AtomicSet(&pid, 0);
@@ -328,6 +329,11 @@ int ThreadApi::isFpga()
     return SDL_AtomicGet(&fpga);
 }
 
+int  ThreadApi::isCallibrated()
+{
+   return SDL_AtomicGet(&callibrated);
+}
+
 int ThreadApi::isSimulate()
 {
     return SDL_AtomicGet(&simulate);
@@ -523,6 +529,7 @@ int ThreadApi::openUSB(OscHardware* hw)
 {
     if(SDL_AtomicGet(&open) == 0)
     {
+        SDL_AtomicSet(&callibrated,0);
         SUsb usb = hw->getUSB();
         setUSB(&usb);
         function(afOpenUsb);
@@ -555,6 +562,7 @@ int ThreadApi::useEepromCallibration(OscHardware* hw)
             cJSON* json = hw->json;
             SDL_memcpy(hw, &eepromData, eepromSize);
             hw->json = json;
+            SDL_AtomicSet(&callibrated, 1);
         }
     }
     return 0;

@@ -812,7 +812,7 @@ private:
 private:
     SDL_atomic_t open;
     SDL_atomic_t fpga;
-    SDL_atomic_t fpgaStatus;
+    SDL_atomic_t callibrated;
     SDL_atomic_t simulate;
     SDL_atomic_t vid;
     SDL_atomic_t pid;
@@ -861,6 +861,7 @@ public:
     int  getVersion();
     int  isOpen();
     int  isFpga();
+    int  isCallibrated();
     int  isSimulate();
     void setInit(int memory, int thread, int active, int timeout);
     void setFrame(int  version, int  header, int  data, int  packet);

@@ -51,6 +51,9 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         m_textCtrlDigitalVoltage->SetValue("1.238");
         m_sliderTimeFrame->SetValue(0);
 
+        wxSpinEvent evtspin;
+        m_spinBtnTrigPreOnSpinDown(evtspin);
+
         if (!isFileWritable())
         {
            wxMessageDialog msgBox(this, "Some features will be disabled. You must run ScopeFun.exe as administrator or install it out of 'Progream Files' folder.", wxT("Warning"), wxOK | wxCENTRE);
@@ -344,11 +347,15 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     pOsciloscope->thread.uploadFpga( pOsciloscope->settings.getHardware() );
                     pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
                     pOsciloscope->thread.wait();
-                    if (pOsciloscope->thread.isFpga())
+                 }
+                 else
+                 {
+                    if (!pOsciloscope->thread.isCallibrated())
                     {
                        pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
                        pOsciloscope->thread.hardwareControlFunction(getHw());
                        pOsciloscope->thread.wait();
+
                        wxCommandEvent event;
                        m_comboBoxCh0CaptureOnCombobox(event);
                        m_comboBoxCh1CaptureOnCombobox(event);
