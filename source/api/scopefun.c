@@ -1822,8 +1822,80 @@ SCOPEFUN_API int sfSetGeneratorOffset0(SHardware* hw, int perc)
     return SCOPEFUN_SUCCESS;
 }
 
+uint DoubleToBinary(double number) 
+{
+   // parts
+   uint    integer  = number;
+   double  fraction = number - integer;
+   // whole part
+   int resInt = 0;
+   for (int k = 0; k < 15; k++)
+   {
+      uint modulo = integer % 2;
+      if (modulo == 1)
+      {
+         resInt = resInt | BIT(k);
+      }
+      integer /= 2;
+   }
+   // fractional part
+   uint resDec = 0;
+   for(int k=16;k>0;k--)
+   {
+      fraction *= 2;
+      uint fract = fraction;
+      if (fract == 1) 
+      {
+         fraction -= fract;
+         resDec = resDec | BIT(k);
+      }
+   }
+   return (resInt << 17) | resDec;
+}
+
+
+double BinaryToDouble(uint number)
+{
+   // parts
+   uint Int = number >> 17;
+   uint Dec = (number << 15) >> 15;
+
+   // result
+   double result = 0;
+
+   // whole part
+   for (int k = 0; k < 15; k++)
+   {
+      uint modulo = Int % 2;
+      if (modulo == 1)
+      {
+         result += SDL_pow(2, k);
+      }
+      Int /= 2;
+   }
+   // fractional part
+   for (int k = 0; k < 17; k++)
+   {
+      uint modulo = Dec % 2;
+      if (modulo == 1)
+      {
+         result += 1.0 / SDL_pow(2, 17 - k);
+      }
+      Dec /= 2;
+   }
+   return result;
+}
+
 SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
 {
+    /*uint decimal0 = DoubleToBinary(3.1415);
+    uint decimal1 = DoubleToBinary(12.125);
+    uint decimal2 = DoubleToBinary(500.8888);
+
+    double d0 = BinaryToDouble(decimal0);
+    double d1 = BinaryToDouble(decimal1);
+    double d2 = BinaryToDouble(decimal2);*/
+
     double delta = 0;
     uint mask = (1 << 8);
     mask = ~mask;
@@ -1840,13 +1912,11 @@ SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
         case GENERATOR_DELTA:
         case GENERATOR_DC:
         case GENERATOR_NOISE:
-            delta = 65536.0 * (double)freq / (double)fs;
+            delta = 16384.0 * (double)freq / (double)fs;
             break;
     };
-    uint   iDeltaInt = (uint)(delta);
-    double dDeltaDec = delta - iDeltaInt;
-    uint   iDeltaDec = dDeltaDec * 1000000.0;
-    uint   genDelta = iDeltaInt << 17 | iDeltaDec;
+  
+    uint genDelta = DoubleToBinary(delta);
     hw->generatorDeltaH0 = (genDelta & 0xFFFF0000) >> 16;
     hw->generatorDeltaL0 = genDelta & 0x0000FFFF;
     return SCOPEFUN_SUCCESS;
@@ -1934,14 +2004,11 @@ SCOPEFUN_API int  sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs)
         case GENERATOR_DELTA:
         case GENERATOR_DC:
         case GENERATOR_NOISE:
-            delta = 65536.0 * (double)freq / (double)fs;
+            delta = 16384.0 * (double)freq / (double)fs;
             break;
     };
     //
-    uint   iDeltaInt = (uint)(delta);
-    double dDeltaDec = delta - iDeltaInt;
-    uint   iDeltaDec = dDeltaDec*1000000.0;
-    uint   genDelta = iDeltaInt << 17 | iDeltaDec;
+    uint genDelta = DoubleToBinary(delta);
     hw->generatorDeltaH1 = (genDelta & 0xFFFF0000) >> 16;
     hw->generatorDeltaL1 =  genDelta & 0x0000FFFF;
     return SCOPEFUN_SUCCESS;
@@ -2452,14 +2519,12 @@ SCOPEFUN_API int sfGetGeneratorOffset0(SHardware* hw)
     return hw->generatorOffset0;
 }
 
+
+
 SCOPEFUN_API float sfGetGeneratorFrequency0(SHardware* hw, float fs)
 {
     uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
-    uint iDeltaInt = gDelta >> 17;
-    uint iDeltaDec = (gDelta << 15) >> 15;
-    double dInt  = iDeltaInt;
-    double dDec  = iDeltaDec;
-    double delta = dInt + dDec/1000000.0;
+    double delta = BinaryToDouble(gDelta);
     return (float)delta * (double)(fs) / 8188.0;
 }
 
@@ -2524,11 +2589,7 @@ SCOPEFUN_API int sfGetGeneratorOffset1(SHardware* hw)
 SCOPEFUN_API float sfGetGeneratorFrequency1(SHardware* hw, float fs)
 {
    uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
-   uint iDeltaInt = gDelta >> 17;
-   uint iDeltaDec = (gDelta << 15) >> 15;
-   double dInt = iDeltaInt;
-   double dDec = iDeltaDec;
-   double delta = dInt + dDec / 1000000.0;
+   double delta = BinaryToDouble(gDelta);
    return (float)(delta * (double)(fs) / 8188.0);
 }
 
