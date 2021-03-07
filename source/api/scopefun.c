@@ -1912,7 +1912,7 @@ SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
         case GENERATOR_DELTA:
         case GENERATOR_DC:
         case GENERATOR_NOISE:
-            delta = 16384.0 * (double)freq / (double)fs;
+            delta = 4*16384.0 * (double)freq / (double)fs;
             break;
     };
   
@@ -2004,7 +2004,7 @@ SCOPEFUN_API int  sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs)
         case GENERATOR_DELTA:
         case GENERATOR_DC:
         case GENERATOR_NOISE:
-            delta = 16384.0 * (double)freq / (double)fs;
+            delta = 4*16384.0 * (double)freq / (double)fs;
             break;
     };
     //
@@ -2525,7 +2525,7 @@ SCOPEFUN_API float sfGetGeneratorFrequency0(SHardware* hw, float fs)
 {
     uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
     double delta = BinaryToDouble(gDelta);
-    return (float)delta * (double)(fs) / 8188.0;
+    return (float)delta * (double)(fs) / (4 * 16384.0);
 }
 
 SCOPEFUN_API float sfGetGeneratorSquareDuty0(SHardware* hw)
@@ -2590,7 +2590,7 @@ SCOPEFUN_API float sfGetGeneratorFrequency1(SHardware* hw, float fs)
 {
    uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
    double delta = BinaryToDouble(gDelta);
-   return (float)(delta * (double)(fs) / 8188.0);
+   return (float)(delta * (double)(fs) / (4 * 16384.0));
 }
 
 SCOPEFUN_API float sfGetGeneratorSquareDuty1(SHardware* hw)
