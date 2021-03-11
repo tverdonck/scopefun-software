@@ -431,278 +431,289 @@ void OsciloskopOsciloskop::loadSlot(WndMain& slot)
 
 void OsciloskopOsciloskop::setupUI(WndMain window)
 {
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // horizontal
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // capture
-    m_comboBoxTimeCapture->SetSelection(captureTimeFromValue(window.horizontal.Capture));
-    // display
-    uint  multiEnum = multiplyerFromValue(window.horizontal.Display);
-    float multiFloat = multiplyerFromEnum(multiEnum);
-    // position
-    m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Position)));
-    m_sliderTimePosition->SetValue(window.horizontal.Position);
-    // mode
-    wxCommandEvent evt;
-    evt.SetClientData((void*)0xcd);
-    switch(window.horizontal.Mode)
-    {
-        case SIGNAL_MODE_PLAY:
-            m_buttonPlayOnButtonClick(evt);
-            break;
-        case SIGNAL_MODE_PAUSE:
-            m_buttonPauseOnButtonClick(evt);
-            break;
-        case SIGNAL_MODE_CAPTURE:
-            m_buttonCaptureOnButtonClick(evt);
-            break;
-        case SIGNAL_MODE_SIMULATE:
-            m_buttonSimulateOnButtonClick(evt);
-            break;
-        case SIGNAL_MODE_CLEAR:
-            m_buttonClearOnButtonClick(evt);
-            break;
-    };
-    // control
-    m_comboBoxTimeControl->SetSelection(window.horizontal.Control);
-    //  FrameSize
-    const char* str = pFormat->integerToString((int)window.horizontal.FrameSize);
-    m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(str));
-    // Frame
-    int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
-    int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
-    m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(frameIndex)));
-    m_sliderTimeFrame->SetValue(frameIndex);
-    m_sliderTimeFrame->SetMax(frameCount);
-    // FFTSize
-    m_textCtrlTimeFFTSize->SetValue(wxString::FromAscii(pFormat->integerToString(window.horizontal.FFTSize)));
-    // ETS
-    m_checkBoxETS->SetValue(window.horizontal.ETS);
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // channel 0
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // Capture
-    m_comboBoxCh0Capture->SetSelection(captureVoltFromValue(window.channel01.Capture));
-    // Scale
-    m_textCtrlCh0Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.Scale)));
-    // YPosition
-    m_sliderCh0Position->SetValue(window.channel01.YPosition);
-    m_textCtrlCh0Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.YPosition)));
-    // OscOnOff
-    m_checkBoxSignal1->SetValue(window.channel01.OscOnOff);
-    // FFTOnOff
-    m_checkBoxFFT1->SetValue(window.channel01.FFTOnOff);
-    // Invert
-    m_checkBoxCh0Invert->SetValue(window.channel01.Invert);
-    // Ground
-    m_checkBoxCh0Ground->SetValue(window.channel01.Ground);
-    // AcDc
-    m_choiceCh0ACDC->SetSelection(window.channel01.AcDc);
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // channel 1
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // Capture
-    m_comboBoxCh1Capture->SetSelection(captureVoltFromValue(window.channel02.Capture));
-    // Scale
-    m_textCtrlCh1Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.Scale)));
-    // YPosition
-    m_sliderCh1Position->SetValue(window.channel02.YPosition);
-    m_textCtrlCh1Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.YPosition)));
-    // OscOnOff
-    m_checkBoxSignal2->SetValue(window.channel02.OscOnOff);
-    // FFTOnOff;
-    m_checkBoxFFT2->SetValue(window.channel02.FFTOnOff);
-    // Invert
-    m_checkBoxCh1Invert->SetValue(window.channel02.Invert);
-    // Ground
-    m_checkBoxCh1Ground->SetValue(window.channel02.Ground);
-    // AcDc
-    m_choiceCh1ACDC->SetSelection(window.channel02.AcDc);
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // digital
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // on/off
-    m_checkBox1->SetValue(window.digital.digital[0]);
-    m_checkBox2->SetValue(window.digital.digital[1]);
-    m_checkBox3->SetValue(window.digital.digital[2]);
-    m_checkBox4->SetValue(window.digital.digital[3]);
-    m_checkBox5->SetValue(window.digital.digital[4]);
-    m_checkBox6->SetValue(window.digital.digital[5]);
-    m_checkBox7->SetValue(window.digital.digital[6]);
-    m_checkBox8->SetValue(window.digital.digital[7]);
-    m_checkBox9->SetValue(window.digital.digital[8]);
-    m_checkBox10->SetValue(window.digital.digital[9]);
-    m_checkBox11->SetValue(window.digital.digital[10]);
-    m_checkBox12->SetValue(window.digital.digital[11]);
-    // output
-    m_choiceBit0->SetSelection(window.digital.output[0]);
-    m_choiceBit1->SetSelection(window.digital.output[1]);
-    m_choiceBit2->SetSelection(window.digital.output[2]);
-    m_choiceBit3->SetSelection(window.digital.output[3]);
-    m_choiceBit4->SetSelection(window.digital.output[4]);
-    m_choiceBit5->SetSelection(window.digital.output[5]);
-    m_choiceBit6->SetSelection(window.digital.output[6]);
-    m_choiceBit7->SetSelection(window.digital.output[7]);
-    m_choiceBit8->SetSelection(window.digital.output[8]);
-    m_choiceBit9->SetSelection(window.digital.output[9]);
-    m_choiceBit10->SetSelection(window.digital.output[10]);
-    m_choiceBit11->SetSelection(window.digital.output[11]);
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // digital setup
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // voltage
-    m_textCtrlDigitalVoltage->SetValue(wxString::FromAscii(pFormat->floatToString(window.digitalSetup.voltage)));
-    // divider
-    m_textCtrlFreqDivider->SetValue(wxString::FromAscii(pFormat->integerToString(window.digitalSetup.divider)));
-    double freq = 100000000.0 / (double(window.digitalSetup.divider) + 1.0);
-    m_staticTextMhz->SetLabel(wxString::FromAscii(pFormat->doubleToString(freq)).append(wxT(" Hz")));
-    // inputOutput15
-    m_choiceInputOutput->SetSelection(window.digitalSetup.inputOutput15);
-    if(m_choiceInputOutput->GetSelection() == 1)
-    {
-        m_choiceBit6->Disable();
-        m_choiceBit7->Disable();
-        m_choiceBit8->Disable();
-        m_choiceBit9->Disable();
-        m_choiceBit10->Disable();
-        m_choiceBit11->Disable();
-    }
-    else
-    {
-        m_choiceBit6->Enable();
-        m_choiceBit7->Enable();
-        m_choiceBit8->Enable();
-        m_choiceBit9->Enable();
-        m_choiceBit10->Enable();
-        m_choiceBit11->Enable();
-    }
-    // inputOutput7
-    m_choiceInputOutput1->SetSelection(window.digitalSetup.inputOutput7);
-    if(m_choiceInputOutput1->GetSelection() == 1)
-    {
-        m_choiceBit0->Disable();
-        m_choiceBit1->Disable();
-        m_choiceBit2->Disable();
-        m_choiceBit3->Disable();
-        m_choiceBit4->Disable();
-        m_choiceBit5->Disable();
-    }
-    else
-    {
-        m_choiceBit0->Enable();
-        m_choiceBit1->Enable();
-        m_choiceBit2->Enable();
-        m_choiceBit3->Enable();
-        m_choiceBit4->Enable();
-        m_choiceBit5->Enable();
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // function
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // xyGraph
-    m_checkBoxXYVoltageGraph->SetValue(window.function.xyGraph);
-    // Type
-    m_comboBoxFunction->SetSelection(window.function.Type);
-    // OscOnOff
-    m_checkBoxSignalF->SetValue(window.function.OscOnOff);
-    // FFTOnOff;
-    m_checkBoxFFTF->SetValue(window.function.FFTOnOff);
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // trigger
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // Source
-    m_comboBoxTriggerSource->SetSelection(window.trigger.Source);
-    // Slope
-    m_comboBoxTriggerSlope->SetSelection(window.trigger.Slope);
-    // Mode
-    m_comboBoxTrigger->SetSelection(window.trigger.Mode);
-    // Level
-    m_textCtrlTriggerLevel->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Level)));
-    m_sliderTriggerLevel->SetValue(window.trigger.Level);
-    // His
-    m_textCtrlTriggerHisteresis->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.His)));
-    m_sliderTriggerHisteresis->SetValue(window.trigger.His);
-    // Percent
-    m_textCtrlTriggerPre->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Percent)));
-    m_sliderTriggerPre->SetValue(window.trigger.Percent);
-    // Holdoff
-    m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Holdoff)));
-    m_sliderTriggerHoldoff->SetValue(window.trigger.Holdoff);
-    // stage
-    m_comboBoxDigitalStage->SetSelection(window.trigger.stage);
-    // stageStart
-    m_comboBoxDigitalStageStart->SetSelection(window.trigger.stageStart);
-    // stageMode
-    m_comboBoxDigitalMode->SetSelection(window.trigger.stageMode);
-    // stageChannel
-    m_comboBoxDigitalSerialChannel->SetSelection(window.trigger.stageChannel);
-    // stage
-    int istage = window.trigger.stage;
-    // delay[4]
-    ushort delay = window.trigger.delay[istage];
-    m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
-    // pattern[4]
-    m_comboBoxBit0->SetSelection(window.trigger.pattern[istage][0]);
-    m_comboBoxBit1->SetSelection(window.trigger.pattern[istage][1]);
-    m_comboBoxBit2->SetSelection(window.trigger.pattern[istage][2]);
-    m_comboBoxBit3->SetSelection(window.trigger.pattern[istage][3]);
-    m_comboBoxBit4->SetSelection(window.trigger.pattern[istage][4]);
-    m_comboBoxBit5->SetSelection(window.trigger.pattern[istage][5]);
-    m_comboBoxBit6->SetSelection(window.trigger.pattern[istage][6]);
-    m_comboBoxBit7->SetSelection(window.trigger.pattern[istage][7]);
-    m_comboBoxBit8->SetSelection(window.trigger.pattern[istage][8]);
-    m_comboBoxBit9->SetSelection(window.trigger.pattern[istage][9]);
-    m_comboBoxBit10->SetSelection(window.trigger.pattern[istage][10]);
-    m_comboBoxBit11->SetSelection(window.trigger.pattern[istage][11]);
-    // mask[4]
-    if(!window.trigger.mask[istage][0])
-    {
-        m_comboBoxBit0->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][1])
-    {
-        m_comboBoxBit1->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][2])
-    {
-        m_comboBoxBit2->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][3])
-    {
-        m_comboBoxBit3->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][4])
-    {
-        m_comboBoxBit4->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][5])
-    {
-        m_comboBoxBit5->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][6])
-    {
-        m_comboBoxBit6->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][7])
-    {
-        m_comboBoxBit7->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][8])
-    {
-        m_comboBoxBit8->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][9])
-    {
-        m_comboBoxBit9->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][10])
-    {
-        m_comboBoxBit10->SetSelection(4);
-    }
-    if(!window.trigger.mask[istage][11])
-    {
-        m_comboBoxBit11->SetSelection(4);
-    }
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // horizontal
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // capture
+   m_comboBoxTimeCapture->SetSelection(captureTimeFromValue(window.horizontal.Capture));
+   // display
+   uint  multiEnum = multiplyerFromValue(window.horizontal.Display);
+   float multiFloat = multiplyerFromEnum(multiEnum);
+   // position
+   m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Position)));
+   m_sliderTimePosition->SetValue(window.horizontal.Position);
+   // mode
+   wxCommandEvent evt;
+   evt.SetClientData((void*)0xcd);
+   switch (window.horizontal.Mode)
+   {
+   case SIGNAL_MODE_PLAY:
+      m_buttonPlayOnButtonClick(evt);
+      break;
+   case SIGNAL_MODE_PAUSE:
+      m_buttonPauseOnButtonClick(evt);
+      break;
+   case SIGNAL_MODE_CAPTURE:
+      m_buttonCaptureOnButtonClick(evt);
+      break;
+   case SIGNAL_MODE_SIMULATE:
+      m_buttonSimulateOnButtonClick(evt);
+      break;
+   case SIGNAL_MODE_CLEAR:
+      m_buttonClearOnButtonClick(evt);
+      break;
+   };
+   // control
+   m_comboBoxTimeControl->SetSelection(window.horizontal.Control);
+   //  FrameSize
+   const char* str = pFormat->integerToString((int)window.horizontal.FrameSize);
+   m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(str));
+   // Frame
+   int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+   int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+   m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(frameIndex)));
+   m_sliderTimeFrame->SetValue(frameIndex);
+   m_sliderTimeFrame->SetMax(frameCount);
+   // FFTSize
+   m_textCtrlTimeFFTSize->SetValue(wxString::FromAscii(pFormat->integerToString(window.horizontal.FFTSize)));
+   // ETS
+   m_checkBoxETS->SetValue(window.horizontal.ETS);
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // channel 0
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // Capture
+   m_comboBoxCh0Capture->SetSelection(captureVoltFromValue(window.channel01.Capture));
+   // Scale
+   m_textCtrlCh0Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.Scale)));
+   // YPosition
+   m_sliderCh0Position->SetValue(window.channel01.YPosition);
+   m_textCtrlCh0Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel01.YPosition)));
+   // OscOnOff
+   m_checkBoxSignal1->SetValue(window.channel01.OscOnOff);
+   // FFTOnOff
+   m_checkBoxFFT1->SetValue(window.channel01.FFTOnOff);
+   // Invert
+   m_checkBoxCh0Invert->SetValue(window.channel01.Invert);
+   // Ground
+   m_checkBoxCh0Ground->SetValue(window.channel01.Ground);
+   // AcDc
+   m_choiceCh0ACDC->SetSelection(window.channel01.AcDc);
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // channel 1
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // Capture
+   m_comboBoxCh1Capture->SetSelection(captureVoltFromValue(window.channel02.Capture));
+   // Scale
+   m_textCtrlCh1Scale->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.Scale)));
+   // YPosition
+   m_sliderCh1Position->SetValue(window.channel02.YPosition);
+   m_textCtrlCh1Position->SetValue(wxString::FromAscii(pFormat->floatToString(window.channel02.YPosition)));
+   // OscOnOff
+   m_checkBoxSignal2->SetValue(window.channel02.OscOnOff);
+   // FFTOnOff;
+   m_checkBoxFFT2->SetValue(window.channel02.FFTOnOff);
+   // Invert
+   m_checkBoxCh1Invert->SetValue(window.channel02.Invert);
+   // Ground
+   m_checkBoxCh1Ground->SetValue(window.channel02.Ground);
+   // AcDc
+   m_choiceCh1ACDC->SetSelection(window.channel02.AcDc);
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // digital
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // on/off
+   m_checkBox1->SetValue(window.digital.digital[0]);
+   m_checkBox2->SetValue(window.digital.digital[1]);
+   m_checkBox3->SetValue(window.digital.digital[2]);
+   m_checkBox4->SetValue(window.digital.digital[3]);
+   m_checkBox5->SetValue(window.digital.digital[4]);
+   m_checkBox6->SetValue(window.digital.digital[5]);
+   m_checkBox7->SetValue(window.digital.digital[6]);
+   m_checkBox8->SetValue(window.digital.digital[7]);
+   m_checkBox9->SetValue(window.digital.digital[8]);
+   m_checkBox10->SetValue(window.digital.digital[9]);
+   m_checkBox11->SetValue(window.digital.digital[10]);
+   m_checkBox12->SetValue(window.digital.digital[11]);
+   // output
+   m_choiceBit0->SetSelection(window.digital.output[0]);
+   m_choiceBit1->SetSelection(window.digital.output[1]);
+   m_choiceBit2->SetSelection(window.digital.output[2]);
+   m_choiceBit3->SetSelection(window.digital.output[3]);
+   m_choiceBit4->SetSelection(window.digital.output[4]);
+   m_choiceBit5->SetSelection(window.digital.output[5]);
+   m_choiceBit6->SetSelection(window.digital.output[6]);
+   m_choiceBit7->SetSelection(window.digital.output[7]);
+   m_choiceBit8->SetSelection(window.digital.output[8]);
+   m_choiceBit9->SetSelection(window.digital.output[9]);
+   m_choiceBit10->SetSelection(window.digital.output[10]);
+   m_choiceBit11->SetSelection(window.digital.output[11]);
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // digital setup
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // voltage
+   m_textCtrlDigitalVoltage->SetValue(wxString::FromAscii(pFormat->floatToString(window.digitalSetup.voltage)));
+   // divider
+   m_textCtrlFreqDivider->SetValue(wxString::FromAscii(pFormat->integerToString(window.digitalSetup.divider)));
+   double freq = 100000000.0 / (double(window.digitalSetup.divider) + 1.0);
+   m_staticTextMhz->SetLabel(wxString::FromAscii(pFormat->doubleToString(freq)).append(wxT(" Hz")));
+   // inputOutput15
+   m_choiceInputOutput->SetSelection(window.digitalSetup.inputOutput15);
+   if (m_choiceInputOutput->GetSelection() == 1)
+   {
+      m_choiceBit6->Disable();
+      m_choiceBit7->Disable();
+      m_choiceBit8->Disable();
+      m_choiceBit9->Disable();
+      m_choiceBit10->Disable();
+      m_choiceBit11->Disable();
+   }
+   else
+   {
+      m_choiceBit6->Enable();
+      m_choiceBit7->Enable();
+      m_choiceBit8->Enable();
+      m_choiceBit9->Enable();
+      m_choiceBit10->Enable();
+      m_choiceBit11->Enable();
+   }
+   // inputOutput7
+   m_choiceInputOutput1->SetSelection(window.digitalSetup.inputOutput7);
+   if (m_choiceInputOutput1->GetSelection() == 1)
+   {
+      m_choiceBit0->Disable();
+      m_choiceBit1->Disable();
+      m_choiceBit2->Disable();
+      m_choiceBit3->Disable();
+      m_choiceBit4->Disable();
+      m_choiceBit5->Disable();
+   }
+   else
+   {
+      m_choiceBit0->Enable();
+      m_choiceBit1->Enable();
+      m_choiceBit2->Enable();
+      m_choiceBit3->Enable();
+      m_choiceBit4->Enable();
+      m_choiceBit5->Enable();
+   }
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // function
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // xyGraph
+   m_checkBoxXYVoltageGraph->SetValue(window.function.xyGraph);
+   // Type
+   m_comboBoxFunction->SetSelection(window.function.Type);
+   // OscOnOff
+   m_checkBoxSignalF->SetValue(window.function.OscOnOff);
+   // FFTOnOff;
+   m_checkBoxFFTF->SetValue(window.function.FFTOnOff);
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // trigger
+   ////////////////////////////////////////////////////////////////////////////////////////
+   // Source
+   m_comboBoxTriggerSource->SetSelection(window.trigger.Source);
+   // Slope
+   m_comboBoxTriggerSlope->SetSelection(window.trigger.Slope);
+   // Mode
+   m_comboBoxTrigger->SetSelection(window.trigger.Mode);
+   // Level
+   m_textCtrlTriggerLevel->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Level)));
+   m_sliderTriggerLevel->SetValue(window.trigger.Level);
+   // His
+   m_textCtrlTriggerHisteresis->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.His)));
+   m_sliderTriggerHisteresis->SetValue(window.trigger.His);
+   // Percent
+   m_textCtrlTriggerPre->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Percent)));
+   m_sliderTriggerPre->SetValue(window.trigger.Percent);
+   // Holdoff
+   m_textCtrlTriggerHoldoff->SetValue(wxString::FromAscii(pFormat->floatToString(window.trigger.Holdoff)));
+   m_sliderTriggerHoldoff->SetValue(window.trigger.Holdoff);
+   // stage
+   m_comboBoxDigitalStage->SetSelection(window.trigger.stage);
+   // stageStart
+   m_comboBoxDigitalStageStart->SetSelection(window.trigger.stageStart);
+   // stageMode
+   m_comboBoxDigitalMode->SetSelection(window.trigger.stageMode);
+   // stageChannel
+   m_comboBoxDigitalSerialChannel->SetSelection(window.trigger.stageChannel);
+   // stage
+   int istage = window.trigger.stage;
+   // delay[4]
+   ushort delay = window.trigger.delay[istage];
+   m_textCtrDigitallDelay->SetValue(wxString::FromAscii(pFormat->integerToString(delay)));
+   // pattern[4]
+   m_comboBoxBit0->SetSelection(window.trigger.pattern[istage][0]);
+   m_comboBoxBit1->SetSelection(window.trigger.pattern[istage][1]);
+   m_comboBoxBit2->SetSelection(window.trigger.pattern[istage][2]);
+   m_comboBoxBit3->SetSelection(window.trigger.pattern[istage][3]);
+   m_comboBoxBit4->SetSelection(window.trigger.pattern[istage][4]);
+   m_comboBoxBit5->SetSelection(window.trigger.pattern[istage][5]);
+   m_comboBoxBit6->SetSelection(window.trigger.pattern[istage][6]);
+   m_comboBoxBit7->SetSelection(window.trigger.pattern[istage][7]);
+   m_comboBoxBit8->SetSelection(window.trigger.pattern[istage][8]);
+   m_comboBoxBit9->SetSelection(window.trigger.pattern[istage][9]);
+   m_comboBoxBit10->SetSelection(window.trigger.pattern[istage][10]);
+   m_comboBoxBit11->SetSelection(window.trigger.pattern[istage][11]);
+   // mask[4]
+   if (!window.trigger.mask[istage][0])
+   {
+      m_comboBoxBit0->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][1])
+   {
+      m_comboBoxBit1->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][2])
+   {
+      m_comboBoxBit2->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][3])
+   {
+      m_comboBoxBit3->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][4])
+   {
+      m_comboBoxBit4->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][5])
+   {
+      m_comboBoxBit5->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][6])
+   {
+      m_comboBoxBit6->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][7])
+   {
+      m_comboBoxBit7->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][8])
+   {
+      m_comboBoxBit8->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][9])
+   {
+      m_comboBoxBit9->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][10])
+   {
+      m_comboBoxBit10->SetSelection(4);
+   }
+   if (!window.trigger.mask[istage][11])
+   {
+      m_comboBoxBit11->SetSelection(4);
+   }
+
+   if (pHardwareGenerator)
+   {
+      pHardwareGenerator->SetupUI();
+   }
+}
+
+void OsciloskopHardwareGenerator::SetupUI()
+{
+   wxInitDialogEvent evt;
+   HardwareGeneratorOnInitDialog(evt);
 }
 
 int OsciloskopOsciloskop::getCurrentSlot()

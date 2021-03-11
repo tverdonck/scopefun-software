@@ -30,6 +30,31 @@ void OsciloskopHardwareGenerator::HardwareGeneratorOnInitDialog(wxInitDialogEven
 {
     // TODO: Implement HardwareGeneratorOnInitDialog
     FORMAT_BUFFER();
+
+    // freq
+    pOsciloscope->window.hardwareGenerator.frequency0 = sfGetGeneratorFrequency0(getHw(), pOsciloscope->settings.getHardware()->generatorFs);
+    pOsciloscope->window.hardwareGenerator.frequency1 = sfGetGeneratorFrequency1(getHw(), pOsciloscope->settings.getHardware()->generatorFs);
+
+    // type
+    pOsciloscope->window.hardwareGenerator.type0 = sfGetGeneratorType0(getHw());
+    pOsciloscope->window.hardwareGenerator.type1 = sfGetGeneratorType1(getHw());
+
+    // voltage
+    pOsciloscope->window.hardwareGenerator.voltage0 = sfGetGeneratorVoltage0(getHw());
+    pOsciloscope->window.hardwareGenerator.voltage1 = sfGetGeneratorVoltage1(getHw());
+
+    // offset
+    pOsciloscope->window.hardwareGenerator.offset0 = sfGetGeneratorOffset0(getHw());
+    pOsciloscope->window.hardwareGenerator.offset1 = sfGetGeneratorOffset1(getHw());
+
+    // square duty
+    pOsciloscope->window.hardwareGenerator.squareDuty0 = sfGetGeneratorSquareDuty0(getHw());
+    pOsciloscope->window.hardwareGenerator.squareDuty1 = sfGetGeneratorSquareDuty1(getHw());
+
+    // slope
+    pOsciloscope->window.hardwareGenerator.sawSlopePositive0 = sfGetGeneratorSlope0(getHw());
+    pOsciloscope->window.hardwareGenerator.sawSlopePositive1 = sfGetGeneratorSlope1(getHw());
+
     // generator 0
     FORMAT("%f", pOsciloscope->window.hardwareGenerator.frequency0);
     m_comboBoxType->SetSelection(pOsciloscope->window.hardwareGenerator.type0);
@@ -116,6 +141,7 @@ void OsciloskopHardwareGenerator::m_textCtrlFrequencyOnTextEnter(wxCommandEvent&
     float freq = atof(m_textCtrlFrequency->GetValue().ToAscii().data());
     pOsciloscope->window.hardwareGenerator.frequency0 = freq;
     sfSetGeneratorFrequency0(getHw(), freq, pOsciloscope->settings.getHardware()->generatorFs);
+    m_textCtrlFrequency->SetValue( pFormat->floatToString( sfGetGeneratorFrequency0(getHw(), pOsciloscope->settings.getHardware()->generatorFs) ));
     pOsciloscope->transferData();
 }
 
@@ -315,6 +341,7 @@ void OsciloskopHardwareGenerator::m_textCtrlFrequency1OnTextEnter(wxCommandEvent
     float freq = atof(m_textCtrlFrequency1->GetValue().ToAscii().data());
     pOsciloscope->window.hardwareGenerator.frequency1 = freq;
     sfSetGeneratorFrequency1(getHw(), freq, pOsciloscope->settings.getHardware()->generatorFs);
+    m_textCtrlFrequency1->SetValue(pFormat->floatToString(sfGetGeneratorFrequency1(getHw(), pOsciloscope->settings.getHardware()->generatorFs)));
     pOsciloscope->transferData();
 }
 

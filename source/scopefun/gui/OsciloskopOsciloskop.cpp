@@ -92,7 +92,6 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         ////////////////////////////////////////////////////////////////////////////////////////
         wxCommandEvent version2;
         SetDigital13To16(false);
-        sfSetDefault(getHw());
         m_comboBoxTimeCapture->Clear();
         for (int i = 0; i < t2cLast; i++)
         {

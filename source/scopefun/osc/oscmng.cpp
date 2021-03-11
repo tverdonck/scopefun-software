@@ -853,8 +853,11 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // generator fs
     ////////////////////////////////////////////////
-    sfSetGeneratorFrequency0(getHw(), 50.f, settings.getHardware()->generatorFs);
-    sfSetGeneratorFrequency1(getHw(), 50.f, settings.getHardware()->generatorFs);
+    sfSetGeneratorFrequency0(getHw(), 50.0, settings.getHardware()->generatorFs);
+    sfSetGeneratorFrequency1(getHw(), 50.0, settings.getHardware()->generatorFs);
+    float freq0 = sfGetGeneratorFrequency0(getHw(), settings.getHardware()->generatorFs);
+    float freq1 = sfGetGeneratorFrequency1(getHw(), settings.getHardware()->generatorFs);
+
     ////////////////////////////////////////////////
     // custom signal
     ////////////////////////////////////////////////
@@ -3329,6 +3332,8 @@ void OsciloscopeManager::transferUI()
     window.hardwareGenerator.offset1 = sfGetGeneratorOffset1(&m_hw) - pOsciloscope->settings.getHardware()->getGeneratorOffset(window.horizontal.Capture, 1);
     window.hardwareGenerator.frequency1 = sfGetGeneratorFrequency1(&m_hw, pOsciloscope->settings.getHardware()->generatorFs);
     window.hardwareGenerator.squareDuty1 = sfGetGeneratorSquareDuty1(&m_hw);
+
+    // ui
     SetupUI(window);
 }
 

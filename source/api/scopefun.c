@@ -1888,13 +1888,7 @@ double BinaryToDouble(uint number)
 
 SCOPEFUN_API int sfSetGeneratorFrequency0(SHardware* hw, float freq, float fs)
 {
-    /*uint decimal0 = DoubleToBinary(3.1415);
-    uint decimal1 = DoubleToBinary(12.125);
-    uint decimal2 = DoubleToBinary(500.8888);
-
-    double d0 = BinaryToDouble(decimal0);
-    double d1 = BinaryToDouble(decimal1);
-    double d2 = BinaryToDouble(decimal2);*/
+    freq = fClamp(freq, 0.f, 50000000.f);
 
     double delta = 0;
     uint mask = (1 << 8);
@@ -1988,6 +1982,8 @@ SCOPEFUN_API int  sfSetGeneratorOffset1(SHardware* hw, int perc)
 
 SCOPEFUN_API int  sfSetGeneratorFrequency1(SHardware* hw, float freq, float fs)
 {
+    freq = fClamp(freq, 0.f, 50000000.f);
+
     double delta = 0;
     uint mask = (1 << 8);
     mask = ~mask;

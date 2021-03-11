@@ -85,7 +85,8 @@ public:
     /** Constructor */
     OsciloskopHardwareGenerator(wxWindow* parent);
     //// end generated class members
-
+public:
+   void SetupUI();
 };
 
 #endif // __OsciloskopHardwareGenerator__
