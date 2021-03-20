@@ -1840,14 +1840,14 @@ uint DoubleToBinary(double number)
    }
    // fractional part
    uint resDec = 0;
-   for(int k=16;k>0;k--)
+   for(int k=17;k>0;k--)
    {
       fraction *= 2;
       uint fract = fraction;
       if (fract == 1) 
       {
          fraction -= fract;
-         resDec = resDec | BIT(k);
+         resDec = resDec | BIT(k-1);
       }
    }
    return (resInt << 17) | resDec;
