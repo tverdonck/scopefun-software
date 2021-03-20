@@ -853,9 +853,10 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     // generator fs
     ////////////////////////////////////////////////
-    sfSetGeneratorFrequency0(getHw(), 50.0, settings.getHardware()->generatorFs);
-    sfSetGeneratorFrequency1(getHw(), 50.0, settings.getHardware()->generatorFs);
-    sfSetDigitalInputOutput(getHw(), 1, 1);
+    sfSetGeneratorFrequency0(getHw(), 100000.0, settings.getHardware()->generatorFs);
+    sfSetGeneratorFrequency1(getHw(), 100000.0, settings.getHardware()->generatorFs);
+    sfSetGeneratorVoltage0(getHw(), 5100);
+    sfSetGeneratorVoltage1(getHw(), 5100);
     float freq0 = sfGetGeneratorFrequency0(getHw(), settings.getHardware()->generatorFs);
     float freq1 = sfGetGeneratorFrequency1(getHw(), settings.getHardware()->generatorFs);
 

@@ -912,6 +912,32 @@ void OsciloskopMeasure::m_sliderFFT1OnScroll(wxScrollEvent& event)
     pOsciloscope->window.measure.data.pickFFT1.updateUI = true;
 }
 
+void OsciloskopMeasure::m_ItemActivated( wxDataViewEvent& event )
+{
+// TODO: Implement m_ItemActivated
+   SelectionChanged(event);
+}
+
+void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
+{
+   // TODO: Implement m_ItemStartEditing
+}
+
+void OsciloskopMeasure::m_ItemStartEditing( wxDataViewEvent& event )
+{
+// TODO: Implement m_ItemStartEditing
+}
+
+void OsciloskopMeasure::m_OnLeftDown( wxMouseEvent& event )
+{
+    // TODO: Implement m_OnLeftDown
+}
+
+void OsciloskopMeasure::m_dataViewListCtrl1OnMouseEvents( wxMouseEvent& event )
+{
+    // TODO: Implement m_dataViewListCtrl1OnMouseEvents
+}
+
 void OsciloskopMeasure::m_buttonOkOnButtonClick(wxCommandEvent& event)
 {
     // TODO: Implement m_buttonOkOnButtonClick
@@ -970,7 +996,7 @@ float rangeToSeconds(float range)
 }
 
 
-void OsciloskopMeasure::m_SelectionChanged1(wxDataViewEvent& event)
+void OsciloskopMeasure::SelectionChanged(wxDataViewEvent& event)
 {
     if (recursive)
     {

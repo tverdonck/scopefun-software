@@ -843,6 +843,8 @@ class Measure : public wxDialog
 		virtual void m_spinBtnFFT1OnSpinDown( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_spinBtnFFT1OnSpinUp( wxSpinEvent& event ) { event.Skip(); }
 		virtual void m_sliderFFT1OnScroll( wxScrollEvent& event ) { event.Skip(); }
+		virtual void m_ItemActivated( wxDataViewEvent& event ) { event.Skip(); }
+		virtual void m_ItemStartEditing( wxDataViewEvent& event ) { event.Skip(); }
 		virtual void m_SelectionChanged1( wxDataViewEvent& event ) { event.Skip(); }
 		virtual void m_OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void m_dataViewListCtrl1OnMouseEvents( wxMouseEvent& event ) { event.Skip(); }

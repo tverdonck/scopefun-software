@@ -36,16 +36,13 @@ class OsciloskopMeasure : public Measure
 protected:
     // Handlers for Measure events.
     void DisplayOnInitDialog(wxInitDialogEvent& event);
-    void m_SelectionChanged1(wxDataViewEvent& event);
-    void m_SelectionChanged2(wxDataViewEvent& event);
     void m_checkBoxAutoClearOnCheckBox(wxCommandEvent& event);
     void m_checkBoxAutoClearTriggerOnCheckBox(wxCommandEvent& event);
     void m_buttonHistoryClearOnButtonClick(wxCommandEvent& event);
-    void m_buttonCopyOnButtonClick(wxCommandEvent& event);
-    void m_buttonCopy2OnButtonClick(wxCommandEvent& event);
     void m_buttonClearXOnButtonClick(wxCommandEvent& event);
     void m_buttonClearYOnButtonClick(wxCommandEvent& event);
     void m_buttonClearFFTOnButtonClick(wxCommandEvent& event);
+	void m_buttonCopyOnButtonClick( wxCommandEvent& event );
     void m_buttonPickX0OnButtonClick(wxCommandEvent& event);
     void m_textCtrlX0OnTextEnter(wxCommandEvent& event);
     void m_spinBtnX0OnSpinDown(wxSpinEvent& event);
@@ -78,6 +75,11 @@ protected:
     void m_spinBtnFFT1OnSpinDown(wxSpinEvent& event);
     void m_spinBtnFFT1OnSpinUp(wxSpinEvent& event);
     void m_sliderFFT1OnScroll(wxScrollEvent& event);
+	 void m_ItemActivated( wxDataViewEvent& event );
+	 void m_ItemStartEditing( wxDataViewEvent& event );
+	 void m_SelectionChanged1( wxDataViewEvent& event );
+	 void m_OnLeftDown( wxMouseEvent& event );
+	 void m_dataViewListCtrl1OnMouseEvents( wxMouseEvent& event );
     void m_buttonOkOnButtonClick(wxCommandEvent& event);
     void m_buttonDefaultOnButtonClick(wxCommandEvent& event);
     void m_buttonCancelOnButtonClick(wxCommandEvent& event);
@@ -91,6 +93,7 @@ public:
     void setTextCtrlY(wxTextCtrl* ctr, double value);
     void setTextCtrlFreq(wxTextCtrl* ctr, wxChoice* choice, double value);
     void PopulateWithData();
+    void SelectionChanged(wxDataViewEvent& event);
 public:
     void CopyToClipBoard(wxDataViewListCtrl* list);
     void insertRow(int row, int i);

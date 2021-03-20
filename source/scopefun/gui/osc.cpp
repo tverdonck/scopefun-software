@@ -3859,6 +3859,8 @@ Measure::Measure( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	m_sliderFFT1->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
 	m_sliderFFT1->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
 	m_sliderFFT1->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
+	m_dataViewListCtrl1->Connect( wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, wxDataViewEventHandler( Measure::m_ItemActivated ), NULL, this );
+	m_dataViewListCtrl1->Connect( wxEVT_COMMAND_DATAVIEW_ITEM_START_EDITING, wxDataViewEventHandler( Measure::m_ItemStartEditing ), NULL, this );
 	m_dataViewListCtrl1->Connect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( Measure::m_SelectionChanged1 ), NULL, this );
 	m_dataViewListCtrl1->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Measure::m_OnLeftDown ), NULL, this );
 	m_dataViewListCtrl1->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Measure::m_dataViewListCtrl1OnMouseEvents ), NULL, this );
@@ -3976,6 +3978,8 @@ Measure::~Measure()
 	m_sliderFFT1->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
 	m_sliderFFT1->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
 	m_sliderFFT1->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( Measure::m_sliderFFT1OnScroll ), NULL, this );
+	m_dataViewListCtrl1->Disconnect( wxEVT_COMMAND_DATAVIEW_ITEM_ACTIVATED, wxDataViewEventHandler( Measure::m_ItemActivated ), NULL, this );
+	m_dataViewListCtrl1->Disconnect( wxEVT_COMMAND_DATAVIEW_ITEM_START_EDITING, wxDataViewEventHandler( Measure::m_ItemStartEditing ), NULL, this );
 	m_dataViewListCtrl1->Disconnect( wxEVT_COMMAND_DATAVIEW_SELECTION_CHANGED, wxDataViewEventHandler( Measure::m_SelectionChanged1 ), NULL, this );
 	m_dataViewListCtrl1->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Measure::m_OnLeftDown ), NULL, this );
 	m_dataViewListCtrl1->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Measure::m_dataViewListCtrl1OnMouseEvents ), NULL, this );
