@@ -667,27 +667,27 @@ void OsciloskopMeasure::m_textCtrlX0OnTextEnter(wxCommandEvent& event)
 {
     double time = pFormat->stringToDouble(m_textCtrlX0->GetValue().data().AsChar());
     double  mul = mulXFromIndex(m_choiceX0->GetSelection());
-    pOsciloscope->window.measure.data.pickX0.position.setXTime(time * mul);
+    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, time * mul);
 }
 
 void OsciloskopMeasure::m_spinBtnX0OnSpinDown(wxSpinEvent& event)
 {
     pOsciloscope->window.measure.data.pickX0.position.xTime -= pOsciloscope->window.horizontal.Capture;
-    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->window.measure.data.pickX0.position.xTime);
+    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, pOsciloscope->window.measure.data.pickX0.position.xTime);
     pOsciloscope->window.measure.data.pickX0.updateUI = true;
 }
 
 void OsciloskopMeasure::m_spinBtnX0OnSpinUp(wxSpinEvent& event)
 {
     pOsciloscope->window.measure.data.pickX0.position.xTime += pOsciloscope->window.horizontal.Capture;
-    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->window.measure.data.pickX0.position.xTime);
+    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, pOsciloscope->window.measure.data.pickX0.position.xTime);
     pOsciloscope->window.measure.data.pickX0.updateUI = true;
 }
 
 void OsciloskopMeasure::m_sliderX0OnScroll(wxScrollEvent& event)
 {
     pOsciloscope->window.measure.data.pickX0.position.xTime = getXScroll(m_sliderX0);
-    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->window.measure.data.pickX0.position.xTime);
+    pOsciloscope->window.measure.data.pickX0.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, pOsciloscope->window.measure.data.pickX0.position.xTime);
     pOsciloscope->window.measure.data.pickX0.updateUI = true;
 }
 
@@ -700,27 +700,27 @@ void OsciloskopMeasure::m_textCtrlX1OnTextEnter(wxCommandEvent& event)
 {
     double  time = pFormat->stringToDouble(m_textCtrlX1->GetValue().data().AsChar());
     double  mul = mulXFromIndex(m_choiceX1->GetSelection());
-    pOsciloscope->window.measure.data.pickX1.position.setXTime(time * mul);
+    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, time * mul);
 }
 
 void OsciloskopMeasure::m_spinBtnX1OnSpinDown(wxSpinEvent& event)
 {
     pOsciloscope->window.measure.data.pickX1.position.xTime -= pOsciloscope->window.horizontal.Capture;
-    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->window.measure.data.pickX1.position.xTime);
+    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom, pOsciloscope->window.measure.data.pickX1.position.xTime);
     pOsciloscope->window.measure.data.pickX1.updateUI = true;
 }
 
 void OsciloskopMeasure::m_spinBtnX1OnSpinUp(wxSpinEvent& event)
 {
     pOsciloscope->window.measure.data.pickX1.position.xTime += pOsciloscope->window.horizontal.Capture;
-    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->window.measure.data.pickX1.position.xTime);
+    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom,pOsciloscope->window.measure.data.pickX1.position.xTime);
     pOsciloscope->window.measure.data.pickX1.updateUI = true;
 }
 
 void OsciloskopMeasure::m_sliderX1OnScroll(wxScrollEvent& event)
 {
     pOsciloscope->window.measure.data.pickX1.position.xTime = getXScroll(m_sliderX1);
-    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->window.measure.data.pickX1.position.xTime);
+    pOsciloscope->window.measure.data.pickX1.position.setXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom,pOsciloscope->window.measure.data.pickX1.position.xTime);
     pOsciloscope->window.measure.data.pickX1.updateUI = true;
 }
 

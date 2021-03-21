@@ -308,17 +308,22 @@ void MeasureChannelData::Clear()
     }
 }
 
-uint MeasurePos::getXIndex(uint frameSize)
+uint MeasurePos::getXIndex(double sx,double sz,uint frameSize)
 {
-    return uint((x) * double((frameSize - 1)));
+    double xMin = (sx + 0.5 - 0.5*sz);
+    double xMax = (sx + 0.5 + 0.5*sz);
+    return uint((xMin+(x*(xMax-xMin))) * double((frameSize - 1)));
 }
 
-void MeasurePos::setXTime(double time)
+void MeasurePos::setXTime(double sx,double sz,double time)
 {
-    double maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
     xTime = time;
-    x  = time / maxTime;
-    x += double(pOsciloscope->window.trigger.Percent / 100.0);
+    double maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
+       double xMin = (sx + 0.5 - 0.5*sz);
+       double xMax = (sx + 0.5 + 0.5*sz);
+                 x  = time / maxTime;
+                 x  =  (x - xMin)/(xMax-xMin);
+                 x += double(pOsciloscope->window.trigger.Percent / 100.0);
 }
 
 void MeasurePos::setXFreq(double freq)
@@ -356,10 +361,12 @@ void MeasurePos::setYVolt(double volt, int channel)
     };
 }
 
-double MeasurePos::getXTime()
+double MeasurePos::getXTime(double sx,double sz)
 {
-    double  maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
-    xTime  = x * maxTime - maxTime * (double(pOsciloscope->window.trigger.Percent) / 100.0);
+    double     maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
+    double tMax        = (sx + 0.5 + 0.5*sz) * maxTime;
+    double tMin        = (sx + 0.5 - 0.5*sz) * maxTime;
+                xTime  = tMin + (tMax-tMin)*x - maxTime * (double(pOsciloscope->window.trigger.Percent) / 100.0);
     return xTime;
 }
 

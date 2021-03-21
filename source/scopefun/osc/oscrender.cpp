@@ -644,8 +644,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         double         gridZoomSamples = max<double>(1.0, gridZoomTime / sampleTime);
         // units
         double min          = (0.5 * sz) - sx;
-        ilarge zoomScreen   = (0.5 - min) / (0.1 * sz);
-        ilarge screenGrid   = zoomScreen + i;
+        double zoomScreen   = (0.5 - min) / (0.1 * sz);
+        double screenGrid   = zoomScreen + i;
         double gridValue    = screenGrid * gridZoomTime;
         // screen
         double screenX = -0.5 + SDL_fmodf(-sx / sz, 0.1) + i * 0.1;
@@ -726,6 +726,8 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     {
         return;
     }
+    double sx = render.signalPosition;
+    double sz = render.signalZoom;
     int    icount = (double)frame.samples;
     double  count = (double)icount;
     double   etsDelta = (1.f / icount) / double(render.maxEts);
@@ -744,6 +746,8 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
     double  yGridMax = yCount / 2.0;
     double  yfactor0 = wndMain.channel01.Capture * yGridMax;
     double  yfactor1 = wndMain.channel02.Capture * yGridMax;
+    double xMin = (sx + 0.5 - 0.5*sz);
+    double xMax = (sx + 0.5 + 0.5*sz);
     double minX = min(wndMain.measure.data.pickX0.position.x, wndMain.measure.data.pickX1.position.x);
     double maxX = max(wndMain.measure.data.pickX0.position.x, wndMain.measure.data.pickX1.position.x);
     double minY = min(wndMain.measure.data.pickY0.position.y, wndMain.measure.data.pickY1.position.y);
@@ -1072,7 +1076,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         ///////////////////////////////////////////////////////////////////////
         // at pick 0 ( x axis )
         ///////////////////////////////////////////////////////////////////////
-        if(idx == wndMain.measure.data.pickX0.position.getXIndex(frameSize))
+        if(idx == wndMain.measure.data.pickX0.position.getXIndex(sx,sz,frameSize))
         {
             current.row[Ch0XT0] = time;
             current.row[Ch1XT0] = time;
@@ -1084,7 +1088,7 @@ void OsciloscopeThreadRenderer::measureSignal(uint threadId, OsciloscopeThreadDa
         ///////////////////////////////////////////////////////////////////////
         // at pick 1 ( x axis )
         ///////////////////////////////////////////////////////////////////////
-        if(idx == wndMain.measure.data.pickX1.position.getXIndex(frameSize))
+        if(idx == wndMain.measure.data.pickX1.position.getXIndex(sx,sz,frameSize))
         {
             current.row[Ch0XT1] = time;
             current.row[Ch1XT1] = time;
@@ -2186,6 +2190,8 @@ void OsciloscopeThreadRenderer::renderMeasure(uint threadId, OsciloscopeThreadDa
     SDisplay&            frame = threadData.m_frame;
     WndMain&           wndMain = threadData.m_window;
     OsciloscopeRenderData&  render = threadData.m_render;
+    float           sz = render.signalZoom;
+    float           sx = render.signalPosition;
     Matrix4x4&   final = render.cameraOsc.Final;
     float pre = wndMain.trigger.Percent / 100.0;
     float X0PickX = wndMain.measure.data.pickX0.position.x - 0.5;

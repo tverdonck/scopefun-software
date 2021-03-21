@@ -252,13 +252,13 @@ public:
     float FrameToZ(int iframe);
     int   ZToFrame(float fz);
 public:
-    uint  getXIndex(uint frameSize);
+    uint  getXIndex(double sx,double sz,uint frameSize);
 public:
-    void setXTime(double time);
+    void setXTime(double sx,double sz,double time);
     void setXFreq(double freq);
     void setYVolt(double volt, int channel);
 public:
-    double getXTime();
+    double getXTime(double sx,double sz);
     double getXFreq();
     double getYVolt(int channel);
 public:

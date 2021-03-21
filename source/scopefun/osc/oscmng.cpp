@@ -1225,7 +1225,7 @@ int OsciloscopeManager::update(float dt)
             float mouseNormalizedY = float(mY) / (float(pRender->width) * analogWindowSize);
             mouseNormalizedY  = mouseNormalizedY * 1.2f;
             mouseNormalizedY -= (0.5f * 1.2f);
-            float mouseOSC  =  mouseNormalized * cameraOsc.zoom + (cameraOsc.ortho.View.Pos().x + 0.5);
+            float mouseOSC  =  mouseNormalized + (cameraOsc.ortho.View.Pos().x + 0.5);
             float mouseFFT  =  mouseNormalized * cameraFFT.zoom + (cameraFFT.ortho.View.Pos().x);
             float mouseY = -mouseNormalizedY;
             ////////////////////////////////////////////////////////////////////////////////

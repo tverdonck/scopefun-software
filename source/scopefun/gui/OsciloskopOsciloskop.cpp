@@ -409,12 +409,12 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             if(pOsciloscope->window.measure.data.pickX0.updateUI)
             {
                 pOsciloscope->window.measure.data.pickX0.updateUI = false;
-                pMeasure->setTextCtrlX(pMeasure->m_textCtrlX0, pMeasure->m_choiceX0, pOsciloscope->window.measure.data.pickX0.position.getXTime());
+                pMeasure->setTextCtrlX(pMeasure->m_textCtrlX0, pMeasure->m_choiceX0, pOsciloscope->window.measure.data.pickX0.position.getXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom));
             }
             if(pOsciloscope->window.measure.data.pickX1.updateUI)
             {
                 pOsciloscope->window.measure.data.pickX1.updateUI = false;
-                pMeasure->setTextCtrlX(pMeasure->m_textCtrlX1, pMeasure->m_choiceX1, pOsciloscope->window.measure.data.pickX1.position.getXTime());
+                pMeasure->setTextCtrlX(pMeasure->m_textCtrlX1, pMeasure->m_choiceX1, pOsciloscope->window.measure.data.pickX1.position.getXTime(pOsciloscope->signalPosition, pOsciloscope->signalZoom));
             }
             if(pOsciloscope->window.measure.data.pickY0.updateUI)
             {
