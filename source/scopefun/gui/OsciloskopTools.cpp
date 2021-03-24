@@ -708,6 +708,8 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
    {
       pHardwareGenerator->SetupUI();
    }
+
+   DigitalMiddlePinMaxVoltText(pOsciloscope->window.digitalSetup.voltage);
 }
 
 void OsciloskopHardwareGenerator::SetupUI()

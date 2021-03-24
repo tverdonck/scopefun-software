@@ -215,9 +215,9 @@ MWDigitalSetup::MWDigitalSetup()
 void MWDigitalSetup::Default()
 {
     divider = 0;
-    voltage = 1.25;
-    inputOutput15 = 1;
-    inputOutput7  = 1;
+    voltage = 1.238;
+    inputOutput15 = 0;
+    inputOutput7  = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -178,6 +178,8 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
             if(item10)
             { item10->Enable(false); }
         }
+
+        SetupUI(pOsciloscope->window);
     }
 }
 

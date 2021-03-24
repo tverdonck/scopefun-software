@@ -31,6 +31,13 @@ void OsciloskopHardwareGenerator::HardwareGeneratorOnInitDialog(wxInitDialogEven
     // TODO: Implement HardwareGeneratorOnInitDialog
     FORMAT_BUFFER();
 
+    m_spinBtnCh0Volt->SetRange(-1000000, 1000000);
+    m_spinBtnCh1Volt->SetRange(-1000000, 1000000);
+    m_spinBtnCh0Offset->SetRange(-1000000, 1000000);
+    m_spinBtnCh1Offset->SetRange(-1000000, 1000000);
+    m_spinBtnGen0SqrDuty->SetRange(-1000000, 1000000);
+    m_spinBtnGen1SqrDuty->SetRange(-1000000, 1000000);
+
     // freq
     pOsciloscope->window.hardwareGenerator.frequency0 = sfGetGeneratorFrequency0(getHw(), pOsciloscope->settings.getHardware()->generatorFs);
     pOsciloscope->window.hardwareGenerator.frequency1 = sfGetGeneratorFrequency1(getHw(), pOsciloscope->settings.getHardware()->generatorFs);

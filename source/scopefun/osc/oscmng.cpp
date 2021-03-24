@@ -840,10 +840,15 @@ int OsciloscopeManager::start()
         m_callback.Get(0)->Run();
     }
     sfFrameDisplayCallback(getCtx(), m_callback.Ptr(), this);
+
+    ////////////////////////////////////////////////
     // apply settings
     ////////////////////////////////////////////////
     sfSetYRangeScaleA(getHw(), getAttr(vc2Volt), getGain(0, vc2Volt));
     sfSetYRangeScaleB(getHw(), getAttr(vc2Volt), getGain(1, vc2Volt));
+    sfSetDigitalOutputBit(getHw(), 0, 0);
+    sfSetDigitalVoltage(getHw(), pOsciloscope->window.digitalSetup.voltage, pOsciloscope->settings.getHardware()->digitalVoltageCoeficient);
+
     ////////////////////////////////////////////////
     // apply canvas allocation settings
     ////////////////////////////////////////////////
