@@ -645,7 +645,7 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
         // units
         double min          = (0.5 * sz) - sx;
         double zoomScreen   = (0.5 - min) / (0.1 * sz);
-        double screenGrid   = zoomScreen + i;
+        ularge screenGrid   = zoomScreen + i;
         double gridValue    = screenGrid * gridZoomTime;
         // screen
         double screenX = -0.5 + SDL_fmodf(-sx / sz, 0.1) + i * 0.1;
