@@ -395,8 +395,8 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
             int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
             m_sliderTimeFrame->SetMax(frameCount);
-            m_sliderTimeFrame->SetValue(frameIndex);
-            m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex)));
+            m_sliderTimeFrame->SetValue(frameIndex%frameCount);
+            m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex%frameCount)));
         }
         ////////////////////////////////////////////////////////////////////////////////
         // measure
