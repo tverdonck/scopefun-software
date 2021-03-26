@@ -820,7 +820,7 @@ int OsciloscopeManager::start()
     cJSON_InitHooks(&hooks);
     settings.load();
     wheel = 0;
-    signalPosition = 0.f;
+    signalPosition = 0.5f;
     signalZoom     = 1.f;
     sliderPosition = 0.5f;
     ////////////////////////////////////////////////
@@ -895,9 +895,9 @@ int OsciloscopeManager::start()
     //////////////////////////////////////////////////////////
     // camera setup
     //////////////////////////////////////////////////////////
-    cameraOsc.ortho.View.Pos() = Vector4(0.f, 0.f, -1.0f, 1.f);
+    cameraOsc.ortho.View.Pos() = Vector4(0.5f, 0.f, -1.0f, 1.f);
     cameraOsc.zoom = 1.f;
-    cameraFFT.ortho.View.Pos() = Vector4(0.f, 0.f, -1.0f, 1.f);
+    cameraFFT.ortho.View.Pos() = Vector4(0.5f, 0.f, -1.0f, 1.f);
     cameraFFT.zoom = 1.f;
     grid.set(10.f, 10.f);
     ////////////////////////////////////////////////
@@ -1059,17 +1059,17 @@ void OsciloscopeManager::oscCameraSetup(int enable)
 {
     if(enable)
     {
-        Vector4 pos = Vector4(1.f, 1.f, -1.f, 1.f);
-        Vector4 at = Vector4(0.f, 0.f, 0.5f, 1.f);
-        Vector4 up = Vector4(0.f, 1.f, 0.f, 1.f);
+        Vector4 pos = Vector4(1.f,  1.f, -1.f, 1.f);
+        Vector4 at  = Vector4(0.5f, 0.0f, 0.5f, 1.f);
+        Vector4 up  = Vector4(0.f,  1.f, 0.f, 1.f);
         cameraOsc.zoom = 1.f;
         cameraOsc.ortho.lookAt(pos, at, up);
     }
     else
     {
-        Vector4 pos = Vector4(0.f, 0.f, -1.f, 1);
-        Vector4 at = Vector4(0.f, 0.f, 0.f, 1.f);
-        Vector4 up = Vector4(0.f, 1.f, 0.f, 1.f);
+        Vector4 pos = Vector4(0.5f, 0.f, -1.f, 1);
+        Vector4  at = Vector4(0.5f, 0.f,  0.f, 1.f);
+        Vector4  up = Vector4(0.f,  1.f,  0.f, 1.f);
         cameraOsc.zoom = 1.f;
         cameraOsc.ortho.lookAt(pos, at, up);
     }
@@ -1112,16 +1112,16 @@ void OsciloscopeManager::fftCameraSetup(int enable)
     if(enable)
     {
         Vector4 pos = Vector4(1.f, 1.f, -1.f,  1.f);
-        Vector4  at = Vector4(0.f, 0.f,  0.5f, 1.f);
+        Vector4  at = Vector4(0.5f, 0.f,  0.5f, 1.f);
         Vector4  up = Vector4(0.f, 1.f,  0.f,  1.f);
         cameraFFT.zoom = 1.f;
         cameraFFT.ortho.lookAt(pos, at, up);
     }
     else
     {
-        Vector4 pos = Vector4(0.f, 0.f, -1.f, 1);
-        Vector4 at = Vector4(0.f, 0.f, 0.f, 1.f);
-        Vector4 up = Vector4(0.f, 1.f, 0.f, 1.f);
+        Vector4 pos = Vector4(0.5f, 0.f, -1.f, 1);
+        Vector4  at = Vector4(0.5f, 0.f, 0.f, 1.f);
+        Vector4  up = Vector4(0.f,  1.f, 0.f, 1.f);
         cameraFFT.zoom = 1.f;
         cameraFFT.ortho.lookAt(pos, at, up);
     }
@@ -1230,7 +1230,7 @@ int OsciloscopeManager::update(float dt)
             float mouseNormalizedY = float(mY) / (float(pRender->width) * analogWindowSize);
             mouseNormalizedY  = mouseNormalizedY * 1.2f;
             mouseNormalizedY -= (0.5f * 1.2f);
-            float mouseOSC  =  mouseNormalized + (cameraOsc.ortho.View.Pos().x + 0.5);
+            float mouseOSC  =  mouseNormalized  + cameraOsc.ortho.View.Pos().x;
             float mouseFFT  =  mouseNormalized * cameraFFT.zoom + (cameraFFT.ortho.View.Pos().x);
             float mouseY = -mouseNormalizedY;
             ////////////////////////////////////////////////////////////////////////////////
@@ -1258,7 +1258,7 @@ int OsciloscopeManager::update(float dt)
                 float zoomOffset = (1.f / signalZoom) / 2.f;
                 OsciloscopeSlider slider;
                 slider.Rectangle(sliderRectW, sliderRectH, sliderRectX, sliderRectY, pRender->width, pRender->height, analogWindowSize);
-                slider.MinMax(sliderMin, sliderMax, pRender->width, pRender->height, sliderPosition - 0.5f, analogWindowSize, signalZoom /*cameraFFT.zoom */);
+                slider.MinMax(sliderMin, sliderMax, pRender->width, pRender->height, sliderPosition, analogWindowSize, signalZoom /*cameraFFT.zoom */);
                 insideSliderBox  = (mX > sliderMin && mX < sliderMax && mY >= sliderRectY && mY <= sliderRectY + sliderRectH);
                 insideSliderArea = (mY >= sliderRectY && mY <= sliderRectY + sliderRectH);
                 // slider
@@ -1270,8 +1270,10 @@ int OsciloscopeManager::update(float dt)
                     sliderPosition += (float(mRelX) / float(pRender->width));
                     sliderPosition  = clamp<float>(sliderPosition, 0.f + box, 1.f - box);
                     // min, max
-                    signalPosition = (sliderPosition - 0.5);
-                    signalPosition = clamp<double>(signalPosition, -0.5 + DOUBLE_MICRO,  0.5 - DOUBLE_MICRO);
+                    signalPosition = (sliderPosition);
+                    double sMin = 0 + 0.5*signalZoom;
+                    double sMax = 1 - 0.5*signalZoom;
+                    signalPosition = clamp<double>(signalPosition, sMin, sMax);
                 }
                 // up / down
                 else if(insideSliderArea)
@@ -1294,7 +1296,10 @@ int OsciloscopeManager::update(float dt)
                         Vector4 MoveOsc = Move * CamMoveSpeed * Vector4(cameraOsc.zoom);
                         double move = -fRelX * signalZoom;
                         signalPosition += move;
-                        signalPosition = clamp<double>(signalPosition, -0.5 + DOUBLE_MICRO, 0.5 - DOUBLE_MICRO);
+
+                        double sMin = 0 + 0.5*signalZoom;
+                        double sMax = 1 - 0.5*signalZoom;
+                        signalPosition = clamp<double>(signalPosition, sMin, sMax);
                     }
                 }
             }
@@ -1310,11 +1315,11 @@ int OsciloscopeManager::update(float dt)
                 SDL_AtomicSet(&clearThermal, 1);
                 SDL_AtomicSet(&clearRenderTarget, 1);
                 clearEts(1);
-                cameraFFT.ortho.View.Pos() = Vector4(0, 0, -1.f, 1.f);
+                cameraFFT.ortho.View.Pos() = Vector4(0.5, 0, -1.f, 1.f);
                 cameraFFT.zoom = 1.f;
-                cameraOsc.ortho.View.Pos() = Vector4(0, 0, -1.f, 1.f);
+                cameraOsc.ortho.View.Pos() = Vector4(0.5, 0, -1.f, 1.f);
                 cameraOsc.zoom = 1.f;
-                signalPosition = 0.f;
+                signalPosition = 0.5f;
                 signalZoom     = 1.f;
                 sliderPosition = 0.5f;
             }
@@ -1419,7 +1424,7 @@ int OsciloscopeManager::update(float dt)
             cameraFFT.zoom = clamp<float>(cameraFFT.zoom, 0.05f, 2.f);
         }
         float  cameraR = cameraFFT.zoom * 2.0f;
-        cameraFFT.ortho.View.Pos() = Vector4(0, 0, 0.5f, 1) + cameraFFT.ortho.View.RowZ() * Vector4(-cameraR, -cameraR, -cameraR, 1);
+        cameraFFT.ortho.View.Pos() = Vector4(0.5, 0, 0.5f, 1) + cameraFFT.ortho.View.RowZ() * Vector4(-cameraR, -cameraR, -cameraR, 1);
     }
     ////////////////////////////////////////////////////////////////////////////////
     // 3d osc
@@ -1509,7 +1514,7 @@ int OsciloscopeManager::update(float dt)
         }
         // position
         float  cameraR = cameraOsc.zoom * 2.0f;
-        cameraOsc.ortho.View.Pos() = Vector4(0, 0, 0.5f, 1) + cameraOsc.ortho.View.RowZ() * Vector4(-cameraR, -cameraR, -cameraR, 1);
+        cameraOsc.ortho.View.Pos() = Vector4(0.5, 0, 0.5f, 1) + cameraOsc.ortho.View.RowZ() * Vector4(-cameraR, -cameraR, -cameraR, 1);
     }
     ////////////////////////////////////////////////////////////////////////////////
     // mouuse debug

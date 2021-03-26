@@ -319,10 +319,10 @@ void MeasurePos::setXTime(double sx,double sz,double time)
 {
     xTime = time;
     double maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
-       double xMin = (sx + 0.5 - 0.5*sz);
-       double xMax = (sx + 0.5 + 0.5*sz);
+       //double xMin = (sx - 0.5 - 0.5*sz);
+       //double xMax = (sx - 0.5 + 0.5*sz);
                  x  = time / maxTime;
-                 x  =  (x - xMin)/(xMax-xMin);
+              //    x  =  (x - xMin)/(xMax-xMin);
                  x += double(pOsciloscope->window.trigger.Percent / 100.0);
 }
 
@@ -364,9 +364,9 @@ void MeasurePos::setYVolt(double volt, int channel)
 double MeasurePos::getXTime(double sx,double sz)
 {
     double     maxTime = double(pOsciloscope->window.horizontal.Capture) * double(pOsciloscope->window.horizontal.FrameSize);
-    double tMax        = (sx + 0.5 + 0.5*sz) * maxTime;
-    double tMin        = (sx + 0.5 - 0.5*sz) * maxTime;
-                xTime  = tMin + (tMax-tMin)*x - maxTime * (double(pOsciloscope->window.trigger.Percent) / 100.0);
+    double tMin        = (sx - 0.5*sz) * maxTime;
+    double tMax        = (sx + 0.5*sz) * maxTime;
+                xTime  = tMin + x*(tMax-tMin) - maxTime * (double(pOsciloscope->window.trigger.Percent) / 100.0);
     return xTime;
 }
 
@@ -381,7 +381,7 @@ double MeasurePos::getXFreq()
     double       max = float(count - 1);
     if(pOsciloscope->window.display.fftLogFreq > 0)
     {
-        double pos = (x + 0.5f);
+        double pos = (x);
         double hertz = float(pos) * maxHertz;
         double max = float(count - 1);
         hertz = pow(max, pos);

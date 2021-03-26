@@ -1028,7 +1028,7 @@ SCOPEFUN_API int sfFrameDisplay(SFContext* ctx, SFrameData* buffer, int len, SDi
     ushort analogSwitch = sfGetAnalogSwitch(&hw);
     display->attr |= (analogSwitch & CHANNEL_ETS) ? daETS : 0;
     // resample
-    double resamplePos = displayPos  + 0.5;
+    double resamplePos = displayPos;
     double resampleMin = resamplePos - 0.5 * (double)displayZoom;
     double resampleMax = resamplePos + 0.5 * (double)displayZoom;
     // sample: min / max
