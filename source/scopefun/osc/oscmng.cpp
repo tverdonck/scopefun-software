@@ -772,6 +772,7 @@ int ThreadApi::hardwareControlFunction(SHardware* hw)
 ////////////////////////////////////////////////////////////////////////////////
 OsciloscopeManager::OsciloscopeManager()
 {
+    SDL_AtomicSet(&m_undoRedoEnabled,0);
     dtUpdate = 0.0;
     dtRender = 0.0;
     ctx = new OscContext();
@@ -3215,6 +3216,8 @@ void OsciloscopeManager::clearEts(int value)
 
 void OsciloscopeManager::transferData()
 {
+    if ( !SDL_AtomicGet(&m_undoRedoEnabled) )
+      return;
     UndoRedo undo;
     undo.m_wnd = window;
     undo.m_hw  = m_hw;
@@ -3250,6 +3253,11 @@ int OsciloscopeManager::isRedoActive()
 {
     return m_hardwareRedo.getCount();
 }
+void OsciloscopeManager::enableUndoRedo()
+{
+   SDL_AtomicSet(&m_undoRedoEnabled,1);
+}
+
 int OsciloscopeManager::transferRedo()
 {
     if(!m_hardwareRedo.getCount())

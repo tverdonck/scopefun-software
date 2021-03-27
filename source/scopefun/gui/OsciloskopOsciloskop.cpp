@@ -362,6 +362,10 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                        m_comboBoxCh1CaptureOnCombobox(event);
                        pOsciloscope->transferData();
                     }
+                    else
+                    {
+                        pOsciloscope->enableUndoRedo();
+                    }
                  }
               }
               usbTimer = 0;

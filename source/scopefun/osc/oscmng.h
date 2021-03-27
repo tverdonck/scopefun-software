@@ -1226,6 +1226,7 @@ public:
     Array<UndoRedo, SCOPEFUN_MAX_UNDO> m_hardwareUndo;
     Array<UndoRedo, SCOPEFUN_MAX_UNDO> m_hardwareRedo;
     SHardware                          m_hw;
+    SDL_atomic_t                       m_undoRedoEnabled;
 public:
     SDL_atomic_t clearRenderTarget;
     SDL_atomic_t clearThermal;
@@ -1293,6 +1294,7 @@ public:
     int  isUndoActive();
     int  isRedoActive();
     void transferUI();
+    void enableUndoRedo();
 public:
     int Render();
 };
