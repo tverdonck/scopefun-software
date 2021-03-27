@@ -865,6 +865,8 @@ int OsciloscopeManager::start()
     sfSetGeneratorVoltage1(getHw(), 5100);
     float freq0 = sfGetGeneratorFrequency0(getHw(), settings.getHardware()->generatorFs);
     float freq1 = sfGetGeneratorFrequency1(getHw(), settings.getHardware()->generatorFs);
+    sfSetGeneratorSquareDuty0(getHw(), 50);
+    sfSetGeneratorSquareDuty1(getHw(), 50);
 
     ////////////////////////////////////////////////
     // custom signal
