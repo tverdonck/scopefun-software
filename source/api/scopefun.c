@@ -923,16 +923,29 @@ SCOPEFUN_API int sfFrameCapture(SFContext* ctx, SInt* received, SInt* frameSize)
     apiLock(ctx);
 
     // header
-    if(ctx->frame.received < SCOPEFUN_FRAME_HEADER)
+    if (ctx->frame.received < SCOPEFUN_FRAME_HEADER)
     {
-        int transfered = 0;
-        int  ret = sfHardwareCapture(ctx, &ctx->frame.data, SCOPEFUN_FRAME_HEADER, ctx->frame.received, (SInt*)&transfered);
-        ctx->frame.received += transfered;
-        SHardware hw = { 0 };
-        sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
-        ctx->frame.frameSize = sfGetFrameSize(&hw);
-        if( !(transfered == SCOPEFUN_FRAME_HEADER || transfered == 0 ) )
-            SDL_ShowSimpleMessageBox(0,"Frame De-Sync","USB capture must be multiple of 1024bytes. Possible header de-sync ...",0);
+       int transfered = 0;
+       int  ret = sfHardwareCapture(ctx, &ctx->frame.data, SCOPEFUN_FRAME_HEADER, ctx->frame.received, (SInt*)&transfered);
+
+        SFrameHeader* header = (SFrameHeader*)&ctx->frame.data.data.bytes[0];
+        int magic = 0;
+        if (header->magic.bytes[0] == 0xdd &&
+            header->magic.bytes[1] == 0xdd &&
+            header->magic.bytes[2] == 0xdd &&
+            header->magic.bytes[3] == 0xdd )
+        {
+            magic = 1;
+        }
+        if (magic)
+        {
+           SHardware hw = { 0 };
+           sfGetHeaderHardware(ctx, (SFrameHeader*)&ctx->frame.data.data.bytes[0], &hw);
+           ctx->frame.frameSize = sfGetFrameSize(&hw);
+           if (!(transfered == SCOPEFUN_FRAME_HEADER || transfered == 0))
+              SDL_ShowSimpleMessageBox(0, "Frame De-Sync", "USB capture must be multiple of 1024bytes. Possible header de-sync ...", 0);
+           ctx->frame.received += transfered;
+        }
     }
     // data
     if(ctx->frame.received >= SCOPEFUN_FRAME_HEADER)

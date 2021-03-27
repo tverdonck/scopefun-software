@@ -1294,7 +1294,7 @@ public:
     int  isUndoActive();
     int  isRedoActive();
     void transferUI();
-    void enableUndoRedo();
+    void UndoRedoOnOff(int enable);
 public:
     int Render();
 };

@@ -3255,9 +3255,9 @@ int OsciloscopeManager::isRedoActive()
 {
     return m_hardwareRedo.getCount();
 }
-void OsciloscopeManager::enableUndoRedo()
+void OsciloscopeManager::UndoRedoOnOff(int enable)
 {
-   SDL_AtomicSet(&m_undoRedoEnabled,1);
+   SDL_AtomicSet(&m_undoRedoEnabled, enable);
 }
 
 int OsciloscopeManager::transferRedo()

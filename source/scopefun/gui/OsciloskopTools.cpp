@@ -442,27 +442,6 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
    // position
    m_textCtrlTimePosition->SetValue(wxString::FromAscii(pFormat->floatToString(window.horizontal.Position)));
    m_sliderTimePosition->SetValue(window.horizontal.Position);
-   // mode
-   wxCommandEvent evt;
-   evt.SetClientData((void*)0xcd);
-   switch (window.horizontal.Mode)
-   {
-   case SIGNAL_MODE_PLAY:
-      m_buttonPlayOnButtonClick(evt);
-      break;
-   case SIGNAL_MODE_PAUSE:
-      m_buttonPauseOnButtonClick(evt);
-      break;
-   case SIGNAL_MODE_CAPTURE:
-      m_buttonCaptureOnButtonClick(evt);
-      break;
-   case SIGNAL_MODE_SIMULATE:
-      m_buttonSimulateOnButtonClick(evt);
-      break;
-   case SIGNAL_MODE_CLEAR:
-      m_buttonClearOnButtonClick(evt);
-      break;
-   };
    // control
    m_comboBoxTimeControl->SetSelection(window.horizontal.Control);
    //  FrameSize

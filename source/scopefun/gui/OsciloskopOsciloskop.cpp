@@ -364,7 +364,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     }
                     else
                     {
-                        pOsciloscope->enableUndoRedo();
+                        pOsciloscope->UndoRedoOnOff(1);
                     }
                  }
               }
@@ -1117,8 +1117,10 @@ void OsciloskopOsciloskop::m_buttonPlayOnButtonClick(wxCommandEvent& event)
         m_buttonPlay->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonPlay->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    pOsciloscope->UndoRedoOnOff(0);
     if(event.GetClientData() == 0)
     { pOsciloscope->transferData(); }
+    pOsciloscope->UndoRedoOnOff(1);
     m_buttonPause->Enable();
     m_buttonPlay->Disable();
     m_buttonCapture->Enable();
@@ -1137,8 +1139,10 @@ void OsciloskopOsciloskop::m_buttonPauseOnButtonClick(wxCommandEvent& event)
         m_buttonPause->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonPause->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    pOsciloscope->UndoRedoOnOff(0);
     if(event.GetClientData() == 0)
     { pOsciloscope->transferData(); }
+    pOsciloscope->UndoRedoOnOff(1);
     m_buttonPause->Disable();
     m_buttonPlay->Enable();
     m_buttonCapture->Enable();
@@ -1161,10 +1165,12 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
           m_buttonCapture->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
           m_buttonCapture->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
        }
+       pOsciloscope->UndoRedoOnOff(0);
        if (event.GetClientData() == 0)
        {
           pOsciloscope->transferData();
        }
+       pOsciloscope->UndoRedoOnOff(1);
        m_buttonPause->Enable();
        m_buttonPlay->Enable();
        m_buttonCapture->Disable();
@@ -1184,8 +1190,10 @@ void OsciloskopOsciloskop::m_buttonSimulateOnButtonClick(wxCommandEvent& event)
         m_buttonSimulate->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonSimulate->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    pOsciloscope->UndoRedoOnOff(0);
     if(event.GetClientData() == 0)
     { pOsciloscope->transferData(); }
+    pOsciloscope->UndoRedoOnOff(1);
     m_buttonPause->Enable();
     m_buttonPlay->Enable();
     m_buttonCapture->Enable();
@@ -1205,8 +1213,10 @@ void OsciloskopOsciloskop::m_buttonClearOnButtonClick(wxCommandEvent& event)
         m_buttonClear->SetBackgroundColour(pOsciloscope->settings.getColors()->windowFront);
         m_buttonClear->SetForegroundColour(pOsciloscope->settings.getColors()->windowBack);
     }
+    pOsciloscope->UndoRedoOnOff(0);
     if(event.GetClientData() == 0)
     { pOsciloscope->transferData(); }
+    pOsciloscope->UndoRedoOnOff(1);
     m_buttonPause->Enable();
     m_buttonPlay->Enable();
     m_buttonCapture->Enable();
