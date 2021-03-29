@@ -503,80 +503,89 @@ void OsciloskopOsciloskop::OnSize(wxSizeEvent& event)
 
 void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
 {
-    wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString,
-                                                _("*.osc"),
-                                                wxFD_OPEN | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    int show = LoadDialog->ShowModal();
-    if(show == wxID_OK)   // If the user clicked "OK"
-    {
-        // file
-        String file = LoadDialog->GetPath().ToAscii().data();
-        LoadDialog->Destroy();
-        // show dialog
-        wxProgressDialog progressDlg(_("Loading File"), _("in progress..."), 100, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
-        progressDlg.ShowModal();
-        // run thread
-        pOsciloscope->loadFromFile(file.asChar());
-        // loop
-        int active = 1;
-        while(active)
-        {
-            int progress = pOsciloscope->m_captureBuffer.getProgress();
-            active = pOsciloscope->m_captureBuffer.isActive();
-            progressDlg.Update(progress);
-            if(progressDlg.WasCancelled())
-            { pOsciloscope->m_captureBuffer.disable(); }
+   wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString, _("*.osc"), wxFD_OPEN | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
+   // Creates a Save Dialog with 4 file types
+   int show = LoadDialog->ShowModal();
+   if (show == wxID_OK)   // If the user clicked "OK"
+   {
+      // file
+      String file = LoadDialog->GetPath().ToAscii().data();
+      LoadDialog->Destroy();
+      delete LoadDialog;
 
-            pOsciloscope->Render();
-        }
-        // destroy
-        progressDlg.Destroy();
-    }
-    else
-    {
-        LoadDialog->Destroy();
-    }
-    int frameSamples = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameSamples);
-    m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(frameSamples)));
+      // show dialog
+      wxProgressDialog* progressDlg = new wxProgressDialog(_("Loading File"), _("in progress..."), 100, this, wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
+      progressDlg->Show(true);
+      // run thread
+      pOsciloscope->loadFromFile(file.asChar());
+      // loop
+      int active = 1;
+      while (active)
+      {
+         int progress = pOsciloscope->m_captureBuffer.getProgress();
+         active = pOsciloscope->m_captureBuffer.isActive();
+         progressDlg->Update(progress);
+         if (progressDlg->WasCancelled())
+         {
+            pOsciloscope->m_captureBuffer.disable();
+         }
+
+         pOsciloscope->Render();
+      }
+      // destroy
+      progressDlg->Destroy();
+      delete progressDlg;
+   }
+   else
+   {
+      LoadDialog->Destroy();
+      delete LoadDialog;
+   }
+   int frameSamples = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameSamples);
+   m_textCtrlTimeFrameSize->SetValue(wxString::FromAscii(pFormat->integerToString(frameSamples)));
 }
 
 void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
 {
-    wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), wxEmptyString, wxEmptyString,
-                                                _("*.osc"),
-                                                wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
-    // Creates a Save Dialog with 4 file types
-    int show = SaveDialog->ShowModal();
-    if(show == wxID_OK)   // If the user clicked "OK"
-    {
-        // file
-        String file = SaveDialog->GetPath().ToAscii().data();
-        SaveDialog->Destroy();
-        // show dialog
-        wxProgressDialog progressDlg(_("Saving File"), _("in progress..."), 100, this, wxPD_APP_MODAL | wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
-        progressDlg.ShowModal();
-        // run thread
-        pOsciloscope->saveToFile(file.asChar());
-        // loop
-        int active = 1;
-        while(active)
-        {
-            int progress = pOsciloscope->m_captureBuffer.getProgress();
-            active = pOsciloscope->m_captureBuffer.isActive();
-            progressDlg.Update(progress);
-            if(progressDlg.WasCancelled())
-            { pOsciloscope->m_captureBuffer.disable(); }
+   wxFileDialog* SaveDialog = new wxFileDialog(this, _("Save File As _?"), wxEmptyString, wxEmptyString, _("*.osc"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT, wxDefaultPosition);
+  
+   // Creates a Save Dialog with 4 file types
+   int show = SaveDialog->ShowModal();
+   if (show == wxID_OK)   // If the user clicked "OK"
+   {
+      // file
+      String file = SaveDialog->GetPath().ToAscii().data();
+      SaveDialog->Destroy();
+      delete SaveDialog;
 
-            pOsciloscope->Render();
-        }
-        // destroy
-        progressDlg.Destroy();
-    }
-    else
-    {
-        SaveDialog->Destroy();
-    }
+      // show dialog
+      wxProgressDialog* progressDlg = new wxProgressDialog(_("Saving File"), _("in progress..."), 100, this, wxPD_AUTO_HIDE | wxPD_CAN_ABORT);
+      progressDlg->Show(true);
+      // run thread
+      pOsciloscope->saveToFile(file.asChar());
+      // loop
+      int active = 1;
+      while (active)
+      {
+         int progress = pOsciloscope->m_captureBuffer.getProgress();
+         active = pOsciloscope->m_captureBuffer.isActive();
+         progressDlg->Update(progress);
+         if (progressDlg->WasCancelled())
+         {
+            pOsciloscope->m_captureBuffer.disable();
+         }
+
+         pOsciloscope->Render();
+      }
+      // destroy
+      progressDlg->Destroy();
+      delete progressDlg;
+   }
+   else
+   {
+      SaveDialog->Destroy();
+      delete SaveDialog;
+   }
 }
 
 void OsciloskopOsciloskop::m_menuItem3OnMenuSelection(wxCommandEvent& event)
