@@ -504,12 +504,15 @@ void OsciloskopOsciloskop::OnSize(wxSizeEvent& event)
 void OsciloskopOsciloskop::m_menuItem1OnMenuSelection(wxCommandEvent& event)
 {
    wxFileDialog* LoadDialog = new wxFileDialog(this, _("Load File As _?"), wxEmptyString, wxEmptyString, _("*.osc"), wxFD_OPEN | wxFD_FILE_MUST_EXIST, wxDefaultPosition);
-   // Creates a Save Dialog with 4 file types
+   // Creates a Load Dialog with 4 file types
    int show = LoadDialog->ShowModal();
    if (show == wxID_OK)   // If the user clicked "OK"
    {
       // file
       String file = LoadDialog->GetPath().ToAscii().data();
+      #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC)
+            file.add(".osc");
+      #endif
       LoadDialog->Destroy();
       delete LoadDialog;
 
@@ -555,6 +558,9 @@ void OsciloskopOsciloskop::m_menuItem2OnMenuSelection(wxCommandEvent& event)
    {
       // file
       String file = SaveDialog->GetPath().ToAscii().data();
+      #if defined(PLATFORM_LINUX) || defined(PLATFORM_MAC)
+            file.add(".osc");
+      #endif
       SaveDialog->Destroy();
       delete SaveDialog;
 

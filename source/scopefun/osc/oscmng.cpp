@@ -847,7 +847,9 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     sfSetYRangeScaleA(getHw(), getAttr(vc2Volt), getGain(0, vc2Volt));
     sfSetYRangeScaleB(getHw(), getAttr(vc2Volt), getGain(1, vc2Volt));
-    sfSetDigitalOutputBit(getHw(), 0, 0);
+    sfSetDigitalOutputBit(getHw(), 1, 1);
+    window.digitalSetup.inputOutput15 = 1;
+    window.digitalSetup.inputOutput7  = 1;
     sfSetDigitalVoltage(getHw(), pOsciloscope->window.digitalSetup.voltage, pOsciloscope->settings.getHardware()->digitalVoltageCoeficient);
 
     ////////////////////////////////////////////////
@@ -865,8 +867,8 @@ int OsciloscopeManager::start()
     sfSetGeneratorVoltage1(getHw(), 5100);
     float freq0 = sfGetGeneratorFrequency0(getHw(), settings.getHardware()->generatorFs);
     float freq1 = sfGetGeneratorFrequency1(getHw(), settings.getHardware()->generatorFs);
-    sfSetGeneratorSquareDuty0(getHw(), 50);
-    sfSetGeneratorSquareDuty1(getHw(), 50);
+    sfSetGeneratorSquareDuty0(getHw(), 50.1);
+    sfSetGeneratorSquareDuty1(getHw(), 50.1);
 
     ////////////////////////////////////////////////
     // custom signal
@@ -3218,12 +3220,12 @@ void OsciloscopeManager::clearEts(int value)
 
 void OsciloscopeManager::transferData()
 {
-    if ( !SDL_AtomicGet(&m_undoRedoEnabled) )
-      return;
+    thread.hardwareControlFunction(&m_hw);
+    if (!SDL_AtomicGet(&m_undoRedoEnabled))
+       return;
     UndoRedo undo;
     undo.m_wnd = window;
     undo.m_hw  = m_hw;
-    thread.hardwareControlFunction(&m_hw);
     if(m_hardwareUndo.getCount() >= SCOPEFUN_MAX_UNDO)
     { m_hardwareUndo.popFront(); }
     m_hardwareUndo.pushBack(undo);

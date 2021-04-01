@@ -450,8 +450,8 @@ void OsciloskopOsciloskop::setupUI(WndMain window)
    // Frame
    int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
    int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
-   m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(frameIndex)));
-   m_sliderTimeFrame->SetValue(frameIndex);
+   m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex%frameCount)));
+   m_sliderTimeFrame->SetValue(frameIndex%frameCount);
    m_sliderTimeFrame->SetMax(frameCount);
    // FFTSize
    m_textCtrlTimeFFTSize->SetValue(wxString::FromAscii(pFormat->integerToString(window.horizontal.FFTSize)));
