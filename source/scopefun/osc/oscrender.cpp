@@ -1943,7 +1943,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
     ////////////////////////////////////////////////////////////////////////////////
     end = isamples0 - 1;
     uint count = 0;
-    for(uint point = start; point <= end; point += increment)
+    for(uint point = start+ increment; point <= end; point += increment)
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
@@ -1984,16 +1984,17 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
             uint idx0 = clamp<uint>(point, 0, isamples0);
             uint idx1 = clamp<uint>(point + increment, 0, isamples0);
             float x0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset0);
-            float y0 = frame.analog0.bytes[idx0] * yfactor0 - float(yOffset1);
-            float x1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset0);
+            float y0 = frame.analog1.bytes[idx0] * yfactor0 - float(yOffset1);
+            float x1 = frame.analog0.bytes[idx1] * yfactor1 - float(yOffset0);
             float y1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset1);
+            // debug
             float fstart = (float(point) / NUM_SAMPLES);
             float fend = (float(point + increment) / NUM_SAMPLES);
-            float xstart = fstart  + xposition;
-            float xend   = fend + xposition;
-            //
-            Vector4 vstart = Vector4(x0, y0, 0.f, 1.f);
-            Vector4 vend   = Vector4(x1, y1, 0.f, 1.f);
+            float xstart = fstart + xposition;
+            float xend = fend + xposition;
+
+            Vector4 vstart = Vector4(x0+0.5, y0, 0.f, 1.f);
+            Vector4 vend   = Vector4(x1+0.5, y1, 0.f, 1.f);
             pCanvas3d->bLine(threadid, vstart, vend);
         }
     }
