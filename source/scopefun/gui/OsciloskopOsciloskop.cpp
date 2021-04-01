@@ -395,13 +395,27 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         ////////////////////////////////////////////////////////////////////////////////
         // frame index
         ////////////////////////////////////////////////////////////////////////////////
+        int mode = SDL_AtomicGet(&pOsciloscope->signalMode);
+        if( mode == SignalMode::SIGNAL_MODE_CAPTURE  || 
+            mode == SignalMode::SIGNAL_MODE_SIMULATE || 
+            mode == SignalMode::SIGNAL_MODE_PLAY )
         {
             int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
             int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
-            m_sliderTimeFrame->SetMax(frameCount);
-            m_sliderTimeFrame->SetValue(frameIndex%frameCount);
-            m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex%frameCount)));
+            if (frameIndex < frameCount)
+            {
+               m_sliderTimeFrame->SetMax(frameCount);
+               m_sliderTimeFrame->SetValue(frameIndex);
+               m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex)));
+            }
+            else
+            {
+               m_sliderTimeFrame->SetMax(frameCount);
+               m_sliderTimeFrame->SetValue(frameCount);
+               m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameCount)));
+            }
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         // measure
         ////////////////////////////////////////////////////////////////////////////////

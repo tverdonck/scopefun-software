@@ -2597,7 +2597,7 @@ SCOPEFUN_API int sfGetGeneratorOffset1(SHardware* hw)
 
 SCOPEFUN_API float sfGetGeneratorFrequency1(SHardware* hw, float fs)
 {
-   uint gDelta = (uint)(hw->generatorDeltaL0) | (uint)(hw->generatorDeltaH0 << 16);
+   uint gDelta = (uint)(hw->generatorDeltaL1) | (uint)(hw->generatorDeltaH1 << 16);
    double delta = BinaryToDouble(gDelta);
    return (float)(delta * (double)(fs) / (4 * 16384.0));
 }

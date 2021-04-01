@@ -275,7 +275,7 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
             cx = 0.f;
         }
         // grid
-        int   renderCount = double(xCount+1);
+        int   renderCount = double(xCount);
         double gridDelta  = 1.0 / double(xCount);
 
         // resample
@@ -311,7 +311,7 @@ void OsciloscopeThreadRenderer::renderAnalogGrid(uint threadId, OsciloscopeThrea
         // x fine grid lines
         //////////////////////////////////////////////////////////////////////////////////
         pCanvas3d->beginBatch(threadId, CANVAS3D_BATCH_LINE, int(renderCount));
-        for(int i = 0; i < renderCount; i++)
+        for(int i = 1; i <= renderCount; i++)
         {
             // screen units
             double        x   = gridModulo + i * 0.1;
@@ -1840,7 +1840,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
     ////////////////////////////////////////////////////////////////////////////////
     end = isamples0 - 1;
     uint count = 0;
-    for(uint point = start; point <= end; point += increment)
+    for(uint point = start+increment; point <= end; point += increment)
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
@@ -1857,9 +1857,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
     float   yGridMax   = 0.5f;
     float    yfactor0  = yGridMax;
     float    yfactor1  = yGridMax;
-    float    xfactor   = 1.f;
-    // float    xposition = (wndMain.horizontal.Position / 100.f)*(xfactor)+etsOffset*xfactor;
-    float    xposition = render.signalPosition;
+    float    xposition = (wndMain.horizontal.Position / 100.f)+etsOffset;
     if(invert0)
     {
         yfactor0 = -yfactor0;
@@ -1889,8 +1887,8 @@ void OsciloscopeThreadRenderer::renderAnalogFunction(uint threadid, OsciloscopeT
             yend   = channelFunction(yend0, yend1, function, wndMain);
             float fstart = (float(point) / NUM_SAMPLES);
             float fend = (float(point + increment) / NUM_SAMPLES);
-            float xstart = fstart * xfactor + xposition;
-            float xend = fend * xfactor + xposition;
+            float xstart = fstart + xposition;
+            float xend = fend  + xposition;
             //
             Vector4 vstart = Vector4(xstart, ystart, 0.f, 1.f);
             Vector4 vend   = Vector4(xend, yend, 0.f, 1.f);
@@ -1962,8 +1960,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
     float   yGridMax   = 0.5f;
     float    yfactor0  = yGridMax;
     float    yfactor1  = yGridMax;
-    float    xfactor   = 1.f;
-    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor) + etsOffset * xfactor;
+    float    xposition = (wndMain.horizontal.Position / 100.f) + etsOffset;
     float  xCount     = 10.f;
     double yNormalize = double(yCapture0) * double(xCount) / 2.0;
     double yOffset0 = 0;
@@ -1992,8 +1989,8 @@ void OsciloscopeThreadRenderer::renderAnalogFunctionXY(uint threadid, Osciloscop
             float y1 = frame.analog1.bytes[idx1] * yfactor1 - float(yOffset1);
             float fstart = (float(point) / NUM_SAMPLES);
             float fend = (float(point + increment) / NUM_SAMPLES);
-            float xstart = fstart * xfactor + xposition;
-            float xend   = fend * xfactor   + xposition;
+            float xstart = fstart  + xposition;
+            float xend   = fend + xposition;
             //
             Vector4 vstart = Vector4(x0, y0, 0.f, 1.f);
             Vector4 vend   = Vector4(x1, y1, 0.f, 1.f);
@@ -2044,7 +2041,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
     ////////////////////////////////////////////////////////////////////////////////
     end = isamples0 - 1;
     uint count = 0;
-    for(uint point = start; point <= end; point += increment)
+    for(uint point = start+increment; point <= end; point += increment)
     {
         uint idx0 = clamp<uint>(point, 0, isamples0);
         uint idx1 = clamp<uint>(point + increment, 0, isamples0);
@@ -2060,8 +2057,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
     float    yGridMax  = 0.5f;
     float    yfactor0  = yGridMax;
     float    yfactor1  = yGridMax;
-    float    xfactor   = 1.f;
-    float    xposition = (wndMain.horizontal.Position / 100.f) * (xfactor) + etsOffset * xfactor;
+    float    xposition = (wndMain.horizontal.Position / 100.f) + etsOffset;
     if(invert0)
     {
         yfactor0 = -yfactor0;
@@ -2085,7 +2081,7 @@ void OsciloscopeThreadRenderer::renderAnalogFunction3d(uint threadid, Osciloscop
             float y      = channelFunction(y0, y1, wndMain.function.Type, wndMain);
             // x
             float fpoint = (float(point) / NUM_SAMPLES);
-            float x      = fpoint * xfactor + xposition;
+            float x      = fpoint + xposition;
             // surface
             surfaceFrameF[frameIndex].point[i].pos = Vector4(x, y, z, 1.f);
             i++;
