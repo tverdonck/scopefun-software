@@ -847,7 +847,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     sfSetYRangeScaleA(getHw(), getAttr(vc2Volt), getGain(0, vc2Volt));
     sfSetYRangeScaleB(getHw(), getAttr(vc2Volt), getGain(1, vc2Volt));
-    sfSetDigitalOutputBit(getHw(), 1, 1);
+    sfSetDigitalInputOutput(getHw(), 1, 1);
     window.digitalSetup.inputOutput15 = 1;
     window.digitalSetup.inputOutput7  = 1;
     sfSetDigitalVoltage(getHw(), pOsciloscope->window.digitalSetup.voltage, pOsciloscope->settings.getHardware()->digitalVoltageCoeficient);
