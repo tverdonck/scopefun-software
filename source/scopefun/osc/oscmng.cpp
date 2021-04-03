@@ -3240,15 +3240,21 @@ int OsciloscopeManager::isUndoActive()
 int OsciloscopeManager::transferUndo()
 {
     if(!m_hardwareUndo.getCount())
-    { return 1; }
+      return 1;
+    
+    m_hardwareRedo.pushBack(m_hardwareUndo.last());
+    m_hardwareUndo.popBack();
+    if (!m_hardwareUndo.getCount())
+       return 1;
+
     UndoRedo undo = m_hardwareUndo.last();
     window = undo.m_wnd;
     m_hw   = undo.m_hw;
     thread.hardwareControlFunction(&m_hw);
-    m_hardwareUndo.popBack();
+    
     if(m_hardwareRedo.getCount() >= SCOPEFUN_MAX_UNDO)
     { m_hardwareRedo.popFront(); }
-    m_hardwareRedo.pushBack(undo);
+
     transferUI();
     return 0;
 }
@@ -3266,14 +3272,17 @@ int OsciloscopeManager::transferRedo()
 {
     if(!m_hardwareRedo.getCount())
     { return 1; }
+
     UndoRedo redo = m_hardwareRedo.last();
-    m_hw = redo.m_hw;
+    m_hw   = redo.m_hw;
     window = redo.m_wnd;
     thread.hardwareControlFunction(&m_hw);
+    m_hardwareUndo.pushBack(redo);
     m_hardwareRedo.popBack();
+  
     if(m_hardwareUndo.getCount() >= SCOPEFUN_MAX_UNDO)
     { m_hardwareUndo.popFront(); }
-    m_hardwareUndo.pushBack(redo);
+
     transferUI();
     return 0;
 }
@@ -3291,10 +3300,13 @@ void OsciloscopeManager::transferUI()
     window.horizontal.Control  = sfGetControl(&m_hw);
     window.channel01.Capture   = captureVoltFromEnum(getVolt(0, sfGetYGainA(&m_hw)));
     window.channel01.Scale     = sfGetYScaleA(&m_hw);
-    window.channel01.YPosition = sfGetYPositionA(&m_hw) - pOsciloscope->settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 0, window.channel01.Capture);
+    window.channel01.YPosition = sfGetYPositionA(&m_hw) -pOsciloscope->settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 0, window.channel01.Capture);
+    window.channel01.YPosition *= pOsciloscope->settings.getHardware()->getAnalogStep(window.horizontal.Capture, 0, window.channel01.Capture);
     window.channel02.Capture   = captureVoltFromEnum(getVolt(1, sfGetYGainB(&m_hw)));
     window.channel02.Scale     = sfGetYScaleB(&m_hw);
     window.channel02.YPosition = sfGetYPositionB(&m_hw) - pOsciloscope->settings.getHardware()->getAnalogOffset(window.horizontal.Capture, 1, window.channel02.Capture);
+    window.channel02.YPosition *= pOsciloscope->settings.getHardware()->getAnalogStep(window.horizontal.Capture, 1, window.channel02.Capture);
+
     // trigger
     window.trigger.Source = sfGetTriggerSource(&m_hw);
     window.trigger.Mode = sfGetTriggerMode(&m_hw);
