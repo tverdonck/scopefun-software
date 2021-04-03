@@ -664,8 +664,8 @@ void OsciloscopeThreadRenderer::renderAnalogUnits(uint threadid, OsciloscopeThre
     ////////////////////////////////////////////////////////////////////////////////
     FORMAT("%s", "Trigger");
     float preTrigPos = (double(wndMain.trigger.Percent) / 100.0) / sz;
-    sx = -0.5 / sz + sx / sz;
     pFont->setSize(threadid, 0.42f);
+    sx = -sx/sz + 0.5;
     pFont->writeText3d(threadid, render.cameraOsc.Final, sx + preTrigPos, yMax + charHeight, 0.f, Vector4(1, 0, 0, 1), Vector4(0, 1, 0, 1), formatBuffer, render.colorTrigger, render.oscScaleX, render.oscScaleY);
     {
         Vector4        tip = Vector4(sx + preTrigPos, yMin, 0, 1);
