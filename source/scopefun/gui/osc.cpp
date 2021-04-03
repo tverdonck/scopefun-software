@@ -823,7 +823,7 @@ Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxString m_choiceDS70Choices[] = { _("Custom"), _("All Zero"), _("All One") };
 	int m_choiceDS70NChoices = sizeof( m_choiceDS70Choices ) / sizeof( wxString );
 	m_choiceDS70 = new wxChoice( m_panel91, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceDS70NChoices, m_choiceDS70Choices, 0 );
-	m_choiceDS70->SetSelection( 2 );
+	m_choiceDS70->SetSelection( 1 );
 	bSizer161->Add( m_choiceDS70, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticText135 = new wxStaticText( m_panel91, wxID_ANY, _("->"), wxDefaultPosition, wxDefaultSize, 0 );
