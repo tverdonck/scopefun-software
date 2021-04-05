@@ -871,6 +871,7 @@ void OsciloskopOsciloskop::m_menuItemReadCertificateOnMenuSelection(wxCommandEve
     int ret = usbFx3ReadLockableEEPROM((UsbContext*)getCtx()->usb, (unsigned char*)verify, 256, 0);
     if(ret == PUREUSB_SUCCESS)
     {
+        wxTheClipboard->Close();
         if(wxTheClipboard->Open())
         {
             wxString string = wxString::From8BitData(verify);
