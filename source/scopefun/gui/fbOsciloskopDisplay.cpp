@@ -1,47 +1,24 @@
-#include "fbOsciloskopDisplay.h"
-
-OsciloskopDisplay::OsciloskopDisplay(wxWindow* parent)
-    :
-    Display(parent)
-{
-}
-
-void OsciloskopDisplay::DisplayOnInitDialog(wxInitDialogEvent& event)
-{
-    // TODO: Implement DisplayOnInitDialog
-}
-
-void OsciloskopDisplay::m_checkBoxUnitsOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxUnitsOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxAxisOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxAxisOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxGridOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxGridOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxFFTUnitOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxFFTUnitOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxFFTAxisOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxFFTAxisOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxFFTGridOnCheckBox(wxCommandEvent& event)
-{
-    // TODO: Implement m_checkBoxFFTGridOnCheckBox
-}
-
-void OsciloskopDisplay::m_checkBoxDigitalUnitOnCheckBox(wxCommandEvent& event)
+////////////////////////////////////////////////////////////////////////////////
+//    ScopeFun Oscilloscope ( http://www.scopefun.com )
+//    Copyright (C) 2016 - 2021 David Košenina
+//
+//    This file is part of ScopeFun Oscilloscope.
+//
+//    ScopeFun Oscilloscope is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    ScopeFun Oscilloscope is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////
+_checkBoxDigitalUnitOnCheckBox(wxCommandEvent& event)
 {
     // TODO: Implement m_checkBoxDigitalUnitOnCheckBox
 }

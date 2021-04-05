@@ -1,44 +1,23 @@
-///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
-// http://www.wxformbuilder.org/
+////////////////////////////////////////////////////////////////////////////////
+//    ScopeFun Oscilloscope ( http://www.scopefun.com )
+//    Copyright (C) 2016 - 2021 David Košenina
 //
-// PLEASE DO *NOT* EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
-
-#pragma once
-
-#include <wx/artprov.h>
-#include <wx/xrc/xmlres.h>
-#include <wx/intl.h>
-#include <wx/string.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/menu.h>
-#include <wx/gdicmn.h>
-#include <wx/font.h>
-#include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/checkbox.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/choice.h>
-#include <wx/sizer.h>
-#include <wx/panel.h>
-#include <wx/textctrl.h>
-#include <wx/spinbutt.h>
-#include <wx/slider.h>
-#include <wx/notebook.h>
-#include <wx/filepicker.h>
-#include <wx/radiobut.h>
-#include <wx/statline.h>
-#include <wx/frame.h>
-#include <wx/dialog.h>
-#include <wx/dataview.h>
-#include <wx/scrolwin.h>
-#include <wx/statbmp.h>
-
-#include "guiheader.h"
+//    This file is part of ScopeFun Oscilloscope.
+//
+//    ScopeFun Oscilloscope is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    ScopeFun Oscilloscope is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////
 

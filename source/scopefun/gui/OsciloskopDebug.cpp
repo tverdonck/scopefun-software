@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2020 David Koöenina
+//    Copyright (C) 2016 - 2021 David Ko≈°enina
 //
 //    This file is part of ScopeFun Oscilloscope.
 //
@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-#include "OsciloskopDebug.h"
+include "OsciloskopDebug.h"
 
 
 OsciloskopDebug::OsciloskopDebug(wxWindow* parent)

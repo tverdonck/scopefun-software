@@ -1,27 +1,24 @@
-///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
-// http://www.wxformbuilder.org/
+////////////////////////////////////////////////////////////////////////////////
+//    ScopeFun Oscilloscope ( http://www.scopefun.com )
+//    Copyright (C) 2016 - 2021 David Košenina
 //
-// PLEASE DO *NOT* EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
-
-#include "osc.h"
-
-///////////////////////////////////////////////////////////////////////////
-
-Osciloskop::Osciloskop( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxSize( -1,-1 ), wxSize( -1,-1 ) );
-	this->SetBackgroundColour( wxColour( 255, 255, 255 ) );
-
-	m_menubar1 = new wxMenuBar( 0 );
-	m_menu1 = new wxMenu();
-	wxMenuItem* m_menuItem1;
-	m_menuItem1 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Open") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append( m_menuItem1 );
-
-	wxMenuItem* m_menuItem2;
-	m_menuItem2 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Save") ) , wxEmptyString, wxITEM_NORMAL );
+//    This file is part of ScopeFun Oscilloscope.
+//
+//    ScopeFun Oscilloscope is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    ScopeFun Oscilloscope is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////
+L );
 	m_menu1->Append( m_menuItem2 );
 
 	m_menu1->AppendSeparator();
