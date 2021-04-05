@@ -1,24 +1,44 @@
-////////////////////////////////////////////////////////////////////////////////
-//    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2021 David Košenina
-//
-//    This file is part of ScopeFun Oscilloscope.
-//
-//    ScopeFun Oscilloscope is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    ScopeFun Oscilloscope is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
-t m_buttonOkOnButtonClick
+#include "fbOsciloskopConnection.h"
+
+OsciloskopConnection::OsciloskopConnection(wxWindow* parent)
+    :
+    Connection(parent)
+{
+}
+
+void OsciloskopConnection::m_choiceConnectionOnChoice(wxCommandEvent& event)
+{
+    // TODO: Implement m_choiceConnectionOnChoice
+}
+
+void OsciloskopConnection::m_textCtrlIPOnTextEnter(wxCommandEvent& event)
+{
+    // TODO: Implement m_textCtrlIPOnTextEnter
+}
+
+void OsciloskopConnection::m_textCtrlPortOnTextEnter(wxCommandEvent& event)
+{
+    // TODO: Implement m_textCtrlPortOnTextEnter
+}
+
+void OsciloskopConnection::m_checkBoxConnectedOnCheckBox(wxCommandEvent& event)
+{
+    // TODO: Implement m_checkBoxConnectedOnCheckBox
+}
+
+void OsciloskopConnection::m_buttonConnectOnButtonClick(wxCommandEvent& event)
+{
+    // TODO: Implement m_buttonConnectOnButtonClick
+}
+
+void OsciloskopConnection::m_buttonDisconnectOnButtonClick(wxCommandEvent& event)
+{
+    // TODO: Implement m_buttonDisconnectOnButtonClick
+}
+
+void OsciloskopConnection::m_buttonOkOnButtonClick(wxCommandEvent& event)
+{
+    // TODO: Implement m_buttonOkOnButtonClick
 }
 
 void OsciloskopConnection::m_buttonDefaultOnButtonClick(wxCommandEvent& event)

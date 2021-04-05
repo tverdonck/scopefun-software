@@ -1,24 +1,53 @@
-////////////////////////////////////////////////////////////////////////////////
-//    ScopeFun Oscilloscope ( http://www.scopefun.com )
-//    Copyright (C) 2016 - 2021 David Košenina
-//
-//    This file is part of ScopeFun Oscilloscope.
-//
-//    ScopeFun Oscilloscope is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    ScopeFun Oscilloscope is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
-n( wxCommandEvent& event )
+#include "fbOsciloskopOsciloskop.h"
+
+OsciloskopOsciloskop::OsciloskopOsciloskop( wxWindow* parent )
+:
+Osciloskop( parent )
+{
+
+}
+
+void OsciloskopOsciloskop::onActivate( wxActivateEvent& event )
+{
+// TODO: Implement onActivate
+}
+
+void OsciloskopOsciloskop::onActivateApp( wxActivateEvent& event )
+{
+    // TODO: Implement onActivateApp
+}
+
+void OsciloskopOsciloskop::onClose( wxCloseEvent& event )
+{
+    // TODO: Implement onClose
+}
+
+void OsciloskopOsciloskop::OnIdle( wxIdleEvent& event )
+{
+    // TODO: Implement OnIdle
+}
+
+void OsciloskopOsciloskop::OnSetFocus( wxFocusEvent& event )
+{
+    // TODO: Implement OnSetFocus
+}
+
+void OsciloskopOsciloskop::OnSize( wxSizeEvent& event )
+{
+    // TODO: Implement OnSize
+}
+
+void OsciloskopOsciloskop::m_menuItem1OnMenuSelection( wxCommandEvent& event )
+{
+    // TODO: Implement m_menuItem1OnMenuSelection
+}
+
+void OsciloskopOsciloskop::m_menuItem2OnMenuSelection( wxCommandEvent& event )
+{
+    // TODO: Implement m_menuItem2OnMenuSelection
+}
+
+void OsciloskopOsciloskop::m_menuItem3OnMenuSelection( wxCommandEvent& event )
 {
     // TODO: Implement m_menuItem3OnMenuSelection
 }

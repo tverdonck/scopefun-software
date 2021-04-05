@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-include "OsciloskopOsciloskop.h"
+#include "OsciloskopOsciloskop.h"
 
 OsciloskopOsciloskop::OsciloskopOsciloskop(wxWindow* parent) 
 : 

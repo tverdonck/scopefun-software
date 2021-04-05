@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-include "OsciloskopThermal.h"
+#include "OsciloskopThermal.h"
 
 OsciloskopThermal::OsciloskopThermal(wxWindow* parent)
     :

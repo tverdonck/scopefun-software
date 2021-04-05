@@ -134,4 +134,4 @@ int UpdateLicense()
 {
     return -1;
 }
-#endif()
+#endif

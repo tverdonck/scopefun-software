@@ -21,7 +21,6 @@ class OsciloskopDebug : public Debug
 		void m_buttonSaveOnButtonClick( wxCommandEvent& event );
 		void m_buttonLuaOnButtonClick( wxCommandEvent& event );
 		void m_buttonHelpOnButtonClick( wxCommandEvent& event );
-		void m_buttonUploadOnButtonClick( wxCommandEvent& event );
 	public:
 		/** Constructor */
 		OsciloskopDebug( wxWindow* parent );

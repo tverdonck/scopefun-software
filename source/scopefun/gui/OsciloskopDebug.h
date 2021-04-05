@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-ifndef __OsciloskopDebug__
+#ifndef __OsciloskopDebug__
 #define __OsciloskopDebug__
 
 /**

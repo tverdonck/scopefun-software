@@ -18,7 +18,7 @@
 //    along with this ScopeFun Oscilloscope.  If not, see <http://www.gnu.org/licenses/>.
 //
 ////////////////////////////////////////////////////////////////////////////////
-ifndef __OsciloskopThermal__
+#ifndef __OsciloskopThermal__
 #define __OsciloskopThermal__
 
 /**
