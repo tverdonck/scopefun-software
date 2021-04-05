@@ -924,6 +924,8 @@ public:
     SDL_atomic_t                                m_frameCount;
     SDL_atomic_t                                m_frameSize;
     SDL_atomic_t                                m_frameIndex;
+    SDL_atomic_t                                m_frameStart;
+    SDL_atomic_t                                m_frameEnd;
     SDL_atomic_t                                m_frameClear;
     SDL_atomic_t                                m_frameOffset;
     SDL_atomic_t                                m_frameSamples;
@@ -943,6 +945,8 @@ public:
         SDL_AtomicSet(&m_updateIndex,  0);
         SDL_AtomicSet(&m_screenIndex,  0);
         SDL_AtomicSet(&m_frameIndex,   0);
+        SDL_AtomicSet(&m_frameStart,   0);
+        SDL_AtomicSet(&m_frameEnd,     0);
         SDL_AtomicSet(&m_frameClear,   0);
         SDL_AtomicSet(&m_frameOffset,  0);
         SDL_AtomicSet(&m_frameSamples, 0);

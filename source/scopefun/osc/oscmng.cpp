@@ -3578,6 +3578,8 @@ int SDLCALL CaptureDataThreadFunction(void* data)
         // info
         uint     frameIndex = SDL_AtomicGet(&captureBuffer.m_frameIndex);
         uint     frameCount = SDL_AtomicGet(&captureBuffer.m_frameCount);
+        uint     frameStart = SDL_AtomicGet(&captureBuffer.m_frameStart);
+        uint     frameEnd   = SDL_AtomicGet(&captureBuffer.m_frameEnd);
         uint      frameSize = SDL_AtomicGet(&captureBuffer.m_frameSize);
         uint    frameOffset = SDL_AtomicGet(&captureBuffer.m_frameOffset);
 
@@ -3603,6 +3605,13 @@ int SDLCALL CaptureDataThreadFunction(void* data)
             {
                receivedBytes.value = receivedFrameSize.value = 0;
                SDL_AtomicSet(&captureBuffer.m_frameIndex, frameIndex + 1);
+
+               // frameStart
+               if( (frameIndex+1) >= frameCount )
+                  SDL_AtomicSet(&captureBuffer.m_frameStart, frameStart + 1);
+
+               // frameEnd
+               SDL_AtomicSet(&captureBuffer.m_frameEnd, frameEnd + 1);
             }
          }
 
@@ -3631,8 +3640,9 @@ int SDLCALL CaptureDataThreadFunction(void* data)
          if (mode == SIGNAL_MODE_PAUSE)
          {
             if (receivedBytes.value == 0)
-               frameIndex = (frameIndex-1) % frameCount;
-
+            {
+               frameIndex = max<int>(0,frameIndex - 1) % frameCount;
+            }
             SDL_Delay(10);
          }
 

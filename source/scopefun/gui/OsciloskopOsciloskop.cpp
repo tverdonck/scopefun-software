@@ -401,19 +401,14 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             mode == SignalMode::SIGNAL_MODE_PLAY )
         {
             int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+            int frameStart = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameStart);
+            int frameEnd   = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameEnd);
             int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
-            if (frameIndex < frameCount)
-            {
-               m_sliderTimeFrame->SetMax(frameCount);
-               m_sliderTimeFrame->SetValue(frameIndex);
-               m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameIndex)));
-            }
-            else
-            {
-               m_sliderTimeFrame->SetMax(frameCount);
-               m_sliderTimeFrame->SetValue(frameCount);
-               m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(frameCount)));
-            }
+            int sliderPos  = clamp<int>(frameEnd,              0, frameCount-1);
+            int sliderMax  = clamp<int>(frameEnd - frameStart, 0, frameCount-1);
+            m_sliderTimeFrame->SetMax(sliderMax);
+            m_sliderTimeFrame->SetValue(sliderPos);
+            m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->integerToString(sliderPos)));
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -1105,7 +1100,16 @@ void OsciloskopOsciloskop::m_sliderTimePositionOnScroll(wxScrollEvent& event)
 
 void OsciloskopOsciloskop::m_textCtrlTimeFrameOnTextEnter(wxCommandEvent& event)
 {
+    int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+    int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+    int frameStart = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameStart);
+
     pOsciloscope->window.horizontal.Frame = pFormat->stringToFloat(m_textCtrlTimeFrame->GetValue().ToAscii().data());
+    pOsciloscope->window.horizontal.Frame = clamp<int>(pOsciloscope->window.horizontal.Frame, 0, frameCount - 1);
+                            int  newIndex = frameStart + pOsciloscope->window.horizontal.Frame;
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex, newIndex);
+
+    m_textCtrlTimeFrame->SetValue(pFormat->integerToString(pOsciloscope->window.horizontal.Frame));
     m_sliderTimeFrame->SetValue(pOsciloscope->window.horizontal.Frame);
     SDL_AtomicSet(&pOsciloscope->clearRenderTarget, 1);
 }
@@ -1126,12 +1130,17 @@ void OsciloskopOsciloskop::m_spinBtnFrameHistoryOnSpinUp(wxSpinEvent& event)
 
 void OsciloskopOsciloskop::m_sliderTimeFrameOnScroll(wxScrollEvent& event)
 {
-    pOsciloscope->window.horizontal.Frame = m_sliderTimeFrame->GetValue();
-    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex,  pOsciloscope->window.horizontal.Frame);
-    //SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_playIndex,   pOsciloscope->window.horizontal.Frame);
-    //SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_pauseIndex,  pOsciloscope->window.horizontal.Frame);
-    m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(pOsciloscope->window.horizontal.Frame)));
-    pOsciloscope->window.horizontal.Frame = pOsciloscope->window.horizontal.Frame;
+    int frameCount  = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+    int frameIndex  = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+    int frameStart  = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameStart);
+    int frameSlider = m_sliderTimeFrame->GetValue();
+    int  newIndex   = frameStart + frameSlider;
+    SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex, newIndex );
+
+    // ui
+    m_textCtrlTimeFrame->SetValue(wxString::FromAscii(pFormat->floatToString(frameSlider)));
+
+    // redner
     SDL_AtomicSet(&pOsciloscope->clearRenderTarget, 1);
 }
 
@@ -1184,7 +1193,13 @@ void OsciloskopOsciloskop::m_buttonCaptureOnButtonClick(wxCommandEvent& event)
     int isFpga = pOsciloscope->thread.isFpga();
     int isOpen = pOsciloscope->thread.isOpen();
     if (isOpen && isFpga)
-    {
+    {      
+       int frameIndex = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameIndex);
+       int frameStart = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameStart);
+       int frameEnd   = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameEnd);
+       int frameCount = SDL_AtomicGet(&pOsciloscope->m_captureBuffer.m_frameCount);
+       SDL_AtomicSet(&pOsciloscope->m_captureBuffer.m_frameIndex,frameEnd);
+
        pOsciloscope->window.horizontal.Mode = SIGNAL_MODE_CAPTURE;
        SDL_AtomicSet(&pOsciloscope->signalMode, SIGNAL_MODE_CAPTURE);
        pOsciloscope->simOnOff(0);
