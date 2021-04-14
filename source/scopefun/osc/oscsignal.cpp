@@ -1148,6 +1148,7 @@ int LuaOnFrame(lua_State* L, SFrameData* data, int len, float* pos, float* zoom,
     {
        LuaOnPrint(L, msg.what());
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
     return 0;
 }
 
@@ -1228,6 +1229,7 @@ int LuaOnDisplay(lua_State* L, SDisplay* data, float* pos, float* zoom, void* us
     {
        LuaOnPrint(L, msg.what());
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
     return 0;
 }
 
@@ -1264,6 +1266,7 @@ int LuaOnConfigure(lua_State* L, SHardware* hw)
     {
        LuaOnPrint(L, msg.what());
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
     return 0;
 }
 
@@ -1300,6 +1303,7 @@ int LuaOnInit(lua_State* L, SFContext* ctx)
     {
        LuaOnPrint(L, msg.what() );
     }
+    lua_gc(L, LUA_GCCOLLECT, 0);
     return 0;
 }
 
@@ -1384,6 +1388,7 @@ int LuaOnUpload(lua_State* L, SGenerator* gen, uint* sampleCount)
    {
       LuaOnPrint(L, msg.what());
    }
+   lua_gc(L, LUA_GCCOLLECT, 0);
    return 0;
 }
 
