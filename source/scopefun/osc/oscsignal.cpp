@@ -1398,11 +1398,13 @@ OsciloscopeScript::OsciloscopeScript(int index)
     m_spinLock = 0;
     m_userData = 0;
     m_luaState = 0;
-    SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
+    SDL_AtomicSet(&m_active, 0);
     m_luaScript = 0;
 }
 int OsciloscopeScript::OnFrame(SFrameData* data, int len, float* pos, float* zoom, void* user)
 {
+    if (!SDL_AtomicGet(&m_active))
+      return 0;
     int ret = 0;
     SDL_AtomicLock(&m_spinLock);
     ret = LuaOnFrame(m_luaState, data, len, pos, zoom, user);
@@ -1411,6 +1413,8 @@ int OsciloscopeScript::OnFrame(SFrameData* data, int len, float* pos, float* zoo
 }
 int OsciloscopeScript::OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user)
 {
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
     int ret = 0;
     SDL_AtomicLock(&m_spinLock);
     ret = LuaOnSample(m_luaState, sample, ch0, ch1, fun, dig, pos, zoom, user);
@@ -1419,14 +1423,30 @@ int OsciloscopeScript::OnSample(int sample, ishort* ch0, ishort* ch1, ishort* fu
 }
 int OsciloscopeScript::OnDisplay(SDisplay* data, float* pos, float* zoom, void* user)
 {
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
     int ret = 0;
     SDL_AtomicLock(&m_spinLock);
     ret = LuaOnDisplay(m_luaState, data, pos, zoom, user);
     SDL_AtomicUnlock(&m_spinLock);
     return ret;
 }
+
+int OsciloscopeScript::OnFunction(ishort ch0, ishort ch1, ishort* fun)
+{
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
+   int ret = 0;
+   SDL_AtomicLock(&m_spinLock);
+   ret = LuaOnFunction(m_luaState, ch0, ch1, fun);
+   SDL_AtomicUnlock(&m_spinLock);
+   return ret;
+}
+
 int OsciloscopeScript::OnConfigure(SHardware* hw)
 {
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
    int ret = 0;
    if (SDL_AtomicTryLock(&m_spinLock) == SDL_TRUE)
    {
@@ -1435,8 +1455,11 @@ int OsciloscopeScript::OnConfigure(SHardware* hw)
    }
    return ret;
 }
+
 int OsciloscopeScript::OnInit(SFContext* ctx)
 {
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
     int ret = 0;
     SDL_AtomicLock(&m_spinLock);
     ret = LuaOnInit(m_luaState, ctx);
@@ -1444,57 +1467,46 @@ int OsciloscopeScript::OnInit(SFContext* ctx)
     return ret;
 }
 
-int OsciloscopeScript::OnFunction(ishort ch0, ishort ch1, ishort* fun)
-{
-   int ret = 0;
-   SDL_AtomicLock(&m_spinLock);
-   ret = LuaOnFunction(m_luaState, ch0, ch1, fun);
-   SDL_AtomicUnlock(&m_spinLock);
-   return ret;
-}
 int OsciloscopeScript::OnUpload(SGenerator* gen, uint* sampleCount)
 {
+   if (!SDL_AtomicGet(&m_active))
+      return 0;
    int ret = 0;
    SDL_AtomicLock(&m_spinLock);
    ret = LuaOnUpload(m_luaState, gen, sampleCount);
-   SDL_AtomicUnlock(&m_spinLock);;
+   SDL_AtomicUnlock(&m_spinLock);
    return ret;
 }
 
 int OsciloscopeScript::LuaPrint(const char* str)
 {
-    if(str)
-    {
-       int dstLen = SDL_strlen(m_luaPrint);
-       int srcLen = SDL_strlen(str);
-       if( SCOPEFUN_LUA_BUFFER > dstLen + srcLen + 1 )
-          SDL_strlcat(m_luaPrint, str, srcLen);
-    }
+    if (!str)
+      return 0;
+
+    m_msg(str, m_userData);
     return 0;
 }
 
 
 int OsciloscopeScript::LuaError(const char* str)
 {
-    LuaPrint(str);
+    if (!str)
+      return 0;
+
+    m_msg(str, m_userData);
     lua_close(m_luaState);
     m_luaState = 0;
     return 0;
 }
 
-int OsciloscopeScript::CppPrint(const char* str)
+int OsciloscopeScript::Load(String fileName, LuaOnMsg msg)
 {
-    SDL_AtomicLock(&m_spinLock);
-    SDL_strlcat(m_luaPrint, str, SCOPEFUN_LUA_BUFFER);
-    SDL_AtomicUnlock(&m_spinLock);
+    m_fileName = fileName;
+    m_msg = msg;
     return 0;
 }
 
-int OsciloscopeScript::Load(String fileName)
-{
-    m_fileName = fileName;
-    return 0;
-}
+int callInit(void* script);
 
 int OsciloscopeScript::Run()
 {
@@ -1540,8 +1552,11 @@ int OsciloscopeScript::Run()
     }
     SDL_AtomicUnlock(&m_spinLock);
 
-    // OnInit
-    ret = OnInit(getCtx());
+    // active
+    Active(1);
+
+    // Init
+    callInit(this);
     return ret;
 }
 
@@ -1557,11 +1572,18 @@ int OsciloscopeScript::Reload()
 int OsciloscopeScript::Stop()
 {
     if(!m_luaState) { return 1; }
+    Active(0);
     SDL_AtomicLock(&m_spinLock);
     lua_close(m_luaState);
     m_luaState = 0;
     SDL_AtomicUnlock(&m_spinLock);
     return 0;
+}
+
+int OsciloscopeScript::Active(int onoff)
+{
+   SDL_AtomicSet(&m_active, onoff);
+   return 0;
 }
 
 void OsciloscopeScript::SetUserData(void* user)
@@ -1579,49 +1601,30 @@ int OsciloscopeScript::GetArrayIdx()
     return m_arrayIdx;
 }
 
-void OsciloscopeScript::ClrPrint()
-{
-    SDL_AtomicLock(&m_spinLock);
-    SDL_memset(m_luaPrint, 0, SCOPEFUN_LUA_BUFFER);
-    SDL_AtomicUnlock(&m_spinLock);
-}
-
-const char* OsciloscopeScript::GetPrint()
-{
-    return m_luaPrint;
-}
-
-
 int callFrame(SFrameData* data, int len, float* pos, float* zoom, void* user)
 {
     for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    { pOsciloscope->m_callback.Get(i)->OnFrame(data, len, pos, zoom, user); }
-    return 0;
-}
-
-int callSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user)
-{
-    for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    { pOsciloscope->m_callback.Get(i)->OnSample(sample, ch0, ch1, fun, dig, pos, zoom, user); }
+    { 
+       pOsciloscope->m_callback.Get(i)->OnFrame(data, len, pos, zoom, user); 
+    }
     return 0;
 }
 
 int callDisplay(SDisplay* data, float* pos, float* zoom, void* user)
 {
-    for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    { pOsciloscope->m_callback.Get(i)->OnDisplay(data, pos, zoom, user); }
-    return 0;
+   for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
+   {
+      pOsciloscope->m_callback.Get(i)->OnDisplay(data, pos, zoom, user);
+   }
+   return 0;
 }
-int callConfigure(SHardware* hw)
+
+int callSample(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user)
 {
     for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    { pOsciloscope->m_callback.Get(i)->OnConfigure(hw); }
-    return 0;
-}
-int callInit(SFContext* ctx)
-{
-    for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    { pOsciloscope->m_callback.Get(i)->OnInit(ctx); }
+    { 
+       pOsciloscope->m_callback.Get(i)->OnSample(sample, ch0, ch1, fun, dig, pos, zoom, user); 
+    }
     return 0;
 }
 
@@ -1643,6 +1646,21 @@ int callUpload(SGenerator* gen, uint* sampelCount)
    return 0;
 }
 
+int callConfigure(SHardware* hw)
+{
+   for (int i = 0; i < pOsciloscope->m_callback.Count(); i++)
+   {
+      pOsciloscope->m_callback.Get(i)->OnConfigure((SHardware*)hw);
+   }
+   return 0;
+}
+
+int callInit(void* data)
+{
+   OsciloscopeScript* script = (OsciloscopeScript*)data;
+   script->OnInit(getCtx());
+   return 0;
+}
 
 OsciloscopeCallback::OsciloscopeCallback()
 {
@@ -1665,12 +1683,12 @@ const char* OsciloscopeCallback::GetHelp()
 {
    return (const char*)m_help;
 }
-int OsciloscopeCallback::Add(String fileName)
+int OsciloscopeCallback::Add(String fileName, LuaOnMsg msg)
 {
     if(m_script.getCount() < SCOPEFUN_MAX_SCRIPT)
     {
         OsciloscopeScript* script = new OsciloscopeScript(m_script.getCount());
-        script->Load(fileName);
+        script->Load(fileName,msg);
         script->Reload();
         m_script.pushBack(script);
         return 0;

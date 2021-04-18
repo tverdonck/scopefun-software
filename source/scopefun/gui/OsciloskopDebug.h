@@ -56,8 +56,8 @@ private:
 public:
     void OnDestroy(wxActivateEvent& event);
 public:
+    void ThreadStop();
     void Clear();
-    void Redirect();
     void AppendText(const char* str);
     void AssignScript(OsciloscopeScript* script) { m_script = script; }
 

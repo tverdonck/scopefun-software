@@ -224,6 +224,7 @@ public:
     void SetButtonColors();
     void SetDigital13To16(bool enable);
     void DigitalMiddlePinMaxVoltText(float voltageMax);
+    void OnAutoDetectUsb();
 public:
     OsciloskopStorage*    pStorage;
     OsciloskopConnection* pConnection;

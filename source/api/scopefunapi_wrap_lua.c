@@ -2710,10 +2710,10 @@ SWIG_Lua_dostring(lua_State *L, const char *str) {
 #define SWIGTYPE_p__SInt swig_types[39]
 #define SWIGTYPE_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int swig_types[40]
 #define SWIGTYPE_p_f_p_SDisplay_p_float_p_float_p_void__int swig_types[41]
-#define SWIGTYPE_p_f_p_SFContext__int swig_types[42]
-#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[43]
-#define SWIGTYPE_p_f_p_SGenerator_p_unsigned_int__int swig_types[44]
-#define SWIGTYPE_p_f_p_SHardware__int swig_types[45]
+#define SWIGTYPE_p_f_p_SFrameData_int_p_float_p_float_p_void__int swig_types[42]
+#define SWIGTYPE_p_f_p_SGenerator_p_unsigned_int__int swig_types[43]
+#define SWIGTYPE_p_f_p_SHardware__int swig_types[44]
+#define SWIGTYPE_p_f_p_void__int swig_types[45]
 #define SWIGTYPE_p_f_short_short_p_short__int swig_types[46]
 #define SWIGTYPE_p_float swig_types[47]
 #define SWIGTYPE_p_int swig_types[48]
@@ -15377,19 +15377,19 @@ fail:
 static int _wrap_SCallback_onInit_set(lua_State* L) {
   int SWIG_arg = 0;
   struct _SCallback *arg1 = (struct _SCallback *) 0 ;
-  int (*arg2)(SFContext *) = (int (*)(SFContext *)) 0 ;
+  int (*arg2)(void *) = (int (*)(void *)) 0 ;
   
   SWIG_check_num_args("_SCallback::onInit",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SCallback::onInit",1,"struct _SCallback *");
-  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("_SCallback::onInit",2,"int (*)(SFContext *)");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("_SCallback::onInit",2,"int (*)(void *)");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p__SCallback,0))){
     SWIG_fail_ptr("SCallback_onInit_set",1,SWIGTYPE_p__SCallback);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_f_p_SFContext__int,0))){
-    SWIG_fail_ptr("SCallback_onInit_set",2,SWIGTYPE_p_f_p_SFContext__int);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_f_p_void__int,0))){
+    SWIG_fail_ptr("SCallback_onInit_set",2,SWIGTYPE_p_f_p_void__int);
   }
   
   if (arg1) (arg1)->onInit = arg2;
@@ -15407,7 +15407,7 @@ fail:
 static int _wrap_SCallback_onInit_get(lua_State* L) {
   int SWIG_arg = 0;
   struct _SCallback *arg1 = (struct _SCallback *) 0 ;
-  int (*result)(SFContext *) = 0 ;
+  int (*result)(void *) = 0 ;
   
   SWIG_check_num_args("_SCallback::onInit",1,1)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("_SCallback::onInit",1,"struct _SCallback *");
@@ -15416,8 +15416,8 @@ static int _wrap_SCallback_onInit_get(lua_State* L) {
     SWIG_fail_ptr("SCallback_onInit_get",1,SWIGTYPE_p__SCallback);
   }
   
-  result = (int (*)(SFContext *)) ((arg1)->onInit);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_f_p_SFContext__int,0); SWIG_arg++; 
+  result = (int (*)(void *)) ((arg1)->onInit);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_f_p_void__int,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -20464,10 +20464,10 @@ static swig_type_info _swigt__p__SFloat = {"_p__SFloat", "struct _SFloat *|SFloa
 static swig_type_info _swigt__p__SInt = {"_p__SInt", "SInt *|struct _SInt *|_SInt *", 0, 0, (void*)&_wrap_class_SInt, 0};
 static swig_type_info _swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int = {"_p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int", "int (*)(int,short *,short *,short *,unsigned short *,float *,float *,void *)|int (*)(int,ishort *,ishort *,ishort *,ushort *,float *,float *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SDisplay_p_float_p_float_p_void__int = {"_p_f_p_SDisplay_p_float_p_float_p_void__int", "int (*)(SDisplay *,float *,float *,void *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_SFContext__int = {"_p_f_p_SFContext__int", "int (*)(SFContext *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SFrameData_int_p_float_p_float_p_void__int = {"_p_f_p_SFrameData_int_p_float_p_float_p_void__int", "int (*)(SFrameData *,int,float *,float *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SGenerator_p_unsigned_int__int = {"_p_f_p_SGenerator_p_unsigned_int__int", "int (*)(SGenerator *,uint *)|int (*)(SGenerator *,unsigned int *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_SHardware__int = {"_p_f_p_SHardware__int", "int (*)(SHardware *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void__int = {"_p_f_p_void__int", "int (*)(void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_short_short_p_short__int = {"_p_f_short_short_p_short__int", "int (*)(short,short,short *)|int (*)(ishort,ishort,ishort *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *|SSpinLock *|iint *", 0, 0, (void*)0, 0};
@@ -20522,10 +20522,10 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p__SInt,
   &_swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int,
   &_swigt__p_f_p_SDisplay_p_float_p_float_p_void__int,
-  &_swigt__p_f_p_SFContext__int,
   &_swigt__p_f_p_SFrameData_int_p_float_p_float_p_void__int,
   &_swigt__p_f_p_SGenerator_p_unsigned_int__int,
   &_swigt__p_f_p_SHardware__int,
+  &_swigt__p_f_p_void__int,
   &_swigt__p_f_short_short_p_short__int,
   &_swigt__p_float,
   &_swigt__p_int,
@@ -20580,10 +20580,10 @@ static swig_cast_info _swigc__p__SFloat[] = {  {&_swigt__p__SFloat, 0, 0, 0},{0,
 static swig_cast_info _swigc__p__SInt[] = {  {&_swigt__p__SInt, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int[] = {  {&_swigt__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SDisplay_p_float_p_float_p_void__int[] = {  {&_swigt__p_f_p_SDisplay_p_float_p_float_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_SFContext__int[] = {  {&_swigt__p_f_p_SFContext__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SFrameData_int_p_float_p_float_p_void__int[] = {  {&_swigt__p_f_p_SFrameData_int_p_float_p_float_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SGenerator_p_unsigned_int__int[] = {  {&_swigt__p_f_p_SGenerator_p_unsigned_int__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_SHardware__int[] = {  {&_swigt__p_f_p_SHardware__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void__int[] = {  {&_swigt__p_f_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_short_short_p_short__int[] = {  {&_swigt__p_f_short_short_p_short__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -20638,10 +20638,10 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p__SInt,
   _swigc__p_f_int_p_short_p_short_p_short_p_unsigned_short_p_float_p_float_p_void__int,
   _swigc__p_f_p_SDisplay_p_float_p_float_p_void__int,
-  _swigc__p_f_p_SFContext__int,
   _swigc__p_f_p_SFrameData_int_p_float_p_float_p_void__int,
   _swigc__p_f_p_SGenerator_p_unsigned_int__int,
   _swigc__p_f_p_SHardware__int,
+  _swigc__p_f_p_void__int,
   _swigc__p_f_short_short_p_short__int,
   _swigc__p_float,
   _swigc__p_int,

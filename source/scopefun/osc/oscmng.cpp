@@ -810,6 +810,7 @@ int usbHotPlugCallback(int flags)
 int SDLCALL CaptureDataThreadFunction(void* data);
 int SDLCALL GenerateFrameThreadFunction(void* data);
 int SDLCALL ControlHardwareThreadFunction(void* data);
+int   LuaMsg(const char* msg, void* windows);
 
 int OsciloscopeManager::start()
 {
@@ -837,7 +838,7 @@ int OsciloscopeManager::start()
     ////////////////////////////////////////////////
     if(m_runScript.getLength() > 0)
     {
-        m_callback.Add(m_runScript);
+        m_callback.Add(m_runScript,LuaMsg);
         m_callback.Get(0)->Run();
     }
     sfFrameDisplayCallback(getCtx(), m_callback.Ptr(), this);

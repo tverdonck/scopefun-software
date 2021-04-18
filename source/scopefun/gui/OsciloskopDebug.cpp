@@ -53,7 +53,6 @@ void OsciloskopDebug::OnDestroy(wxActivateEvent& event)
     if(m_script)
     {
         m_script->Stop();
-        m_script->ClrPrint();
     }
     if(m_script)
     { ((OsciloskopOsciloskop*)this->GetParent())->GetMenuBar()->GetMenu(6)->GetMenuItems()[m_script->GetArrayIdx()]->Check(false); }
@@ -75,10 +74,7 @@ void OsciloskopDebug::m_buttonStopOnButtonClick( wxCommandEvent& event )
 {
    if (m_script)
    {
-      m_script->Stop();
-      m_buttonStart->Enable();
-      m_buttonStop->Disable();
-      m_buttonUpload->Disable();
+      SDL_CreateThread(LuaStopScript, "LuaStopScript", this);
    }
    event.Skip();
 }
@@ -122,6 +118,14 @@ void OsciloskopDebug::SetText(std::string str)
    m_textCtrlOutput->SetValue(str.c_str());
 }
 
+void OsciloskopDebug::ThreadStop()
+{
+   m_script->Stop();
+   m_buttonStart->Enable();
+   m_buttonStop->Disable();
+   m_buttonUpload->Disable();
+}
+
 void OsciloskopDebug::Clear()
 {
     #if defined(PLATFORM_MINGW)
@@ -132,13 +136,6 @@ void OsciloskopDebug::Clear()
     m_textCtrlOutput->Clear();
 }
 
-void OsciloskopDebug::Redirect()
-{
-   if (!m_script)
-      return;
-   m_textCtrlOutput->AppendText(m_script->GetPrint());
-   m_script->ClrPrint();
-}
 
 OsciloskopDebug::~OsciloskopDebug()
 {
@@ -147,5 +144,5 @@ OsciloskopDebug::~OsciloskopDebug()
 
 void OsciloskopDebug::AppendText(const char* str)
 {
-    std::cout << str;
+   m_textCtrlOutput->AppendText(str);
 }

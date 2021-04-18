@@ -30,6 +30,77 @@ wxLocale* pLocalization = 0;
 
 wxIMPLEMENT_ABSTRACT_CLASS(wxLanguageUserData, wxObject);
 
+void OsciloskopOsciloskop::OnAutoDetectUsb()
+{
+   wxCommandEvent event;
+   m_comboBoxCh0CaptureOnCombobox(event);
+   m_comboBoxCh1CaptureOnCombobox(event);
+}
+
+int SDLCALL AutoDetectUsb(void* ptr)
+{
+   if (!ptr)
+      return 1;
+
+   OsciloskopOsciloskop* osc = (OsciloskopOsciloskop*)ptr;
+   pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
+   pOsciloscope->thread.wait();
+
+   pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+   pOsciloscope->thread.wait();
+
+   // usb
+   if (!pOsciloscope->thread.isOpen())
+   {
+      pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());
+   }
+   else // fpga
+   {
+      if (!pOsciloscope->thread.isFpga())
+      {
+         pOsciloscope->thread.uploadFpga(pOsciloscope->settings.getHardware());
+         pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
+         pOsciloscope->thread.wait();
+      }
+      else
+      {
+         if (!pOsciloscope->thread.isCallibrated())
+         {
+            pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
+            pOsciloscope->thread.hardwareControlFunction(getHw());
+            pOsciloscope->thread.wait();
+            osc->OnAutoDetectUsb();
+            pOsciloscope->transferData();
+         }
+         else
+         {
+            pOsciloscope->UndoRedoOnOff(1);
+         }
+      }
+   }
+   return 0;
+}
+
+int SDLCALL LuaStopScript(void* window)
+{
+   if (!window)
+      return 1;
+
+   OsciloskopDebug* debug = (OsciloskopDebug*)window;
+   debug->ThreadStop();
+   return 0;
+}
+
+int LuaMsg(const char* msg,void* window)
+{
+   if (!msg || !window)
+      return 1;
+
+   OsciloskopDebug* debug = (OsciloskopDebug*)window;
+   debug->AppendText(msg);
+   return 0;
+}
+
 // on Windows: if you install in program files folder and run as non-admin your write is restricted there
 bool isFileWritable()
 {

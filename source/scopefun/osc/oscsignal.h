@@ -189,12 +189,15 @@ public:
 #define SCOPEFUN_LUA_BUFFER 16*1024
 #define SCOPEFUN_LUA_ERROR  2048
 
+typedef int (*LuaOnMsg)(const char* msg,void* window);
+
 class OsciloscopeScript
 {
 private:
     SDL_SpinLock m_spinLock;
     lua_State*   m_luaState;
-    char         m_luaPrint[SCOPEFUN_LUA_BUFFER];
+    LuaOnMsg     m_msg;
+    SDL_atomic_t m_active;
     void*        m_userData;
     int          m_arrayIdx;
 public:
@@ -213,12 +216,12 @@ public:
 public:
     int LuaError(const char* str);
     int LuaPrint(const char* str);
-    int CppPrint(const char* str);
 public:
-    int    Load(String fileName);
-    int    Reload();
-    int    Run();
-    int    Stop();
+    int Load(String fileName, LuaOnMsg msg);
+    int Reload();
+    int Run();
+    int Stop();
+    int Active(int onOff);
 public:
     void    SetUserData(void* user);
     void*   GetUserData();
@@ -233,13 +236,14 @@ class OsciloscopeCallback
 private:
     byte*                                          m_help;
     SCallback                                      m_callback;
+    LuaOnMsg                                       m_msg;
     Array<OsciloscopeScript*, SCOPEFUN_MAX_SCRIPT> m_script;
 public:
     OsciloscopeCallback();
 public:
     SCallback*          Ptr();
     OsciloscopeScript*  Get(int i);
-    int                 Add(String fileName);
+    int                 Add(String fileName, LuaOnMsg msg);
     int                 SetHelp(String helpFile);
     const char*         GetHelp();
     int                 Clear();

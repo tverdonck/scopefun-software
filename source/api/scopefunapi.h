@@ -527,7 +527,7 @@ typedef struct _SCallback
     int (*onSample)(int sample, ishort* ch0, ishort* ch1, ishort* fun, ushort* dig, float* pos, float* zoom, void* user);
     int (*onDisplay)(SDisplay* data, float* pos, float* zoom, void* user);
     int (*onConfigure)(SHardware* hw);
-    int (*onInit)(SFContext* ctx);
+    int (*onInit)(void* ptr);
     int (*onFunction)(ishort ch0, ishort ch1, ishort* fun);
     int (*onUpload)(SGenerator* generator, uint* sampleCount);
 } SCallback;

@@ -75,7 +75,7 @@ void OsciloskopOsciloskop::onActivate(wxActivateEvent& event)
         {
             if(f.empty())
             { break; }
-            pOsciloscope->m_callback.Add(f.data().AsChar());
+            pOsciloscope->m_callback.Add(f.data().AsChar(), LuaMsg );
             String fileName = f.data().AsChar();
             int pos = fileName.pos("/Script/");
             fileName.remove(0, pos + 1);
@@ -214,20 +214,11 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
         timer = 0;
 
         ////////////////////////////////////////////////////////////////////////////////
-        // redirect
-        ////////////////////////////////////////////////////////////////////////////////
-        for(int i=0;i<pOsciloscope->m_callback.Count();i++)
-        {
-          OsciloskopDebug* pDebug = (OsciloskopDebug*)pOsciloscope->m_callback.Get(i)->GetUserData();
-          if (pDebug)
-             pDebug->Redirect();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
         // undo / redo
         ////////////////////////////////////////////////////////////////////////////////
         m_buttonRedo->Enable(pOsciloscope->isRedoActive());
         m_buttonUndo->Enable(pOsciloscope->isUndoActive());
+
         ////////////////////////////////////////////////////////////////////////////////
         // reset gui
         ////////////////////////////////////////////////////////////////////////////////
@@ -248,6 +239,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
             // exit
             SDL_AtomicSet(&pOsciloscope->callibrate.resetUI, 0);
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         // message box
         ////////////////////////////////////////////////////////////////////////////////
@@ -302,6 +294,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     break;
             };
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         // usb
         ////////////////////////////////////////////////////////////////////////////////
@@ -330,48 +323,9 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
            // query ... fpga and usb
            if (usbTimer > 2.0 )
            {
-              pOsciloscope->thread.function(EThreadApiFunction::afIsOpened);
-              pOsciloscope->thread.wait();
-
-              pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
-              pOsciloscope->thread.wait();
-
-              // usb
-              if (!pOsciloscope->thread.isOpen())
-              {
-                 pOsciloscope->thread.openUSB(pOsciloscope->settings.getHardware());             
-              }
-              else // fpga
-              {
-                 if (!pOsciloscope->thread.isFpga())
-                 {
-                    pOsciloscope->thread.uploadFpga( pOsciloscope->settings.getHardware() );
-                    pOsciloscope->thread.function(EThreadApiFunction::afReadFpgaStatus);
-                    pOsciloscope->thread.wait();
-                 }
-                 else
-                 {
-                    if (!pOsciloscope->thread.isCallibrated())
-                    {
-                       pOsciloscope->thread.useEepromCallibration(pOsciloscope->settings.getHardware());
-                       pOsciloscope->thread.hardwareControlFunction(getHw());
-                       pOsciloscope->thread.wait();
-
-                       wxCommandEvent event;
-                       m_comboBoxCh0CaptureOnCombobox(event);
-                       m_comboBoxCh1CaptureOnCombobox(event);
-                       pOsciloscope->transferData();
-                    }
-                    else
-                    {
-                        pOsciloscope->UndoRedoOnOff(1);
-                    }
-                 }
-              }
+              SDL_CreateThread(AutoDetectUsb, "AutoDetectUsb", this);
               usbTimer = 0;
            }
-
-        /*   m_buttonCapture->Disable();*/
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -392,6 +346,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                 }
             }
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         // frame index
         ////////////////////////////////////////////////////////////////////////////////
@@ -452,6 +407,7 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                 pMeasure->setTextCtrlFreq(pMeasure->m_textCtrlFFT1, pMeasure->m_choiceFFT1, pOsciloscope->window.measure.data.pickFFT1.position.getXFreq());
             }
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         // debug
         ////////////////////////////////////////////////////////////////////////////////
@@ -469,20 +425,6 @@ void OsciloskopOsciloskop::OnIdle(wxIdleEvent& event)
                     pDebug->AppendText(formatBuffer);
                 }
             }
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////////////
-    // update script text
-    ////////////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < pOsciloscope->m_callback.Count(); i++)
-    {
-        OsciloscopeScript* script = pOsciloscope->m_callback.Get(i);
-        script->GetPrint();
-        OsciloskopDebug* debug = (OsciloskopDebug*)script->GetUserData();
-        if(debug)
-        {
-            pDebug->AppendText(script->GetPrint());
-            script->ClrPrint();
         }
     }
 
