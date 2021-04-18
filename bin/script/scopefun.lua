@@ -1,12 +1,10 @@
 -- onFrame
 function onFrame(data,length)
-	--print(string.format('%d\n',length) )
 	return data,length
 end
 
 -- onSample
 function onSample(sample,ch0,ch1,fun,dig)
-	--print(string.format('%d\n',sample) )
     return sample,ch0,ch1,fun,dig
 end
 
@@ -17,20 +15,16 @@ end
 
 -- onConfigure
 function onConfigure(hw)
-  print( ScopeFun.sfGetYPositionA(hw) )
+  print( ScopeFun.sfGetYGainA(hw) )
   print( "\n" )
   return hw
 end
 
 -- onInit
 function onInit(ctx)
-  --hw = ScopeFun.sfCreateSHardware()
-  --ScopeFun.sfSetDefault(hw)
-  --ScopeFun.sfHardwareConfig(ctx,hw)
-  for i=0,32,1 do
-     print( "ScopeFun...." )
-  end
-  print( "\n" )
+  hw = ScopeFun.sfCreateSHardware()
+  ScopeFun.sfSetDefault(hw)
+  ScopeFun.sfHardwareConfig(ctx,hw)
   return ctx
 end
 

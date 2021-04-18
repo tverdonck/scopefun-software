@@ -5,7 +5,7 @@ function onFrame(frame,length)
 	for i=start,start+sampleBytes,1 do
 		frame.data[i] = math.abs( math.tan( i ) )
 	end
-	return frame,length
+	return data,length
 end
 
 -- onSample
