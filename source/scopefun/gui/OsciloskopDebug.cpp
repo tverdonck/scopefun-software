@@ -29,6 +29,45 @@ OsciloskopDebug::OsciloskopDebug(wxWindow* parent)
     SetSize(500, 500);
     SetTitle("Script");
 
+    m_Lua->SetLexer(wxSTC_LEX_LUA);
+    m_Lua->SetIndent(4);
+
+    wxFont font;
+    font.SetFaceName(L"Courier New");
+    m_Lua->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+
+    m_Lua->StyleSetItalic(wxSTC_LUA_DEFAULT, true);
+    m_Lua->StyleSetItalic(wxSTC_LUA_COMMENT, true);
+    m_Lua->StyleSetItalic(wxSTC_LUA_COMMENTLINE, true);
+    m_Lua->StyleSetItalic(wxSTC_LUA_COMMENTDOC, true);
+    m_Lua->StyleSetForeground(wxSTC_LUA_DEFAULT, wxColour(0, 128, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_COMMENT, wxColour(0, 128, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_COMMENTLINE, wxColour(0, 128, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_COMMENTDOC, wxColour(0, 128, 0));
+
+    m_Lua->StyleSetForeground(wxSTC_LUA_STRING, wxColour(64, 64, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_CHARACTER, wxColour(64, 64, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_LITERALSTRING, wxColour(64, 64, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_STRINGEOL, wxColour(64, 64, 0));
+
+    m_Lua->StyleSetForeground(wxSTC_LUA_NUMBER, wxColour(0, 0, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_PREPROCESSOR, wxColour(64, 64, 64));
+    m_Lua->StyleSetForeground(wxSTC_LUA_OPERATOR, wxColour(128, 0, 0));
+    m_Lua->StyleSetForeground(wxSTC_LUA_IDENTIFIER, wxColour(128, 128, 128));
+
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD2, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD3, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD4, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD5, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD6, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD7, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_WORD8, wxColour(0, 0, 128));
+    m_Lua->StyleSetForeground(wxSTC_LUA_LABEL, wxColour(0, 0, 128));
+
+    m_Lua->SetKeyWords(wxSTC_LUA_WORD, L"for do if while end function");
+
+
     Connect(wxEVT_CLOSE_WINDOW, wxActivateEventHandler(OsciloskopDebug::OnDestroy));
 
     if (!isFileWritable())

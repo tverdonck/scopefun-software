@@ -37,6 +37,7 @@
 #include <wx/dataview.h>
 #include <wx/scrolwin.h>
 #include <wx/statbmp.h>
+#include <wx/stc/stc.h>
 
 #include "guiheader.h"
 
@@ -939,7 +940,7 @@ class Debug : public wxDialog
 	private:
 
 	protected:
-		wxTextCtrl* m_Lua;
+		wxStyledTextCtrl* m_Lua;
 		wxButton* m_buttonStart;
 		wxButton* m_buttonStop;
 		wxButton* m_buttonSave;
