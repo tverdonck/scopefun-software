@@ -29,7 +29,7 @@ Build-Exe:
         - powershell Remove-Item *.exe
         - powershell Remove-Item *.sha512
         - cmake -G "MinGW Makefiles" -D SCOPEFUN_VERSION_MAJOR="%VERSION_MAJOR%" -D SCOPEFUN_VERSION_MINOR="%VERSION_MINOR%" -D SCOPEFUN_VERSION_MICRO="%VERSION_MICRO%" -D SCOPEFUN_BUILD_TYPE="Release" -D CPACK_SOURCE_ZIP="false" -S .. -B .
-        - set "PATH=%PATH%;C:\msys64\mingw64\bin"
+        - set "PATH=%PATH%;C:\msys64\mingw64\bin;C:\Program Files\Git\bin"
         - mingw32-make package
     only:
         - develop
