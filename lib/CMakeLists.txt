@@ -68,7 +68,7 @@ if( SCOPEFUN_LINUX)
 			    PREFIX 	      ${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/
 			    SOURCE_DIR        ${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/
 			    BINARY_DIR        ${CMAKE_SOURCE_DIR}/lib/wxWidgets-3.0.5/sfBuild${SCOPEFUN_BUILD_TYPE}/
-			    CONFIGURE_COMMAND sh ../configure --disable-shared
+			    CONFIGURE_COMMAND sh ../configure --disable-shared --with-libtiff=builtin --with-libjpeg=builtin
 			    BUILD_COMMAND     make
 			    UPDATE_COMMAND    ""
 			    INSTALL_COMMAND   ""
