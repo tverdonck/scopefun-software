@@ -225,11 +225,7 @@ Upload-Ftp:
         - copy ..\sfExe\*.sha512  $COMMIT_TIME\Windows
         - copy *.7z               $COMMIT_TIME\Windows
         - copy *.sha512           $COMMIT_TIME\Windows
-        - winscp /ini=nul /command "open ftp://${FTP_USERNAME}:$FTP_PASSWORD@ftp.scopefun.com/ "^
-                                   "cd Versions"^
-                                   "put $COMMIT_TIME"^
-                                   "close"^
-                                   "exit"
+        - winscp /ini=nul /command "open ftp://${FTP_USERNAME}:$FTP_PASSWORD@ftp.scopefun.com/" "cd Versions" "put $COMMIT_TIME" "close" "exit"
     when: always
     only:
         - develop
