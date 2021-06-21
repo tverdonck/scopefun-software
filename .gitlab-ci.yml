@@ -260,16 +260,15 @@ Upload-Ftp:
         - Zip-Source
     script:
         - cd sfSrc
-        - git show -s --pretty=format:%%ct %CI_COMMIT_SHA%>commit_time.txt
-        - set /p COMMIT_TIME=<commit_time.txt
-        - mkdir %COMMIT_TIME%\Windows
-        - copy %cd%\..\sfExe\*.exe     %COMMIT_TIME%\Windows
-        - copy %cd%\..\sfExe\*.sha512  %COMMIT_TIME%\Windows
-        - copy *.7z                    %COMMIT_TIME%\Windows
-        - copy *.sha512                %COMMIT_TIME%\Windows
-        - winscp /ini=nul /command "open ftp://%FTP_USERNAME%:%FTP_PASSWORD%@ftp.scopefun.com/ "^
+        - $COMMIT_TIME = show -s --format:%ct
+        - New-Item -ItemType Directory $COMMIT_TIME\Windows
+        - copy ..\sfExe\*.exe     $COMMIT_TIME\Windows
+        - copy ..\sfExe\*.sha512  $COMMIT_TIME\Windows
+        - copy *.7z               $COMMIT_TIME\Windows
+        - copy *.sha512           $COMMIT_TIME\Windows
+        - winscp /ini=nul /command "open ftp://$FTP_USERNAME:$FTP_PASSWORD@ftp.scopefun.com/ "^
                                    "cd Versions"^
-                                   "put %COMMIT_TIME%"^
+                                   "put $COMMIT_TIME"^
                                    "close"^
                                    "exit"
     when: always
