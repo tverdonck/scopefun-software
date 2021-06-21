@@ -20,7 +20,7 @@ Build-Exe:
          - sfExe/*.sha512
       expire_in: 1 day
     cache:
-        key: "%CI_COMMIT_REF_SLUG%"
+        key: $CI_COMMIT_REF_SLUG
         untracked: true
     allow_failure: true
     script:
@@ -41,7 +41,7 @@ Build-Exe-Mac:
     tags:
         - ScopeFunMac
     cache:
-        key: "${CI_COMMIT_REF_SLUG}"
+        key: $CI_COMMIT_REF_SLUG
         untracked: true
     artifacts:
       name: "ScopeFun-Mac64"
@@ -76,7 +76,7 @@ Build-Exe-Linux:
          - sfExe/*.sha512
       expire_in: 1 day
     cache:
-        key: "$CI_COMMIT_REF_SLUG"
+        key: $CI_COMMIT_REF_SLUG
         untracked: true
     allow_failure: true
     image: ubuntu:20.04
