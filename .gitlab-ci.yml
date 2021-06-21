@@ -13,6 +13,7 @@ Build-Exe:
         name: win
     tags:
         - ScopeFun
+    needs: []
     artifacts:
       name: "ScopeFun-Win64"
       paths: 
@@ -34,41 +35,13 @@ Build-Exe:
     only:
         - develop
 
-Build-Exe-Mac:
-    stage: exe
-    environment: 
-        name: mac
-    tags:
-        - ScopeFunMac
-    cache:
-        key: $CI_COMMIT_REF_SLUG
-        untracked: true
-    artifacts:
-      name: "ScopeFun-Mac64"
-      paths: 
-         - sfExe/*Darwin.dmg
-         - sfExe/*Darwin.dmg.sha512
-      expire_in: 1 day
-    allow_failure: true
-    script:
-        - mkdir -p sfExe
-        - cd sfExe
-        - rm -f *.dmg
-        - rm -f *.sha512
-        - chmod +x ../lib/wxWidgets-3.1.3/src/stc/gen_iface.py
-        - chmod +x ../lib/libusb-1.0.22/install-sh
-        - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
-        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D SCOPEFUN_BUILD_TYPE="Release" -D CMAKE_VERBOSE_MAKEFILE="true" -D CPACK_BINARY_DRAGNDROP="true" -S "$CI_BUILDS_DIR.." -B.
-        - make package
-    only:
-        - develop
-
 Build-Exe-Linux:
     stage: exe
     environment: 
         name: linux
     tags:
         - ScopeFunLinux
+    needs: []
     artifacts:
       name: "ScopeFun-Linux64"
       paths: 
@@ -107,6 +80,36 @@ Build-Exe-Linux:
     only:
         - develop
 
+Build-Exe-Mac:
+    stage: exe
+    environment: 
+        name: mac
+    tags:
+        - ScopeFunMac
+    needs: []
+    cache:
+        key: $CI_COMMIT_REF_SLUG
+        untracked: true
+    artifacts:
+      name: "ScopeFun-Mac64"
+      paths: 
+         - sfExe/*Darwin.dmg
+         - sfExe/*Darwin.dmg.sha512
+      expire_in: 1 day
+    allow_failure: true
+    script:
+        - mkdir -p sfExe
+        - cd sfExe
+        - rm -f *.dmg
+        - rm -f *.sha512
+        - chmod +x ../lib/wxWidgets-3.1.3/src/stc/gen_iface.py
+        - chmod +x ../lib/libusb-1.0.22/install-sh
+        - PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+        - cmake -G "Unix Makefiles" -D SCOPEFUN_VERSION_MAJOR="$VERSION_MAJOR" -D SCOPEFUN_VERSION_MINOR="$VERSION_MINOR" -D SCOPEFUN_VERSION_MICRO="$VERSION_MICRO" -D SCOPEFUN_BUILD_TYPE="Release" -D CMAKE_VERBOSE_MAKEFILE="true" -D CPACK_BINARY_DRAGNDROP="true" -S "$CI_BUILDS_DIR.." -B.
+        - make package
+    only:
+        - develop
+
 #-------------------------------------------------------------------------------
 # zip 
 #-------------------------------------------------------------------------------
@@ -117,6 +120,7 @@ Zip-Source:
         name: win
     tags:
         - ScopeFun
+    needs: [Build-Exe]
     cache: {}
     allow_failure: true
     artifacts:
@@ -142,6 +146,7 @@ Zip-Source-Linux:
     environment: linux
     tags:
         - ScopeFunLinux
+    needs: [Build-Exe-Linux]
     cache: {}
     artifacts:
       name: "ScopeFun-Src-Linux"
@@ -173,6 +178,7 @@ Zip-Source-Mac:
         name: mac
     tags:
         - ScopeFunMac
+    needs: [Build-Exe-Mac]
     cache: {}
     artifacts:
       name: "ScopeFun-Src-Mac"
@@ -198,12 +204,45 @@ Zip-Source-Mac:
 # ftp
 #-------------------------------------------------------------------------------
 
+Upload-Ftp:
+    stage: ftp
+    environment: 
+        name: win
+    tags:
+        - ScopeFun
+    needs:
+        - Build-Exe
+        - Zip-Source
+    cache: {}
+    dependencies:
+        - Build-Exe
+        - Zip-Source
+    script:
+        - cd sfSrc
+        - $COMMIT_TIME = git show -s --format=%ct
+        - New-Item -ItemType Directory $COMMIT_TIME\Windows
+        - copy ..\sfExe\*.exe     $COMMIT_TIME\Windows
+        - copy ..\sfExe\*.sha512  $COMMIT_TIME\Windows
+        - copy *.7z               $COMMIT_TIME\Windows
+        - copy *.sha512           $COMMIT_TIME\Windows
+        - winscp /ini=nul /command "open ftp://${FTP_USERNAME}:$FTP_PASSWORD@ftp.scopefun.com/ "^
+                                   "cd Versions"^
+                                   "put $COMMIT_TIME"^
+                                   "close"^
+                                   "exit"
+    when: always
+    only:
+        - develop
+
 Upload-Ftp-Linux:
     stage: ftp
     environment:
         name: linux
     tags:
         - ScopeFunLinux
+    needs:
+        - Build-Exe-Linux
+        - Zip-Source-Linux
     cache: {}
     dependencies:
         - Build-Exe-Linux
@@ -231,6 +270,9 @@ Upload-Ftp-Mac:
         name: mac
     tags:
         - ScopeFunMac
+    needs:
+        - Build-Exe-Mac
+        - Zip-Source-Mac
     cache: {}
     dependencies:
         - Build-Exe-Mac
@@ -244,33 +286,6 @@ Upload-Ftp-Mac:
         - cp *.gz                 $COMMIT_TIME/Mac
         - cp *.sha512             $COMMIT_TIME/Mac
         - ncftpput -z -R -u $FTP_USERNAME -p $FTP_PASSWORD ftp.scopefun.com Versions $COMMIT_TIME
-    when: always
-    only:
-        - develop
-     
-Upload-Ftp:
-    stage: ftp
-    environment: 
-        name: win
-    tags:
-        - ScopeFun
-    cache: {}
-    dependencies:
-        - Build-Exe
-        - Zip-Source
-    script:
-        - cd sfSrc
-        - $COMMIT_TIME = git show -s --format=%ct
-        - New-Item -ItemType Directory $COMMIT_TIME\Windows
-        - copy ..\sfExe\*.exe     $COMMIT_TIME\Windows
-        - copy ..\sfExe\*.sha512  $COMMIT_TIME\Windows
-        - copy *.7z               $COMMIT_TIME\Windows
-        - copy *.sha512           $COMMIT_TIME\Windows
-        - winscp /ini=nul /command "open ftp://${FTP_USERNAME}:$FTP_PASSWORD@ftp.scopefun.com/ "^
-                                   "cd Versions"^
-                                   "put $COMMIT_TIME"^
-                                   "close"^
-                                   "exit"
     when: always
     only:
         - develop
