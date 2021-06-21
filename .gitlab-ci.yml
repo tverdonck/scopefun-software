@@ -260,7 +260,7 @@ Upload-Ftp:
         - Zip-Source
     script:
         - cd sfSrc
-        - $COMMIT_TIME = show -s --format:%ct
+        - $COMMIT_TIME = git show -s --format:%ct
         - New-Item -ItemType Directory $COMMIT_TIME\Windows
         - copy ..\sfExe\*.exe     $COMMIT_TIME\Windows
         - copy ..\sfExe\*.sha512  $COMMIT_TIME\Windows
